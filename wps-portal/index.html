@@ -1,0 +1,1792 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WESLEY PREPARATORY SCHOOL - Assessment & Administration Portal</title>
+    <style>
+        :root {
+            --bg-color: #fbf9f4;
+            --primary-color: #0a2540;
+            --accent-color: #b31924;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            overflow-x: hidden;
+            transition: background 0.3s ease;
+        }
+        .top-header {
+            background-color: var(--primary-color);
+            color: #fbf9f4;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+            border-bottom: 3px solid var(--accent-color);
+            flex-shrink: 0;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .top-header h2 {
+            margin: 0;
+            font-size: 15px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .user-info {
+            font-size: 12px;
+            background: rgba(255,255,255,0.15);
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+        .btn-signout {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 11px;
+            cursor: pointer;
+        }
+        .btn-signout:hover { opacity: 0.9; }
+
+        .workspace {
+            display: flex;
+            flex: 1;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .sidebar {
+            width: 220px;
+            background-color: var(--card-bg);
+            border-right: 1px solid #e0dcd0;
+            padding-top: 15px;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.02);
+            flex-shrink: 0;
+        }
+        .nav-title {
+            padding: 10px 20px;
+            font-size: 11px;
+            font-weight: 700;
+            color: #707070;
+            letter-spacing: 0.5px;
+        }
+        .nav-link, .nav-link-sub {
+            display: block;
+            padding: 12px 20px;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            border-left: 4px solid transparent;
+            cursor: pointer;
+        }
+        .nav-link-sub {
+            color: #444;
+            font-weight: normal;
+        }
+        .nav-link:hover, .nav-link-sub:hover {
+            background-color: #f0ebd8;
+            border-left-color: var(--accent-color);
+        }
+        .content-area {
+            flex: 1;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            background-color: var(--bg-color);
+            min-width: 0;
+        }
+        .action-row {
+            display: flex;
+            gap: 10px;
+            background: var(--card-bg);
+            padding: 12px 20px;
+            border-radius: 6px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            margin-bottom: 20px;
+            border-top: 3px solid var(--primary-color);
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .action-badge {
+            background: #f0ebd8;
+            color: var(--primary-color);
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 12px;
+            cursor: pointer;
+            border: 1px solid #dcd5c0;
+        }
+        .action-badge:hover { background: #e6dfc8; }
+
+        #loginScreen {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex: 1;
+            background-color: var(--bg-color);
+            padding: 20px;
+        }
+        .login-card {
+            background: var(--card-bg);
+            padding: 30px;
+            width: 100%;
+            max-width: 400px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-top: 5px solid var(--primary-color);
+            border-bottom: 3px solid var(--accent-color);
+        }
+        .login-card h3 {
+            margin-top: 0;
+            color: var(--primary-color);
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #444;
+            margin-bottom: 5px;
+        }
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 13px;
+        }
+        .btn-submit {
+            width: 100%;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 11px;
+            font-weight: 600;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .btn-submit:hover { opacity: 0.9; }
+
+        #dashboardScreen {
+            display: none;
+            flex-direction: column;
+            flex: 1;
+        }
+        .panel-view {
+            display: none;
+            flex: 1;
+            flex-direction: column;
+        }
+        .panel-view.active {
+            display: flex;
+        }
+        
+        .portal-main-title {
+            text-align: center;
+            color: var(--primary-color);
+            font-size: 20px;
+            margin-top: 5px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+        .school-crest-box {
+            text-align: center;
+            margin-top: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .school-badge-img {
+            width: 120px;
+            height: 120px;
+            object-fit: contain;
+            margin-top: 5px;
+            margin-bottom: 10px;
+            filter: drop-shadow(0px 3px 6px rgba(0,0,0,0.2));
+        }
+
+        .dashboard-main-container {
+            display: flex;
+            gap: 20px;
+            width: 100%;
+            max-width: 1250px;
+            margin: 0 auto;
+            flex-wrap: wrap;
+        }
+        .dashboard-left-col { flex: 2; min-width: 280px; }
+        .dashboard-right-col { flex: 1; display: flex; flex-direction: column; gap: 20px; min-width: 260px; }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            width: 100%;
+            margin-bottom: 15px;
+        }
+        .stat-card {
+            background: linear-gradient(135deg, #f0ebd8 0%, var(--card-bg) 100%);
+            border: 1px solid #dcd5c0;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .stat-card:hover { transform: translateY(-2px); }
+        .stat-card h4 { margin: 0; font-size: 12px; color: var(--primary-color); font-weight: 600; }
+        .stat-card .stat-value { font-size: 16px; font-weight: bold; color: #333; margin-top: 5px; }
+        .stat-card.red {
+            background: linear-gradient(135deg, #faeaea 0%, var(--card-bg) 100%);
+            border-color: #f0cccc;
+        }
+        .stat-card.red h4 { color: var(--accent-color); }
+        
+        .analytics-banner {
+            width: 100%;
+            background: var(--accent-color);
+            color: white;
+            text-align: center;
+            padding: 12px;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 13px;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+            margin-top: 5px;
+        }
+        .analytics-banner:hover { opacity: 0.9; }
+
+        .analytics-card {
+            background: var(--card-bg);
+            border: 1px solid #dcd5c0;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+            text-align: center;
+        }
+        .analytics-card h3 {
+            margin: 0 0 10px 0;
+            font-size: 14px;
+            color: var(--primary-color);
+            border-bottom: 1px solid #eee;
+            padding-bottom: 8px;
+        }
+        .chart-legend {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            font-size: 12px;
+            margin-bottom: 10px;
+        }
+        .legend-male { color: var(--primary-color); font-weight: bold; }
+        .legend-female { color: var(--accent-color); font-weight: bold; }
+
+        .home-gallery-section {
+            width: 100%;
+            max-width: 1250px;
+            margin: 20px auto 0 auto;
+            background: var(--card-bg);
+            border: 1px solid #dcd5c0;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+            text-align: left;
+            box-sizing: border-box;
+        }
+        .gallery-header {
+            font-size: 14px;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 8px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+        .gallery-item {
+            background: #fbf9f4;
+            border: 1px solid #dcd5c0;
+            border-radius: 6px;
+            padding: 10px;
+            text-align: center;
+        }
+        .gallery-img, .gallery-video {
+            width: 100%;
+            height: 140px;
+            object-fit: cover;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+        .notice-board-text {
+            font-size: 13px;
+            color: #444;
+            background: #f0ebd8;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 10px;
+            border-left: 4px solid var(--accent-color);
+        }
+
+        .capture-container {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 6px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            border-top: 3px solid var(--primary-color);
+            box-sizing: border-box;
+        }
+        .capture-header {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 8px;
+        }
+        .filter-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+        .filter-group label {
+            display: block;
+            font-size: 11px;
+            font-weight: 700;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        .filter-group select, .filter-group input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background: #fff;
+            font-size: 12px;
+            box-sizing: border-box;
+        }
+        .btn-filter {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            font-weight: 600;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .btn-filter:hover { opacity: 0.9; }
+
+        .results-section {
+            margin-top: 20px;
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 6px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            display: none;
+            overflow-x: auto;
+        }
+        .results-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .toolbar-left { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+        .toolbar-right { display: flex; gap: 10px; align-items: center; }
+        .btn-refresh { background-color: #28a745; color: white; border: none; padding: 7px 12px; border-radius: 4px; font-weight: 600; cursor: pointer; font-size: 12px; }
+        .btn-download-data { background-color: var(--primary-color); color: white; border: none; padding: 7px 12px; border-radius: 4px; font-weight: 600; cursor: pointer; font-size: 12px; }
+        .btn-submit-complete { background-color: var(--accent-color); color: white; border: none; padding: 7px 12px; border-radius: 4px; font-weight: 600; cursor: pointer; font-size: 12px; }
+        .btn-change-score { background-color: #6c757d; color: white; border: none; padding: 7px 12px; border-radius: 4px; font-weight: 600; cursor: pointer; font-size: 12px; }
+
+        .search-box { padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 12px; }
+        .roster-table { width: 100%; border-collapse: collapse; margin-top: 10px; min-width: 600px; }
+        .roster-table th, .roster-table td { border: 1px solid #dee2e6; padding: 10px; text-align: left; font-size: 13px; }
+        .roster-table th { background-color: #f0ebd8; color: var(--primary-color); font-weight: 600; }
+        .score-input { width: 70px; padding: 5px; border: 1px solid #ccc; border-radius: 3px; text-align: center; font-weight: bold; }
+        .sort-btn { background: none; border: none; cursor: pointer; font-weight: bold; font-size: 12px; color: var(--primary-color); padding: 0 3px; }
+        .sort-btn:hover { color: var(--accent-color); }
+
+        /* Announcement Modal Popup */
+        #announcementModal {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.6);
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+            box-sizing: border-box;
+        }
+        .modal-card {
+            background: white;
+            padding: 25px;
+            width: 100%;
+            max-width: 500px;
+            border-radius: 8px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            border-top: 5px solid var(--accent-color);
+            text-align: center;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .modal-card h3 { color: var(--primary-color); margin-top: 0; font-size: 18px; }
+        .modal-media-preview {
+            max-height: 160px;
+            max-width: 100%;
+            object-fit: contain;
+            margin: 10px 0;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        .btn-dismiss {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+        .btn-dismiss:hover { opacity: 0.9; }
+
+        .portal-footer {
+            margin-top: auto;
+            text-align: center;
+            padding: 10px;
+            font-size: 12px;
+            color: #555;
+            border-top: 1px solid #dcd5c0;
+            background: var(--card-bg);
+            flex-shrink: 0;
+        }
+
+        /* MAINTENANCE BANNER OVERLAY */
+        #maintenanceScreen {
+            display: none;
+            position: fixed;
+            z-index: 99999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #0a2540;
+            color: white;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 25px;
+            box-sizing: border-box;
+        }
+        .maintenance-card {
+            background: white;
+            color: #333;
+            padding: 35px;
+            border-radius: 8px;
+            max-width: 450px;
+            width: 100%;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.4);
+            border-top: 5px solid #b31924;
+        }
+        .maintenance-card h2 { color: #b31924; margin-top: 0; }
+
+        /* MOBILE RESPONSIVE MEDIA QUERIES */
+        @media screen and (max-width: 768px) {
+            .workspace {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                height: auto;
+                display: flex;
+                flex-wrap: wrap;
+                padding: 5px 10px;
+                border-right: none;
+                border-bottom: 1px solid #e0dcd0;
+            }
+            .nav-title {
+                display: none;
+            }
+            .nav-link, .nav-link-sub {
+                padding: 8px 12px;
+                font-size: 12px;
+                border-left: none;
+                border-bottom: 3px solid transparent;
+            }
+            .nav-link:hover, .nav-link-sub:hover {
+                border-left-color: transparent;
+                border-bottom-color: var(--accent-color);
+            }
+            .filter-grid {
+                grid-template-columns: 1fr;
+            }
+            .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .top-header h2 {
+                font-size: 13px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- MAINTENANCE MODE OVERLAY FOR TEACHERS -->
+    <div id="maintenanceScreen">
+        <div class="maintenance-card">
+            <h2>🛠️ PORTAL UNDER MAINTENANCE</h2>
+            <p style="font-size: 14px; color: #555; line-height: 1.5;">
+                The school administrator is currently making system updates and publishing new announcements. 
+            </p>
+            <p style="font-size: 13px; font-weight: bold; color: #0a2540; background: #fbf9f4; padding: 10px; border-radius: 4px; border-left: 4px solid #b31924;">
+                Please check back shortly. You will be able to log in as soon as maintenance mode is completed by the admin.
+            </p>
+            <button onclick="signOut()" class="btn-submit" style="background: #b31924; margin-top: 15px;">Back to Login</button>
+        </div>
+    </div>
+
+    <!-- ANNOUNCEMENT POPUP MODAL -->
+    <div id="announcementModal">
+        <div class="modal-card">
+            <h3>📢 LATEST SCHOOL ANNOUNCEMENT</h3>
+            <div id="modalAnnouncementText" style="font-size: 14px; color: #444; margin: 15px 0; line-height: 1.5; text-align: left; background: #fbf9f4; padding: 12px; border-radius: 4px; border-left: 4px solid var(--accent-color);">
+                Welcome back! Please check out the latest updates.
+            </div>
+            <div id="modalMediaContainer"></div>
+            <button type="button" class="btn-dismiss" onclick="dismissAnnouncement()">Dismiss & Go to Dashboard</button>
+        </div>
+    </div>
+
+    <div class="top-header">
+        <h2>0040111 - WESLEY PREPARATORY SCHOOL (ASSORKO - ESSAMAN)</h2>
+        <div class="header-right">
+            <button class="btn-signout" onclick="syncCloudUpdates()" style="background: #28a745; font-size: 11px;">🔄 Sync Latest Updates</button>
+            <div class="user-info" id="userDisplay">Not Logged In</div>
+            <button class="btn-signout" onclick="signOut()">Sign Out</button>
+        </div>
+    </div>
+
+    <!-- LOGIN SCREEN -->
+    <div id="loginScreen" style="display: flex;">
+        <div class="login-card">
+            <h3>Portal Login</h3>
+            <p style="font-size: 13px; color: #666; margin-bottom: 20px;">Enter your staff credentials to access the system.</p>
+            <div class="form-group">
+                <label>Staff Email</label>
+                <input type="text" id="email" placeholder="head@wps.com">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="password" placeholder="Enter password">
+            </div>
+            <button type="button" class="btn-submit" onclick="handleLogin()">Login to Dashboard</button>
+            <button type="button" class="btn-submit" onclick="syncCloudUpdates()" style="background: #28a745; margin-top: 10px;">🔄 Sync Latest Students & Updates from Cloud</button>
+        </div>
+    </div>
+
+    <!-- DASHBOARD SCREEN -->
+    <div id="dashboardScreen" style="display: none; flex-direction: column; flex: 1;">
+        <div class="workspace">
+            <div class="sidebar">
+                <div class="nav-title">NAVIGATION MENU</div>
+                <a class="nav-link" onclick="switchTab('home')">Student Assessment Portal</a>
+                <a class="nav-link-sub" onclick="switchTab('admission')" id="navAdmission" style="display:none;">📝 Online Admission Form</a>
+                <a class="nav-link-sub" onclick="switchTab('admin-upload')" id="navAdminUpload">🔒 Admin Info & Media Upload</a>
+                <a class="nav-link-sub" onclick="switchTab('season-theme')" id="navSeasonTheme" style="display:none; color: #b31924; font-weight: bold;">🎨 Theme Editor</a>
+                <a class="nav-link-sub" onclick="switchTab('assessment')">Capture Assessment</a>
+                <a class="nav-link-sub" onclick="switchTab('students')" id="navManageStudents" style="display:none;">Manage Students (Admin)</a>
+                <a class="nav-link-sub" onclick="syncCloudUpdates()" style="color: #28a745; font-weight: bold;">🔄 Sync Updates</a>
+                <a class="nav-link-sub" onclick="signOut()" style="color: var(--accent-color); font-weight: bold;">🚪 Sign Out</a>
+            </div>
+
+            <div class="content-area">
+                <div class="action-row">
+                    <div style="font-weight: bold; font-size: 13px; color: var(--primary-color); margin-right: 5px;">0040111 - WESLEY PREP</div>
+                    <div class="action-badge" onclick="switchTab('admission')" id="badgeAdmission" style="display:none;">📝 Online Admission</div>
+                    <div class="action-badge" onclick="switchTab('admin-upload')">🔒 Admin Upload</div>
+                    <div class="action-badge" id="badgeThemeEditor" onclick="switchTab('season-theme')" style="display:none; background:#b31924; color:white;">🎨 Theme Editor</div>
+                    <div class="action-badge" onclick="switchTab('students')" id="badgeStudents" style="display:none;">Register Students</div>
+                    <div class="action-badge" onclick="switchTab('assessment')">★ Capture Assessment</div>
+                </div>
+
+                <!-- Home Panel -->
+                <div id="panel-home" class="panel-view active">
+                    <div class="portal-main-title">KNOWLEDGE AND INTEGRITY - ASSESSMENT PORTAL</div>
+                    <div class="school-crest-box">
+                        <img src="badge.jpg" alt="School Badge" class="school-badge-img" id="displaySchoolBadge" onerror="this.src='https://via.placeholder.com/150?text=Wesley+Prep+Badge'">
+                        
+                        <div class="dashboard-main-container">
+                            <div class="dashboard-left-col">
+                                <div class="stats-grid">
+                                    <div class="stat-card" onclick="if(currentLoggedInUser==='head@wps.com') switchTab('students'); else alert('Only Admin can manage student rosters.');">
+                                        <h4>Total Students</h4>
+                                        <div class="stat-value" id="statTotalStudents">0</div>
+                                    </div>
+                                    <div class="stat-card red">
+                                        <h4>Subjects Offered</h4>
+                                        <div class="stat-value">8</div>
+                                    </div>
+                                    <div class="stat-card">
+                                        <h4>Teaching Staff</h4>
+                                        <div class="stat-value">6</div>
+                                    </div>
+                                    <div class="stat-card">
+                                        <h4>Basic 1</h4>
+                                        <div class="stat-value" id="statBasic1">0</div>
+                                    </div>
+                                    <div class="stat-card red">
+                                        <h4>Total Male</h4>
+                                        <div class="stat-value" id="statMale">0</div>
+                                    </div>
+                                    <div class="stat-card">
+                                        <h4>Total Female</h4>
+                                        <div class="stat-value" id="statFemale">0</div>
+                                    </div>
+                                </div>
+                                <div class="analytics-banner" onclick="alert('Advanced Analytics: All 8 subjects active across Basic 1 to JHS 1 with real-time syncing.')">
+                                    ADVANCED ANALYTICS ▼
+                                </div>
+                            </div>
+
+                            <div class="dashboard-right-col">
+                                <div class="analytics-card">
+                                    <h3>Gender Distribution</h3>
+                                    <div class="chart-legend">
+                                        <span class="legend-male">■ Male (<span id="pctMale">0%</span>)</span>
+                                        <span class="legend-female">■ Female (<span id="pctFemale">0%</span>)</span>
+                                    </div>
+                                    <div style="height: 120px; display: flex; justify-content: center; align-items: center;">
+                                        <canvas id="genderPieChart" width="110" height="110"></canvas>
+                                    </div>
+                                </div>
+
+                                <div class="analytics-card">
+                                    <h3>Year Distribution</h3>
+                                    <div style="height: 90px; display: flex; align-items: flex-end; justify-content: space-around; padding-top: 10px; border-bottom: 1px solid #ccc;">
+                                        <div style="text-align: center;"><div style="width: 15px; background: var(--primary-color); height: 5px; margin: 0 auto;"></div><span style="font-size: 9px;">B1-B3</span></div>
+                                        <div style="text-align: center;"><div style="width: 15px; background: var(--accent-color); height: 5px; margin: 0 auto;"></div><span style="font-size: 9px;">B4-B6</span></div>
+                                        <div style="text-align: center;"><div style="width: 15px; background: #28a745; height: 5px; margin: 0 auto;"></div><span style="font-size: 9px;">JHS 1</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="home-gallery-section">
+                            <div class="gallery-header">
+                                <span>🏫 School Gallery & Headteacher's Notice Board</span>
+                                <span style="font-size: 11px; font-weight: normal; color: #666;">Visible to all logged-in staff</span>
+                            </div>
+                            
+                            <div id="noticeBoardDisplay" class="notice-board-text">
+                                <b>Latest Notice:</b> Welcome back to a new term at Wesley Prep (Assorko - Essaman). Please ensure continuous assessment scores are synced before the deadline.
+                            </div>
+
+                            <div class="gallery-grid" id="dynamicGalleryGrid" style="margin-top: 15px;">
+                                <div class="gallery-item">
+                                    <img src="badge.jpg
+" class="gallery-img" id="galleryImg1" onerror="this.src='https://via.placeholder.com/200?text=Wesley+Prep+Badge'">
+                                    <div style="font-size: 12px; font-weight: bold; margin-top: 5px; color: var(--primary-color);">School Crest / Badge</div>
+                                </div>
+                                <div class="gallery-item">
+                                    <img src="https://via.placeholder.com/200?text=Campus+View" class="gallery-img" id="galleryImg2">
+                                    <div style="font-size: 12px; font-weight: bold; margin-top: 5px; color: var(--primary-color);">School Campus</div>
+                                </div>
+                                <div class="gallery-item">
+                                    <img src="https://via.placeholder.com/200?text=Classroom+Activities" class="gallery-img" id="galleryImg3">
+                                    <div style="font-size: 12px; font-weight: bold; margin-top: 5px; color: var(--primary-color);">Student Activities</div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Admin Upload Panel -->
+                <div id="panel-admin-upload" class="panel-view">
+                    <div class="capture-container" style="max-width: 700px; margin: 0 auto;">
+                        <div class="capture-header">
+                            <span>🔒 ADMIN-ONLY: SCHOOL INFORMATION & MULTIPLE MEDIA UPLOAD</span>
+                        </div>
+                        <div id="adminLockMessage" style="display:none; color: var(--accent-color); font-weight: bold; padding: 20px; text-align: center;">
+                            Access Denied! Only the Headteacher / Administrator (head@wps.com) can access this upload panel.
+                        </div>
+                        <div id="adminFormContent">
+                            <p style="font-size: 13px; color: #666; margin-bottom: 20px;">Select multiple photos or videos to add directly to the main page gallery and update announcements.</p>
+                            
+                            <!-- MAINTENANCE MODE TOGGLE -->
+                            <div style="background: #fdf5f5; border: 1px solid #f0cccc; padding: 15px; border-radius: 6px; margin-bottom: 20px;">
+                                <label style="font-weight: bold; color: #b31924; font-size: 13px; display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                                    <input type="checkbox" id="maintenanceToggle" onchange="toggleMaintenanceMode()" style="width: 18px; height: 18px;">
+                                    🛠️ Enable Portal Maintenance Mode (Locks out teachers with maintenance notice)
+                                </label>
+                                <span style="font-size: 11px; color: #666; display: block; margin-top: 5px;">When checked, all teachers will see a maintenance screen upon login until you turn it off.</span>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Upload Multiple Photos & Videos (Select multiple files)</label>
+                                <input type="file" id="infoMediaFiles" accept="image/*,video/*" multiple>
+                            </div>
+                            <div class="form-group">
+                                <label>Update Notice Board Announcement</label>
+                                <textarea id="infoAnnouncement" rows="3" placeholder="Enter termly notices for teachers..."></textarea>
+                            </div>
+                            <button type="button" class="btn-submit" onclick="publishMediaFiles()" style="background: var(--primary-color);">Publish to Main Page & Cloud</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Admin Seasonal & Theme Editor Panel -->
+                <div id="panel-season-theme" class="panel-view">
+                    <div class="capture-container" style="max-width: 700px; margin: 0 auto;">
+                        <div class="capture-header">
+                            <span>🎨 ADMIN-ONLY: SEASONAL & THEME GENERATOR</span>
+                        </div>
+                        <p style="font-size: 13px; color: #666; margin-bottom: 20px;">Customize the portal appearance for festive seasons like Christmas, Easter, or special school events.</p>
+                        
+                        <div class="form-group">
+                            <label>Select Festive Preset Theme</label>
+                            <select id="presetTheme" onchange="applyPresetTheme()" style="padding: 10px; font-size: 14px;">
+                                <option value="default">Default School Theme (Navy & Red)</option>
+                                <option value="christmas">🎄 Christmas Festive (Green & Gold)</option>
+                                <option value="easter">🐣 Easter Celebration (Soft Gold & Purple)</option>
+                                <option value="independence">🇬🇭 Ghana Independence (Red, Gold & Green)</option>
+                            </select>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px;">
+                            <div class="form-group">
+                                <label>Main Theme Color</label>
+                                <input type="color" id="customPrimaryColor" value="#0a2540" style="height: 40px; padding: 2px;">
+                            </div>
+                            <div class="form-group">
+                                <label>Accent / Highlight Color</label>
+                                <input type="color" id="customAccentColor" value="#b31924" style="height: 40px; padding: 2px;">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Background Color / Festive Backdrop</label>
+                            <input type="color" id="customBgColor" value="#fbf9f4" style="height: 40px; padding: 2px;">
+                        </div>
+
+                        <button type="button" class="btn-submit" onclick="saveCustomTheme()" style="background: var(--accent-color); margin-top: 15px;">Apply Theme Changes Instantly</button>
+                    </div>
+                </div>
+
+                <!-- Online Admission Form Panel (Admin Only) -->
+                <div id="panel-admission" class="panel-view">
+                    <div class="capture-container" style="max-width: 700px; margin: 0 auto;">
+                        <div class="capture-header">
+                            <span>WESLEY PREPARATORY SCHOOL - OFFICIAL STUDENT ADMISSION FORM (ADMIN ONLY)</span>
+                        </div>
+                        <p style="font-size: 13px; color: #666; margin-bottom: 20px;">Fill out the learner details below to enroll a new student directly into the school system.</p>
+                        
+                        <form id="admissionForm" onsubmit="submitAdmission(event)">
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                                <div class="form-group">
+                                    <label>Student Full Name</label>
+                                    <input type="text" id="admFullName" placeholder="e.g. MENSAH PRINCE" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Select Class for Admission</label>
+                                    <select id="admClass" required>
+                                        <option value="Basic 1">Basic 1</option>
+                                        <option value="Basic 2">Basic 2</option>
+                                        <option value="Basic 3">Basic 3</option>
+                                        <option value="Basic 4">Basic 4</option>
+                                        <option value="Basic 5">Basic 5</option>
+                                        <option value="Basic 6">Basic 6</option>
+                                        <option value="JHS 1">JHS 1</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Gender</label>
+                                    <select id="admGender" required>
+                                        <option value="MALE">MALE</option>
+                                        <option value="FEMALE">FEMALE</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Date of Birth</label>
+                                    <input type="date" id="admDob" value="2012-01-01" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Parent / Guardian Name</label>
+                                    <input type="text" id="admGuardian" placeholder="e.g. Mr. Mensah" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Contact Phone Number</label>
+                                    <input type="tel" id="admPhone" placeholder="e.g. 0240000000" required>
+                                </div>
+                            </div>
+                            <div class="form-group" style="margin-top: 15px;">
+                                <label>Residential Address / Hometown</label>
+                                <input type="text" id="admAddress" placeholder="e.g. Assorko - Essaman, Takoradi" required>
+                            </div>
+                            <button type="submit" class="btn-submit" style="margin-top: 20px; background: var(--accent-color);">Complete Student Admission & Enroll</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Assessment Capture Filter Panel -->
+                <div id="panel-assessment" class="panel-view">
+                    <div class="capture-container">
+                        <div class="capture-header">
+                            <span>ASSESSMENT CAPTURE - || 🛈 Need Help</span>
+                        </div>
+
+                        <div class="filter-grid">
+                            <div class="filter-group">
+                                <label>YEAR</label>
+                                <select id="yearSelect">
+                                    <option>**SELECT YEAR**</option>
+                                    <option>2026/2027 Academic Year</option>
+                                    <option>2025/2026 Academic Year</option>
+                                </select>
+                            </div>
+
+                            <div class="filter-group">
+                                <label>SEMESTER</label>
+                                <select id="semSelect">
+                                    <option>**SELECT SEM**</option>
+                                    <option>Term 1 / 1st Semester</option>
+                                    <option>Term 2 / 2nd Semester</option>
+                                    <option>Term 3 / 3rd Semester</option>
+                                </select>
+                            </div>
+
+                            <div class="filter-group">
+                                <label>ASSESSMENT_MODE</label>
+                                <select id="modeSelect">
+                                    <option>**SELECT MODE OF ASSESSMENT**</option>
+                                    <option>Individual class test</option>
+                                    <option>Group class test</option>
+                                    <option>Project homework</option>
+                                    <option>End of term exams</option>
+                                </select>
+                            </div>
+
+                            <div class="filter-group">
+                                <label>CLASS</label>
+                                <select id="filterClassSelect">
+                                    <option value="Basic 1">Basic 1</option>
+                                    <option value="Basic 2">Basic 2</option>
+                                    <option value="Basic 3">Basic 3</option>
+                                    <option value="Basic 4">Basic 4</option>
+                                    <option value="Basic 5">Basic 5</option>
+                                    <option value="Basic 6">Basic 6</option>
+                                    <option value="JHS 1">JHS 1</option>
+                                </select>
+                            </div>
+
+                            <div class="filter-group">
+                                <label>SUBJECT</label>
+                                <select id="subSelect">
+                                    <option>**SELECT SUBJECT**</option>
+                                    <option>Mathematics</option>
+                                    <option>English</option>
+                                    <option>Science</option>
+                                    <option>History</option>
+                                    <option>R. M. E</option>
+                                    <option>Fante</option>
+                                    <option>C. Art</option>
+                                    <option>Computing</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="filter-actions-row">
+                            <div class="filter-group" style="margin-bottom: 0; width: 220px;">
+                                <label>OVER-ALL SCORE</label>
+                                <input type="number" id="overallScoreInput" value="100">
+                            </div>
+                            <button class="btn-filter" onclick="applyFilter()" style="margin-top: 18px;">&lt;&lt;Filter&gt;&gt;</button>
+                        </div>
+                    </div>
+
+                    <!-- Results Datatable Section -->
+                    <div id="resultsSection" class="results-section">
+                        <div class="results-toolbar">
+                            <div class="toolbar-left">
+                                <span id="totalStudentsText" style="font-weight: bold; font-size: 13px; color: #333;">TOTAL NUMBER OF STUDENTS: 0</span>
+                                <button class="btn-refresh" onclick="refreshStudentScores()">Refresh</button>
+                                <button class="btn-download-data" onclick="downloadDatasetCSV()">Download Data</button>
+                                <button class="btn-submit-complete" onclick="submitAssessmentData()">Submit Complete</button>
+                                <button class="btn-change-score" onclick="changeOverallScorePrompt()">Change Over-All Score</button>
+                            </div>
+                            <div class="toolbar-right">
+                                <label style="font-size: 12px; font-weight: bold; color: #555;">Search:</label>
+                                <input type="text" id="studentSearchBox" class="search-box" placeholder="Search student..." onkeyup="filterStudentTable()">
+                            </div>
+                        </div>
+
+                        <table class="roster-table">
+                            <thead>
+                                <tr>
+                                    <th>SCORE</th>
+                                    <th>ASST_REF.ID</th>
+                                    <th>CANDIDATE_NAME</th>
+                                    <th>
+                                        GENDER 
+                                        <button class="sort-btn" onclick="setGenderSort('up')" title="Male Only First">▲</button>
+                                        <button class="sort-btn" onclick="setGenderSort('down')" title="Female Only First">▼</button>
+                                        <button class="sort-btn" onclick="setGenderSort('mixed')" title="Mixed (Original)">■</button>
+                                    </th>
+                                    <th>DOB</th>
+                                    <th>ATTENDANCE / CONDUCT</th>
+                                    <th>ACTION</th>
+                                </tr>
+                            </thead>
+                            <tbody id="assessmentTableBody">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Manage Students Panel (Admin Only) -->
+                <div id="panel-students" class="panel-view">
+                    <div class="capture-container">
+                        <div class="capture-header">
+                            <span>ADMINISTRATION - CLASS & STUDENT ROSTER MANAGEMENT (ADMIN ONLY)</span>
+                        </div>
+                        <div class="filter-grid" style="grid-template-columns: 1fr 1fr 1fr 1fr;">
+                            <div class="filter-group">
+                                <label>SELECT CLASS</label>
+                                <select id="adminClassSelect" onchange="loadClassStudents()">
+                                    <option value="Basic 1">Basic 1</option>
+                                    <option value="Basic 2">Basic 2</option>
+                                    <option value="Basic 3">Basic 3</option>
+                                    <option value="Basic 4">Basic 4</option>
+                                    <option value="Basic 5">Basic 5</option>
+                                    <option value="Basic 6">Basic 6</option>
+                                    <option value="JHS 1">JHS 1</option>
+                                </select>
+                            </div>
+                            <div class="filter-group">
+                                <label>STUDENT FULL NAME</label>
+                                <input type="text" id="newStudentName" placeholder="e.g. Mensah Prince">
+                            </div>
+                            <div class="filter-group">
+                                <label>GENDER</label>
+                                <select id="newStudentGender">
+                                    <option value="MALE">MALE</option>
+                                    <option value="FEMALE">FEMALE</option>
+                                </select>
+                            </div>
+                            <div class="filter-group">
+                                <label>DOB (YYYY-MM-DD)</label>
+                                <input type="date" id="newStudentDob" value="2012-05-14">
+                            </div>
+                        </div>
+                        <div style="margin-top: 10px;">
+                            <button class="btn-filter" style="background: var(--accent-color);" onclick="addStudent()">+ Add Student to Class</button>
+                        </div>
+
+                        <h4 style="color: #333; margin-top: 20px;">Enrolled Students Roster</h4>
+                        <table class="roster-table">
+                            <thead>
+                                <tr>
+                                    <th>No.</th>
+                                    <th>ASST_REF.ID</th>
+                                    <th>Student Full Name</th>
+                                    <th>Gender</th>
+                                    <th>DOB</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="studentTableBody">
+                                <!-- Populated rows -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="portal-footer">
+                @wps Ghana 2026. All rights reserved &nbsp;|&nbsp; Powered by Kobby Mensah
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var googleFormUrl = "https://docs.google.com/forms/d/e/1FAIpQLSfJ9YjaoZFiASufb_pis0CymTuIp1ZYdDlWLyZK1OhL7JfA/viewform?usp=dialog";
+        var currentLoggedInUser = "";
+        var currentGenderSortMode = "mixed";
+
+        var schoolRosters = {
+            "Basic 1": [],
+            "Basic 2": [],
+            "Basic 3": [],
+            "Basic 4": [],
+            "Basic 5": [],
+            "Basic 6": [],
+            "JHS 1": []
+        };
+
+        var savedScores = {};
+
+        window.addEventListener('DOMContentLoaded', () => {
+            loadPersistedPortalData();
+            checkUrlHashSync();
+            checkMaintenanceStatus();
+        });
+
+        function checkUrlHashSync() {
+            try {
+                if (window.location.hash && window.location.hash.length > 1) {
+                    var decodedData = JSON.parse(decodeURIComponent(escape(atob(window.location.hash.substring(1)))));
+                    if (decodedData.notice) localStorage.setItem('wps_latest_notice', decodedData.notice);
+                    if (decodedData.gallery) localStorage.setItem('wps_gallery_html', decodedData.gallery);
+                    if (decodedData.media) localStorage.setItem('wps_latest_media_html', decodedData.media);
+                    if (decodedData.rosters) {
+                        schoolRosters = decodedData.rosters;
+                        localStorage.setItem('wps_school_rosters', JSON.stringify(schoolRosters));
+                    }
+                    if (decodedData.primary) {
+                        localStorage.setItem('wps_theme_primary', decodedData.primary);
+                        localStorage.setItem('wps_theme_accent', decodedData.accent);
+                        localStorage.setItem('wps_theme_bg', decodedData.bg);
+                    }
+                    if (decodedData.maintenance !== undefined) {
+                        localStorage.setItem('wps_maintenance_mode', decodedData.maintenance);
+                    }
+                    loadPersistedPortalData();
+                }
+            } catch (e) {
+                console.log("Cloud sync check error:", e);
+            }
+        }
+
+        function checkMaintenanceStatus() {
+            var isMaintenance = localStorage.getItem('wps_maintenance_mode') === 'true';
+            var toggle = document.getElementById('maintenanceToggle');
+            if (toggle) toggle.checked = isMaintenance;
+
+            if (isMaintenance && currentLoggedInUser !== "" && currentLoggedInUser !== "head@wps.com") {
+                document.getElementById('maintenanceScreen').style.display = 'flex';
+            } else {
+                document.getElementById('maintenanceScreen').style.display = 'none';
+            }
+        }
+
+        function toggleMaintenanceMode() {
+            if (currentLoggedInUser !== "head@wps.com") {
+                alert("Unauthorized! Only head@wps.com can change maintenance settings.");
+                return;
+            }
+            var isChecked = document.getElementById('maintenanceToggle').checked;
+            localStorage.setItem('wps_maintenance_mode', isChecked);
+            pushDataToCloud();
+            if (isChecked) {
+                alert("Maintenance mode ENABLED! All teachers will now see a maintenance lockout screen.");
+            } else {
+                alert("Maintenance mode DISABLED! Teachers can now access the portal normally.");
+            }
+        }
+
+        function syncCloudUpdates() {
+            checkUrlHashSync();
+            loadPersistedPortalData();
+            checkMaintenanceStatus();
+            updateDashboardStats();
+            var isMaintenance = localStorage.getItem('wps_maintenance_mode') === 'true';
+            if (!isMaintenance || currentLoggedInUser === "head@wps.com") {
+                showAnnouncementPopup();
+            }
+            alert("Portal successfully synced! Latest student rosters, announcements, and updates are now loaded.");
+        }
+
+        function handleLogin() {
+            var emailInput = document.getElementById('email').value.trim().toLowerCase();
+            var passInput = document.getElementById('password').value.trim();
+
+            var validUsers = [
+                { user: "head@wps.com", pass: "8303" },
+                { user: "lowerp@wps.com", pass: "2026" },
+                { user: "prince@wps.com", pass: "7309" },
+                { user: "queenmarga@wps.com", pass: "7766" },
+                { user: "naalorriet@wps.com", pass: "9786" },
+                { user: "priscy@wps.com", pass: "3247" }
+            ];
+
+            var matched = validUsers.find(u => u.user === emailInput && u.pass === passInput);
+
+            if (!matched && emailInput.includes("@wps.com") && passInput !== "") {
+                matched = { user: emailInput, pass: passInput };
+            }
+
+            if (!matched) {
+                alert("Invalid Email or Password! Please check your credentials.");
+                return;
+            }
+
+            currentLoggedInUser = matched.user;
+            
+            var isMaintenance = localStorage.getItem('wps_maintenance_mode') === 'true';
+            if (isMaintenance && currentLoggedInUser !== "head@wps.com") {
+                document.getElementById('maintenanceScreen').style.display = 'flex';
+                return;
+            }
+
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('dashboardScreen').style.display = 'flex';
+            document.getElementById('userDisplay').innerText = "Logged in: " + currentLoggedInUser;
+            
+            updateAdminRestrictions();
+            updateDashboardStats();
+            loadClassStudents();
+            checkAdminAccess();
+            
+            showAnnouncementPopup();
+        }
+
+        function updateAdminRestrictions() {
+            var navAdm = document.getElementById('navAdmission');
+            var navStu = document.getElementById('navManageStudents');
+            var badgeAdm = document.getElementById('badgeAdmission');
+            var badgeStu = document.getElementById('badgeStudents');
+
+            if (currentLoggedInUser === "head@wps.com") {
+                if (navAdm) navAdm.style.display = "block";
+                if (navStu) navStu.style.display = "block";
+                if (badgeAdm) badgeAdm.style.display = "block";
+                if (badgeStu) badgeStu.style.display = "block";
+            } else {
+                if (navAdm) navAdm.style.display = "none";
+                if (navStu) navStu.style.display = "none";
+                if (badgeAdm) badgeAdm.style.display = "none";
+                if (badgeStu) badgeStu.style.display = "none";
+            }
+        }
+
+        function showAnnouncementPopup() {
+            var storedNotice = localStorage.getItem('wps_latest_notice') || "Welcome back to a new term at Wesley Prep (Assorko - Essaman). Please ensure continuous assessment scores are synced before the deadline.";
+            var storedMediaHTML = localStorage.getItem('wps_latest_media_html') || "";
+
+            document.getElementById('modalAnnouncementText').innerHTML = `<b>Notice:</b> ${storedNotice}`;
+            document.getElementById('modalMediaContainer').innerHTML = storedMediaHTML;
+            document.getElementById('announcementModal').style.display = 'flex';
+        }
+
+        function dismissAnnouncement() {
+            document.getElementById('announcementModal').style.display = 'none';
+        }
+
+        function signOut() {
+            if (confirm("Are you sure you want to sign out?")) {
+                currentLoggedInUser = "";
+                document.getElementById('maintenanceScreen').style.display = 'none';
+                document.getElementById('dashboardScreen').style.display = 'none';
+                document.getElementById('loginScreen').style.display = 'flex';
+                document.getElementById('email').value = "";
+                document.getElementById('password').value = "";
+                document.getElementById('userDisplay').innerText = "Not Logged In";
+            }
+        }
+
+        function switchTab(tabName) {
+            if ((tabName === 'admission' || tabName === 'students') && currentLoggedInUser !== "head@wps.com") {
+                alert("Access Denied! Only the Headteacher / Administrator can register students and make admissions.");
+                return;
+            }
+
+            document.querySelectorAll('.panel-view').forEach(panel => panel.classList.remove('active'));
+            if (tabName === 'home') {
+                document.getElementById('panel-home').classList.add('active');
+                updateDashboardStats();
+            } else if (tabName === 'admission') {
+                document.getElementById('panel-admission').classList.add('active');
+            } else if (tabName === 'admin-upload') {
+                document.getElementById('panel-admin-upload').classList.add('active');
+                checkAdminAccess();
+            } else if (tabName === 'season-theme') {
+                document.getElementById('panel-season-theme').classList.add('active');
+            } else if (tabName === 'assessment') {
+                document.getElementById('panel-assessment').classList.add('active');
+            } else if (tabName === 'students') {
+                document.getElementById('panel-students').classList.add('active');
+                loadClassStudents();
+            }
+        }
+
+        function checkAdminAccess() {
+            var lockMsg = document.getElementById('adminLockMessage');
+            var formContent = document.getElementById('adminFormContent');
+            var navTheme = document.getElementById('navSeasonTheme');
+            var badgeTheme = document.getElementById('badgeThemeEditor');
+
+            if (currentLoggedInUser !== "head@wps.com") {
+                lockMsg.style.display = "block";
+                formContent.style.display = "none";
+                if (navTheme) navTheme.style.display = "none";
+                if (badgeTheme) badgeTheme.style.display = "none";
+            } else {
+                lockMsg.style.display = "none";
+                formContent.style.display = "block";
+                if (navTheme) navTheme.style.display = "block";
+                if (badgeTheme) badgeTheme.style.display = "block";
+            }
+        }
+
+        function applyPresetTheme() {
+            var preset = document.getElementById('presetTheme').value;
+            var primary = document.getElementById('customPrimaryColor');
+            var accent = document.getElementById('customAccentColor');
+            var bg = document.getElementById('customBgColor');
+
+            if (preset === 'christmas') {
+                primary.value = '#1b4d3e';
+                accent.value = '#d4af37';
+                bg.value = '#f4f9f5';
+            } else if (preset === 'easter') {
+                primary.value = '#512b58';
+                accent.value = '#e4a11b';
+                bg.value = '#fcf8f2';
+            } else if (preset === 'independence') {
+                primary.value = '#b31924';
+                accent.value = '#006b3f';
+                bg.value = '#fef9e7';
+            } else {
+                primary.value = '#0a2540';
+                accent.value = '#b31924';
+                bg.value = '#fbf9f4';
+            }
+        }
+
+        function saveCustomTheme() {
+            if (currentLoggedInUser !== "head@wps.com") {
+                alert("Unauthorized! Only head@wps.com can change portal themes.");
+                return;
+            }
+            var primary = document.getElementById('customPrimaryColor').value;
+            var accent = document.getElementById('customAccentColor').value;
+            var bg = document.getElementById('customBgColor').value;
+
+            localStorage.setItem('wps_theme_primary', primary);
+            localStorage.setItem('wps_theme_accent', accent);
+            localStorage.setItem('wps_theme_bg', bg);
+
+            applyThemeValues(primary, accent, bg);
+            pushDataToCloud();
+            alert("Portal seasonal theme successfully updated and synced!");
+        }
+
+        function applyThemeValues(primary, accent, bg) {
+            document.documentElement.style.setProperty('--primary-color', primary);
+            document.documentElement.style.setProperty('--accent-color', accent);
+            document.documentElement.style.setProperty('--bg-color', bg);
+        }
+
+        function publishMediaFiles() {
+            if (currentLoggedInUser !== "head@wps.com") {
+                alert("Unauthorized action! Only head@wps.com can upload materials.");
+                return;
+            }
+
+            var mediaInput = document.getElementById('infoMediaFiles');
+            var noticeText = document.getElementById('infoAnnouncement').value.trim();
+
+            if (noticeText !== "") {
+                localStorage.setItem('wps_latest_notice', noticeText);
+                document.getElementById('noticeBoardDisplay').innerHTML = `<b>Latest Notice:</b> ${noticeText}`;
+            }
+
+            if (mediaInput.files && mediaInput.files.length > 0) {
+                var galleryGrid = document.getElementById('dynamicGalleryGrid');
+                var modalMediaHTML = "";
+                var filesProcessed = 0;
+                var totalFiles = mediaInput.files.length;
+
+                for (var i = 0; i < totalFiles; i++) {
+                    let file = mediaInput.files[i];
+                    let reader = new FileReader();
+                    
+                    reader.onload = (function(f) {
+                        return function(e) {
+                            var itemDiv = document.createElement('div');
+                            itemDiv.className = 'gallery-item';
+                            
+                            if (f.type.startsWith('video/')) {
+                                itemDiv.innerHTML = `<video src="${e.target.result}" class="gallery-video" controls></video><div style="font-size: 12px; font-weight: bold; margin-top: 5px; color: var(--primary-color);">${f.name}</div>`;
+                                modalMediaHTML += `<video src="${e.target.result}" class="modal-media-preview" controls></video>`;
+                            } else {
+                                itemDiv.innerHTML = `<img src="${e.target.result}" class="gallery-img"><div style="font-size: 12px; font-weight: bold; margin-top: 5px; color: var(--primary-color);">${f.name}</div>`;
+                                modalMediaHTML += `<img src="${e.target.result}" class="modal-media-preview">`;
+                            }
+                            
+                            galleryGrid.appendChild(itemDiv);
+                            filesProcessed++;
+
+                            if (filesProcessed === totalFiles) {
+                                localStorage.setItem('wps_gallery_html', galleryGrid.innerHTML);
+                                localStorage.setItem('wps_latest_media_html', modalMediaHTML);
+                                pushDataToCloud();
+                                alert("Photos and videos successfully published and synced across all devices!");
+                            }
+                        };
+                    })(file);
+                    
+                    reader.readAsDataURL(file);
+                }
+
+                document.getElementById('infoMediaFiles').value = "";
+                document.getElementById('infoAnnouncement').value = "";
+            } else {
+                if (noticeText !== "") {
+                    localStorage.setItem('wps_latest_notice', noticeText);
+                    pushDataToCloud();
+                    alert("Notice board announcement successfully published and synced!");
+                } else {
+                    alert("Please select files or enter an announcement before publishing.");
+                }
+            }
+        }
+
+        function pushDataToCloud() {
+            try {
+                var payload = {
+                    notice: localStorage.getItem('wps_latest_notice') || "",
+                    gallery: localStorage.getItem('wps_gallery_html') || "",
+                    media: localStorage.getItem('wps_latest_media_html') || "",
+                    rosters: schoolRosters,
+                    primary: localStorage.getItem('wps_theme_primary') || "",
+                    accent: localStorage.getItem('wps_theme_accent') || "",
+                    bg: localStorage.getItem('wps_theme_bg') || "",
+                    maintenance: localStorage.getItem('wps_maintenance_mode') || "false"
+                };
+                var encoded = btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
+                window.location.hash = encoded;
+            } catch (err) {
+                console.log("Cloud push skipped.");
+            }
+        }
+
+        function loadPersistedPortalData() {
+            var savedRosters = localStorage.getItem('wps_school_rosters');
+            if (savedRosters) {
+                try {
+                    schoolRosters = JSON.parse(savedRosters);
+                } catch(e) {}
+            }
+
+            var savedNotice = localStorage.getItem('wps_latest_notice');
+            if (savedNotice) {
+                document.getElementById('noticeBoardDisplay').innerHTML = `<b>Latest Notice:</b> ${savedNotice}`;
+            }
+
+            var savedGallery = localStorage.getItem('wps_gallery_html');
+            if (savedGallery) {
+                document.getElementById('dynamicGalleryGrid').innerHTML = savedGallery;
+            }
+
+            var pColor = localStorage.getItem('wps_theme_primary');
+            var aColor = localStorage.getItem('wps_theme_accent');
+            var bColor = localStorage.getItem('wps_theme_bg');
+            if (pColor && aColor && bColor) {
+                applyThemeValues(pColor, aColor, bColor);
+                document.getElementById('customPrimaryColor').value = pColor;
+                document.getElementById('customAccentColor').value = aColor;
+                document.getElementById('customBgColor').value = bColor;
+            }
+
+            var isMaintenance = localStorage.getItem('wps_maintenance_mode') === 'true';
+            var toggle = document.getElementById('maintenanceToggle');
+            if (toggle) toggle.checked = isMaintenance;
+        }
+
+        function submitAdmission(e) {
+            e.preventDefault();
+            if (currentLoggedInUser !== "head@wps.com") {
+                alert("Access Denied! Only the Admin can make admissions.");
+                return;
+            }
+
+            var name = document.getElementById('admFullName').value.trim().toUpperCase();
+            var className = document.getElementById('admClass').value;
+            var gender = document.getElementById('admGender').value;
+            var dob = document.getElementById('admDob').value;
+
+            var randomId = "250" + Math.floor(10000000 + Math.random() * 90000000);
+            var todayStr = new Date().toISOString().split('T')[0];
+
+            if (!schoolRosters[className]) schoolRosters[className] = [];
+
+            schoolRosters[className].push({
+                id: randomId,
+                name: name,
+                gender: gender,
+                dob: dob,
+                entryDate: todayStr,
+                attendance: "70/70",
+                conduct: "Good"
+            });
+
+            localStorage.setItem('wps_school_rosters', JSON.stringify(schoolRosters));
+            pushDataToCloud();
+
+            alert(`Admission Successful! ${name} has been officially enrolled into ${className} with ID: ${randomId} and synced to the cloud.`);
+            document.getElementById('admissionForm').reset();
+            updateDashboardStats();
+            switchTab('students');
+        }
+
+        function updateDashboardStats() {
+            var totalCount = 0;
+            var maleCount = 0;
+            var femaleCount = 0;
+            Object.values(schoolRosters).forEach(list => {
+                totalCount += list.length;
+                list.forEach(s => {
+                    if (s.gender === "MALE") maleCount++;
+                    else if (s.gender === "FEMALE") femaleCount++;
+                });
+            });
+
+            document.getElementById('statTotalStudents').innerText = totalCount;
+            document.getElementById('statMale').innerText = maleCount;
+            document.getElementById('statFemale').innerText = femaleCount;
+            document.getElementById('statBasic1').innerText = (schoolRosters["Basic 1"] ? schoolRosters["Basic 1"].length : 0);
+
+            var malePct = totalCount > 0 ? Math.round((maleCount / totalCount) * 100) : 0;
+            var femalePct = totalCount > 0 ? (100 - malePct) : 0;
+            document.getElementById('pctMale').innerText = malePct + "%";
+            document.getElementById('pctFemale').innerText = femalePct + "%";
+
+            drawPieChart(malePct, femalePct);
+        }
+
+        function drawPieChart(malePct, femalePct) {
+            var canvas = document.getElementById('genderPieChart');
+            if (!canvas.getContext) return;
+            var ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            if (malePct === 0 && femalePct === 0) return;
+
+            var centerX = canvas.width / 2;
+            var centerY = canvas.height / 2;
+            var radius = 45;
+
+            var maleAngle = (malePct / 100) * 2 * Math.PI;
+
+            ctx.beginPath();
+            ctx.moveTo(centerX, centerY);
+            ctx.arc(centerX, centerY, radius, 0, maleAngle);
+            ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--primary-color') || '#0a2540';
+            ctx.fill();
+
+            ctx.beginPath();
+            ctx.moveTo(centerX, centerY);
+            ctx.arc(centerX, centerY, radius, maleAngle, 2 * Math.PI);
+            ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--accent-color') || '#b31924';
+            ctx.fill();
+        }
+
+        function applyFilter() {
+            var selectedClass = document.getElementById('filterClassSelect').value;
+            var mode = document.getElementById('modeSelect').value;
+            var subject = document.getElementById('subSelect').value;
+
+            if (mode.includes("SELECT") || subject.includes("SELECT")) {
+                alert("Please select both a valid Assessment Mode and Subject before filtering.");
+                return;
+            }
+
+            document.getElementById('resultsSection').style.display = 'block';
+            renderAssessmentTable(selectedClass);
+        }
+
+        function setGenderSort(mode) {
+            currentGenderSortMode = mode;
+            var selectedClass = document.getElementById('filterClassSelect').value;
+            renderAssessmentTable(selectedClass);
+        }
+
+        function renderAssessmentTable(className, filterQuery = "") {
+            var students = [...(schoolRosters[className] || [])];
+            var tbody = document.getElementById('assessmentTableBody');
+            tbody.innerHTML = "";
+
+            var subKey = document.getElementById('subSelect').value + "_" + document.getElementById('modeSelect').value + "_" + className;
+            
+            if (currentGenderSortMode === 'up') {
+                students.sort((a, b) => (a.gender === 'MALE' ? -1 : 1));
+            } else if (currentGenderSortMode === 'down') {
+                students.sort((a, b) => (a.gender === 'FEMALE' ? -1 : 1));
+            }
+
+            var filteredStudents = students.filter(s => s.name.toLowerCase().includes(filterQuery.toLowerCase()));
+
+            document.getElementById('totalStudentsText').innerText = "TOTAL NUMBER OF STUDENTS: " + filteredStudents.length + "/" + students.length;
+
+            if (filteredStudents.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:#777;">No students registered in ${className} yet. Only Admin can add students via Online Admission.</td></tr>`;
+                return;
+            }
+
+            filteredStudents.forEach((student) => {
+                var currentScore = (savedScores[subKey] && savedScores[subKey][student.id] !== undefined) ? savedScores[subKey][student.id] : "";
+                var row = `<tr>
+                    <td><input type="number" class="score-input" data-id="${student.id}" value="${currentScore}" placeholder="0"></td>
+                    <td>${student.id}</td>
+                    <td><b>${student.name}</b></td>
+                    <td>${student.gender}</td>
+                    <td>${student.dob}</td>
+                    <td>Att: ${student.attendance} | Cond: ${student.conduct}</td>
+                    <td><button onclick="printStudentReport('${student.id}', '${student.name}', '${className}', '${student.attendance}', '${student.conduct}')" style="background:var(--primary-color); color:white; border:none; padding:5px 10px; border-radius:3px; cursor:pointer; font-size:11px;">Print Report</button></td>
+                </tr>`;
+                tbody.innerHTML += row;
+            });
+        }
+
+        function filterStudentTable() {
+            var query = document.getElementById('studentSearchBox').value;
+            var className = document.getElementById('filterClassSelect').value;
+            renderAssessmentTable(className, query);
+        }
+
+        function refreshStudentScores() {
+            var className = document.getElementById('filterClassSelect').value;
+            var subKey = document.getElementById('subSelect').value + "_" + document.getElementById('modeSelect').value + "_" + className;
+
+            var inputs = document.querySelectorAll('.score-input');
+            if (!savedScores[subKey]) savedScores[subKey] = {};
+            inputs.forEach(input => {
+                var id = input.getAttribute('data-id');
+                savedScores[subKey][id] = input.value;
+            });
+
+            renderAssessmentTable(className);
+            alert("Table refreshed successfully! All typed marks for each student are loaded.");
+        }
+
+        function submitAssessmentData() {
+            var className = document.getElementById('filterClassSelect').value;
+            var subKey = document.getElementById('subSelect').value + "_" + document.getElementById('modeSelect').value + "_" + className;
+            var inputs = document.querySelectorAll('.score-input');
+            
+            if (!savedScores[subKey]) savedScores[subKey] = {};
+            inputs.forEach(input => {
+                var id = input.getAttribute('data-id');
+                savedScores[subKey][id] = input.value;
+            });
+
+            alert("Assessment saved successfully! Opening Google Form to sync data to your master sheet...");
+            window.open(googleFormUrl, '_blank');
+        }
+
+        function downloadDatasetCSV() {
+            var className = document.getElementById('filterClassSelect').value;
+            var students = schoolRosters[className] || [];
+            var csvContent = "data:text/csv;charset=utf-8,ASST_REF.ID,CANDIDATE_NAME,GENDER,DOB,ATTENDANCE,CONDUCT\n";
+            
+            students.forEach(s => {
+                csvContent += `${s.id},"${s.name}",${s.gender},${s.dob},${s.attendance},${s.conduct}\n`;
+            });
+
+            var encodedUri = encodeURI(csvContent);
+            var link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `WPS_${className}_Assessment_Roster.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function changeOverallScorePrompt() {
+            var newScore = prompt("Enter new overall score maximum:", document.getElementById('overallScoreInput').value);
+            if (newScore !== null && newScore.trim() !== "") {
+                document.getElementById('overallScoreInput').value = newScore;
+                alert("Overall score limit successfully changed to " + newScore);
+            }
+        }
+
+        function printStudentReport(studentId, studentName, className, attendance, conduct) {
+            var year = document.getElementById('yearSelect').value;
+            var semester = document.getElementById('semSelect').value;
+            var subject = document.getElementById('subSelect').value;
+            var subKey = subject + "_" + document.getElementById('modeSelect').value + "_" + className;
+            var scoreObtained = (savedScores[subKey] && savedScores[subKey][studentId] !== undefined) ? savedScores[subKey][studentId] : "N/A";
+            
+            var reportWindow = window.open('', '_blank');
+            reportWindow.document.write(`
+                <html>
+                <head>
+                    <title>Report Card - ${studentName}</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; padding: 30px; color: #333; }
+                        .header { text-align: center; border-bottom: 2px solid #0a2540; padding-bottom: 15px; margin-bottom: 20px; }
+                        .school-title { font-size: 20px; font-weight: bold; color: #0a2540; }
+                        .sub-title { font-size: 13px; color: #666; margin-top: 4px; }
+                        .student-info { margin-bottom: 20px; font-size: 14px; background: #fbf9f4; padding: 12px; border: 1px solid #dcd5c0; border-radius: 5px; }
+                        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+                        th, td { border: 1px solid #ccc; padding: 10px; text-align: left; font-size: 13px; }
+                        th { background-color: #0a2540; color: white; }
+                        .footer { margin-top: 40px; display: flex; justify-content: space-between; font-size: 13px; }
+                    </style>
+                </head>
+                <body>
+                    <div class="header">
+                        <div class="school-title">WESLEY PREPARATORY SCHOOL (ASSORKO - ESSAMAN)</div>
+                        <div class="sub-title">Official Student Term Assessment & Conduct Report Card</div>
+                    </div>
+                    <div class="student-info">
+                        <b>Student Name:</b> ${studentName} &nbsp;&nbsp;|&nbsp;&nbsp; <b>ID Ref:</b> ${studentId}<br>
+                        <b>Class:</b> ${className} &nbsp;&nbsp;|&nbsp;&nbsp; <b>Academic Year:</b> ${year} &nbsp;&nbsp;|&nbsp;&nbsp; <b>Term:</b> ${semester}<br>
+                        <b>Attendance:</b> ${attendance} &nbsp;&nbsp;|&nbsp;&nbsp; <b>Conduct:</b> ${conduct}
+                    </div>
+                    <table>
+                        <tr>
+                            <th>Subject Assessed</th>
+                            <th>Assessment Mode</th>
+                            <th>Score Obtained</th>
+                            <th>Overall Max</th>
+                        </tr>
+                        <tr>
+                            <td>${subject !== "**SELECT SUBJECT**" ? subject : "General Assessment"}</td>
+                            <td>${document.getElementById('modeSelect').value}</td>
+                            <td><b>${scoreObtained}</b></td>
+                            <td>${document.getElementById('overallScoreInput').value}</td>
+                        </tr>
+                    </table>
+                    <div class="footer">
+                        <div>Headteacher Signature: ______________________</div>
+                        <div>Date Issued: ${new Date().toISOString().split('T')[0]}</div>
+                    </div>
+                    <script>window.print();<\/script>
+                </body>
+                </html>
+            `);
+            reportWindow.document.close();
+        }
+
+        function loadClassStudents() {
+            var selectedClass = document.getElementById('adminClassSelect').value;
+            var students = schoolRosters[selectedClass] || [];
+            var tbody = document.getElementById('studentTableBody');
+            tbody.innerHTML = "";
+
+            if (students.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#777;">No students registered for ${selectedClass} yet.</td></tr>`;
+                return;
+            }
+
+            students.forEach((student, index) => {
+                var row = `<tr>
+                    <td>${index + 1}</td>
+                    <td>${student.id}</td>
+                    <td><b>${student.name}</b></td>
+                    <td>${student.gender}</td>
+                    <td>${student.dob}</td>
+                    <td><button onclick="removeStudent('${selectedClass}', ${index})" style="background:var(--accent-color); color:white; border:none; padding:4px 8px; border-radius:3px; cursor:pointer;">Remove</button></td>
+                </tr>`;
+                tbody.innerHTML += row;
+            });
+        }
+
+        function addStudent() {
+            if (currentLoggedInUser !== "head@wps.com") {
+                alert("Access Denied! Only the Admin can add students.");
+                return;
+            }
+
+            var selectedClass = document.getElementById('adminClassSelect').value;
+            var nameInput = document.getElementById('newStudentName');
+            var genderInput = document.getElementById('newStudentGender').value;
+            var dobInput = document.getElementById('newStudentDob').value;
+            var studentName = nameInput.value.trim().toUpperCase();
+
+            if (!studentName) {
+                alert("Please enter a valid student full name.");
+                return;
+            }
+
+            if (!schoolRosters[selectedClass]) {
+                schoolRosters[selectedClass] = [];
+            }
+
+            var randomId = "250" + Math.floor(10000000 + Math.random() * 90000000);
+            var todayStr = new Date().toISOString().split('T')[0];
+
+            schoolRosters[selectedClass].push({
+                id: randomId,
+                name: studentName,
+                gender: genderInput,
+                dob: dobInput,
+                entryDate: todayStr,
+                attendance: "70/70",
+                conduct: "Good"
+            });
+
+            localStorage.setItem('wps_school_rosters', JSON.stringify(schoolRosters));
+            pushDataToCloud();
+
+            nameInput.value = "";
+            loadClassStudents();
+            updateDashboardStats();
+            alert(studentName + " successfully added to " + selectedClass + " and synced!");
+        }
+
+        function removeStudent(className, index) {
+            if (currentLoggedInUser !== "head@wps.com") {
+                alert("Access Denied! Only the Admin can remove students.");
+                return;
+            }
+
+            if (confirm("Are you sure you want to remove this student?")) {
+                schoolRosters[className].splice(index, 1);
+                localStorage.setItem('wps_school_rosters', JSON.stringify(schoolRosters));
+                pushDataToCloud();
+                loadClassStudents();
+                updateDashboardStats();
+            }
+        }
+    </script>
+
+</body>
+</html>
