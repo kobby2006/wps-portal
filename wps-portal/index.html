@@ -943,7 +943,7 @@
                             </div>
                         </div>
                         <div style="margin-top: 10px;">
-                            <button class="btn-filter" style="background: var(--accent-color);" onclick="addStudent()">+ Add Student to Cloud</button>
+                            <button type="button" class="btn-filter" style="background: var(--accent-color);" onclick="addStudent()">+ Add Student to Cloud</button>
                         </div>
                         <h4 style="color: #333; margin-top: 20px;">Enrolled Students Roster</h4>
                         <table class="roster-table">
@@ -1028,10 +1028,10 @@
             loadPersistedPortalData();
             checkMaintenanceStatus();
             
-            if (typeof loadCloudStudentsFromFirebase === 'function') loadCloudStudentsFromFirebase();
-            if (typeof loadAnnouncements === 'function') loadAnnouncements();
-            if (typeof loadTeacherPhotos === 'function') loadTeacherPhotos();
-            if (typeof loadCloudScores === 'function') loadCloudScores();
+            if (typeof window.loadCloudStudentsFromFirebase === 'function') window.loadCloudStudentsFromFirebase();
+            if (typeof window.loadAnnouncements === 'function') window.loadAnnouncements();
+            if (typeof window.loadTeacherPhotos === 'function') window.loadTeacherPhotos();
+            if (typeof window.loadCloudScores === 'function') window.loadCloudScores();
 
             var isMaintenance = localStorage.getItem('wps_maintenance_mode') === 'true';
             if (!isMaintenance || currentLoggedInUser === "head@wps.com") {
@@ -1073,8 +1073,8 @@
             updateAdminRestrictions();
             checkAdminAccess();
             
-            if (typeof loadCloudStudentsFromFirebase === 'function') loadCloudStudentsFromFirebase();
-            if (typeof loadCloudScores === 'function') loadCloudScores();
+            if (typeof window.loadCloudStudentsFromFirebase === 'function') window.loadCloudStudentsFromFirebase();
+            if (typeof window.loadCloudScores === 'function') window.loadCloudScores();
 
             showAnnouncementPopup();
         }
@@ -1136,7 +1136,7 @@
                 checkAdminAccess();
             } else if (tabName === 'teacher-photos') {
                 document.getElementById('panel-teacher-photos').classList.add('active');
-                if (typeof loadTeacherPhotos === 'function') loadTeacherPhotos();
+                if (typeof window.loadTeacherPhotos === 'function') window.loadTeacherPhotos();
             } else if (tabName === 'season-theme') {
                 document.getElementById('panel-season-theme').classList.add('active');
             } else if (tabName === 'assessment') {
@@ -1283,8 +1283,8 @@
                 alert("Access Denied! Only Admin can make admissions.");
                 return;
             }
-            if (typeof addStudentToFirebase === 'function') {
-                addStudentToFirebase();
+            if (typeof window.addStudentToFirebase === 'function') {
+                window.addStudentToFirebase();
             }
         }
 
@@ -1293,8 +1293,8 @@
                 alert("Access Denied! Only Admin can add students.");
                 return;
             }
-            if (typeof addStudentToFirebase === 'function') {
-                addStudentToFirebase();
+            if (typeof window.addStudentToFirebase === 'function') {
+                window.addStudentToFirebase();
             }
         }
 
@@ -1510,10 +1510,10 @@
       import { collection, addDoc, getDocs, doc, setDoc, deleteDoc, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
       window.addStudentToFirebase = async function() {
-          const nameInput = document.getElementById('admFullName') || document.getElementById('newStudentName');
-          const classSelect = document.getElementById('admClass') || document.getElementById('adminClassSelect');
-          const genderSelect = document.getElementById('admGender') || document.getElementById('newStudentGender');
-          const dobInput = document.getElementById('admDob') || document.getElementById('newStudentDob');
+          const nameInput = document.getElementById('newStudentName') || document.getElementById('admFullName');
+          const classSelect = document.getElementById('adminClassSelect') || document.getElementById('admClass');
+          const genderSelect = document.getElementById('newStudentGender') || document.getElementById('admGender');
+          const dobInput = document.getElementById('newStudentDob') || document.getElementById('admDob');
           
           const name = nameInput ? nameInput.value.trim().toUpperCase() : "";
           const studentClass = classSelect ? classSelect.value : "Basic 1";
@@ -1533,9 +1533,9 @@
                   registeredAt: new Date()
               });
               alert(`Admission Successful! ${name} enrolled into ${studentClass} and saved to cloud.`);
+              if (nameInput) nameInput.value = '';
               if (document.getElementById('admissionForm')) document.getElementById('admissionForm').reset();
-              if (document.getElementById('newStudentName')) document.getElementById('newStudentName').value = '';
-              loadCloudStudentsFromFirebase();
+              window.loadCloudStudentsFromFirebase();
               switchTab('students');
           } catch (error) {
               console.error("Error adding student: ", error);
@@ -1546,14 +1546,11 @@
       window.loadCloudStudentsFromFirebase = async function() {
           try {
               const querySnapshot = await getDocs(collection(db, "students"));
-              cloudStudentsList = [];
+              window.cloudStudentsList = [];
               querySnapshot.forEach((docSnap) => {
-                  cloudStudentsList.push({ id: docSnap.id, ...docSnap.data() });
+                  window.cloudStudentsList.push({ id: docSnap.id, ...docSnap.data() });
               });
               if (typeof loadClassStudents === 'function') loadClassStudents();
-              if (document.getElementById('panel-home')?.classList.contains('active')) {
-                  updateDashboardStatsFromCloud();
-              }
           } catch (error) {
               console.error("Error loading students:", error);
           }
@@ -1564,7 +1561,7 @@
           if (confirm("Are you sure you want to remove this student from the cloud?")) {
               try {
                   await deleteDoc(doc(db, "students", docId));
-                  loadCloudStudentsFromFirebase();
+                  window.loadCloudStudentsFromFirebase();
                   alert("Student removed successfully.");
               } catch (e) {
                   alert("Failed to remove student.");
@@ -1595,12 +1592,12 @@
       window.loadCloudScores = async function() {
           try {
               const querySnapshot = await getDocs(collection(db, "assessment_scores"));
-              cloudScoresData = {};
+              window.cloudScoresData = {};
               querySnapshot.forEach((docSnap) => {
                   let data = docSnap.data();
                   if (data.keyBase && data.studentId) {
-                      if (!cloudScoresData[data.keyBase]) cloudScoresData[data.keyBase] = {};
-                      cloudScoresData[data.keyBase][data.studentId] = data.scores;
+                      if (!window.cloudScoresData[data.keyBase]) window.cloudScoresData[data.keyBase] = {};
+                      window.cloudScoresData[data.keyBase][data.studentId] = data.scores;
                   }
               });
           } catch (error) {
@@ -1637,7 +1634,7 @@
                   });
                   alert("Photo uploaded and synced!");
                   fileInput.value = ""; captionInput.value = "";
-                  loadTeacherPhotos();
+                  window.loadTeacherPhotos();
               } catch (err) { alert("Upload failed."); }
           };
           reader.readAsDataURL(fileInput.files[0]);
@@ -1656,28 +1653,11 @@
           } catch (e) {}
       };
 
-      function updateDashboardStatsFromCloud() {
-          let total = cloudStudentsList.length;
-          let male = cloudStudentsList.filter(s => s.gender === "MALE").length;
-          let female = cloudStudentsList.filter(s => s.gender === "FEMALE").length;
-          let b1 = cloudStudentsList.filter(s => s.class === "Basic 1").length;
-
-          document.getElementById('statTotalStudents').innerText = total;
-          document.getElementById('statMale').innerText = male;
-          document.getElementById('statFemale').innerText = female;
-          document.getElementById('statBasic1').innerText = b1;
-
-          let malePct = total > 0 ? Math.round((male / total) * 100) : 0;
-          let femalePct = total > 0 ? (100 - malePct) : 0;
-          document.getElementById('pctMale').innerText = malePct + "%";
-          document.getElementById('pctFemale').innerText = femalePct + "%";
-      }
-
       window.addEventListener('DOMContentLoaded', () => {
-          loadCloudStudentsFromFirebase();
-          loadCloudScores();
-          loadAnnouncements();
-          loadTeacherPhotos();
+          window.loadCloudStudentsFromFirebase();
+          window.loadCloudScores();
+          window.loadAnnouncements();
+          window.loadTeacherPhotos();
       });
     </script>
 </body>
