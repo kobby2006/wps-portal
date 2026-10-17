@@ -302,10 +302,23 @@
         }
     </script>
 
-    <!-- FIREBASE CLOUD SYNC MODULE -->
+    <!-- FIREBASE CLOUD SYNC MODULE (EMBEDDED CONFIG) -->
     <script type="module">
-        import { db } from './firebase.js';
-        import { collection, addDoc, getDocs, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+          apiKey: "AIzaSyAgB-npNhw-e6JtQo03wB4G86ZFnnXm8cA",
+          authDomain: "wps-gh.firebaseapp.com",
+          projectId: "wps-gh",
+          storageBucket: "wps-gh.firebasestorage.app",
+          messagingSenderId: "442533477217",
+          appId: "1:442533477217:web:65a408746cc2241bda2320",
+          measurementId: "G-4LRS0F2BSV"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
 
         window.promptAddStudent = async function() {
             var name = prompt("Enter Student Full Name:");
