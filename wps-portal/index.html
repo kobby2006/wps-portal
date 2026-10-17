@@ -25,56 +25,61 @@
         .top-header {
             background-color: var(--primary-color);
             color: #fbf9f4;
-            padding: 10px 20px;
+            padding: 10px 15px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             border-bottom: 3px solid var(--accent-color);
             flex-wrap: wrap;
-            gap: 10px;
+            gap: 8px;
+            font-size: 12px;
         }
-        .header-brand { display: flex; align-items: center; gap: 12px; }
-        .school-badge { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid #fff; background: #fff; }
-        .top-header h2 { margin: 0; font-size: 14px; font-weight: 600; }
-        .header-right { display: flex; align-items: center; gap: 8px; }
-        .user-info { font-size: 11px; background: rgba(255,255,255,0.15); padding: 4px 8px; border-radius: 4px; }
-        .btn-signout { background-color: var(--accent-color); color: white; border: none; padding: 5px 10px; border-radius: 4px; font-weight: 600; font-size: 11px; cursor: pointer; }
+        .top-header h2 { margin: 0; font-size: 12px; font-weight: 600; }
+        .header-right { display: flex; align-items: center; gap: 6px; }
+        .user-info { font-size: 10px; background: rgba(255,255,255,0.15); padding: 3px 6px; border-radius: 4px; }
+        .btn-signout { background-color: var(--accent-color); color: white; border: none; padding: 4px 8px; border-radius: 4px; font-weight: 600; font-size: 10px; cursor: pointer; }
         
         .workspace { display: flex; flex: 1; width: 100%; box-sizing: border-box; }
-        .sidebar { width: 220px; background-color: var(--card-bg); border-right: 1px solid #e0dcd0; padding-top: 15px; flex-shrink: 0; }
-        .nav-link { display: block; padding: 12px 15px; color: var(--primary-color); text-decoration: none; font-size: 12px; font-weight: 600; cursor: pointer; border-left: 3px solid transparent; }
+        .sidebar { width: 210px; background-color: var(--card-bg); border-right: 1px solid #e0dcd0; padding-top: 10px; flex-shrink: 0; }
+        .nav-link { display: block; padding: 10px 12px; color: var(--primary-color); text-decoration: none; font-size: 11px; font-weight: 600; cursor: pointer; border-left: 3px solid transparent; }
         .nav-link:hover { background-color: #f0ebd8; border-left-color: var(--accent-color); }
-        .content-area { flex: 1; padding: 15px; background-color: var(--bg-color); min-width: 0; }
+        .content-area { flex: 1; padding: 12px; background-color: var(--bg-color); min-width: 0; }
         
-        #loginScreen { display: flex; justify-content: center; align-items: center; flex: 1; padding: 20px; }
-        .login-card { background: var(--card-bg); padding: 25px; width: 100%; max-width: 380px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-top: 5px solid var(--primary-color); }
-        .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; font-size: 12px; font-weight: 600; color: #444; margin-bottom: 5px; }
-        .form-group input, .form-group select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; font-size: 13px; }
-        .btn-submit { width: 100%; background: var(--primary-color); color: white; border: none; padding: 11px; font-weight: 600; border-radius: 4px; cursor: pointer; font-size: 13px; }
+        #loginScreen { display: flex; justify-content: center; align-items: center; flex: 1; padding: 15px; }
+        .login-card { background: var(--card-bg); padding: 20px; width: 100%; max-width: 360px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-top: 5px solid var(--primary-color); }
+        .form-group { margin-bottom: 12px; }
+        .form-group label { display: block; font-size: 11px; font-weight: 600; color: #444; margin-bottom: 4px; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; font-size: 12px; }
+        .btn-submit { width: 100%; background: var(--primary-color); color: white; border: none; padding: 10px; font-weight: 600; border-radius: 4px; cursor: pointer; font-size: 12px; }
         .btn-submit:hover { opacity: 0.9; }
 
         .panel-view { display: none; flex: 1; flex-direction: column; }
         .panel-view.active { display: flex; }
-        .capture-container { background: var(--card-bg); padding: 20px; border-radius: 6px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); border-top: 3px solid var(--primary-color); box-sizing: border-box; margin-bottom: 20px; }
-        .roster-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        .roster-table th, .roster-table td { border: 1px solid #dee2e6; padding: 8px; text-align: center; font-size: 11px; }
+        .capture-container { background: var(--card-bg); padding: 15px; border-radius: 6px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); border-top: 3px solid var(--primary-color); box-sizing: border-box; margin-bottom: 15px; }
+        
+        /* Quick Nav Action Grid */
+        .quick-nav-grid { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; background: var(--card-bg); padding: 10px; border-radius: 6px; border: 1px solid #e0dcd0; }
+        .quick-btn { background: #f0ebd8; color: var(--primary-color); border: 1px solid #d4cebe; padding: 6px 10px; border-radius: 4px; font-size: 11px; font-weight: 600; cursor: pointer; text-decoration: none; }
+        .quick-btn:hover { background: var(--primary-color); color: #fff; }
+
+        .roster-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        .roster-table th, .roster-table td { border: 1px solid #dee2e6; padding: 6px; text-align: center; font-size: 10px; }
         .roster-table th { background-color: #f0ebd8; color: var(--primary-color); }
+
+        .footer-text { text-align: center; font-size: 10px; color: #666; padding: 8px 0; }
         
         @media screen and (max-width: 768px) {
             .workspace { flex-direction: column; }
-            .sidebar { width: 100%; display: flex; flex-wrap: wrap; padding: 5px; }
-            .nav-link { padding: 8px 10px; font-size: 11px; border-left: none; }
+            .sidebar { width: 100%; display: flex; flex-wrap: wrap; padding: 4px; }
+            .nav-link { padding: 6px 8px; font-size: 10px; border-left: none; }
         }
     </style>
 </head>
 <body>
     <div class="top-header">
-        <div class="header-brand">
-            <img src="badge.jpg" alt="School Badge" class="school-badge" onerror="this.style.display='none'">
-            <h2>WESLEY PREP (ASSORKO - ESSAMAN)</h2>
-        </div>
+        <h2>0040111 - WESLEY PREPARATORY SCHOOL (ASSORKO - ESSAMAN)</h2>
         <div class="header-right">
+            <button class="btn-submit" style="background:#28a745; padding:3px 6px; font-size:10px; width:auto;" onclick="syncUpdates()">🔄 Sync Updates</button>
             <div class="user-info" id="userDisplay">Not Logged In</div>
             <button class="btn-signout" onclick="signOut()">Sign Out</button>
         </div>
@@ -83,107 +88,63 @@
     <!-- LOGIN SCREEN -->
     <div id="loginScreen">
         <div class="login-card">
-            <h3>Portal Login</h3>
+            <h3 style="margin-top:0;">Portal Login</h3>
+            <p style="font-size: 11px; color: #666; margin-bottom: 12px;">Enter your staff credentials to access the system.</p>
             <div class="form-group">
                 <label>Staff Email</label>
-                <input type="text" id="email" placeholder="head@wps.com or teacher@wps.com">
+                <input type="text" id="email" value="head@wps.com" placeholder="head@wps.com">
             </div>
             <div class="form-group">
                 <label>Password</label>
-                <input type="password" id="password" placeholder="Enter password">
+                <input type="password" id="password" value="8303" placeholder="Enter password">
             </div>
-            <button type="button" class="btn-submit" onclick="handleLogin()">Login to Portal</button>
+            <button type="button" class="btn-submit" onclick="handleLogin()">Login to Dashboard</button>
         </div>
     </div>
 
-    <!-- DASHBOARD SCREEN -->
+    <!-- DASHBOARD & PANELS SCREEN -->
     <div id="dashboardScreen" style="display: none; flex-direction: column; flex: 1;">
+        
+        <!-- Top Action Bar Present Across Panels -->
+        <div style="padding: 10px 15px 0 15px;">
+            <div class="quick-nav-grid">
+                <button class="quick-btn" onclick="switchTab('admission')">📝 Online Admission</button>
+                <button class="quick-btn" onclick="switchTab('photos')">🔒 Admin Upload</button>
+                <button class="quick-btn" onclick="switchTab('theme')">🎨 Theme Editor</button>
+                <button class="quick-btn" onclick="switchTab('students')" id="topNavRegister">👥 Register Students</button>
+                <button class="quick-btn" onclick="switchTab('assessment')">⭐ Capture Assessment</button>
+            </div>
+        </div>
+
         <div class="workspace">
             <div class="sidebar">
-                <a class="nav-link" onclick="switchTab('assessment')">📊 Assessment & Scores</a>
-                <a class="nav-link" onclick="switchTab('students')" id="navManageStudents" style="display:none;">📝 Manage Students</a>
-                <a class="nav-link" onclick="switchTab('admission')">📋 Online Admission</a>
+                <a class="nav-link" onclick="switchTab('admission')">📋 Online Admission Form</a>
+                <a class="nav-link" onclick="switchTab('photos')">🔒 Admin Info & Media Upload</a>
                 <a class="nav-link" onclick="switchTab('theme')">🎨 Theme Editor</a>
-                <a class="nav-link" onclick="switchTab('photos')">📷 Teacher Media</a>
+                <a class="nav-link" onclick="switchTab('students')" id="navManageStudents" style="display:none;">📝 Manage Students (Admin)</a>
+                <a class="nav-link" onclick="switchTab('assessment')">📊 Capture Assessment</a>
+                <a class="nav-link" onclick="syncUpdates()" style="color: #28a745;">🔄 Sync Updates</a>
                 <a class="nav-link" onclick="signOut()" style="color: var(--accent-color);">🚪 Sign Out</a>
             </div>
             <div class="content-area">
                 
-                <!-- 1. ASSESSMENT & SCORES PANEL -->
-                <div id="panel-assessment" class="panel-view active">
+                <!-- 1. ONLINE ADMISSION FORM PANEL -->
+                <div id="panel-admission" class="panel-view active">
                     <div class="capture-container">
-                        <h3>Termly Assessment & SBA Register</h3>
-                        <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 15px; align-items: center;">
-                            <select id="filterClassSelect" style="padding:8px; font-size:12px; border-radius:4px; border:1px solid #ccc;">
-                                <option value="Basic 1">Basic 1</option>
-                                <option value="Basic 2">Basic 2</option>
-                                <option value="Basic 3">Basic 3</option>
-                                <option value="Basic 4" selected>Basic 4</option>
-                                <option value="Basic 5">Basic 5</option>
-                                <option value="Basic 6">Basic 6</option>
-                                <option value="JHS 1">JHS 1</option>
-                            </select>
-                            <button class="btn-submit" style="width: auto; padding: 8px 15px;" onclick="renderAssessmentTable()">Load Register</button>
-                            <button class="btn-submit" style="width: auto; padding: 8px 15px; background: #28a745;" onclick="syncUpdates()">🔄 Sync Cloud Data</button>
-                        </div>
-                        <table class="roster-table">
-                            <thead>
-                                <tr>
-                                    <th>No.</th>
-                                    <th>Student Name</th>
-                                    <th>Class</th>
-                                    <th>Class Score (50%)</th>
-                                    <th>Exams Score (50%)</th>
-                                    <th>Total (100%)</th>
-                                </tr>
-                            </thead>
-                            <tbody id="assessmentTableBody">
-                                <tr><td colspan="6">Click Load Register to view class records</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- 2. MANAGE STUDENTS PANEL (ADMIN ONLY) -->
-                <div id="panel-students" class="panel-view">
-                    <div class="capture-container">
-                        <h3>Student Roster & Cloud Management</h3>
-                        <p style="font-size: 12px; color: #666;">Enroll students directly into the cloud database.</p>
-                        <button type="button" class="btn-submit" style="background: var(--accent-color); margin-bottom: 15px; padding: 12px;" onclick="promptAddStudent()">+ Add Student to Cloud</button>
+                        <h3 style="margin-top:0; color:var(--primary-color);">WESLEY PREPARATORY SCHOOL - OFFICIAL STUDENT ADMISSION FORM</h3>
+                        <p style="font-size: 11px; color: #666;">Fill out the learner details below to enroll a new student directly into the cloud system.</p>
                         
-                        <table class="roster-table">
-                            <thead>
-                                <tr>
-                                    <th>No.</th>
-                                    <th>Ref ID</th>
-                                    <th>Student Full Name</th>
-                                    <th>Class</th>
-                                    <th>Gender</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody id="studentTableBody">
-                                <tr><td colspan="6">Loading roster...</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- 3. ONLINE ADMISSION PANEL -->
-                <div id="panel-admission" class="panel-view">
-                    <div class="capture-container">
-                        <h3>Online Student Admission Portal</h3>
                         <div class="form-group">
-                            <label>Full Student Name</label>
-                            <input type="text" id="admFullName" placeholder="ENTER STUDENT FULL NAME">
+                            <label>Student Full Name</label>
+                            <input type="text" id="admFullName" placeholder="e.g. MENSAH PRINCE">
                         </div>
                         <div class="form-group">
-                            <label>Select Class</label>
+                            <label>Select Class for Admission</label>
                             <select id="admClassSelect">
                                 <option value="Basic 1">Basic 1</option>
                                 <option value="Basic 2">Basic 2</option>
                                 <option value="Basic 3">Basic 3</option>
-                                <option value="Basic 4">Basic 4</option>
+                                <option value="Basic 4" selected>Basic 4</option>
                                 <option value="Basic 5">Basic 5</option>
                                 <option value="Basic 6">Basic 6</option>
                                 <option value="JHS 1">JHS 1</option>
@@ -196,36 +157,210 @@
                                 <option value="FEMALE">FEMALE</option>
                             </select>
                         </div>
-                        <button type="button" class="btn-submit" style="background: var(--accent-color);" onclick="submitOnlineAdmission()">Complete Admission & Save to Cloud</button>
+                        <div class="form-group">
+                            <label>Date of Birth</label>
+                            <input type="date" id="admDob" value="2012-01-01">
+                        </div>
+                        <div class="form-group">
+                            <label>Parent / Guardian Name</label>
+                            <input type="text" id="admParent" placeholder="e.g. Mr. Mensah">
+                        </div>
+                        <div class="form-group">
+                            <label>Contact Phone Number</label>
+                            <input type="text" id="admPhone" placeholder="e.g. 0240000000">
+                        </div>
+                        <div class="form-group">
+                            <label>Residential Address / Hometown</label>
+                            <input type="text" id="admAddress" placeholder="e.g. Assorko - Essaman, Takoradi">
+                        </div>
+                        <button type="button" class="btn-submit" style="background: var(--accent-color);" onclick="submitOnlineAdmission()">Complete Student Admission & Enroll</button>
                     </div>
                 </div>
 
-                <!-- 4. THEME EDITOR PANEL -->
-                <div id="panel-theme" class="panel-view">
-                    <div class="capture-container">
-                        <h3>Portal Theme Customizer</h3>
-                        <div class="form-group">
-                            <label>Primary Header Color</label>
-                            <input type="color" id="primaryColorPicker" value="#0a2540" style="height: 40px; cursor: pointer;" onchange="updateTheme()">
-                        </div>
-                        <div class="form-group">
-                            <label>Accent Highlight Color</label>
-                            <input type="color" id="accentColorPicker" value="#b31924" style="height: 40px; cursor: pointer;" onchange="updateTheme()">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 5. TEACHER MEDIA PANEL -->
+                <!-- 2. ADMIN INFO & MEDIA UPLOAD PANEL -->
                 <div id="panel-photos" class="panel-view">
                     <div class="capture-container">
-                        <h3>Teacher Media & Photo Share</h3>
-                        <p style="font-size: 12px; color: #666;">Upload classroom moments.</p>
-                        <input type="file" id="mediaUploadInput" accept="image/*" style="margin-bottom: 15px; font-size: 12px;">
-                        <button type="button" class="btn-submit" style="width: auto; padding: 8px 15px;" onclick="alert('Photo ready!')">Upload Photo</button>
+                        <h3 style="margin-top:0; color:var(--primary-color);">🔒 ADMIN-ONLY: SCHOOL INFORMATION & MULTIPLE MEDIA UPLOAD</h3>
+                        <p style="font-size: 11px; color: #666;">Select multiple photos or videos to add directly to the main page gallery and update announcements.</p>
+                        
+                        <div class="form-group">
+                            <label>Upload Multiple Photos & Videos</label>
+                            <input type="file" id="mediaUploadInput" multiple accept="image/*,video/*">
+                        </div>
+                        <div class="form-group">
+                            <label>Update Notice Board Announcement</label>
+                            <textarea id="noticeInput" rows="3" placeholder="Enter termly notices for teachers...">Welcome back to a new term at Wesley Prep (Assorko - Essaman). Please ensure continuous assessment scores are synced before the deadline.</textarea>
+                        </div>
+                        <button type="button" class="btn-submit" onclick="alert('Notice board and media parameters saved successfully!')">Publish to Main Page & Cloud</button>
+                    </div>
+                </div>
+
+                <!-- 3. THEME EDITOR PANEL -->
+                <div id="panel-theme" class="panel-view">
+                    <div class="capture-container">
+                        <h3 style="margin-top:0; color:var(--primary-color);">🎨 ADMIN-ONLY: SEASONAL & THEME GENERATOR</h3>
+                        <p style="font-size: 11px; color: #666;">Customize the portal appearance for festive seasons like Christmas, Easter, or special school events.</p>
+                        
+                        <div class="form-group">
+                            <label>Select Festive Preset Theme</label>
+                            <select id="presetTheme" onchange="applyPresetTheme()">
+                                <option value="navy">Default School Theme (Navy & Red)</option>
+                                <option value="christmas">Christmas Theme (Festive Green & Gold)</option>
+                                <option value="easter">Easter Theme (Gold & Royal Purple)</option>
+                                <option value="ghana">Ghana Independence (Red, Gold, Green & Black)</option>
+                            </select>
+                        </div>
+                        <div style="display: flex; gap: 10px;">
+                            <div class="form-group" style="flex:1;">
+                                <label>Main Theme Color</label>
+                                <input type="color" id="primaryColorPicker" value="#0a2540" style="height:35px; cursor:pointer;" onchange="updateTheme()">
+                            </div>
+                            <div class="form-group" style="flex:1;">
+                                <label>Accent / Highlight Color</label>
+                                <input type="color" id="accentColorPicker" value="#b31924" style="height:35px; cursor:pointer;" onchange="updateTheme()">
+                            </div>
+                        </div>
+                        <button type="button" class="btn-submit" style="background: var(--accent-color);" onclick="alert('Theme applied successfully!')">Apply Theme Changes Instantly</button>
+                    </div>
+                </div>
+
+                <!-- 4. MANAGE STUDENTS (CLASS & STUDENT ROSTER) PANEL -->
+                <div id="panel-students" class="panel-view">
+                    <div class="capture-container">
+                        <h3 style="margin-top:0; color:var(--primary-color);">ADMINISTRATION - CLASS & STUDENT ROSTER MANAGEMENT</h3>
+                        
+                        <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px;">
+                            <div class="form-group" style="flex:1; min-width:110px;">
+                                <label>Select Class</label>
+                                <select id="rosterClassSelect">
+                                    <option value="Basic 1">Basic 1</option>
+                                    <option value="Basic 2">Basic 2</option>
+                                    <option value="Basic 3">Basic 3</option>
+                                    <option value="Basic 4" selected>Basic 4</option>
+                                    <option value="Basic 5">Basic 5</option>
+                                    <option value="Basic 6">Basic 6</option>
+                                    <option value="JHS 1">JHS 1</option>
+                                </select>
+                            </div>
+                            <div class="form-group" style="flex:2; min-width:140px;">
+                                <label>Student Full Name</label>
+                                <input type="text" id="rosterFullName" placeholder="e.g. Mensah Prince">
+                            </div>
+                            <div class="form-group" style="flex:1; min-width:90px;">
+                                <label>Gender</label>
+                                <select id="rosterGender">
+                                    <option value="MALE">MALE</option>
+                                    <option value="FEMALE">FEMALE</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button type="button" class="btn-submit" style="background: var(--accent-color); margin-bottom: 12px;" onclick="promptAddStudentToClass()">+ Add Student to Class</button>
+                        
+                        <h4 style="margin: 10px 0 5px 0; font-size:12px;">Enrolled Students Roster</h4>
+                        <table class="roster-table">
+                            <thead>
+                                <tr>
+                                    <th>No.</th>
+                                    <th>ASST_REF.ID</th>
+                                    <th>Student Full Name</th>
+                                    <th>Class</th>
+                                    <th>Gender</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="studentTableBody">
+                                <tr><td colspan="6">Loading cloud roster...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 5. CAPTURE ASSESSMENT PANEL -->
+                <div id="panel-assessment" class="panel-view">
+                    <div class="capture-container">
+                        <h3 style="margin-top:0; color:var(--primary-color);">ASSESSMENT CAPTURE</h3>
+                        
+                        <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px;">
+                            <div class="form-group" style="flex:1; min-width:110px;">
+                                <label>Year</label>
+                                <select id="assessmentYear">
+                                    <option value="2026">2026</option>
+                                    <option value="2025">2025</option>
+                                </select>
+                            </div>
+                            <div class="form-group" style="flex:1; min-width:110px;">
+                                <label>Semester</label>
+                                <select id="assessmentSem">
+                                    <option value="Term 1">Term 1</option>
+                                    <option value="Term 2">Term 2</option>
+                                    <option value="Term 3">Term 3</option>
+                                </select>
+                            </div>
+                            <div class="form-group" style="flex:1; min-width:110px;">
+                                <label>Assessment Mode</label>
+                                <select id="assessmentMode">
+                                    <option value="SBA & Exam">SBA & Exam (50/50)</option>
+                                    <option value="Classwork">Classwork Only</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px;">
+                            <div class="form-group" style="flex:1; min-width:110px;">
+                                <label>Class</label>
+                                <select id="filterClassSelect">
+                                    <option value="Basic 1">Basic 1</option>
+                                    <option value="Basic 2">Basic 2</option>
+                                    <option value="Basic 3">Basic 3</option>
+                                    <option value="Basic 4" selected>Basic 4</option>
+                                    <option value="Basic 5">Basic 5</option>
+                                    <option value="Basic 6">Basic 6</option>
+                                    <option value="JHS 1">JHS 1</option>
+                                </select>
+                            </div>
+                            <div class="form-group" style="flex:1; min-width:130px;">
+                                <label>Subject</label>
+                                <select id="assessmentSubject">
+                                    <option value="Mathematics">Mathematics</option>
+                                    <option value="English Language">English Language</option>
+                                    <option value="Integrated Science">Integrated Science</option>
+                                    <option value="Social Studies">Social Studies</option>
+                                    <option value="Creative Arts">Creative Arts</option>
+                                    <option value="Computing">Computing</option>
+                                    <option value="RME">RME</option>
+                                    <option value="Ghanaian Language">Ghanaian Language</option>
+                                </select>
+                            </div>
+                            <div class="form-group" style="flex:1; min-width:80px;">
+                                <label>Over-all Score</label>
+                                <input type="number" id="assessmentMax" value="100">
+                            </div>
+                        </div>
+
+                        <button type="button" class="btn-submit" style="width: auto; padding: 8px 15px;" onclick="renderAssessmentTable()">&lt;&lt; Filter &gt;&gt;</button>
+                        
+                        <table class="roster-table" style="margin-top: 12px;">
+                            <thead>
+                                <tr>
+                                    <th>No.</th>
+                                    <th>Student Full Name</th>
+                                    <th>Class</th>
+                                    <th>Class Score (50%)</th>
+                                    <th>Exam Score (50%)</th>
+                                    <th>Total (100%)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="assessmentTableBody">
+                                <tr><td colspan="6">Click &lt;&lt;Filter&gt;&gt; to load class assessment records</td></tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
 
             </div>
+        </div>
+        <div class="footer-text">
+            @wps Ghana 2026. All rights reserved | Powered by Kobby Mensah
         </div>
     </div>
 
@@ -241,10 +376,11 @@
                 currentLoggedInUser = email;
                 document.getElementById('loginScreen').style.display = 'none';
                 document.getElementById('dashboardScreen').style.display = 'flex';
-                document.getElementById('userDisplay').innerText = email;
+                document.getElementById('userDisplay').innerText = "Logged in: " + email;
                 
                 if (email === "head@wps.com") {
-                    document.getElementById('navManageStudents').style.display = "block";
+                    var nav = document.getElementById('navManageStudents');
+                    if(nav) nav.style.display = "block";
                 }
                 if (typeof window.loadCloudStudents === 'function') window.loadCloudStudents();
             } else {
@@ -260,15 +396,15 @@
 
         function switchTab(tab) {
             document.querySelectorAll('.panel-view').forEach(p => p.classList.remove('active'));
-            if (tab === 'assessment') document.getElementById('panel-assessment').classList.add('active');
+            if (tab === 'admission') document.getElementById('panel-admission').classList.add('active');
+            if (tab === 'photos') document.getElementById('panel-photos').classList.add('active');
+            if (tab === 'theme') document.getElementById('panel-theme').classList.add('active');
             if (tab === 'students') {
                 if (currentLoggedInUser !== "head@wps.com") { alert("Restricted: Admin access required."); return; }
                 document.getElementById('panel-students').classList.add('active');
                 if (typeof window.loadCloudStudents === 'function') window.loadCloudStudents();
             }
-            if (tab === 'admission') document.getElementById('panel-admission').classList.add('active');
-            if (tab === 'theme') document.getElementById('panel-theme').classList.add('active');
-            if (tab === 'photos') document.getElementById('panel-photos').classList.add('active');
+            if (tab === 'assessment') document.getElementById('panel-assessment').classList.add('active');
         }
 
         function updateTheme() {
@@ -276,6 +412,24 @@
             var accent = document.getElementById('accentColorPicker').value;
             document.documentElement.style.setProperty('--primary-color', primary);
             document.documentElement.style.setProperty('--accent-color', accent);
+        }
+
+        function applyPresetTheme() {
+            var preset = document.getElementById('presetTheme').value;
+            if (preset === 'christmas') {
+                document.getElementById('primaryColorPicker').value = '#1b4d3e';
+                document.getElementById('accentColorPicker').value = '#d4af37';
+            } else if (preset === 'easter') {
+                document.getElementById('primaryColorPicker').value = '#512da8';
+                document.getElementById('accentColorPicker').value = '#ffb300';
+            } else if (preset === 'ghana') {
+                document.getElementById('primaryColorPicker').value = '#ce1126';
+                document.getElementById('accentColorPicker').value = '#fcd116';
+            } else {
+                document.getElementById('primaryColorPicker').value = '#0a2540';
+                document.getElementById('accentColorPicker').value = '#b31924';
+            }
+            updateTheme();
         }
 
         function syncUpdates() {
@@ -291,16 +445,16 @@
             tbody.innerHTML = "";
             var filtered = cloudStudentsList.filter(s => s.class === cls);
             if (filtered.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6">No students found in ${cls}. Add students via Manage Students or Online Admission.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="6">No students found in ${cls}. Enroll students via Online Admission or Register Students.</td></tr>`;
                 return;
             }
             filtered.forEach((s, i) => {
                 tbody.innerHTML += `<tr>
                     <td>${i+1}</td>
-                    <td style="text-align:left; padding-left:10px;"><b>${s.name}</b></td>
+                    <td style="text-align:left; padding-left:8px;"><b>${s.name}</b></td>
                     <td>${s.class}</td>
-                    <td><input type="number" placeholder="Class" style="width:50px; padding:3px; text-align:center;"></td>
-                    <td><input type="number" placeholder="Exam" style="width:50px; padding:3px; text-align:center;"></td>
+                    <td><input type="number" placeholder="0-50" style="width:45px; padding:2px; text-align:center;"></td>
+                    <td><input type="number" placeholder="0-50" style="width:45px; padding:2px; text-align:center;"></td>
                     <td><span style="font-weight:600; color:#0a2540;">--</span></td>
                 </tr>`;
             });
@@ -325,13 +479,19 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        window.promptAddStudent = async function() {
-            var name = prompt("Enter Student Full Name:");
-            if (!name) return;
-            var cls = prompt("Enter Class (e.g. Basic 1, Basic 4, JHS 1):", "Basic 4");
-            if (!cls) return;
-            var gender = prompt("Enter Gender (MALE / FEMALE):", "MALE");
-            if (!gender) gender = "MALE";
+        window.submitOnlineAdmission = async function() {
+            var name = document.getElementById('admFullName').value.trim();
+            var cls = document.getElementById('admClassSelect').value;
+            var gender = document.getElementById('admGenderSelect').value;
+            var dob = document.getElementById('admDob').value;
+            var parent = document.getElementById('admParent').value.trim();
+            var phone = document.getElementById('admPhone').value.trim();
+            var address = document.getElementById('admAddress').value.trim();
+
+            if (!name) {
+                alert("Please enter student full name.");
+                return;
+            }
 
             try {
                 const refId = "WPS-" + Math.floor(100000 + Math.random() * 900000);
@@ -339,20 +499,29 @@
                     refId: refId,
                     name: name.toUpperCase(),
                     class: cls,
-                    gender: gender.toUpperCase(),
+                    gender: gender,
+                    dob: dob,
+                    parent: parent,
+                    phone: phone,
+                    address: address,
                     registeredAt: new Date()
                 });
-                alert("Admission Successful! " + name.toUpperCase() + " saved to cloud.");
+                alert("Admission Successful! " + name.toUpperCase() + " enrolled to cloud.");
+                document.getElementById('admFullName').value = "";
+                document.getElementById('admParent').value = "";
+                document.getElementById('admPhone').value = "";
+                document.getElementById('admAddress').value = "";
                 window.loadCloudStudents();
+                switchTab('students');
             } catch (err) {
-                alert("Error saving to cloud: " + err.message);
+                alert("Error saving admission: " + err.message);
             }
         };
 
-        window.submitOnlineAdmission = async function() {
-            var name = document.getElementById('admFullName').value.trim();
-            var cls = document.getElementById('admClassSelect').value;
-            var gender = document.getElementById('admGenderSelect').value;
+        window.promptAddStudentToClass = async function() {
+            var name = document.getElementById('rosterFullName').value.trim();
+            var cls = document.getElementById('rosterClassSelect').value;
+            var gender = document.getElementById('rosterGender').value;
 
             if (!name) {
                 alert("Please enter student full name.");
@@ -368,12 +537,11 @@
                     gender: gender,
                     registeredAt: new Date()
                 });
-                alert("Admission Successful! " + name.toUpperCase() + " enrolled to cloud.");
-                document.getElementById('admFullName').value = "";
+                alert("Successfully added " + name.toUpperCase() + " to " + cls + "!");
+                document.getElementById('rosterFullName').value = "";
                 window.loadCloudStudents();
-                switchTab('students');
             } catch (err) {
-                alert("Error saving admission: " + err.message);
+                alert("Error saving to cloud: " + err.message);
             }
         };
 
@@ -389,16 +557,16 @@
                 if (tbody) {
                     tbody.innerHTML = "";
                     if (window.cloudStudentsList.length === 0) {
-                        tbody.innerHTML = `<tr><td colspan="6">No students in cloud yet. Tap above to add one.</td></tr>`;
+                        tbody.innerHTML = `<tr><td colspan="6">No students in cloud yet. Use Online Admission above.</td></tr>`;
                     } else {
                         window.cloudStudentsList.forEach((s, i) => {
                             tbody.innerHTML += `<tr>
                                 <td>${i+1}</td>
                                 <td><code>${s.refId || 'WPS-TEMP'}</code></td>
-                                <td style="text-align:left; padding-left:15px;"><b>${s.name}</b></td>
+                                <td style="text-align:left; padding-left:8px;"><b>${s.name}</b></td>
                                 <td>${s.class}</td>
                                 <td>${s.gender || 'MALE'}</td>
-                                <td><button onclick="window.removeStudent('${s.id}')" style="background:#b31924;color:white;border:none;padding:4px 8px;border-radius:3px;cursor:pointer;">Delete</button></td>
+                                <td><button onclick="window.removeStudent('${s.id}')" style="background:#b31924;color:white;border:none;padding:3px 6px;border-radius:3px;cursor:pointer;">Delete</button></td>
                             </tr>`;
                         });
                     }
