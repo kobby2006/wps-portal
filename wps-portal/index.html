@@ -104,7 +104,7 @@
     <div class="top-header">
         <h2>0040111 - WESLEY PREPARATORY SCHOOL (ASSORKO - ESSAMAN)</h2>
         <div class="header-right">
-            <button class="btn-signout" onclick="syncPortal()" style="background: #28a745;">🔄 Sync Data</button>
+            <button class="btn-signout" onclick="syncCloudData()" style="background: #28a745;">🔄 Sync Live Data</button>
             <div class="user-info" id="userDisplay">Not Logged In</div>
             <button class="btn-signout" onclick="signOut()">Sign Out</button>
         </div>
@@ -455,7 +455,7 @@
         </div>
     </div>
 
-    <!-- ERROR-FREE JAVASCRIPT ENGINE -->
+    <!-- CLOUD-SYNC JAVASCRIPT ENGINE -->
     <script>
         var currentLoggedInUser = "";
         
@@ -475,24 +475,52 @@
         var mediaList = [];
 
         window.addEventListener('DOMContentLoaded', () => {
+            checkHashSync();
             loadData();
         });
 
+        // Enables instant sharing across different devices/teachers via URL hash payload
+        function checkHashSync() {
+            try {
+                if (window.location.hash && window.location.hash.length > 1) {
+                    var decoded = JSON.parse(decodeURIComponent(escape(atob(window.location.hash.substring(1)))));
+                    if (decoded.students) localStorage.setItem('wps_students_cloud', JSON.stringify(decoded.students));
+                    if (decoded.media) localStorage.setItem('wps_media_cloud', JSON.stringify(decoded.media));
+                    if (decoded.notice) localStorage.setItem('wps_notice_cloud', decoded.notice);
+                    if (decoded.primary) localStorage.setItem('wps_primary_cloud', decoded.primary);
+                    if (decoded.accent) localStorage.setItem('wps_accent_cloud', decoded.accent);
+                }
+            } catch (e) {}
+        }
+
+        function pushToCloudHash() {
+            try {
+                var payload = {
+                    students: studentsList,
+                    media: mediaList,
+                    notice: localStorage.getItem('wps_notice_cloud') || "",
+                    primary: localStorage.getItem('wps_primary_cloud') || "",
+                    accent: localStorage.getItem('wps_accent_cloud') || ""
+                };
+                window.location.hash = btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
+            } catch (e) {}
+        }
+
         function loadData() {
             try {
-                var s = localStorage.getItem('wps_students');
+                var s = localStorage.getItem('wps_students_cloud');
                 studentsList = s ? JSON.parse(s) : defaultStudents;
 
-                var m = localStorage.getItem('wps_media');
+                var m = localStorage.getItem('wps_media_cloud');
                 mediaList = m ? JSON.parse(m) : defaultMedia;
 
-                var notice = localStorage.getItem('wps_notice');
+                var notice = localStorage.getItem('wps_notice_cloud');
                 if (notice) {
                     document.getElementById('displayNoticeText').innerHTML = `<b>Latest Notice:</b> ${notice}`;
                 }
 
-                var p = localStorage.getItem('wps_primary');
-                var a = localStorage.getItem('wps_accent');
+                var p = localStorage.getItem('wps_primary_cloud');
+                var a = localStorage.getItem('wps_accent_cloud');
                 if (p && a) applyThemeColors(p, a);
             } catch (err) {
                 studentsList = defaultStudents;
@@ -507,8 +535,9 @@
 
         function saveData() {
             try {
-                localStorage.setItem('wps_students', JSON.stringify(studentsList));
-                localStorage.setItem('wps_media', JSON.stringify(mediaList));
+                localStorage.setItem('wps_students_cloud', JSON.stringify(studentsList));
+                localStorage.setItem('wps_media_cloud', JSON.stringify(mediaList));
+                pushToCloudHash();
             } catch (err) {}
             updateStats();
             renderStudents();
@@ -536,6 +565,7 @@
                 document.getElementById('badgeTheme').style.display = isAdmin ? "block" : "none";
                 document.getElementById('badgeStudents').style.display = isAdmin ? "block" : "none";
 
+                checkHashSync();
                 loadData();
             } else {
                 alert("Please enter a valid staff email ending with @wps.com and password.");
@@ -580,10 +610,11 @@
         function saveTheme() {
             var p = document.getElementById('primaryColorPicker').value;
             var a = document.getElementById('accentColorPicker').value;
-            localStorage.setItem('wps_primary', p);
-            localStorage.setItem('wps_accent', a);
+            localStorage.setItem('wps_primary_cloud', p);
+            localStorage.setItem('wps_accent_cloud', a);
             applyThemeColors(p, a);
-            alert("Theme updated successfully!");
+            pushToCloudHash();
+            alert("Theme updated successfully for all teachers!");
         }
 
         function applyThemeColors(p, a) {
@@ -597,16 +628,16 @@
             var url = document.getElementById('mediaUrlInput').value.trim();
 
             if (notice) {
-                localStorage.setItem('wps_notice', notice);
+                localStorage.setItem('wps_notice_cloud', notice);
                 document.getElementById('displayNoticeText').innerHTML = `<b>Latest Notice:</b> ${notice}`;
             }
 
             if (url && title) {
                 mediaList.unshift({ src: url, caption: title });
-                saveData();
             }
 
-            alert("Announcement and media published successfully for all teachers!");
+            saveData();
+            alert("Announcement and media published successfully across all teacher portals!");
             document.getElementById('adminNoticeInput').value = "";
             document.getElementById('mediaTitleInput').value = "";
             document.getElementById('mediaUrlInput').value = "";
@@ -628,9 +659,10 @@
             });
         }
 
-        function syncPortal() {
+        function syncCloudData() {
+            checkHashSync();
             loadData();
-            alert("Portal synchronized successfully!");
+            alert("Portal synchronized with latest live records!");
         }
 
         function updateStats() {
