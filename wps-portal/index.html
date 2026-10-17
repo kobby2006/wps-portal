@@ -418,13 +418,11 @@
         .toolbar-right { display: flex; gap: 10px; align-items: center; }
         .btn-refresh { background-color: #28a745; color: white; border: none; padding: 7px 12px; border-radius: 4px; font-weight: 600; cursor: pointer; font-size: 12px; }
         .btn-download-data { background-color: var(--primary-color); color: white; border: none; padding: 7px 12px; border-radius: 4px; font-weight: 600; cursor: pointer; font-size: 12px; }
-        .btn-submit-complete { background-color: var(--accent-color); color: white; border: none; padding: 7px 12px; border-radius: 4px; font-weight: 600; cursor: pointer; font-size: 12px; }
         .search-box { padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 12px; }
         .roster-table { width: 100%; border-collapse: collapse; margin-top: 10px; min-width: 900px; }
         .roster-table th, .roster-table td { border: 1px solid #dee2e6; padding: 8px; text-align: center; font-size: 12px; }
         .roster-table th { background-color: #f0ebd8; color: var(--primary-color); font-weight: 600; }
         .score-input { width: 55px; padding: 4px; border: 1px solid #ccc; border-radius: 3px; text-align: center; font-weight: bold; font-size: 12px; }
-        /* Announcement Modal Popup */
         #announcementModal {
             display: none;
             position: fixed;
@@ -471,7 +469,6 @@
             margin-top: 15px;
             font-size: 14px;
         }
-        .btn-dismiss:hover { opacity: 0.9; }
         .portal-footer {
             margin-top: auto;
             text-align: center;
@@ -482,7 +479,6 @@
             background: var(--card-bg);
             flex-shrink: 0;
         }
-        /* MAINTENANCE BANNER OVERLAY */
         #maintenanceScreen {
             display: none;
             position: fixed;
@@ -524,7 +520,6 @@
     </style>
 </head>
 <body>
-    <!-- MAINTENANCE MODE OVERLAY FOR TEACHERS -->
     <div id="maintenanceScreen">
         <div class="maintenance-card">
             <h2>🛠️ PORTAL UNDER MAINTENANCE</h2>
@@ -537,7 +532,6 @@
             <button onclick="signOut()" class="btn-submit" style="background: #b31924; margin-top: 15px;">Back to Login</button>
         </div>
     </div>
-    <!-- ANNOUNCEMENT POPUP MODAL -->
     <div id="announcementModal">
         <div class="modal-card">
             <h3>📢 LATEST SCHOOL ANNOUNCEMENT</h3>
@@ -556,7 +550,6 @@
             <button class="btn-signout" onclick="signOut()">Sign Out</button>
         </div>
     </div>
-    <!-- LOGIN SCREEN -->
     <div id="loginScreen" style="display: flex;">
         <div class="login-card">
             <h3>Portal Login</h3>
@@ -573,7 +566,6 @@
             <button type="button" class="btn-submit" onclick="syncCloudUpdates()" style="background: #28a745; margin-top: 10px;">🔄 Sync Latest Students & Updates from Cloud</button>
         </div>
     </div>
-    <!-- DASHBOARD SCREEN -->
     <div id="dashboardScreen" style="display: none; flex-direction: column; flex: 1;">
         <div class="workspace">
             <div class="sidebar">
@@ -695,7 +687,6 @@
                         <div id="adminFormContent">
                             <p style="font-size: 13px; color: #666; margin-bottom: 20px;">Select multiple photos or videos to add directly to the main page gallery and update announcements.</p>
                             
-                            <!-- MAINTENANCE MODE TOGGLE -->
                             <div style="background: #fdf5f5; border: 1px solid #f0cccc; padding: 15px; border-radius: 6px; margin-bottom: 20px;">
                                 <label style="font-weight: bold; color: #b31924; font-size: 13px; display: flex; align-items: center; gap: 10px; cursor: pointer;">
                                     <input type="checkbox" id="maintenanceToggle" onchange="toggleMaintenanceMode()" style="width: 18px; height: 18px;">
@@ -779,7 +770,7 @@
                         <div class="capture-header">
                             <span>WESLEY PREPARATORY SCHOOL - OFFICIAL STUDENT ADMISSION FORM (ADMIN ONLY)</span>
                         </div>
-                        <p style="font-size: 13px; color: #666; margin-bottom: 20px;">Fill out the learner details below to enroll a new student directly into the school system.</p>
+                        <p style="font-size: 13px; color: #666; margin-bottom: 20px;">Fill out the learner details below to enroll a new student directly into the cloud system.</p>
                         
                         <form id="admissionForm" onsubmit="submitAdmission(event)">
                             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
@@ -823,7 +814,7 @@
                                 <label>Residential Address / Hometown</label>
                                 <input type="text" id="admAddress" placeholder="e.g. Assorko - Essaman, Takoradi" required>
                             </div>
-                            <button type="submit" class="btn-submit" style="margin-top: 20px; background: var(--accent-color);">Complete Student Admission & Enroll</button>
+                            <button type="submit" class="btn-submit" style="margin-top: 20px; background: var(--accent-color);">Complete Student Admission & Enroll to Cloud</button>
                         </form>
                     </div>
                 </div>
@@ -978,8 +969,9 @@
             </div>
         </div>
     </div>
+
+    <!-- MAIN CORE SCRIPT -->
     <script>
-        var googleFormUrl = "https://docs.google.com/forms/d/e/1FAIpQLSfJ9YjaoZFiASufb_pis0CymTuIp1ZYdDlWLyZK1OhL7JfA/viewform?usp=dialog";
         var currentLoggedInUser = "";
         var cloudStudentsList = [];
         var cloudScoresData = {};
@@ -1002,9 +994,7 @@
                     }
                     loadPersistedPortalData();
                 }
-            } catch (e) {
-                console.log("Cloud sync check error:", e);
-            }
+            } catch (e) {}
         }
 
         function checkMaintenanceStatus() {
@@ -1298,6 +1288,16 @@
             }
         }
 
+        function addStudent() {
+            if (currentLoggedInUser !== "head@wps.com") {
+                alert("Access Denied! Only Admin can add students.");
+                return;
+            }
+            if (typeof addStudentToFirebase === 'function') {
+                addStudentToFirebase();
+            }
+        }
+
         function applyFilter() {
             var selectedClass = document.getElementById('filterClassSelect').value;
             document.getElementById('resultsSection').style.display = 'block';
@@ -1322,7 +1322,6 @@
                 return;
             }
 
-            // Calculate totals and sort for rankings/grades automatically
             let evaluatedList = filtered.map(student => {
                 let scores = cloudScoresData[keyBase]?.[student.id] || { t39: 0, t20: 0, t36: 0, proj: 0, exams: 0 };
                 let t39 = parseFloat(scores.t39) || 0;
@@ -1331,15 +1330,14 @@
                 let proj = parseFloat(scores.proj) || 0;
                 let exams = parseFloat(scores.exams) || 0;
 
-                let totalSBA = t39 + t20 + t36 + proj; // out of 100
-                let cs50 = (totalSBA * 0.5); // 50%
-                let es50 = (exams * 0.5); // 50%
-                let overall = cs50 + es50; // out of 100
+                let totalSBA = t39 + t20 + t36 + proj;
+                let cs50 = (totalSBA * 0.5);
+                let es50 = (exams * 0.5);
+                let overall = cs50 + es50;
 
                 return { student, t39, t20, t36, proj, totalSBA, cs50, exams, es50, overall };
             });
 
-            // Sort descending by overall score for automated positioning
             evaluatedList.sort((a, b) => b.overall - a.overall);
 
             evaluatedList.forEach((item, index) => {
@@ -1386,7 +1384,6 @@
             row.querySelector(`#es50_${studentId}`).innerText = es50.toFixed(1);
             row.querySelector(`#overall_${studentId}`).innerText = overall.toFixed(1);
 
-            // Instant auto-save to memory structure
             var year = document.getElementById('yearSelect').value;
             var sem = document.getElementById('semSelect').value;
             var className = document.getElementById('filterClassSelect').value;
@@ -1507,180 +1504,181 @@
         }
     </script>
 
-<script type="module">
-  import { db } from './firebase.js';
-  import { collection, addDoc, getDocs, doc, setDoc, deleteDoc, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    <!-- FIREBASE MODULE SCRIPT -->
+    <script type="module">
+      import { db } from './firebase.js';
+      import { collection, addDoc, getDocs, doc, setDoc, deleteDoc, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-  // 1. Add Student to Firebase Cloud
-  window.addStudentToFirebase = async function() {
-      const name = document.getElementById('admFullName').value.trim().toUpperCase();
-      const studentClass = document.getElementById('admClass').value;
-      const gender = document.getElementById('admGender').value;
-      const dob = document.getElementById('admDob').value;
-      
-      if (!name) {
-          alert("Please enter student full name.");
-          return;
-      }
-      try {
-          await addDoc(collection(db, "students"), {
-              name: name,
-              class: studentClass,
-              gender: gender,
-              dob: dob,
-              registeredAt: new Date()
-          });
-          alert(`Admission Successful! ${name} enrolled into ${studentClass} and saved to cloud.`);
-          document.getElementById('admissionForm').reset();
-          loadCloudStudentsFromFirebase();
-          switchTab('students');
-      } catch (error) {
-          console.error("Error adding student: ", error);
-          alert("Failed to save student to cloud.");
-      }
-  };
-
-  // 2. Load Students from Firebase Cloud
-  window.loadCloudStudentsFromFirebase = async function() {
-      try {
-          const querySnapshot = await getDocs(collection(db, "students"));
-          cloudStudentsList = [];
-          querySnapshot.forEach((docSnap) => {
-              cloudStudentsList.push({ id: docSnap.id, ...docSnap.data() });
-          });
-          if (typeof loadClassStudents === 'function') loadClassStudents();
-          if (document.getElementById('panel-home')?.classList.contains('active')) {
-              updateDashboardStatsFromCloud();
+      window.addStudentToFirebase = async function() {
+          const nameInput = document.getElementById('admFullName') || document.getElementById('newStudentName');
+          const classSelect = document.getElementById('admClass') || document.getElementById('adminClassSelect');
+          const genderSelect = document.getElementById('admGender') || document.getElementById('newStudentGender');
+          const dobInput = document.getElementById('admDob') || document.getElementById('newStudentDob');
+          
+          const name = nameInput ? nameInput.value.trim().toUpperCase() : "";
+          const studentClass = classSelect ? classSelect.value : "Basic 1";
+          const gender = genderSelect ? genderSelect.value : "MALE";
+          const dob = dobInput ? dobInput.value : "2012-01-01";
+          
+          if (!name) {
+              alert("Please enter student full name.");
+              return;
           }
-      } catch (error) {
-          console.error("Error loading students:", error);
-      }
-  };
-
-  // 3. Remove Student from Cloud
-  window.removeCloudStudent = async function(docId) {
-      if (currentLoggedInUser !== "head@wps.com") { alert("Unauthorized!"); return; }
-      if (confirm("Are you sure you want to remove this student from the cloud?")) {
           try {
-              await deleteDoc(doc(db, "students", docId));
-              loadCloudStudentsFromFirebase();
-              alert("Student removed successfully.");
-          } catch (e) {
-              alert("Failed to remove student.");
-          }
-      }
-  };
-
-  // 4. Save All Assessment Scores to Cloud automatically
-  window.saveAllScoresToCloud = async function() {
-      try {
-          for (let keyBase in cloudScoresData) {
-              for (let studentId in cloudScoresData[keyBase]) {
-                  let docRef = doc(db, "assessment_scores", `${keyBase}_${studentId}`);
-                  await setDoc(docRef, {
-                      keyBase: keyBase,
-                      studentId: studentId,
-                      scores: cloudScoresData[keyBase][studentId],
-                      updatedAt: new Date()
-                  }, { merge: true });
-              }
-          }
-          alert("All assessment scores saved and synced successfully to Firebase Cloud!");
-      } catch (error) {
-          console.error("Error saving scores:", error);
-          alert("Failed to sync scores to cloud.");
-      }
-  };
-
-  // 5. Load Assessment Scores from Cloud
-  window.loadCloudScores = async function() {
-      try {
-          const querySnapshot = await getDocs(collection(db, "assessment_scores"));
-          cloudScoresData = {};
-          querySnapshot.forEach((docSnap) => {
-              let data = docSnap.data();
-              if (data.keyBase && data.studentId) {
-                  if (!cloudScoresData[data.keyBase]) cloudScoresData[data.keyBase] = {};
-                  cloudScoresData[data.keyBase][data.studentId] = data.scores;
-              }
-          });
-      } catch (error) {
-          console.error("Error loading cloud scores:", error);
-      }
-  };
-
-  // 6. Announcements & Photos
-  window.loadAnnouncements = async function() {
-      try {
-          const q = query(collection(db, "announcements"), orderBy("date", "desc"), limit(5));
-          const querySnapshot = await getDocs(q);
-          const container = document.getElementById('announcementsContainer');
-          if (!container) return;
-          container.innerHTML = "";
-          querySnapshot.forEach((docSnap) => {
-              const item = docSnap.data();
-              container.innerHTML += `<div><h4>${item.title}</h4><p>${item.message}</p></div>`;
-          });
-      } catch (e) {}
-  };
-
-  window.uploadTeacherPhoto = async function() {
-      const fileInput = document.getElementById('teacherPhotoFile');
-      const captionInput = document.getElementById('teacherPhotoCaption');
-      if (!fileInput.files || fileInput.files.length === 0) { alert("Select an image."); return; }
-      const reader = new FileReader();
-      reader.onload = async function(e) {
-          try {
-              await addDoc(collection(db, "teacher_photos"), {
-                  image: e.target.result,
-                  caption: captionInput.value.trim() || "Classroom Activity",
-                  teacher: currentLoggedInUser || "Staff",
-                  date: new Date()
+              await addDoc(collection(db, "students"), {
+                  name: name,
+                  class: studentClass,
+                  gender: gender,
+                  dob: dob,
+                  registeredAt: new Date()
               });
-              alert("Photo uploaded and synced!");
-              fileInput.value = ""; captionInput.value = "";
-              loadTeacherPhotos();
-          } catch (err) { alert("Upload failed."); }
+              alert(`Admission Successful! ${name} enrolled into ${studentClass} and saved to cloud.`);
+              if (document.getElementById('admissionForm')) document.getElementById('admissionForm').reset();
+              if (document.getElementById('newStudentName')) document.getElementById('newStudentName').value = '';
+              loadCloudStudentsFromFirebase();
+              switchTab('students');
+          } catch (error) {
+              console.error("Error adding student: ", error);
+              alert("Failed to save student to cloud. Check console for details.");
+          }
       };
-      reader.readAsDataURL(fileInput.files[0]);
-  };
 
-  window.loadTeacherPhotos = async function() {
-      try {
-          const querySnapshot = await getDocs(collection(db, "teacher_photos"));
-          const grid = document.getElementById('teacherPhotoGalleryGrid');
-          if (!grid) return;
-          grid.innerHTML = "";
-          querySnapshot.forEach((docSnap) => {
-              const data = docSnap.data();
-              grid.innerHTML += `<div class="gallery-item"><img src="${data.image}" style="width:100%;height:130px;object-fit:cover;border-radius:4px;"><div style="font-size:12px;font-weight:bold;margin-top:5px;">${data.caption}</div><div style="font-size:10px;color:#666;">By: ${data.teacher}</div></div>`;
-          });
-      } catch (e) {}
-  };
+      window.loadCloudStudentsFromFirebase = async function() {
+          try {
+              const querySnapshot = await getDocs(collection(db, "students"));
+              cloudStudentsList = [];
+              querySnapshot.forEach((docSnap) => {
+                  cloudStudentsList.push({ id: docSnap.id, ...docSnap.data() });
+              });
+              if (typeof loadClassStudents === 'function') loadClassStudents();
+              if (document.getElementById('panel-home')?.classList.contains('active')) {
+                  updateDashboardStatsFromCloud();
+              }
+          } catch (error) {
+              console.error("Error loading students:", error);
+          }
+      };
 
-  function updateDashboardStatsFromCloud() {
-      let total = cloudStudentsList.length;
-      let male = cloudStudentsList.filter(s => s.gender === "MALE").length;
-      let female = cloudStudentsList.filter(s => s.gender === "FEMALE").length;
-      let b1 = cloudStudentsList.filter(s => s.class === "Basic 1").length;
+      window.removeCloudStudent = async function(docId) {
+          if (currentLoggedInUser !== "head@wps.com") { alert("Unauthorized!"); return; }
+          if (confirm("Are you sure you want to remove this student from the cloud?")) {
+              try {
+                  await deleteDoc(doc(db, "students", docId));
+                  loadCloudStudentsFromFirebase();
+                  alert("Student removed successfully.");
+              } catch (e) {
+                  alert("Failed to remove student.");
+              }
+          }
+      };
 
-      document.getElementById('statTotalStudents').innerText = total;
-      document.getElementById('statMale').innerText = male;
-      document.getElementById('statFemale').innerText = female;
-      document.getElementById('statBasic1').innerText = b1;
+      window.saveAllScoresToCloud = async function() {
+          try {
+              for (let keyBase in cloudScoresData) {
+                  for (let studentId in cloudScoresData[keyBase]) {
+                      let docRef = doc(db, "assessment_scores", `${keyBase}_${studentId}`);
+                      await setDoc(docRef, {
+                          keyBase: keyBase,
+                          studentId: studentId,
+                          scores: cloudScoresData[keyBase][studentId],
+                          updatedAt: new Date()
+                      }, { merge: true });
+                  }
+              }
+              alert("All assessment scores saved and synced successfully to Firebase Cloud!");
+          } catch (error) {
+              console.error("Error saving scores:", error);
+              alert("Failed to sync scores to cloud.");
+          }
+      };
 
-      let malePct = total > 0 ? Math.round((male / total) * 100) : 0;
-      let femalePct = total > 0 ? (100 - malePct) : 0;
-      document.getElementById('pctMale').innerText = malePct + "%";
-      document.getElementById('pctFemale').innerText = femalePct + "%";
-  }
+      window.loadCloudScores = async function() {
+          try {
+              const querySnapshot = await getDocs(collection(db, "assessment_scores"));
+              cloudScoresData = {};
+              querySnapshot.forEach((docSnap) => {
+                  let data = docSnap.data();
+                  if (data.keyBase && data.studentId) {
+                      if (!cloudScoresData[data.keyBase]) cloudScoresData[data.keyBase] = {};
+                      cloudScoresData[data.keyBase][data.studentId] = data.scores;
+                  }
+              });
+          } catch (error) {
+              console.error("Error loading cloud scores:", error);
+          }
+      };
 
-  window.addEventListener('DOMContentLoaded', () => {
-      loadCloudStudentsFromFirebase();
-      loadCloudScores();
-      loadAnnouncements();
-      loadTeacherPhotos();
-  });
-</script>
+      window.loadAnnouncements = async function() {
+          try {
+              const q = query(collection(db, "announcements"), orderBy("date", "desc"), limit(5));
+              const querySnapshot = await getDocs(q);
+              const container = document.getElementById('announcementsContainer');
+              if (!container) return;
+              container.innerHTML = "";
+              querySnapshot.forEach((docSnap) => {
+                  const item = docSnap.data();
+                  container.innerHTML += `<div><h4>${item.title}</h4><p>${item.message}</p></div>`;
+              });
+          } catch (e) {}
+      };
+
+      window.uploadTeacherPhoto = async function() {
+          const fileInput = document.getElementById('teacherPhotoFile');
+          const captionInput = document.getElementById('teacherPhotoCaption');
+          if (!fileInput.files || fileInput.files.length === 0) { alert("Select an image."); return; }
+          const reader = new FileReader();
+          reader.onload = async function(e) {
+              try {
+                  await addDoc(collection(db, "teacher_photos"), {
+                      image: e.target.result,
+                      caption: captionInput.value.trim() || "Classroom Activity",
+                      teacher: currentLoggedInUser || "Staff",
+                      date: new Date()
+                  });
+                  alert("Photo uploaded and synced!");
+                  fileInput.value = ""; captionInput.value = "";
+                  loadTeacherPhotos();
+              } catch (err) { alert("Upload failed."); }
+          };
+          reader.readAsDataURL(fileInput.files[0]);
+      };
+
+      window.loadTeacherPhotos = async function() {
+          try {
+              const querySnapshot = await getDocs(collection(db, "teacher_photos"));
+              const grid = document.getElementById('teacherPhotoGalleryGrid');
+              if (!grid) return;
+              grid.innerHTML = "";
+              querySnapshot.forEach((docSnap) => {
+                  const data = docSnap.data();
+                  grid.innerHTML += `<div class="gallery-item"><img src="${data.image}" style="width:100%;height:130px;object-fit:cover;border-radius:4px;"><div style="font-size:12px;font-weight:bold;margin-top:5px;">${data.caption}</div><div style="font-size:10px;color:#666;">By: ${data.teacher}</div></div>`;
+              });
+          } catch (e) {}
+      };
+
+      function updateDashboardStatsFromCloud() {
+          let total = cloudStudentsList.length;
+          let male = cloudStudentsList.filter(s => s.gender === "MALE").length;
+          let female = cloudStudentsList.filter(s => s.gender === "FEMALE").length;
+          let b1 = cloudStudentsList.filter(s => s.class === "Basic 1").length;
+
+          document.getElementById('statTotalStudents').innerText = total;
+          document.getElementById('statMale').innerText = male;
+          document.getElementById('statFemale').innerText = female;
+          document.getElementById('statBasic1').innerText = b1;
+
+          let malePct = total > 0 ? Math.round((male / total) * 100) : 0;
+          let femalePct = total > 0 ? (100 - malePct) : 0;
+          document.getElementById('pctMale').innerText = malePct + "%";
+          document.getElementById('pctFemale').innerText = femalePct + "%";
+      }
+
+      window.addEventListener('DOMContentLoaded', () => {
+          loadCloudStudentsFromFirebase();
+          loadCloudScores();
+          loadAnnouncements();
+          loadTeacherPhotos();
+      });
+    </script>
 </body>
 </html>
