@@ -1284,7 +1284,7 @@
                 return;
             }
             if (typeof window.addStudentToFirebase === 'function') {
-                window.addStudentToFirebase();
+                window.addStudentToFirebase('admission');
             }
         }
 
@@ -1294,7 +1294,7 @@
                 return;
             }
             if (typeof window.addStudentToFirebase === 'function') {
-                window.addStudentToFirebase();
+                window.addStudentToFirebase('roster');
             }
         }
 
@@ -1414,7 +1414,7 @@
             
             classStudents.forEach((s, idx) => {
                 var sc = cloudScoresData[keyBase]?.[s.id] || { t39: 0, t20: 0, t36: 0, proj: 0, exams: 0, totalSBA: 0, cs50: 0, es50: 0, overall: 0 };
-                csvContent += `${idx + 1},"${s.name}",${sc.t39 || 0},${sc.t20 || 0},${sc.t36 || 0},${sc.proj || 0},${sc.totalSBA || 0},${sc.cs50 || 0},${sc.exams || 0},${sc.es50 || 0},${sc.overall || 0},"-\n`;
+                csvContent += `${idx + 1},"${s.name}",${sc.t39 || 0},${sc.t20 \vert{}\vert{} 0},${sc.t36 || 0},${sc.proj \vert{}\vert{} 0},${sc.totalSBA || 0},${sc.cs50 \vert{}\vert{} 0},${sc.exams || 0},${sc.es50 \vert{}\vert{} 0},${sc.overall || 0},"-\n`;
             });
 
             var encodedUri = encodeURI(csvContent);
@@ -1447,233 +1447,4 @@
                         th, td { border: 1px solid #ccc; padding: 10px; text-align: left; font-size: 13px; }
                         th { background-color: #0a2540; color: white; }
                         .footer { margin-top: 40px; display: flex; justify-content: space-between; font-size: 13px; }
-                    </style>
-                </head>
-                <body>
-                    <div class="header">
-                        <div class="school-title">WESLEY PREPARATORY SCHOOL (ASSORKO - ESSAMAN)</div>
-                        <div class="sub-title">Official Student Termly SBA & Assessment Report Card</div>
-                    </div>
-                    <div class="student-info">
-                        <b>Student Name:</b> ${studentName} &nbsp;&nbsp;|&nbsp;&nbsp; <b>ID Ref:</b> ${studentId}<br>
-                        <b>Class:</b> ${className} &nbsp;&nbsp;|&nbsp;&nbsp; <b>Academic Year:</b> ${year} &nbsp;&nbsp;|&nbsp;&nbsp; <b>Term:</b> ${semester}<br>
-                    </div>
-                    <table>
-                        <tr>
-                            <th>Subject Assessed</th>
-                            <th>Overall Calculated Score</th>
-                            <th>Class Position / Grade</th>
-                        </tr>
-                        <tr>
-                            <td><b>${subject}</b></td>
-                            <td><b>${overallScore} / 100</b></td>
-                            <td><b>${gradePosition}</b></td>
-                        </tr>
-                    </table>
-                    <div class="footer">
-                        <div>Headteacher Signature: ______________________</div>
-                        <div>Date Issued: ${new Date().toISOString().split('T')[0]}</div>
-                    </div>
-                    <script>window.print();<\/script>
-                </body>
-                </html>
-            `);
-            reportWindow.document.close();
-        }
-
-        function loadClassStudents() {
-            var selectedClass = document.getElementById('adminClassSelect').value;
-            var classStudents = cloudStudentsList.filter(s => s.class === selectedClass);
-            var tbody = document.getElementById('studentTableBody');
-            tbody.innerHTML = "";
-            if (classStudents.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#777;">No students registered for ${selectedClass} yet.</td></tr>`;
-                return;
-            }
-            classStudents.forEach((student, index) => {
-                var row = `<tr>
-                    <td>${index + 1}</td>
-                    <td>${student.id}</td>
-                    <td><b>${student.name}</b></td>
-                    <td>${student.gender}</td>
-                    <td>${student.dob}</td>
-                    <td><button onclick="removeCloudStudent('${student.id}')" style="background:var(--accent-color); color:white; border:none; padding:4px 8px; border-radius:3px; cursor:pointer;">Remove</button></td>
-                </tr>`;
-                tbody.innerHTML += row;
-            });
-        }
-    </script>
-
-    <!-- FIREBASE MODULE SCRIPT -->
-    <script type="module">
-      import { db } from './firebase.js';
-      import { collection, addDoc, getDocs, doc, setDoc, deleteDoc, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-      window.addStudentToFirebase = async function() {
-          const nameInput = document.getElementById('newStudentName') || document.getElementById('admFullName');
-          const classSelect = document.getElementById('adminClassSelect') || document.getElementById('admClass');
-          const genderSelect = document.getElementById('newStudentGender') || document.getElementById('admGender');
-          const dobInput = document.getElementById('newStudentDob') || document.getElementById('admDob');
-          
-          const name = nameInput ? nameInput.value.trim().toUpperCase() : "";
-          const studentClass = classSelect ? classSelect.value : "Basic 1";
-          const gender = genderSelect ? genderSelect.value : "MALE";
-          const dob = dobInput ? dobInput.value : "2012-01-01";
-          
-          if (!name) {
-              alert("Please enter student full name.");
-              return;
-          }
-          try {
-              await addDoc(collection(db, "students"), {
-                  name: name,
-                  class: studentClass,
-                  gender: gender,
-                  dob: dob,
-                  registeredAt: new Date()
-              });
-              alert(`Admission Successful! ${name} enrolled into ${studentClass} and saved to cloud.`);
-              if (nameInput) nameInput.value = '';
-              if (document.getElementById('admissionForm')) document.getElementById('admissionForm').reset();
-              window.loadCloudStudentsFromFirebase();
-              switchTab('students');
-          } catch (error) {
-              console.error("Error adding student: ", error);
-              alert("Failed to save student to cloud. Check console for details.");
-          }
-      };
-
-      window.loadCloudStudentsFromFirebase = async function() {
-          try {
-              const querySnapshot = await getDocs(collection(db, "students"));
-              window.cloudStudentsList = [];
-              querySnapshot.forEach((docSnap) => {
-                  window.cloudStudentsList.push({ id: docSnap.id, ...docSnap.data() });
-              });
-              
-              // Update Dashboard Statistics Cards
-              document.getElementById('statTotalStudents').innerText = window.cloudStudentsList.length;
-              document.getElementById('statBasic1').innerText = window.cloudStudentsList.filter(s => s.class === "Basic 1").length;
-              var males = window.cloudStudentsList.filter(s => s.gender === "MALE").length;
-              var females = window.cloudStudentsList.filter(s => s.gender === "FEMALE").length;
-              document.getElementById('statMale').innerText = males;
-              document.getElementById('statFemale').innerText = females;
-              
-              var total = males + females;
-              if (total > 0) {
-                  document.getElementById('pctMale').innerText = Math.round((males/total)*100) + "%";
-                  document.getElementById('pctFemale').innerText = Math.round((females/total)*100) + "%";
-              }
-
-              if (typeof loadClassStudents === 'function') loadClassStudents();
-          } catch (error) {
-              console.error("Error loading students:", error);
-          }
-      };
-
-      window.removeCloudStudent = async function(docId) {
-          if (currentLoggedInUser !== "head@wps.com") { alert("Unauthorized!"); return; }
-          if (confirm("Are you sure you want to remove this student from the cloud?")) {
-              try {
-                  await deleteDoc(doc(db, "students", docId));
-                  window.loadCloudStudentsFromFirebase();
-                  alert("Student removed successfully.");
-              } catch (e) {
-                  alert("Failed to remove student.");
-              }
-          }
-      };
-
-      window.saveAllScoresToCloud = async function() {
-          try {
-              for (let keyBase in cloudScoresData) {
-                  for (let studentId in cloudScoresData[keyBase]) {
-                      let docRef = doc(db, "assessment_scores", `${keyBase}_${studentId}`);
-                      await setDoc(docRef, {
-                          keyBase: keyBase,
-                          studentId: studentId,
-                          scores: cloudScoresData[keyBase][studentId],
-                          updatedAt: new Date()
-                      }, { merge: true });
-                  }
-              }
-              alert("All assessment scores saved and synced successfully to Firebase Cloud!");
-          } catch (error) {
-              console.error("Error saving scores:", error);
-              alert("Failed to sync scores to cloud.");
-          }
-      };
-
-      window.loadCloudScores = async function() {
-          try {
-              const querySnapshot = await getDocs(collection(db, "assessment_scores"));
-              window.cloudScoresData = {};
-              querySnapshot.forEach((docSnap) => {
-                  let data = docSnap.data();
-                  if (data.keyBase && data.studentId) {
-                      if (!window.cloudScoresData[data.keyBase]) window.cloudScoresData[data.keyBase] = {};
-                      window.cloudScoresData[data.keyBase][data.studentId] = data.scores;
-                  }
-              });
-          } catch (error) {
-              console.error("Error loading cloud scores:", error);
-          }
-      };
-
-      window.loadAnnouncements = async function() {
-          try {
-              const q = query(collection(db, "announcements"), orderBy("date", "desc"), limit(5));
-              const querySnapshot = await getDocs(q);
-              const container = document.getElementById('announcementsContainer');
-              if (!container) return;
-              container.innerHTML = "";
-              querySnapshot.forEach((docSnap) => {
-                  const item = docSnap.data();
-                  container.innerHTML += `<div><h4>${item.title}</h4><p>${item.message}</p></div>`;
-              });
-          } catch (e) {}
-      };
-
-      window.uploadTeacherPhoto = async function() {
-          const fileInput = document.getElementById('teacherPhotoFile');
-          const captionInput = document.getElementById('teacherPhotoCaption');
-          if (!fileInput.files || fileInput.files.length === 0) { alert("Select an image."); return; }
-          const reader = new FileReader();
-          reader.onload = async function(e) {
-              try {
-                  await addDoc(collection(db, "teacher_photos"), {
-                      image: e.target.result,
-                      caption: captionInput.value.trim() || "Classroom Activity",
-                      teacher: currentLoggedInUser || "Staff",
-                      date: new Date()
-                  });
-                  alert("Photo uploaded and synced!");
-                  fileInput.value = ""; captionInput.value = "";
-                  window.loadTeacherPhotos();
-              } catch (err) { alert("Upload failed."); }
-          };
-          reader.readAsDataURL(fileInput.files[0]);
-      };
-
-      window.loadTeacherPhotos = async function() {
-          try {
-              const querySnapshot = await getDocs(collection(db, "teacher_photos"));
-              const grid = document.getElementById('teacherPhotoGalleryGrid');
-              if (!grid) return;
-              grid.innerHTML = "";
-              querySnapshot.forEach((docSnap) => {
-                  const data = docSnap.data();
-                  grid.innerHTML += `<div class="gallery-item"><img src="${data.image}" style="width:100%;height:130px;object-fit:cover;border-radius:4px;"><div style="font-size:12px;font-weight:bold;margin-top:5px;">${data.caption}</div><div style="font-size:10px;color:#666;">By: ${data.teacher}</div></div>`;
-              });
-          } catch (e) {}
-      };
-
-      window.addEventListener('DOMContentLoaded', () => {
-          window.loadCloudStudentsFromFirebase();
-          window.loadCloudScores();
-          window.loadAnnouncements();
-          window.loadTeacherPhotos();
-      });
-    </script>
-</body>
-</html>
+                    </
