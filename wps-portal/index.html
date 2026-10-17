@@ -65,7 +65,6 @@
             cursor: pointer;
         }
         .btn-signout:hover { opacity: 0.9; }
-
         .workspace {
             display: flex;
             flex: 1;
@@ -136,7 +135,6 @@
             border: 1px solid #dcd5c0;
         }
         .action-badge:hover { background: #e6dfc8; }
-
         #loginScreen {
             display: flex;
             justify-content: center;
@@ -188,7 +186,6 @@
             cursor: pointer;
         }
         .btn-submit:hover { opacity: 0.9; }
-
         #dashboardScreen {
             display: none;
             flex-direction: column;
@@ -226,7 +223,6 @@
             margin-bottom: 10px;
             filter: drop-shadow(0px 3px 6px rgba(0,0,0,0.2));
         }
-
         .dashboard-main-container {
             display: flex;
             gap: 20px;
@@ -237,7 +233,6 @@
         }
         .dashboard-left-col { flex: 2; min-width: 280px; }
         .dashboard-right-col { flex: 1; display: flex; flex-direction: column; gap: 20px; min-width: 260px; }
-
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -278,7 +273,6 @@
             margin-top: 5px;
         }
         .analytics-banner:hover { opacity: 0.9; }
-
         .analytics-card {
             background: var(--card-bg);
             border: 1px solid #dcd5c0;
@@ -303,7 +297,6 @@
         }
         .legend-male { color: var(--primary-color); font-weight: bold; }
         .legend-female { color: var(--accent-color); font-weight: bold; }
-
         .home-gallery-section {
             width: 100%;
             max-width: 1250px;
@@ -357,7 +350,6 @@
             margin-top: 10px;
             border-left: 4px solid var(--accent-color);
         }
-
         .capture-container {
             background: var(--card-bg);
             padding: 20px;
@@ -407,7 +399,6 @@
             font-size: 12px;
         }
         .btn-filter:hover { opacity: 0.9; }
-
         .results-section {
             margin-top: 20px;
             background: var(--card-bg);
@@ -431,7 +422,6 @@
         .btn-download-data { background-color: var(--primary-color); color: white; border: none; padding: 7px 12px; border-radius: 4px; font-weight: 600; cursor: pointer; font-size: 12px; }
         .btn-submit-complete { background-color: var(--accent-color); color: white; border: none; padding: 7px 12px; border-radius: 4px; font-weight: 600; cursor: pointer; font-size: 12px; }
         .btn-change-score { background-color: #6c757d; color: white; border: none; padding: 7px 12px; border-radius: 4px; font-weight: 600; cursor: pointer; font-size: 12px; }
-
         .search-box { padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 12px; }
         .roster-table { width: 100%; border-collapse: collapse; margin-top: 10px; min-width: 600px; }
         .roster-table th, .roster-table td { border: 1px solid #dee2e6; padding: 10px; text-align: left; font-size: 13px; }
@@ -439,7 +429,6 @@
         .score-input { width: 70px; padding: 5px; border: 1px solid #ccc; border-radius: 3px; text-align: center; font-weight: bold; }
         .sort-btn { background: none; border: none; cursor: pointer; font-weight: bold; font-size: 12px; color: var(--primary-color); padding: 0 3px; }
         .sort-btn:hover { color: var(--accent-color); }
-
         /* Announcement Modal Popup */
         #announcementModal {
             display: none;
@@ -488,7 +477,6 @@
             font-size: 14px;
         }
         .btn-dismiss:hover { opacity: 0.9; }
-
         .portal-footer {
             margin-top: auto;
             text-align: center;
@@ -499,7 +487,6 @@
             background: var(--card-bg);
             flex-shrink: 0;
         }
-
         /* MAINTENANCE BANNER OVERLAY */
         #maintenanceScreen {
             display: none;
@@ -529,7 +516,6 @@
             border-top: 5px solid #b31924;
         }
         .maintenance-card h2 { color: #b31924; margin-top: 0; }
-
         /* MOBILE RESPONSIVE MEDIA QUERIES */
         @media screen and (max-width: 768px) {
             .workspace {
@@ -573,7 +559,6 @@
     </style>
 </head>
 <body>
-
     <!-- MAINTENANCE MODE OVERLAY FOR TEACHERS -->
     <div id="maintenanceScreen">
         <div class="maintenance-card">
@@ -587,7 +572,6 @@
             <button onclick="signOut()" class="btn-submit" style="background: #b31924; margin-top: 15px;">Back to Login</button>
         </div>
     </div>
-
     <!-- ANNOUNCEMENT POPUP MODAL -->
     <div id="announcementModal">
         <div class="modal-card">
@@ -599,7 +583,6 @@
             <button type="button" class="btn-dismiss" onclick="dismissAnnouncement()">Dismiss & Go to Dashboard</button>
         </div>
     </div>
-
     <div class="top-header">
         <h2>0040111 - WESLEY PREPARATORY SCHOOL (ASSORKO - ESSAMAN)</h2>
         <div class="header-right">
@@ -608,7 +591,6 @@
             <button class="btn-signout" onclick="signOut()">Sign Out</button>
         </div>
     </div>
-
     <!-- LOGIN SCREEN -->
     <div id="loginScreen" style="display: flex;">
         <div class="login-card">
@@ -626,7 +608,6 @@
             <button type="button" class="btn-submit" onclick="syncCloudUpdates()" style="background: #28a745; margin-top: 10px;">🔄 Sync Latest Students & Updates from Cloud</button>
         </div>
     </div>
-
     <!-- DASHBOARD SCREEN -->
     <div id="dashboardScreen" style="display: none; flex-direction: column; flex: 1;">
         <div class="workspace">
@@ -641,7 +622,6 @@
                 <a class="nav-link-sub" onclick="syncCloudUpdates()" style="color: #28a745; font-weight: bold;">🔄 Sync Updates</a>
                 <a class="nav-link-sub" onclick="signOut()" style="color: var(--accent-color); font-weight: bold;">🚪 Sign Out</a>
             </div>
-
             <div class="content-area">
                 <div class="action-row">
                     <div style="font-weight: bold; font-size: 13px; color: var(--primary-color); margin-right: 5px;">0040111 - WESLEY PREP</div>
@@ -651,7 +631,6 @@
                     <div class="action-badge" onclick="switchTab('students')" id="badgeStudents" style="display:none;">Register Students</div>
                     <div class="action-badge" onclick="switchTab('assessment')">★ Capture Assessment</div>
                 </div>
-
                 <!-- Home Panel -->
                 <div id="panel-home" class="panel-view active">
                     <div class="portal-main-title">KNOWLEDGE AND INTEGRITY - ASSESSMENT PORTAL</div>
@@ -690,7 +669,6 @@
                                     ADVANCED ANALYTICS ▼
                                 </div>
                             </div>
-
                             <div class="dashboard-right-col">
                                 <div class="analytics-card">
                                     <h3>Gender Distribution</h3>
@@ -702,7 +680,6 @@
                                         <canvas id="genderPieChart" width="110" height="110"></canvas>
                                     </div>
                                 </div>
-
                                 <div class="analytics-card">
                                     <h3>Year Distribution</h3>
                                     <div style="height: 90px; display: flex; align-items: flex-end; justify-content: space-around; padding-top: 10px; border-bottom: 1px solid #ccc;">
@@ -713,7 +690,6 @@
                                 </div>
                             </div>
                         </div>
-
                         <div class="home-gallery-section">
                             <div class="gallery-header">
                                 <span>🏫 School Gallery & Headteacher's Notice Board</span>
@@ -723,11 +699,9 @@
                             <div id="noticeBoardDisplay" class="notice-board-text">
                                 <b>Latest Notice:</b> Welcome back to a new term at Wesley Prep (Assorko - Essaman). Please ensure continuous assessment scores are synced before the deadline.
                             </div>
-
                             <div class="gallery-grid" id="dynamicGalleryGrid" style="margin-top: 15px;">
                                 <div class="gallery-item">
-                                    <img src="badge.jpg
-" class="gallery-img" id="galleryImg1" onerror="this.src='https://via.placeholder.com/200?text=Wesley+Prep+Badge'">
+                                    <img src="badge.jpg" class="gallery-img" id="galleryImg1" onerror="this.src='https://via.placeholder.com/200?text=Wesley+Prep+Badge'">
                                     <div style="font-size: 12px; font-weight: bold; margin-top: 5px; color: var(--primary-color);">School Crest / Badge</div>
                                 </div>
                                 <div class="gallery-item">
@@ -740,10 +714,8 @@
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 </div>
-
                 <!-- Admin Upload Panel -->
                 <div id="panel-admin-upload" class="panel-view">
                     <div class="capture-container" style="max-width: 700px; margin: 0 auto;">
@@ -764,7 +736,6 @@
                                 </label>
                                 <span style="font-size: 11px; color: #666; display: block; margin-top: 5px;">When checked, all teachers will see a maintenance screen upon login until you turn it off.</span>
                             </div>
-
                             <div class="form-group">
                                 <label>Upload Multiple Photos & Videos (Select multiple files)</label>
                                 <input type="file" id="infoMediaFiles" accept="image/*,video/*" multiple>
@@ -777,7 +748,6 @@
                         </div>
                     </div>
                 </div>
-
                 <!-- Admin Seasonal & Theme Editor Panel -->
                 <div id="panel-season-theme" class="panel-view">
                     <div class="capture-container" style="max-width: 700px; margin: 0 auto;">
@@ -795,7 +765,6 @@
                                 <option value="independence">🇬🇭 Ghana Independence (Red, Gold & Green)</option>
                             </select>
                         </div>
-
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px;">
                             <div class="form-group">
                                 <label>Main Theme Color</label>
@@ -806,16 +775,13 @@
                                 <input type="color" id="customAccentColor" value="#b31924" style="height: 40px; padding: 2px;">
                             </div>
                         </div>
-
                         <div class="form-group">
                             <label>Background Color / Festive Backdrop</label>
                             <input type="color" id="customBgColor" value="#fbf9f4" style="height: 40px; padding: 2px;">
                         </div>
-
                         <button type="button" class="btn-submit" onclick="saveCustomTheme()" style="background: var(--accent-color); margin-top: 15px;">Apply Theme Changes Instantly</button>
                     </div>
                 </div>
-
                 <!-- Online Admission Form Panel (Admin Only) -->
                 <div id="panel-admission" class="panel-view">
                     <div class="capture-container" style="max-width: 700px; margin: 0 auto;">
@@ -870,14 +836,12 @@
                         </form>
                     </div>
                 </div>
-
                 <!-- Assessment Capture Filter Panel -->
                 <div id="panel-assessment" class="panel-view">
                     <div class="capture-container">
                         <div class="capture-header">
                             <span>ASSESSMENT CAPTURE - || 🛈 Need Help</span>
                         </div>
-
                         <div class="filter-grid">
                             <div class="filter-group">
                                 <label>YEAR</label>
@@ -887,7 +851,6 @@
                                     <option>2025/2026 Academic Year</option>
                                 </select>
                             </div>
-
                             <div class="filter-group">
                                 <label>SEMESTER</label>
                                 <select id="semSelect">
@@ -897,7 +860,6 @@
                                     <option>Term 3 / 3rd Semester</option>
                                 </select>
                             </div>
-
                             <div class="filter-group">
                                 <label>ASSESSMENT_MODE</label>
                                 <select id="modeSelect">
@@ -908,7 +870,6 @@
                                     <option>End of term exams</option>
                                 </select>
                             </div>
-
                             <div class="filter-group">
                                 <label>CLASS</label>
                                 <select id="filterClassSelect">
@@ -921,7 +882,6 @@
                                     <option value="JHS 1">JHS 1</option>
                                 </select>
                             </div>
-
                             <div class="filter-group">
                                 <label>SUBJECT</label>
                                 <select id="subSelect">
@@ -937,7 +897,6 @@
                                 </select>
                             </div>
                         </div>
-
                         <div class="filter-actions-row">
                             <div class="filter-group" style="margin-bottom: 0; width: 220px;">
                                 <label>OVER-ALL SCORE</label>
@@ -946,7 +905,6 @@
                             <button class="btn-filter" onclick="applyFilter()" style="margin-top: 18px;">&lt;&lt;Filter&gt;&gt;</button>
                         </div>
                     </div>
-
                     <!-- Results Datatable Section -->
                     <div id="resultsSection" class="results-section">
                         <div class="results-toolbar">
@@ -962,7 +920,6 @@
                                 <input type="text" id="studentSearchBox" class="search-box" placeholder="Search student..." onkeyup="filterStudentTable()">
                             </div>
                         </div>
-
                         <table class="roster-table">
                             <thead>
                                 <tr>
@@ -986,7 +943,6 @@
                         </table>
                     </div>
                 </div>
-
                 <!-- Manage Students Panel (Admin Only) -->
                 <div id="panel-students" class="panel-view">
                     <div class="capture-container">
@@ -1025,7 +981,6 @@
                         <div style="margin-top: 10px;">
                             <button class="btn-filter" style="background: var(--accent-color);" onclick="addStudent()">+ Add Student to Class</button>
                         </div>
-
                         <h4 style="color: #333; margin-top: 20px;">Enrolled Students Roster</h4>
                         <table class="roster-table">
                             <thead>
@@ -1044,20 +999,16 @@
                         </table>
                     </div>
                 </div>
-
             </div>
-
             <div class="portal-footer">
                 @wps Ghana 2026. All rights reserved &nbsp;|&nbsp; Powered by Kobby Mensah
             </div>
         </div>
     </div>
-
     <script>
         var googleFormUrl = "https://docs.google.com/forms/d/e/1FAIpQLSfJ9YjaoZFiASufb_pis0CymTuIp1ZYdDlWLyZK1OhL7JfA/viewform?usp=dialog";
         var currentLoggedInUser = "";
         var currentGenderSortMode = "mixed";
-
         var schoolRosters = {
             "Basic 1": [],
             "Basic 2": [],
@@ -1067,15 +1018,12 @@
             "Basic 6": [],
             "JHS 1": []
         };
-
         var savedScores = {};
-
         window.addEventListener('DOMContentLoaded', () => {
             loadPersistedPortalData();
             checkUrlHashSync();
             checkMaintenanceStatus();
         });
-
         function checkUrlHashSync() {
             try {
                 if (window.location.hash && window.location.hash.length > 1) {
@@ -1101,19 +1049,16 @@
                 console.log("Cloud sync check error:", e);
             }
         }
-
         function checkMaintenanceStatus() {
             var isMaintenance = localStorage.getItem('wps_maintenance_mode') === 'true';
             var toggle = document.getElementById('maintenanceToggle');
             if (toggle) toggle.checked = isMaintenance;
-
             if (isMaintenance && currentLoggedInUser !== "" && currentLoggedInUser !== "head@wps.com") {
                 document.getElementById('maintenanceScreen').style.display = 'flex';
             } else {
                 document.getElementById('maintenanceScreen').style.display = 'none';
             }
         }
-
         function toggleMaintenanceMode() {
             if (currentLoggedInUser !== "head@wps.com") {
                 alert("Unauthorized! Only head@wps.com can change maintenance settings.");
@@ -1128,7 +1073,6 @@
                 alert("Maintenance mode DISABLED! Teachers can now access the portal normally.");
             }
         }
-
         function syncCloudUpdates() {
             checkUrlHashSync();
             loadPersistedPortalData();
@@ -1140,11 +1084,9 @@
             }
             alert("Portal successfully synced! Latest student rosters, announcements, and updates are now loaded.");
         }
-
         function handleLogin() {
             var emailInput = document.getElementById('email').value.trim().toLowerCase();
             var passInput = document.getElementById('password').value.trim();
-
             var validUsers = [
                 { user: "head@wps.com", pass: "8303" },
                 { user: "lowerp@wps.com", pass: "2026" },
@@ -1153,18 +1095,14 @@
                 { user: "naalorriet@wps.com", pass: "9786" },
                 { user: "priscy@wps.com", pass: "3247" }
             ];
-
             var matched = validUsers.find(u => u.user === emailInput && u.pass === passInput);
-
             if (!matched && emailInput.includes("@wps.com") && passInput !== "") {
                 matched = { user: emailInput, pass: passInput };
             }
-
             if (!matched) {
                 alert("Invalid Email or Password! Please check your credentials.");
                 return;
             }
-
             currentLoggedInUser = matched.user;
             
             var isMaintenance = localStorage.getItem('wps_maintenance_mode') === 'true';
@@ -1172,7 +1110,6 @@
                 document.getElementById('maintenanceScreen').style.display = 'flex';
                 return;
             }
-
             document.getElementById('loginScreen').style.display = 'none';
             document.getElementById('dashboardScreen').style.display = 'flex';
             document.getElementById('userDisplay').innerText = "Logged in: " + currentLoggedInUser;
@@ -1184,13 +1121,11 @@
             
             showAnnouncementPopup();
         }
-
         function updateAdminRestrictions() {
             var navAdm = document.getElementById('navAdmission');
             var navStu = document.getElementById('navManageStudents');
             var badgeAdm = document.getElementById('badgeAdmission');
             var badgeStu = document.getElementById('badgeStudents');
-
             if (currentLoggedInUser === "head@wps.com") {
                 if (navAdm) navAdm.style.display = "block";
                 if (navStu) navStu.style.display = "block";
@@ -1203,20 +1138,16 @@
                 if (badgeStu) badgeStu.style.display = "none";
             }
         }
-
         function showAnnouncementPopup() {
             var storedNotice = localStorage.getItem('wps_latest_notice') || "Welcome back to a new term at Wesley Prep (Assorko - Essaman). Please ensure continuous assessment scores are synced before the deadline.";
             var storedMediaHTML = localStorage.getItem('wps_latest_media_html') || "";
-
             document.getElementById('modalAnnouncementText').innerHTML = `<b>Notice:</b> ${storedNotice}`;
             document.getElementById('modalMediaContainer').innerHTML = storedMediaHTML;
             document.getElementById('announcementModal').style.display = 'flex';
         }
-
         function dismissAnnouncement() {
             document.getElementById('announcementModal').style.display = 'none';
         }
-
         function signOut() {
             if (confirm("Are you sure you want to sign out?")) {
                 currentLoggedInUser = "";
@@ -1228,13 +1159,11 @@
                 document.getElementById('userDisplay').innerText = "Not Logged In";
             }
         }
-
         function switchTab(tabName) {
             if ((tabName === 'admission' || tabName === 'students') && currentLoggedInUser !== "head@wps.com") {
                 alert("Access Denied! Only the Headteacher / Administrator can register students and make admissions.");
                 return;
             }
-
             document.querySelectorAll('.panel-view').forEach(panel => panel.classList.remove('active'));
             if (tabName === 'home') {
                 document.getElementById('panel-home').classList.add('active');
@@ -1253,13 +1182,11 @@
                 loadClassStudents();
             }
         }
-
         function checkAdminAccess() {
             var lockMsg = document.getElementById('adminLockMessage');
             var formContent = document.getElementById('adminFormContent');
             var navTheme = document.getElementById('navSeasonTheme');
             var badgeTheme = document.getElementById('badgeThemeEditor');
-
             if (currentLoggedInUser !== "head@wps.com") {
                 lockMsg.style.display = "block";
                 formContent.style.display = "none";
@@ -1272,13 +1199,11 @@
                 if (badgeTheme) badgeTheme.style.display = "block";
             }
         }
-
         function applyPresetTheme() {
             var preset = document.getElementById('presetTheme').value;
             var primary = document.getElementById('customPrimaryColor');
             var accent = document.getElementById('customAccentColor');
             var bg = document.getElementById('customBgColor');
-
             if (preset === 'christmas') {
                 primary.value = '#1b4d3e';
                 accent.value = '#d4af37';
@@ -1297,7 +1222,6 @@
                 bg.value = '#fbf9f4';
             }
         }
-
         function saveCustomTheme() {
             if (currentLoggedInUser !== "head@wps.com") {
                 alert("Unauthorized! Only head@wps.com can change portal themes.");
@@ -1306,42 +1230,34 @@
             var primary = document.getElementById('customPrimaryColor').value;
             var accent = document.getElementById('customAccentColor').value;
             var bg = document.getElementById('customBgColor').value;
-
             localStorage.setItem('wps_theme_primary', primary);
             localStorage.setItem('wps_theme_accent', accent);
             localStorage.setItem('wps_theme_bg', bg);
-
             applyThemeValues(primary, accent, bg);
             pushDataToCloud();
             alert("Portal seasonal theme successfully updated and synced!");
         }
-
         function applyThemeValues(primary, accent, bg) {
             document.documentElement.style.setProperty('--primary-color', primary);
             document.documentElement.style.setProperty('--accent-color', accent);
             document.documentElement.style.setProperty('--bg-color', bg);
         }
-
         function publishMediaFiles() {
             if (currentLoggedInUser !== "head@wps.com") {
                 alert("Unauthorized action! Only head@wps.com can upload materials.");
                 return;
             }
-
             var mediaInput = document.getElementById('infoMediaFiles');
             var noticeText = document.getElementById('infoAnnouncement').value.trim();
-
             if (noticeText !== "") {
                 localStorage.setItem('wps_latest_notice', noticeText);
                 document.getElementById('noticeBoardDisplay').innerHTML = `<b>Latest Notice:</b> ${noticeText}`;
             }
-
             if (mediaInput.files && mediaInput.files.length > 0) {
                 var galleryGrid = document.getElementById('dynamicGalleryGrid');
                 var modalMediaHTML = "";
                 var filesProcessed = 0;
                 var totalFiles = mediaInput.files.length;
-
                 for (var i = 0; i < totalFiles; i++) {
                     let file = mediaInput.files[i];
                     let reader = new FileReader();
@@ -1361,7 +1277,6 @@
                             
                             galleryGrid.appendChild(itemDiv);
                             filesProcessed++;
-
                             if (filesProcessed === totalFiles) {
                                 localStorage.setItem('wps_gallery_html', galleryGrid.innerHTML);
                                 localStorage.setItem('wps_latest_media_html', modalMediaHTML);
@@ -1373,7 +1288,6 @@
                     
                     reader.readAsDataURL(file);
                 }
-
                 document.getElementById('infoMediaFiles').value = "";
                 document.getElementById('infoAnnouncement').value = "";
             } else {
@@ -1386,7 +1300,6 @@
                 }
             }
         }
-
         function pushDataToCloud() {
             try {
                 var payload = {
@@ -1405,7 +1318,6 @@
                 console.log("Cloud push skipped.");
             }
         }
-
         function loadPersistedPortalData() {
             var savedRosters = localStorage.getItem('wps_school_rosters');
             if (savedRosters) {
@@ -1413,17 +1325,14 @@
                     schoolRosters = JSON.parse(savedRosters);
                 } catch(e) {}
             }
-
             var savedNotice = localStorage.getItem('wps_latest_notice');
             if (savedNotice) {
                 document.getElementById('noticeBoardDisplay').innerHTML = `<b>Latest Notice:</b> ${savedNotice}`;
             }
-
             var savedGallery = localStorage.getItem('wps_gallery_html');
             if (savedGallery) {
                 document.getElementById('dynamicGalleryGrid').innerHTML = savedGallery;
             }
-
             var pColor = localStorage.getItem('wps_theme_primary');
             var aColor = localStorage.getItem('wps_theme_accent');
             var bColor = localStorage.getItem('wps_theme_bg');
@@ -1433,29 +1342,23 @@
                 document.getElementById('customAccentColor').value = aColor;
                 document.getElementById('customBgColor').value = bColor;
             }
-
             var isMaintenance = localStorage.getItem('wps_maintenance_mode') === 'true';
             var toggle = document.getElementById('maintenanceToggle');
             if (toggle) toggle.checked = isMaintenance;
         }
-
         function submitAdmission(e) {
             e.preventDefault();
             if (currentLoggedInUser !== "head@wps.com") {
                 alert("Access Denied! Only the Admin can make admissions.");
                 return;
             }
-
             var name = document.getElementById('admFullName').value.trim().toUpperCase();
             var className = document.getElementById('admClass').value;
             var gender = document.getElementById('admGender').value;
             var dob = document.getElementById('admDob').value;
-
             var randomId = "250" + Math.floor(10000000 + Math.random() * 90000000);
             var todayStr = new Date().toISOString().split('T')[0];
-
             if (!schoolRosters[className]) schoolRosters[className] = [];
-
             schoolRosters[className].push({
                 id: randomId,
                 name: name,
@@ -1465,33 +1368,11 @@
                 attendance: "70/70",
                 conduct: "Good"
             });
-
-
-// Function to save student scores to Firestore
-async function saveStudentScores(studentId, termScores) {
-    try {
-        const studentRef = doc(db, "students", studentId);
-        
-        // Update the student document with the new scores
-        await updateDoc(studentRef, {
-            scores: termScores,
-            lastUpdated: new Date()
-        });
-        
-        alert("Scores saved successfully to the cloud!");
-    } catch (error) {
-        console.error("Error updating scores: ", error);
-        alert("Failed to save scores. Check connection.");
-    }
-}
-
-
             alert(`Admission Successful! ${name} has been officially enrolled into ${className} with ID: ${randomId} and synced to the cloud.`);
             document.getElementById('admissionForm').reset();
             updateDashboardStats();
             switchTab('students');
         }
-
         function updateDashboardStats() {
             var totalCount = 0;
             var maleCount = 0;
@@ -1503,72 +1384,57 @@ async function saveStudentScores(studentId, termScores) {
                     else if (s.gender === "FEMALE") femaleCount++;
                 });
             });
-
             document.getElementById('statTotalStudents').innerText = totalCount;
             document.getElementById('statMale').innerText = maleCount;
             document.getElementById('statFemale').innerText = femaleCount;
             document.getElementById('statBasic1').innerText = (schoolRosters["Basic 1"] ? schoolRosters["Basic 1"].length : 0);
-
             var malePct = totalCount > 0 ? Math.round((maleCount / totalCount) * 100) : 0;
             var femalePct = totalCount > 0 ? (100 - malePct) : 0;
             document.getElementById('pctMale').innerText = malePct + "%";
             document.getElementById('pctFemale').innerText = femalePct + "%";
-
             drawPieChart(malePct, femalePct);
         }
-
         function drawPieChart(malePct, femalePct) {
             var canvas = document.getElementById('genderPieChart');
             if (!canvas.getContext) return;
             var ctx = canvas.getContext('2d');
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-
             if (malePct === 0 && femalePct === 0) return;
-
             var centerX = canvas.width / 2;
             var centerY = canvas.height / 2;
             var radius = 45;
-
             var maleAngle = (malePct / 100) * 2 * Math.PI;
-
             ctx.beginPath();
             ctx.moveTo(centerX, centerY);
             ctx.arc(centerX, centerY, radius, 0, maleAngle);
             ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--primary-color') || '#0a2540';
             ctx.fill();
-
             ctx.beginPath();
             ctx.moveTo(centerX, centerY);
             ctx.arc(centerX, centerY, radius, maleAngle, 2 * Math.PI);
             ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--accent-color') || '#b31924';
             ctx.fill();
         }
-
         function applyFilter() {
             var selectedClass = document.getElementById('filterClassSelect').value;
             var mode = document.getElementById('modeSelect').value;
             var subject = document.getElementById('subSelect').value;
-
             if (mode.includes("SELECT") || subject.includes("SELECT")) {
                 alert("Please select both a valid Assessment Mode and Subject before filtering.");
                 return;
             }
-
             document.getElementById('resultsSection').style.display = 'block';
             renderAssessmentTable(selectedClass);
         }
-
         function setGenderSort(mode) {
             currentGenderSortMode = mode;
             var selectedClass = document.getElementById('filterClassSelect').value;
             renderAssessmentTable(selectedClass);
         }
-
         function renderAssessmentTable(className, filterQuery = "") {
             var students = [...(schoolRosters[className] || [])];
             var tbody = document.getElementById('assessmentTableBody');
             tbody.innerHTML = "";
-
             var subKey = document.getElementById('subSelect').value + "_" + document.getElementById('modeSelect').value + "_" + className;
             
             if (currentGenderSortMode === 'up') {
@@ -1576,16 +1442,12 @@ async function saveStudentScores(studentId, termScores) {
             } else if (currentGenderSortMode === 'down') {
                 students.sort((a, b) => (a.gender === 'FEMALE' ? -1 : 1));
             }
-
             var filteredStudents = students.filter(s => s.name.toLowerCase().includes(filterQuery.toLowerCase()));
-
             document.getElementById('totalStudentsText').innerText = "TOTAL NUMBER OF STUDENTS: " + filteredStudents.length + "/" + students.length;
-
             if (filteredStudents.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:#777;">No students registered in ${className} yet. Only Admin can add students via Online Admission.</td></tr>`;
                 return;
             }
-
             filteredStudents.forEach((student) => {
                 var currentScore = (savedScores[subKey] && savedScores[subKey][student.id] !== undefined) ? savedScores[subKey][student.id] : "";
                 var row = `<tr>
@@ -1600,28 +1462,23 @@ async function saveStudentScores(studentId, termScores) {
                 tbody.innerHTML += row;
             });
         }
-
         function filterStudentTable() {
             var query = document.getElementById('studentSearchBox').value;
             var className = document.getElementById('filterClassSelect').value;
             renderAssessmentTable(className, query);
         }
-
         function refreshStudentScores() {
             var className = document.getElementById('filterClassSelect').value;
             var subKey = document.getElementById('subSelect').value + "_" + document.getElementById('modeSelect').value + "_" + className;
-
             var inputs = document.querySelectorAll('.score-input');
             if (!savedScores[subKey]) savedScores[subKey] = {};
             inputs.forEach(input => {
                 var id = input.getAttribute('data-id');
                 savedScores[subKey][id] = input.value;
             });
-
             renderAssessmentTable(className);
             alert("Table refreshed successfully! All typed marks for each student are loaded.");
         }
-
         function submitAssessmentData() {
             var className = document.getElementById('filterClassSelect').value;
             var subKey = document.getElementById('subSelect').value + "_" + document.getElementById('modeSelect').value + "_" + className;
@@ -1632,11 +1489,9 @@ async function saveStudentScores(studentId, termScores) {
                 var id = input.getAttribute('data-id');
                 savedScores[subKey][id] = input.value;
             });
-
             alert("Assessment saved successfully! Opening Google Form to sync data to your master sheet...");
             window.open(googleFormUrl, '_blank');
         }
-
         function downloadDatasetCSV() {
             var className = document.getElementById('filterClassSelect').value;
             var students = schoolRosters[className] || [];
@@ -1645,7 +1500,6 @@ async function saveStudentScores(studentId, termScores) {
             students.forEach(s => {
                 csvContent += `${s.id},"${s.name}",${s.gender},${s.dob},${s.attendance},${s.conduct}\n`;
             });
-
             var encodedUri = encodeURI(csvContent);
             var link = document.createElement("a");
             link.setAttribute("href", encodedUri);
@@ -1654,7 +1508,6 @@ async function saveStudentScores(studentId, termScores) {
             link.click();
             document.body.removeChild(link);
         }
-
         function changeOverallScorePrompt() {
             var newScore = prompt("Enter new overall score maximum:", document.getElementById('overallScoreInput').value);
             if (newScore !== null && newScore.trim() !== "") {
@@ -1662,7 +1515,6 @@ async function saveStudentScores(studentId, termScores) {
                 alert("Overall score limit successfully changed to " + newScore);
             }
         }
-
         function printStudentReport(studentId, studentName, className, attendance, conduct) {
             var year = document.getElementById('yearSelect').value;
             var semester = document.getElementById('semSelect').value;
@@ -1721,18 +1573,15 @@ async function saveStudentScores(studentId, termScores) {
             `);
             reportWindow.document.close();
         }
-
         function loadClassStudents() {
             var selectedClass = document.getElementById('adminClassSelect').value;
             var students = schoolRosters[selectedClass] || [];
             var tbody = document.getElementById('studentTableBody');
             tbody.innerHTML = "";
-
             if (students.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#777;">No students registered for ${selectedClass} yet.</td></tr>`;
                 return;
             }
-
             students.forEach((student, index) => {
                 var row = `<tr>
                     <td>${index + 1}</td>
@@ -1745,31 +1594,25 @@ async function saveStudentScores(studentId, termScores) {
                 tbody.innerHTML += row;
             });
         }
-
         function addStudent() {
             if (currentLoggedInUser !== "head@wps.com") {
                 alert("Access Denied! Only the Admin can add students.");
                 return;
             }
-
             var selectedClass = document.getElementById('adminClassSelect').value;
             var nameInput = document.getElementById('newStudentName');
             var genderInput = document.getElementById('newStudentGender').value;
             var dobInput = document.getElementById('newStudentDob').value;
             var studentName = nameInput.value.trim().toUpperCase();
-
             if (!studentName) {
                 alert("Please enter a valid student full name.");
                 return;
             }
-
             if (!schoolRosters[selectedClass]) {
                 schoolRosters[selectedClass] = [];
             }
-
             var randomId = "250" + Math.floor(10000000 + Math.random() * 90000000);
             var todayStr = new Date().toISOString().split('T')[0];
-
             schoolRosters[selectedClass].push({
                 id: randomId,
                 name: studentName,
@@ -1779,22 +1622,18 @@ async function saveStudentScores(studentId, termScores) {
                 attendance: "70/70",
                 conduct: "Good"
             });
-
             localStorage.setItem('wps_school_rosters', JSON.stringify(schoolRosters));
             pushDataToCloud();
-
             nameInput.value = "";
             loadClassStudents();
             updateDashboardStats();
             alert(studentName + " successfully added to " + selectedClass + " and synced!");
         }
-
         function removeStudent(className, index) {
             if (currentLoggedInUser !== "head@wps.com") {
                 alert("Access Denied! Only the Admin can remove students.");
                 return;
             }
-
             if (confirm("Are you sure you want to remove this student?")) {
                 schoolRosters[className].splice(index, 1);
                 localStorage.setItem('wps_school_rosters', JSON.stringify(schoolRosters));
@@ -1802,14 +1641,12 @@ async function saveStudentScores(studentId, termScores) {
                 loadClassStudents();
                 updateDashboardStats();
             }
-        }  // 1. Function to save student scores to Firestore
-  window.saveStudentScores = async function(studentId, termScores) {
-      try {
-              </script>
+        }
+    </script>
 <script type="module">
   import { db } from './firebase.js';
   import { collection, addDoc, getDocs, query, orderBy, limit, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
+  
   // 1. Register student to the cloud
   window.addStudent = async function() {
       const name = document.getElementById('newStudentName').value;
