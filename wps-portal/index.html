@@ -112,17 +112,18 @@
             <div class="sidebar">
                 <a class="nav-link" onclick="switchTab('home')">🏠 Home Dashboard</a>
                 <a class="nav-link-sub" onclick="switchTab('admission')" id="navAdmission" style="display:none;">📝 Online Admission Form</a>
-                <a class="nav-link-sub" onclick="switchTab('assessment')">📊 Capture Assessment</a>
-                <a class="nav-link-sub" onclick="switchTab('students')" id="navManageStudents" style="display:none;">📝 Manage Students</a>
-                <a class="nav-link-sub" onclick="switchTab('theme')">🎨 Theme Editor</a>
+                <a class="nav-link-sub" onclick="switchTab('assessment')">★ Capture Assessment</a>
+                <a class="nav-link-sub" onclick="switchTab('students')" id="navManageStudents" style="display:none;">📝 Register Students</a>
+                <a class="nav-link-sub" onclick="switchTab('theme')" id="navTheme" style="display:none;">🎨 Theme Editor</a>
                 <a class="nav-link-sub" onclick="signOut()" style="color: var(--accent-color);">🚪 Sign Out</a>
             </div>
             <div class="content-area">
                 <div class="action-row">
-                    <div style="font-weight: bold; font-size: 12px; color: var(--primary-color);">WESLEY PREP PORTAL</div>
-                    <div class="action-badge" onclick="switchTab('admission')" id="badgeAdmission" style="display:none;">+ Admission</div>
-                    <div class="action-badge" onclick="switchTab('assessment')">★ Assessment</div>
-                    <div class="action-badge" onclick="switchTab('students')" id="badgeStudents" style="display:none;">Manage Roster</div>
+                    <div style="font-weight: bold; font-size: 12px; color: var(--primary-color);">0040111 - WESLEY PREP</div>
+                    <div class="action-badge" onclick="switchTab('admission')" id="badgeAdmission" style="display:none;">Online Admission</div>
+                    <div class="action-badge" onclick="switchTab('theme')" id="badgeTheme" style="display:none; background:#b31924; color:white;">Theme Editor</div>
+                    <div class="action-badge" onclick="switchTab('students')" id="badgeStudents" style="display:none;">Register Students</div>
+                    <div class="action-badge" onclick="switchTab('assessment')">Capture Assessment</div>
                 </div>
 
                 <!-- HOME PANEL -->
@@ -137,16 +138,16 @@
                                 <div class="stat-value" id="statTotalStudents">0</div>
                             </div>
                             <div class="stat-card">
-                                <h4>Subjects</h4>
+                                <h4>Subjects Offered</h4>
                                 <div class="stat-value">8</div>
                             </div>
                             <div class="stat-card">
-                                <h4>Staff</h4>
+                                <h4>Teaching Staff</h4>
                                 <div class="stat-value">6</div>
                             </div>
                             <div class="stat-card">
-                                <h4>Basic 4</h4>
-                                <div class="stat-value" id="statBasic4">0</div>
+                                <h4>Basic 1</h4>
+                                <div class="stat-value" id="statBasic1">0</div>
                             </div>
                             <div class="stat-card">
                                 <h4>Total Male</h4>
@@ -168,19 +169,19 @@
                 <!-- ONLINE ADMISSION PANEL -->
                 <div id="panel-admission" class="panel-view">
                     <div class="capture-container" style="max-width: 650px; margin: 0 auto;">
-                        <h3 style="color: var(--primary-color); margin-top:0;">Online Student Admission Form</h3>
-                        <p style="font-size: 12px; color: #666;">Enroll a learner directly into the school system.</p>
+                        <h3 style="color: var(--primary-color); margin-top:0;">WESLEY PREPARATORY SCHOOL - OFFICIAL STUDENT ADMISSION FORM</h3>
+                        <p style="font-size: 12px; color: #666;">Fill out the learner details below to enroll a new student directly into the school system.</p>
                         <div class="form-group">
-                            <label>Full Student Name</label>
+                            <label>Student Full Name</label>
                             <input type="text" id="admFullName" placeholder="e.g. MENSAH PRINCE">
                         </div>
                         <div class="form-group">
-                            <label>Select Class</label>
+                            <label>Select Class for Admission</label>
                             <select id="admClassSelect">
                                 <option value="Basic 1">Basic 1</option>
                                 <option value="Basic 2">Basic 2</option>
                                 <option value="Basic 3">Basic 3</option>
-                                <option value="Basic 4" selected>Basic 4</option>
+                                <option value="Basic 4">Basic 4</option>
                                 <option value="Basic 5">Basic 5</option>
                                 <option value="Basic 6">Basic 6</option>
                                 <option value="JHS 1">JHS 1</option>
@@ -193,39 +194,88 @@
                                 <option value="FEMALE">FEMALE</option>
                             </select>
                         </div>
-                        <button type="button" class="btn-submit" style="background: var(--accent-color);" onclick="submitOnlineAdmission()">Complete Admission & Save</button>
+                        <button type="button" class="btn-submit" style="background: var(--accent-color);" onclick="submitOnlineAdmission()">Complete Student Admission & Enroll</button>
                     </div>
                 </div>
 
-                <!-- ASSESSMENT PANEL -->
+                <!-- ASSESSMENT CAPTURE PANEL (RESTORED EXACT LAYOUT) -->
                 <div id="panel-assessment" class="panel-view">
                     <div class="capture-container">
-                        <h3>Termly Assessment & SBA Register</h3>
-                        <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 15px; align-items: center;">
-                            <select id="filterClassSelect" style="padding:8px; font-size:12px; border-radius:4px; border:1px solid #ccc;">
+                        <h3 style="color: var(--primary-color); margin-top:0; font-size: 14px;">ASSESSMENT CAPTURE - || 📋 Need Help</h3>
+                        
+                        <div class="form-group">
+                            <label>YEAR</label>
+                            <select id="yearSelect">
+                                <option value="" disabled selected>**SELECT YEAR**</option>
+                                <option>2025/2026 Academic Year</option>
+                                <option>2026/2027 Academic Year</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>SEMESTER</label>
+                            <select id="semSelect">
+                                <option value="" disabled selected>**SELECT SEM**</option>
+                                <option>Term 1 / 1st Semester</option>
+                                <option>Term 2 / 2nd Semester</option>
+                                <option>Term 3 / 3rd Semester</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>ASSESSMENT_MODE</label>
+                            <select id="assessmentModeSelect">
+                                <option value="" disabled selected>**SELECT MODE OF ASSESSMENT**</option>
+                                <option>Continuous Assessment & SBA</option>
+                                <option>End of Term Examination</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>CLASS</label>
+                            <select id="filterClassSelect">
                                 <option value="Basic 1">Basic 1</option>
                                 <option value="Basic 2">Basic 2</option>
                                 <option value="Basic 3">Basic 3</option>
-                                <option value="Basic 4" selected>Basic 4</option>
+                                <option value="Basic 4">Basic 4</option>
                                 <option value="Basic 5">Basic 5</option>
                                 <option value="Basic 6">Basic 6</option>
                                 <option value="JHS 1">JHS 1</option>
                             </select>
-                            <button class="btn-submit" style="width: auto; padding: 8px 15px;" onclick="renderAssessmentTable()">Load Register</button>
                         </div>
+                        <div class="form-group">
+                            <label>SUBJECT</label>
+                            <select id="subSelect">
+                                <option value="" disabled selected>**SELECT SUBJECT**</option>
+                                <option>Mathematics</option>
+                                <option>English Language</option>
+                                <option>Integrated Science</option>
+                                <option>History</option>
+                                <option>R. M. E</option>
+                                <option>Fante</option>
+                                <option>Creative Arts</option>
+                                <option>Computing</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>OVER-ALL SCORE</label>
+                            <input type="number" id="overallScoreInput" value="100">
+                        </div>
+                        
+                        <button type="button" class="btn-submit" style="width: auto; padding: 10px 25px;" onclick="renderAssessmentTable()">&lt;&lt;Filter&gt;&gt;</button>
+                    </div>
+
+                    <div id="assessmentResultsSection" style="display:none;" class="capture-container">
+                        <h4 style="color: var(--primary-color);">Class Register & Scores Entry</h4>
                         <table class="roster-table">
                             <thead>
                                 <tr>
                                     <th>No.</th>
                                     <th>Student Name</th>
-                                    <th>Class</th>
                                     <th>Class Score (50%)</th>
                                     <th>Exams Score (50%)</th>
                                     <th>Total (100%)</th>
                                 </tr>
                             </thead>
                             <tbody id="assessmentTableBody">
-                                <tr><td colspan="6">Click Load Register to view class records</td></tr>
+                                <!-- Dynamic rows -->
                             </tbody>
                         </table>
                     </div>
@@ -234,17 +284,47 @@
                 <!-- MANAGE STUDENTS PANEL -->
                 <div id="panel-students" class="panel-view">
                     <div class="capture-container">
-                        <h3>Student Roster & Management</h3>
-                        <button type="button" class="btn-submit" style="background: var(--accent-color); margin-bottom: 15px; padding: 10px;" onclick="promptAddStudent()">+ Add Student to Roster</button>
+                        <h3 style="color: var(--primary-color); margin-top:0; font-size: 14px;">ADMINISTRATION - CLASS & STUDENT ROSTER MANAGEMENT</h3>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 10px; margin-bottom: 15px;">
+                            <div class="form-group" style="margin-bottom:0;">
+                                <label>SELECT CLASS</label>
+                                <select id="regClassSelect">
+                                    <option value="Basic 1">Basic 1</option>
+                                    <option value="Basic 2">Basic 2</option>
+                                    <option value="Basic 3">Basic 3</option>
+                                    <option value="Basic 4" selected>Basic 4</option>
+                                    <option value="Basic 5">Basic 5</option>
+                                    <option value="Basic 6">Basic 6</option>
+                                    <option value="JHS 1">JHS 1</option>
+                                </select>
+                            </div>
+                            <div class="form-group" style="margin-bottom:0;">
+                                <label>STUDENT FULL NAME</label>
+                                <input type="text" id="newStudentName" placeholder="e.g. Mensah Prince">
+                            </div>
+                            <div class="form-group" style="margin-bottom:0;">
+                                <label>GENDER</label>
+                                <select id="newStudentGender">
+                                    <option value="MALE">MALE</option>
+                                    <option value="FEMALE">FEMALE</option>
+                                </select>
+                            </div>
+                            <div class="form-group" style="margin-bottom:0;">
+                                <label>DOB (YYYY-MM-DD)</label>
+                                <input type="date" id="newStudentDob" value="2012-05-14">
+                            </div>
+                        </div>
+                        <button type="button" class="btn-submit" style="background: var(--accent-color); width: auto; padding: 10px 20px;" onclick="promptAddStudent()">+ Add Student to Class</button>
                         
+                        <h4 style="margin-top: 20px; color: var(--primary-color);">Enrolled Students Roster</h4>
                         <table class="roster-table">
                             <thead>
                                 <tr>
                                     <th>No.</th>
-                                    <th>Ref ID</th>
+                                    <th>ASST_REF.ID</th>
                                     <th>Student Full Name</th>
-                                    <th>Class</th>
                                     <th>Gender</th>
+                                    <th>DOB</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -258,7 +338,7 @@
                 <!-- THEME EDITOR PANEL -->
                 <div id="panel-theme" class="panel-view">
                     <div class="capture-container" style="max-width: 500px; margin: 0 auto;">
-                        <h3>Portal Theme Customizer</h3>
+                        <h3 style="color: var(--primary-color); margin-top:0;">Portal Theme Customizer</h3>
                         <div class="form-group">
                             <label>Primary Header Color</label>
                             <input type="color" id="primaryColorPicker" value="#0a2540" style="height: 40px; cursor: pointer;" onchange="updateTheme()">
@@ -274,12 +354,12 @@
         </div>
     </div>
 
-    <!-- CORE SCRIPT WITH LOCAL STORAGE & FIREBASE SYNC -->
+    <!-- CORE SCRIPT WITH LOCAL STORAGE & INSTANT UI SYNC -->
     <script>
         var currentLoggedInUser = "";
         var cloudStudentsList = [
-            { id: "WPS-1001", name: "KOBBY MENSAH", class: "Basic 4", gender: "MALE" },
-            { id: "WPS-1002", name: "AYELE VIBES", class: "Basic 4", gender: "FEMALE" }
+            { id: "WPS-1001", name: "KOBBY MENSAH", class: "Basic 4", gender: "MALE", dob: "2012-05-14" },
+            { id: "WPS-1002", name: "AYELE VIBES", class: "Basic 4", gender: "FEMALE", dob: "2012-08-20" }
         ];
 
         window.addEventListener('DOMContentLoaded', () => {
@@ -315,7 +395,9 @@
                 if (email === "head@wps.com") {
                     document.getElementById('navAdmission').style.display = "block";
                     document.getElementById('navManageStudents').style.display = "block";
+                    document.getElementById('navTheme').style.display = "block";
                     document.getElementById('badgeAdmission').style.display = "block";
+                    document.getElementById('badgeTheme').style.display = "block";
                     document.getElementById('badgeStudents').style.display = "block";
                 }
                 loadLocalStudents();
@@ -343,7 +425,10 @@
                 document.getElementById('panel-students').classList.add('active');
                 renderStudentTable();
             }
-            if (tab === 'theme') document.getElementById('panel-theme').classList.add('active');
+            if (tab === 'theme') {
+                if (currentLoggedInUser !== "head@wps.com") { alert("Admin access required."); return; }
+                document.getElementById('panel-theme').classList.add('active');
+            }
         }
 
         function updateTheme() {
@@ -360,8 +445,8 @@
 
         function updateDashboardStats() {
             document.getElementById('statTotalStudents').innerText = cloudStudentsList.length;
-            var basic4Count = cloudStudentsList.filter(s => s.class === "Basic 4").length;
-            document.getElementById('statBasic4').innerText = basic4Count;
+            var basic1Count = cloudStudentsList.filter(s => s.class === "Basic 1").length;
+            document.getElementById('statBasic1').innerText = basic1Count;
             var maleCount = cloudStudentsList.filter(s => s.gender === "MALE").length;
             var femaleCount = cloudStudentsList.filter(s => s.gender === "FEMALE").length;
             document.getElementById('statMale').innerText = maleCount;
@@ -369,21 +454,25 @@
         }
 
         function promptAddStudent() {
-            var name = prompt("Enter Student Full Name:");
-            if (!name) return;
-            var cls = prompt("Enter Class (e.g. Basic 1, Basic 4, JHS 1):", "Basic 4");
-            if (!cls) return;
-            var gender = prompt("Enter Gender (MALE / FEMALE):", "MALE");
-            if (!gender) gender = "MALE";
+            var name = document.getElementById('newStudentName').value.trim();
+            if (!name) {
+                alert("Please enter student full name.");
+                return;
+            }
+            var cls = document.getElementById('regClassSelect').value;
+            var gender = document.getElementById('newStudentGender').value;
+            var dob = document.getElementById('newStudentDob').value;
 
             var refId = "WPS-" + Math.floor(1000 + Math.random() * 9000);
             cloudStudentsList.push({
                 id: refId,
                 name: name.toUpperCase(),
                 class: cls,
-                gender: gender.toUpperCase()
+                gender: gender,
+                dob: dob
             });
             saveLocalStudents();
+            document.getElementById('newStudentName').value = "";
             alert("Student successfully added to roster!");
         }
 
@@ -402,7 +491,8 @@
                 id: refId,
                 name: name.toUpperCase(),
                 class: cls,
-                gender: gender
+                gender: gender,
+                dob: "2012-01-01"
             });
             saveLocalStudents();
             alert("Admission Successful! " + name.toUpperCase() + " enrolled.");
@@ -415,16 +505,16 @@
             if (tbody) {
                 tbody.innerHTML = "";
                 if (cloudStudentsList.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="6">No students in roster yet.</td></tr>`;
+                    tbody.innerHTML = `<tr><td colspan="6">No students registered yet.</td></tr>`;
                 } else {
                     cloudStudentsList.forEach((s, i) => {
                         tbody.innerHTML += `<tr>
                             <td>${i+1}</td>
                             <td><code>${s.id}</code></td>
                             <td style="text-align:left; padding-left:10px;"><b>${s.name}</b></td>
-                            <td>${s.class}</td>
                             <td>${s.gender || 'MALE'}</td>
-                            <td><button onclick="removeStudent(${i})" style="background:#b31924;color:white;border:none;padding:3px 6px;border-radius:3px;cursor:pointer;">Delete</button></td>
+                            <td>${s.dob || '2012-05-14'}</td>
+                            <td><button onclick="removeStudent(${i})" style="background:#b31924;color:white;border:none;padding:3px 6px;border-radius:3px;cursor:pointer;">Remove</button></td>
                         </tr>`;
                     });
                 }
@@ -432,7 +522,7 @@
         }
 
         function removeStudent(index) {
-            if (confirm("Delete this student?")) {
+            if (confirm("Remove this student?")) {
                 cloudStudentsList.splice(index, 1);
                 saveLocalStudents();
             }
@@ -442,54 +532,24 @@
             var cls = document.getElementById('filterClassSelect').value;
             var tbody = document.getElementById('assessmentTableBody');
             tbody.innerHTML = "";
+            
+            document.getElementById('assessmentResultsSection').style.display = 'block';
             var filtered = cloudStudentsList.filter(s => s.class === cls);
+            
             if (filtered.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6">No students found in ${cls}. Add students via Online Admission or Manage Students.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="5">No students found in ${cls}. Add students via Register Students or Online Admission.</td></tr>`;
                 return;
             }
             filtered.forEach((s, i) => {
                 tbody.innerHTML += `<tr>
                     <td>${i+1}</td>
                     <td style="text-align:left; padding-left:10px;"><b>${s.name}</b></td>
-                    <td>${s.class}</td>
                     <td><input type="number" class="score-input" placeholder="0"></td>
                     <td><input type="number" class="score-input" placeholder="0"></td>
                     <td><span style="font-weight:600; color:#0a2540;">--</span></td>
                 </tr>`;
             });
         }
-    </script>
-
-    <!-- OPTIONAL FIREBASE MODULE -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-        
-        try {
-            const app = initializeApp({
-              apiKey: "AIzaSyAgB-npNhw-e6JtQo03wB4G86ZFnnXm8cA",
-              authDomain: "wps-gh.firebaseapp.com",
-              projectId: "wps-gh",
-              storageBucket: "wps-gh.firebasestorage.app",
-              messagingSenderId: "442533477217",
-              appId: "1:442533477217:web:65a408746cc2241bda2320"
-            });
-            const db = getFirestore(app);
-            
-            getDocs(collection(db, "students")).then(snapshot => {
-                if (!snapshot.empty) {
-                    snapshot.forEach(docSnap => {
-                        let data = docSnap.data();
-                        if (data && data.name) {
-                            if (!cloudStudentsList.some(s => s.name === data.name)) {
-                                cloudStudentsList.push({ id: docSnap.id.substring(0,6), name: data.name, class: data.class || "Basic 4", gender: data.gender || "MALE" });
-                            }
-                        }
-                    });
-                    saveLocalStudents();
-                }
-            }).catch(e => console.log("Using local storage fallback."));
-        } catch(err) {}
     </script>
 </body>
 </html>
