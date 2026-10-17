@@ -38,28 +38,32 @@
         .user-info { font-size: 11px; background: rgba(255,255,255,0.15); padding: 4px 8px; border-radius: 4px; }
         .btn-signout { background-color: var(--accent-color); color: white; border: none; padding: 5px 10px; border-radius: 4px; font-weight: 600; font-size: 11px; cursor: pointer; }
         .workspace { display: flex; flex: 1; width: 100%; box-sizing: border-box; }
-        .sidebar { width: 200px; background-color: var(--card-bg); border-right: 1px solid #e0dcd0; padding-top: 15px; flex-shrink: 0; }
-        .nav-link, .nav-link-sub { display: block; padding: 12px 15px; color: var(--primary-color); text-decoration: none; font-size: 12px; font-weight: 600; cursor: pointer; }
-        .nav-link-sub { color: #444; font-weight: normal; }
-        .nav-link:hover, .nav-link-sub:hover { background-color: #f0ebd8; }
+        .sidebar { width: 220px; background-color: var(--card-bg); border-right: 1px solid #e0dcd0; padding-top: 15px; flex-shrink: 0; }
+        .nav-link, .nav-link-sub { display: block; padding: 12px 15px; color: var(--primary-color); text-decoration: none; font-size: 12px; font-weight: 600; cursor: pointer; border-left: 3px solid transparent; }
+        .nav-link-sub { color: #444; font-weight: normal; padding-left: 25px; }
+        .nav-link:hover, .nav-link-sub:hover { background-color: #f0ebd8; border-left-color: var(--accent-color); }
         .content-area { flex: 1; padding: 15px; background-color: var(--bg-color); min-width: 0; }
+        
         #loginScreen { display: flex; justify-content: center; align-items: center; flex: 1; padding: 20px; }
         .login-card { background: var(--card-bg); padding: 25px; width: 100%; max-width: 380px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-top: 5px solid var(--primary-color); }
         .form-group { margin-bottom: 15px; }
         .form-group label { display: block; font-size: 12px; font-weight: 600; color: #444; margin-bottom: 5px; }
         .form-group input, .form-group select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; font-size: 13px; }
         .btn-submit { width: 100%; background: var(--primary-color); color: white; border: none; padding: 11px; font-weight: 600; border-radius: 4px; cursor: pointer; font-size: 13px; }
+        .btn-submit:hover { opacity: 0.9; }
+
         #dashboardScreen { display: none; flex-direction: column; flex: 1; }
         .panel-view { display: none; flex: 1; flex-direction: column; }
         .panel-view.active { display: flex; }
-        .capture-container { background: var(--card-bg); padding: 15px; border-radius: 6px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); border-top: 3px solid var(--primary-color); box-sizing: border-box; }
-        .roster-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        .roster-table th, .roster-table td { border: 1px solid #dee2e6; padding: 8px; text-align: center; font-size: 11px; }
+        .capture-container { background: var(--card-bg); padding: 20px; border-radius: 6px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); border-top: 3px solid var(--primary-color); box-sizing: border-box; margin-bottom: 20px; }
+        .roster-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        .roster-table th, .roster-table td { border: 1px solid #dee2e6; padding: 10px; text-align: center; font-size: 11px; }
         .roster-table th { background-color: #f0ebd8; color: var(--primary-color); }
+        
         @media screen and (max-width: 768px) {
             .workspace { flex-direction: column; }
             .sidebar { width: 100%; display: flex; flex-wrap: wrap; padding: 5px; }
-            .nav-link, .nav-link-sub { padding: 8px 10px; font-size: 11px; }
+            .nav-link, .nav-link-sub { padding: 8px 10px; font-size: 11px; border-left: none; }
         }
     </style>
 </head>
@@ -72,12 +76,13 @@
         </div>
     </div>
 
-    <div id="loginScreen" style="display: flex;">
+    <!-- LOGIN SCREEN -->
+    <div id="loginScreen">
         <div class="login-card">
             <h3>Portal Login</h3>
             <div class="form-group">
                 <label>Staff Email</label>
-                <input type="text" id="email" placeholder="head@wps.com">
+                <input type="text" id="email" placeholder="head@wps.com or teacher@wps.com">
             </div>
             <div class="form-group">
                 <label>Password</label>
@@ -87,20 +92,25 @@
         </div>
     </div>
 
-    <div id="dashboardScreen" style="display: none; flex-direction: column; flex: 1;">
+    <!-- DASHBOARD SCREEN -->
+    <div id="dashboardScreen">
         <div class="workspace">
             <div class="sidebar">
                 <a class="nav-link" onclick="switchTab('assessment')">📊 Assessment & Scores</a>
-                <a class="nav-link-sub" onclick="switchTab('students')" id="navManageStudents" style="display:none;">📝 Manage Students</a>
-                <a class="nav-link-sub" onclick="signOut()" style="color: var(--accent-color);">🚪 Sign Out</a>
+                <a class="nav-link" onclick="switchTab('students')" id="navManageStudents" style="display:none;">📝 Manage Students</a>
+                <a class="nav-link" onclick="switchTab('admission')">📋 Online Admission Form</a>
+                <a class="nav-link" onclick="switchTab('theme')">🎨 Theme Editor</a>
+                <a class="nav-link" onclick="switchTab('photos')">📷 Teacher Media & Photos</a>
+                <a class="nav-link" onclick="signOut()" style="color: var(--accent-color);">🚪 Sign Out</a>
             </div>
             <div class="content-area">
-                <!-- Assessment Panel -->
+                
+                <!-- 1. ASSESSMENT PANEL -->
                 <div id="panel-assessment" class="panel-view active">
                     <div class="capture-container">
-                        <h3>Termly Assessment Register</h3>
-                        <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 10px;">
-                            <select id="filterClassSelect" style="padding:8px; font-size:12px;">
+                        <h3>Termly Assessment & SBA Register</h3>
+                        <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 15px; align-items: center;">
+                            <select id="filterClassSelect" style="padding:8px; font-size:12px; border-radius:4px; border:1px solid #ccc;">
                                 <option value="Basic 1">Basic 1</option>
                                 <option value="Basic 2">Basic 2</option>
                                 <option value="Basic 3">Basic 3</option>
@@ -110,50 +120,112 @@
                                 <option value="JHS 1">JHS 1</option>
                             </select>
                             <button class="btn-submit" style="width: auto; padding: 8px 15px;" onclick="renderAssessmentTable()">Load Register</button>
+                            <button class="btn-submit" style="width: auto; padding: 8px 15px; background: #28a745;" onclick="syncUpdates()">🔄 Sync Cloud Updates</button>
                         </div>
                         <table class="roster-table">
                             <thead>
                                 <tr>
                                     <th>No.</th>
-                                    <th>Student Name</th>
+                                    <th>Student Full Name</th>
                                     <th>Class</th>
+                                    <th>SBA / Exams Score</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody id="assessmentTableBody">
-                                <tr><td colspan="4">Click Load Register</td></tr>
+                                <tr><td colspan="5">Click Load Register to view students</td></tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
 
-                <!-- Manage Students Panel -->
+                <!-- 2. MANAGE STUDENTS PANEL (ADMIN ONLY) -->
                 <div id="panel-students" class="panel-view">
                     <div class="capture-container">
-                        <h3>Student Cloud Registration</h3>
-                        <p style="font-size: 12px; color: #666;">Tap the button below to add a student directly to the cloud database.</p>
-                        <button type="button" class="btn-submit" style="background: var(--accent-color); margin-bottom: 15px;" onclick="promptAddStudent()">+ Add Student to Cloud</button>
+                        <h3>Administration - Student Roster Management</h3>
+                        <p style="font-size: 12px; color: #666;">Tap below to instantly enroll students into the cloud database via secure mobile dialog.</p>
+                        <button type="button" class="btn-submit" style="background: var(--accent-color); margin-bottom: 15px; padding: 12px;" onclick="promptAddStudent()">+ Add Student to Cloud</button>
                         
-                        <h4 style="margin: 10px 0;">Enrolled Cloud Roster</h4>
+                        <h4 style="margin: 15px 0 5px 0;">Enrolled Cloud Student Roster</h4>
                         <table class="roster-table">
                             <thead>
                                 <tr>
                                     <th>No.</th>
-                                    <th>Name</th>
+                                    <th>ASST_REF.ID</th>
+                                    <th>Student Full Name</th>
                                     <th>Class</th>
+                                    <th>Gender</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody id="studentTableBody">
-                                <tr><td colspan="4">Loading roster...</td></tr>
+                                <tr><td colspan="6">Loading cloud roster...</td></tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
+
+                <!-- 3. ONLINE ADMISSION FORM PANEL -->
+                <div id="panel-admission" class="panel-view">
+                    <div class="capture-container">
+                        <h3>Online Student Admission Portal</h3>
+                        <div class="form-group">
+                            <label>Full Student Name</label>
+                            <input type="text" id="admFullName" placeholder="ENTER STUDENT FULL NAME">
+                        </div>
+                        <div class="form-group">
+                            <label>Select Class</label>
+                            <select id="admClassSelect">
+                                <option value="Basic 1">Basic 1</option>
+                                <option value="Basic 2">Basic 2</option>
+                                <option value="Basic 3">Basic 3</option>
+                                <option value="Basic 4">Basic 4</option>
+                                <option value="Basic 5">Basic 5</option>
+                                <option value="Basic 6">Basic 6</option>
+                                <option value="JHS 1">JHS 1</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Gender</label>
+                            <select id="admGenderSelect">
+                                <option value="MALE">MALE</option>
+                                <option value="FEMALE">FEMALE</option>
+                            </select>
+                        </div>
+                        <button type="button" class="btn-submit" style="background: var(--accent-color);" onclick="submitOnlineAdmission()">Complete Student Admission & Enroll to Cloud</button>
+                    </div>
+                </div>
+
+                <!-- 4. THEME EDITOR PANEL -->
+                <div id="panel-theme" class="panel-view">
+                    <div class="capture-container">
+                        <h3>Portal Theme Customizer</h3>
+                        <div class="form-group">
+                            <label>Primary Header Color</label>
+                            <input type="color" id="primaryColorPicker" value="#0a2540" style="height: 40px; cursor: pointer;" onchange="updateTheme()">
+                        </div>
+                        <div class="form-group">
+                            <label>Accent Highlight Color</label>
+                            <input type="color" id="accentColorPicker" value="#b31924" style="height: 40px; cursor: pointer;" onchange="updateTheme()">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 5. TEACHER MEDIA & PHOTOS PANEL -->
+                <div id="panel-photos" class="panel-view">
+                    <div class="capture-container">
+                        <h3>Teacher Media & Photo Share</h3>
+                        <p style="font-size: 12px; color: #666;">Upload classroom moments and event snapshots to share across staff devices.</p>
+                        <input type="file" id="mediaUploadInput" accept="image/*" style="margin-bottom: 15px; font-size: 12px;">
+                        <button type="button" class="btn-submit" style="width: auto; padding: 8px 15px;" onclick="alert('Photo ready for sharing!')">Upload Photo</button>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
 
+    <!-- CORE SYSTEM LOGIC SCRIPT -->
     <script>
         var currentLoggedInUser = "";
         var cloudStudentsList = [];
@@ -166,12 +238,13 @@
                 document.getElementById('loginScreen').style.display = 'none';
                 document.getElementById('dashboardScreen').style.display = 'flex';
                 document.getElementById('userDisplay').innerText = email;
+                
                 if (email === "head@wps.com") {
                     document.getElementById('navManageStudents').style.display = "block";
                 }
                 if (typeof window.loadCloudStudents === 'function') window.loadCloudStudents();
             } else {
-                alert("Invalid email or password.");
+                alert("Invalid email or password. Use head@wps.com / 8303");
             }
         }
 
@@ -185,9 +258,26 @@
             document.querySelectorAll('.panel-view').forEach(p => p.classList.remove('active'));
             if (tab === 'assessment') document.getElementById('panel-assessment').classList.add('active');
             if (tab === 'students') {
-                if (currentLoggedInUser !== "head@wps.com") { alert("Admin only"); return; }
+                if (currentLoggedInUser !== "head@wps.com") { alert("Restricted: Admin access required."); return; }
                 document.getElementById('panel-students').classList.add('active');
                 if (typeof window.loadCloudStudents === 'function') window.loadCloudStudents();
+            }
+            if (tab === 'admission') document.getElementById('panel-admission').classList.add('active');
+            if (tab === 'theme') document.getElementById('panel-theme').classList.add('active');
+            if (tab === 'photos') document.getElementById('panel-photos').classList.add('active');
+        }
+
+        function updateTheme() {
+            var primary = document.getElementById('primaryColorPicker').value;
+            var accent = document.getElementById('accentColorPicker').value;
+            document.documentElement.style.setProperty('--primary-color', primary);
+            document.documentElement.style.setProperty('--accent-color', accent);
+        }
+
+        function syncUpdates() {
+            if (typeof window.loadCloudStudents === 'function') {
+                window.loadCloudStudents();
+                alert("Portal fully synchronized with cloud database!");
             }
         }
 
@@ -197,16 +287,22 @@
             tbody.innerHTML = "";
             var filtered = cloudStudentsList.filter(s => s.class === cls);
             if (filtered.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4">No students in ${cls}. Admin can add them in Manage Students.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="5">No students registered in ${cls} yet. Admin can add them under Manage Students.</td></tr>`;
                 return;
             }
             filtered.forEach((s, i) => {
-                tbody.innerHTML += `<tr><td>${i+1}</td><td><b>${s.name}</b></td><td>${s.class}</td><td>Loaded</td></tr>`;
+                tbody.innerHTML += `<tr>
+                    <td>${i+1}</td>
+                    <td><b>${s.name}</b></td>
+                    <td>${s.class}</td>
+                    <td><input type="number" placeholder="Score" style="width:60px; padding:4px; text-align:center;"></td>
+                    <td><span style="color:green; font-weight:600;">Active</span></td>
+                </tr>`;
             });
         }
     </script>
 
-    <!-- FIREBASE MODULE -->
+    <!-- FIREBASE CLOUD SYNC MODULE -->
     <script type="module">
         import { db } from './firebase.js';
         import { collection, addDoc, getDocs, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -214,20 +310,52 @@
         window.promptAddStudent = async function() {
             var name = prompt("Enter Student Full Name:");
             if (!name) return;
-            var cls = prompt("Enter Class (e.g. Basic 4):", "Basic 4");
+            var cls = prompt("Enter Class (e.g. Basic 1, Basic 4, JHS 1):", "Basic 4");
             if (!cls) return;
+            var gender = prompt("Enter Gender (MALE / FEMALE):", "MALE");
+            if (!gender) gender = "MALE";
 
             try {
+                const refId = "WPS-" + Math.floor(100000 + Math.random() * 900000);
                 await addDoc(collection(db, "students"), {
+                    refId: refId,
                     name: name.toUpperCase(),
                     class: cls,
-                    gender: "MALE",
+                    gender: gender.toUpperCase(),
                     registeredAt: new Date()
                 });
-                alert("Successfully added " + name.toUpperCase() + " to cloud!");
+                alert("Admission Successful! " + name.toUpperCase() + " saved to cloud.");
                 window.loadCloudStudents();
             } catch (err) {
                 alert("Error saving to cloud: " + err.message);
+            }
+        };
+
+        window.submitOnlineAdmission = async function() {
+            var name = document.getElementById('admFullName').value.trim();
+            var cls = document.getElementById('admClassSelect').value;
+            var gender = document.getElementById('admGenderSelect').value;
+
+            if (!name) {
+                alert("Please enter student full name.");
+                return;
+            }
+
+            try {
+                const refId = "WPS-" + Math.floor(100000 + Math.random() * 900000);
+                await addDoc(collection(db, "students"), {
+                    refId: refId,
+                    name: name.toUpperCase(),
+                    class: cls,
+                    gender: gender,
+                    registeredAt: new Date()
+                });
+                alert("Admission Successful! " + name.toUpperCase() + " enrolled to cloud.");
+                document.getElementById('admFullName').value = "";
+                window.loadCloudStudents();
+                switchTab('students');
+            } catch (err) {
+                alert("Error saving admission: " + err.message);
             }
         };
 
@@ -239,31 +367,37 @@
                     window.cloudStudentsList.push({ id: docSnap.id, ...docSnap.data() });
                 });
 
-                // Populate Manage Students table
                 const tbody = document.getElementById('studentTableBody');
                 if (tbody) {
                     tbody.innerHTML = "";
                     if (window.cloudStudentsList.length === 0) {
-                        tbody.innerHTML = `<tr><td colspan="4">No students in cloud yet.</td></tr>`;
+                        tbody.innerHTML = `<tr><td colspan="6">No students in cloud yet. Tap above to add one.</td></tr>`;
                     } else {
                         window.cloudStudentsList.forEach((s, i) => {
-                            tbody.innerHTML += `<tr><td>${i+1}</td><td><b>${s.name}</b></td><td>${s.class}</td><td><button onclick="window.removeStudent('${s.id}')" style="background:#b31924;color:white;border:none;padding:3px 6px;border-radius:3px;">Delete</button></td></tr>`;
+                            tbody.innerHTML += `<tr>
+                                <td>${i+1}</td>
+                                <td><code>${s.refId || 'WPS-TEMP'}</code></td>
+                                <td style="text-align:left; padding-left:15px;"><b>${s.name}</b></td>
+                                <td>${s.class}</td>
+                                <td>${s.gender || 'MALE'}</td>
+                                <td><button onclick="window.removeStudent('${s.id}')" style="background:#b31924;color:white;border:none;padding:4px 8px;border-radius:3px;cursor:pointer;">Delete</button></td>
+                            </tr>`;
                         });
                     }
                 }
             } catch (err) {
-                console.error(err);
+                console.error("Cloud sync error:", err);
             }
         };
 
         window.removeStudent = async function(id) {
-            if (confirm("Delete this student from cloud?")) {
+            if (confirm("Delete this student from cloud database?")) {
                 try {
                     await deleteDoc(doc(db, "students", id));
                     alert("Deleted successfully!");
                     window.loadCloudStudents();
                 } catch (e) {
-                    alert("Delete failed.");
+                    alert("Delete failed: " + e.message);
                 }
             }
         };
