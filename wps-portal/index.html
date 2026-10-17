@@ -107,7 +107,7 @@
     <div class="top-header">
         <h2>0040111 - WESLEY PREPARATORY SCHOOL (ASSORKO - ESSAMAN)</h2>
         <div class="header-right">
-            <button class="btn-signout" onclick="syncUpdates()" style="background: #28a745;">🔄 Sync Data</button>
+            <button class="btn-signout" onclick="syncUpdates()" style="background: #28a745;">🔄 Sync Cloud Data</button>
             <div class="user-info" id="userDisplay">Not Logged In</div>
             <button class="btn-signout" onclick="signOut()">Sign Out</button>
         </div>
@@ -218,18 +218,7 @@
                                 <b>Latest Notice:</b> Welcome back to Wesley Prep (Assorko - Essaman). Please ensure continuous assessment scores are synced before the deadline.
                             </div>
                             <div class="gallery-grid" id="homeGalleryGrid" style="margin-top: 12px;">
-                                <div class="gallery-item">
-                                    <img src="badge.jpg" class="gallery-img" onerror="this.src='https://via.placeholder.com/150?text=Badge'">
-                                    <div style="font-size: 11px; font-weight: bold; margin-top: 4px; color: var(--primary-color);">School Crest / Badge</div>
-                                </div>
-                                <div class="gallery-item">
-                                    <img src="https://via.placeholder.com/200?text=Campus+View" class="gallery-img">
-                                    <div style="font-size: 11px; font-weight: bold; margin-top: 4px; color: var(--primary-color);">School Campus</div>
-                                </div>
-                                <div class="gallery-item">
-                                    <img src="https://via.placeholder.com/200?text=Student+Activities" class="gallery-img">
-                                    <div style="font-size: 11px; font-weight: bold; margin-top: 4px; color: var(--primary-color);">Student Activities</div>
-                                </div>
+                                <!-- Populated dynamically -->
                             </div>
                         </div>
 
@@ -473,53 +462,90 @@
         </div>
     </div>
 
-    <!-- SCRIPT FOR LOGIC, LOCAL STORAGE, MEDIA DOWNLOADS & THEMES -->
+    <!-- SCRIPT FOR SHAREABLE CLOUD SYNC & MEDIA HUB -->
     <script>
         var currentLoggedInUser = "";
-        var cloudStudentsList = [
+        
+        // Default seed data with real student representations
+        var defaultStudents = [
             { id: "WPS-1001", name: "KOBBY MENSAH", class: "Basic 4", gender: "MALE", dob: "2012-05-14" },
-            { id: "WPS-1002", name: "AYELE VIBES", class: "Basic 4", gender: "FEMALE", dob: "2012-08-20" }
+            { id: "WPS-1002", name: "AYELE VIBES", class: "Basic 4", gender: "FEMALE", dob: "2012-08-20" },
+            { id: "WPS-1003", name: "MILDRED ADZEPA", class: "Basic 1", gender: "FEMALE", dob: "2015-02-10" }
         ];
-        var uploadedMediaList = [
-            { type: "image", src: "https://via.placeholder.com/300?text=Independence+Day+2026", caption: "Ghana Independence Parade 2026" },
-            { type: "image", src: "https://via.placeholder.com/300?text=Term+3+Exams+Briefing", caption: "Term 3 Staff Meeting & Briefing" }
+
+        var defaultMedia = [
+            { type: "image", src: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=500", caption: "Wesley Prep Jersey Representation & Staff Appreciation" },
+            { type: "image", src: "https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=500", caption: "Term 3 Classroom Activities & Teaching" }
         ];
+
+        var cloudStudentsList = [];
+        var uploadedMediaList = [];
 
         window.addEventListener('DOMContentLoaded', () => {
-            loadLocalPortalData();
+            checkUrlHashSync();
+            loadPortalData();
         });
 
-        function loadLocalPortalData() {
+        // Enables multi-device sharing via URL hash payload
+        function checkUrlHashSync() {
+            try {
+                if (window.location.hash && window.location.hash.length > 1) {
+                    var decoded = JSON.parse(decodeURIComponent(escape(atob(window.location.hash.substring(1)))));
+                    if (decoded.students) localStorage.setItem('wps_students_list', JSON.stringify(decoded.students));
+                    if (decoded.media) localStorage.setItem('wps_media_list', JSON.stringify(decoded.media));
+                    if (decoded.notice) localStorage.setItem('wps_notice_text', decoded.notice);
+                    if (decoded.primary) localStorage.setItem('wps_theme_primary', decoded.primary);
+                    if (decoded.accent) localStorage.setItem('wps_theme_accent', decoded.accent);
+                }
+            } catch(e) {}
+        }
+
+        function pushDataToCloudHash() {
+            try {
+                var payload = {
+                    students: cloudStudentsList,
+                    media: uploadedMediaList,
+                    notice: localStorage.getItem('wps_notice_text') || "",
+                    primary: localStorage.getItem('wps_theme_primary') || "",
+                    accent: localStorage.getItem('wps_theme_accent') || ""
+                };
+                window.location.hash = btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
+            } catch(e) {}
+        }
+
+        function loadPortalData() {
             var savedStudents = localStorage.getItem('wps_students_list');
-            if (savedStudents) {
-                try { cloudStudentsList = JSON.parse(savedStudents); } catch(e) {}
-            }
+            cloudStudentsList = savedStudents ? JSON.parse(savedStudents) : defaultStudents;
+
             var savedMedia = localStorage.getItem('wps_media_list');
-            if (savedMedia) {
-                try { uploadedMediaList = JSON.parse(savedMedia); } catch(e) {}
-            }
+            uploadedMediaList = savedMedia ? JSON.parse(savedMedia) : defaultMedia;
+
             var savedNotice = localStorage.getItem('wps_notice_text');
             if (savedNotice) {
                 document.getElementById('displayNoticeText').innerHTML = `<b>Latest Notice:</b> ${savedNotice}`;
             }
-            var savedPrimary = localStorage.getItem('wps_theme_primary');
-            var savedAccent = localStorage.getItem('wps_theme_accent');
-            if (savedPrimary && savedAccent) {
-                applyThemeValues(savedPrimary, savedAccent);
+
+            var pColor = localStorage.getItem('wps_theme_primary');
+            var aColor = localStorage.getItem('wps_theme_accent');
+            if (pColor && aColor) {
+                applyThemeValues(pColor, aColor);
             }
 
             updateDashboardStats();
             renderStudentTable();
             renderTeacherMediaHub();
+            renderHomeGallery();
             drawGenderPieChart();
         }
 
-        function saveLocalPortalData() {
+        function savePortalData() {
             localStorage.setItem('wps_students_list', JSON.stringify(cloudStudentsList));
             localStorage.setItem('wps_media_list', JSON.stringify(uploadedMediaList));
+            pushDataToCloudHash();
             updateDashboardStats();
             renderStudentTable();
             renderTeacherMediaHub();
+            renderHomeGallery();
             drawGenderPieChart();
         }
 
@@ -542,7 +568,7 @@
                 document.getElementById('badgeTheme').style.display = isAdmin ? "block" : "none";
                 document.getElementById('badgeStudents').style.display = isAdmin ? "block" : "none";
 
-                loadLocalPortalData();
+                loadPortalData();
             } else {
                 alert("Invalid email or password. Use head@wps.com / 8303");
             }
@@ -584,9 +610,9 @@
         function applyPresetTheme() {
             var preset = document.getElementById('presetTheme').value;
             var primary = "#0a2540", accent = "#b31924";
-            if (preset === 'independence') { primary = "#b31924"; accent = "#006b3f"; } // Red, Gold, Green
-            else if (preset === 'christmas') { primary = "#1b4d3e"; accent = "#d4af37"; } // Green & Gold
-            else if (preset === 'easter') { primary = "#512b58"; accent = "#e4a11b"; } // Purple & Gold
+            if (preset === 'independence') { primary = "#b31924"; accent = "#006b3f"; }
+            else if (preset === 'christmas') { primary = "#1b4d3e"; accent = "#d4af37"; }
+            else if (preset === 'easter') { primary = "#512b58"; accent = "#e4a11b"; }
             else if (preset === 'default') { primary = "#0a2540"; accent = "#b31924"; }
 
             document.getElementById('primaryColorPicker').value = primary;
@@ -600,7 +626,8 @@
             localStorage.setItem('wps_theme_primary', primary);
             localStorage.setItem('wps_theme_accent', accent);
             applyThemeValues(primary, accent);
-            alert("Theme updated successfully across the portal!");
+            pushDataToCloudHash();
+            alert("Theme updated successfully!");
         }
 
         function applyThemeValues(primary, accent) {
@@ -610,7 +637,7 @@
 
         function publishAdminMedia() {
             var fileInput = document.getElementById('adminMediaFile');
-            var caption = document.getElementById('adminMediaCaption').value.trim() || "School Event";
+            var caption = document.getElementById('adminMediaCaption').value.trim() || "Wesley Prep Event";
             var notice = document.getElementById('adminNoticeInput').value.trim();
 
             if (notice) {
@@ -626,11 +653,11 @@
                         uploadedMediaList.unshift({
                             type: file.type.startsWith('video/') ? 'video' : 'image',
                             src: e.target.result,
-                            caption: caption + (i > 0 ? ` (${i+1})` : '')
+                            caption: caption
                         });
-                        saveLocalPortalData();
+                        savePortalData();
                         if (i === fileInput.files.length - 1) {
-                            alert("Media and notice published successfully! Teachers can now view and download them.");
+                            alert("Media published successfully! All teachers can now view and download it.");
                             document.getElementById('adminMediaFile').value = "";
                             document.getElementById('adminMediaCaption').value = "";
                             document.getElementById('adminNoticeInput').value = "";
@@ -640,6 +667,7 @@
                     reader.readAsDataURL(file);
                 }
             } else if (notice) {
+                pushDataToCloudHash();
                 alert("Notice board updated successfully!");
             }
         }
@@ -648,10 +676,6 @@
             var grid = document.getElementById('teacherMediaDownloadGrid');
             if (!grid) return;
             grid.innerHTML = "";
-            if (uploadedMediaList.length === 0) {
-                grid.innerHTML = `<p style="color:#666; font-size:12px;">No media uploaded by admin yet.</p>`;
-                return;
-            }
             uploadedMediaList.forEach((item, index) => {
                 var mediaHTML = item.type === 'video' 
                     ? `<video src="${item.src}" class="gallery-video" controls></video>` 
@@ -667,9 +691,33 @@
             });
         }
 
+        function renderHomeGallery() {
+            var grid = document.getElementById('homeGalleryGrid');
+            if (!grid) return;
+            grid.innerHTML = `
+                <div class="gallery-item">
+                    <img src="badge.jpg" class="gallery-img" onerror="this.src='https://via.placeholder.com/150?text=Badge'">
+                    <div style="font-size: 11px; font-weight: bold; margin-top: 4px; color: var(--primary-color);">School Crest / Badge</div>
+                </div>
+            `;
+            // Show up to 2 latest uploaded media on the home page gallery
+            uploadedMediaList.slice(0, 2).forEach((item) => {
+                var mediaHTML = item.type === 'video' 
+                    ? `<video src="${item.src}" class="gallery-video" controls></video>` 
+                    : `<img src="${item.src}" class="gallery-img">`;
+                grid.innerHTML += `
+                    <div class="gallery-item">
+                        ${mediaHTML}
+                        <div style="font-size: 11px; font-weight: bold; margin-top: 4px; color: var(--primary-color);">${item.caption}</div>
+                    </div>
+                `;
+            });
+        }
+
         function syncUpdates() {
-            loadLocalPortalData();
-            alert("Portal fully synchronized with latest updates!");
+            checkUrlHashSync();
+            loadPortalData();
+            alert("Portal fully synchronized!");
         }
 
         function updateDashboardStats() {
@@ -715,91 +763,4 @@
         function promptAddStudent() {
             var name = document.getElementById('newStudentName').value.trim();
             if (!name) { alert("Please enter student full name."); return; }
-            var cls = document.getElementById('regClassSelect').value;
-            var gender = document.getElementById('newStudentGender').value;
-            var dob = document.getElementById('newStudentDob').value;
-
-            cloudStudentsList.push({
-                id: "WPS-" + Math.floor(1000 + Math.random() * 9000),
-                name: name.toUpperCase(),
-                class: cls,
-                gender: gender,
-                dob: dob
-            });
-            saveLocalPortalData();
-            document.getElementById('newStudentName').value = "";
-            alert("Student successfully added to roster!");
-        }
-
-        function submitOnlineAdmission() {
-            var name = document.getElementById('admFullName').value.trim();
-            var cls = document.getElementById('admClassSelect').value;
-            var gender = document.getElementById('admGenderSelect').value;
-
-            if (!name) { alert("Please enter student full name."); return; }
-
-            cloudStudentsList.push({
-                id: "WPS-" + Math.floor(1000 + Math.random() * 9000),
-                name: name.toUpperCase(),
-                class: cls,
-                gender: gender,
-                dob: "2012-01-01"
-            });
-            saveLocalPortalData();
-            alert("Admission Successful! " + name.toUpperCase() + " enrolled.");
-            document.getElementById('admFullName').value = "";
-            switchTab('students');
-        }
-
-        function renderStudentTable() {
-            var tbody = document.getElementById('studentTableBody');
-            if (tbody) {
-                tbody.innerHTML = "";
-                if (cloudStudentsList.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="6">No students registered yet.</td></tr>`;
-                } else {
-                    cloudStudentsList.forEach((s, i) => {
-                        tbody.innerHTML += `<tr>
-                            <td>${i+1}</td>
-                            <td><code>${s.id}</code></td>
-                            <td style="text-align:left; padding-left:10px;"><b>${s.name}</b></td>
-                            <td>${s.gender || 'MALE'}</td>
-                            <td>${s.dob || '2012-05-14'}</td>
-                            <td><button onclick="removeStudent(${i})" style="background:#b31924;color:white;border:none;padding:3px 6px;border-radius:3px;cursor:pointer;">Remove</button></td>
-                        </tr>`;
-                    });
-                }
-            }
-        }
-
-        function removeStudent(index) {
-            if (confirm("Remove this student?")) {
-                cloudStudentsList.splice(index, 1);
-                saveLocalPortalData();
-            }
-        }
-
-        function renderAssessmentTable() {
-            var cls = document.getElementById('filterClassSelect').value;
-            var tbody = document.getElementById('assessmentTableBody');
-            tbody.innerHTML = "";
-            document.getElementById('assessmentResultsSection').style.display = 'block';
-            var filtered = cloudStudentsList.filter(s => s.class === cls);
-            
-            if (filtered.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5">No students found in ${cls}. Add students via Register Students or Admission.</td></tr>`;
-                return;
-            }
-            filtered.forEach((s, i) => {
-                tbody.innerHTML += `<tr>
-                    <td>${i+1}</td>
-                    <td style="text-align:left; padding-left:10px;"><b>${s.name}</b></td>
-                    <td><input type="number" class="score-input" placeholder="0"></td>
-                    <td><input type="number" class="score-input" placeholder="0"></td>
-                    <td><span style="font-weight:600; color:#0a2540;">--</span></td>
-                </tr>`;
-            });
-        }
-    </script>
-</body>
-</html>
+            var cls = document.
