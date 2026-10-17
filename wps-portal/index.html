@@ -199,7 +199,6 @@
         .panel-view.active {
             display: flex;
         }
-        
         .portal-main-title {
             text-align: center;
             color: var(--primary-color);
@@ -258,7 +257,6 @@
             border-color: #f0cccc;
         }
         .stat-card.red h4 { color: var(--accent-color); }
-        
         .analytics-banner {
             width: 100%;
             background: var(--accent-color);
@@ -421,14 +419,11 @@
         .btn-refresh { background-color: #28a745; color: white; border: none; padding: 7px 12px; border-radius: 4px; font-weight: 600; cursor: pointer; font-size: 12px; }
         .btn-download-data { background-color: var(--primary-color); color: white; border: none; padding: 7px 12px; border-radius: 4px; font-weight: 600; cursor: pointer; font-size: 12px; }
         .btn-submit-complete { background-color: var(--accent-color); color: white; border: none; padding: 7px 12px; border-radius: 4px; font-weight: 600; cursor: pointer; font-size: 12px; }
-        .btn-change-score { background-color: #6c757d; color: white; border: none; padding: 7px 12px; border-radius: 4px; font-weight: 600; cursor: pointer; font-size: 12px; }
         .search-box { padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 12px; }
-        .roster-table { width: 100%; border-collapse: collapse; margin-top: 10px; min-width: 600px; }
-        .roster-table th, .roster-table td { border: 1px solid #dee2e6; padding: 10px; text-align: left; font-size: 13px; }
+        .roster-table { width: 100%; border-collapse: collapse; margin-top: 10px; min-width: 900px; }
+        .roster-table th, .roster-table td { border: 1px solid #dee2e6; padding: 8px; text-align: center; font-size: 12px; }
         .roster-table th { background-color: #f0ebd8; color: var(--primary-color); font-weight: 600; }
-        .score-input { width: 70px; padding: 5px; border: 1px solid #ccc; border-radius: 3px; text-align: center; font-weight: bold; }
-        .sort-btn { background: none; border: none; cursor: pointer; font-weight: bold; font-size: 12px; color: var(--primary-color); padding: 0 3px; }
-        .sort-btn:hover { color: var(--accent-color); }
+        .score-input { width: 55px; padding: 4px; border: 1px solid #ccc; border-radius: 3px; text-align: center; font-weight: bold; font-size: 12px; }
         /* Announcement Modal Popup */
         #announcementModal {
             display: none;
@@ -516,45 +511,15 @@
             border-top: 5px solid #b31924;
         }
         .maintenance-card h2 { color: #b31924; margin-top: 0; }
-        /* MOBILE RESPONSIVE MEDIA QUERIES */
         @media screen and (max-width: 768px) {
-            .workspace {
-                flex-direction: column;
-            }
-            .sidebar {
-                width: 100%;
-                height: auto;
-                display: flex;
-                flex-wrap: wrap;
-                padding: 5px 10px;
-                border-right: none;
-                border-bottom: 1px solid #e0dcd0;
-            }
-            .nav-title {
-                display: none;
-            }
-            .nav-link, .nav-link-sub {
-                padding: 8px 12px;
-                font-size: 12px;
-                border-left: none;
-                border-bottom: 3px solid transparent;
-            }
-            .nav-link:hover, .nav-link-sub:hover {
-                border-left-color: transparent;
-                border-bottom-color: var(--accent-color);
-            }
-            .filter-grid {
-                grid-template-columns: 1fr;
-            }
-            .gallery-grid {
-                grid-template-columns: 1fr;
-            }
-            .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            .top-header h2 {
-                font-size: 13px;
-            }
+            .workspace { flex-direction: column; }
+            .sidebar { width: 100%; height: auto; display: flex; flex-wrap: wrap; padding: 5px 10px; border-right: none; border-bottom: 1px solid #e0dcd0; }
+            .nav-title { display: none; }
+            .nav-link, .nav-link-sub { padding: 8px 12px; font-size: 12px; border-left: none; border-bottom: 3px solid transparent; }
+            .filter-grid { grid-template-columns: 1fr; }
+            .gallery-grid { grid-template-columns: 1fr; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .top-header h2 { font-size: 13px; }
         }
     </style>
 </head>
@@ -616,6 +581,7 @@
                 <a class="nav-link" onclick="switchTab('home')">Student Assessment Portal</a>
                 <a class="nav-link-sub" onclick="switchTab('admission')" id="navAdmission" style="display:none;">📝 Online Admission Form</a>
                 <a class="nav-link-sub" onclick="switchTab('admin-upload')" id="navAdminUpload">🔒 Admin Info & Media Upload</a>
+                <a class="nav-link-sub" onclick="switchTab('teacher-photos')">📸 Teacher Media & Photo Share</a>
                 <a class="nav-link-sub" onclick="switchTab('season-theme')" id="navSeasonTheme" style="display:none; color: #b31924; font-weight: bold;">🎨 Theme Editor</a>
                 <a class="nav-link-sub" onclick="switchTab('assessment')">Capture Assessment</a>
                 <a class="nav-link-sub" onclick="switchTab('students')" id="navManageStudents" style="display:none;">Manage Students (Admin)</a>
@@ -627,6 +593,7 @@
                     <div style="font-weight: bold; font-size: 13px; color: var(--primary-color); margin-right: 5px;">0040111 - WESLEY PREP</div>
                     <div class="action-badge" onclick="switchTab('admission')" id="badgeAdmission" style="display:none;">📝 Online Admission</div>
                     <div class="action-badge" onclick="switchTab('admin-upload')">🔒 Admin Upload</div>
+                    <div class="action-badge" onclick="switchTab('teacher-photos')">📸 Teacher Photos</div>
                     <div class="action-badge" id="badgeThemeEditor" onclick="switchTab('season-theme')" style="display:none; background:#b31924; color:white;">🎨 Theme Editor</div>
                     <div class="action-badge" onclick="switchTab('students')" id="badgeStudents" style="display:none;">Register Students</div>
                     <div class="action-badge" onclick="switchTab('assessment')">★ Capture Assessment</div>
@@ -665,7 +632,7 @@
                                         <div class="stat-value" id="statFemale">0</div>
                                     </div>
                                 </div>
-                                <div class="analytics-banner" onclick="alert('Advanced Analytics: All 8 subjects active across Basic 1 to JHS 1 with real-time syncing.')">
+                                <div class="analytics-banner" onclick="alert('Advanced Analytics: All 8 subjects active across Basic 1 to JHS 1 with automated real-time cloud syncing.')">
                                     ADVANCED ANALYTICS ▼
                                 </div>
                             </div>
@@ -697,7 +664,7 @@
                             </div>
                             
                             <div id="noticeBoardDisplay" class="notice-board-text">
-                                <b>Latest Notice:</b> Welcome back to a new term at Wesley Prep (Assorko - Essaman). Please ensure continuous assessment scores are synced before the deadline.
+                                <b>Latest Notice:</b> Welcome back to Wesley Prep. Continuous assessments auto-calculate and sync instantly across all devices.
                             </div>
                             <div class="gallery-grid" id="dynamicGalleryGrid" style="margin-top: 15px;">
                                 <div class="gallery-item">
@@ -745,6 +712,30 @@
                                 <textarea id="infoAnnouncement" rows="3" placeholder="Enter termly notices for teachers..."></textarea>
                             </div>
                             <button type="button" class="btn-submit" onclick="publishMediaFiles()" style="background: var(--primary-color);">Publish to Main Page & Cloud</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Teacher Photo Share Panel -->
+                <div id="panel-teacher-photos" class="panel-view">
+                    <div class="capture-container" style="max-width: 800px; margin: 0 auto;">
+                        <div class="capture-header">
+                            <span>📸 TEACHER PHOTO & MEDIA SHARING HUB</span>
+                        </div>
+                        <p style="font-size: 13px; color: #666; margin-bottom: 15px;">Upload classroom photos, student activities, or teaching notes. All connected teacher devices will view them instantly.</p>
+                        
+                        <div class="form-group">
+                            <label>Select Photo or Image</label>
+                            <input type="file" id="teacherPhotoFile" accept="image/*">
+                        </div>
+                        <div class="form-group">
+                            <label>Photo Caption / Description</label>
+                            <input type="text" id="teacherPhotoCaption" placeholder="e.g. Basic 4 Mathematics Practical Session">
+                        </div>
+                        <button type="button" class="btn-submit" onclick="uploadTeacherPhoto()" style="background: var(--primary-color);">Upload Photo to Cloud</button>
+
+                        <h4 style="color: var(--primary-color); margin-top: 25px; border-bottom: 2px solid var(--primary-color); padding-bottom: 5px;">Shared Classroom Photos</h4>
+                        <div id="teacherPhotoGalleryGrid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 15px;">
+                            <!-- Photos populate here dynamically -->
                         </div>
                     </div>
                 </div>
@@ -840,34 +831,22 @@
                 <div id="panel-assessment" class="panel-view">
                     <div class="capture-container">
                         <div class="capture-header">
-                            <span>ASSESSMENT CAPTURE - || 🛈 Need Help</span>
+                            <span>WESLEY PREPARATORY SCHOOL - TERMLY SBA RECORDING (AUTOMATED ASSESSMENT)</span>
                         </div>
                         <div class="filter-grid">
                             <div class="filter-group">
                                 <label>YEAR</label>
                                 <select id="yearSelect">
-                                    <option>**SELECT YEAR**</option>
-                                    <option>2026/2027 Academic Year</option>
                                     <option>2025/2026 Academic Year</option>
+                                    <option>2026/2027 Academic Year</option>
                                 </select>
                             </div>
                             <div class="filter-group">
                                 <label>SEMESTER</label>
                                 <select id="semSelect">
-                                    <option>**SELECT SEM**</option>
                                     <option>Term 1 / 1st Semester</option>
                                     <option>Term 2 / 2nd Semester</option>
                                     <option>Term 3 / 3rd Semester</option>
-                                </select>
-                            </div>
-                            <div class="filter-group">
-                                <label>ASSESSMENT_MODE</label>
-                                <select id="modeSelect">
-                                    <option>**SELECT MODE OF ASSESSMENT**</option>
-                                    <option>Individual class test</option>
-                                    <option>Group class test</option>
-                                    <option>Project homework</option>
-                                    <option>End of term exams</option>
                                 </select>
                             </div>
                             <div class="filter-group">
@@ -885,7 +864,6 @@
                             <div class="filter-group">
                                 <label>SUBJECT</label>
                                 <select id="subSelect">
-                                    <option>**SELECT SUBJECT**</option>
                                     <option>Mathematics</option>
                                     <option>English</option>
                                     <option>Science</option>
@@ -896,24 +874,18 @@
                                     <option>Computing</option>
                                 </select>
                             </div>
-                        </div>
-                        <div class="filter-actions-row">
-                            <div class="filter-group" style="margin-bottom: 0; width: 220px;">
-                                <label>OVER-ALL SCORE</label>
-                                <input type="number" id="overallScoreInput" value="100">
+                            <div class="filter-group" style="display:flex; align-items:flex-end;">
+                                <button class="btn-filter" onclick="applyFilter()" style="width:100%;">Load Register</button>
                             </div>
-                            <button class="btn-filter" onclick="applyFilter()" style="margin-top: 18px;">&lt;&lt;Filter&gt;&gt;</button>
                         </div>
                     </div>
-                    <!-- Results Datatable Section -->
+                    <!-- Results Datatable Section matching official sheet layout -->
                     <div id="resultsSection" class="results-section">
                         <div class="results-toolbar">
                             <div class="toolbar-left">
                                 <span id="totalStudentsText" style="font-weight: bold; font-size: 13px; color: #333;">TOTAL NUMBER OF STUDENTS: 0</span>
-                                <button class="btn-refresh" onclick="refreshStudentScores()">Refresh</button>
-                                <button class="btn-download-data" onclick="downloadDatasetCSV()">Download Data</button>
-                                <button class="btn-submit-complete" onclick="submitAssessmentData()">Submit Complete</button>
-                                <button class="btn-change-score" onclick="changeOverallScorePrompt()">Change Over-All Score</button>
+                                <button class="btn-refresh" onclick="saveAllScoresToCloud()">💾 Auto-Save All to Cloud</button>
+                                <button class="btn-download-data" onclick="downloadOfficialSBA_CSV()">📥 Download Official SBA CSV</button>
                             </div>
                             <div class="toolbar-right">
                                 <label style="font-size: 12px; font-weight: bold; color: #555;">Search:</label>
@@ -923,17 +895,18 @@
                         <table class="roster-table">
                             <thead>
                                 <tr>
-                                    <th>SCORE</th>
-                                    <th>ASST_REF.ID</th>
-                                    <th>CANDIDATE_NAME</th>
-                                    <th>
-                                        GENDER 
-                                        <button class="sort-btn" onclick="setGenderSort('up')" title="Male Only First">▲</button>
-                                        <button class="sort-btn" onclick="setGenderSort('down')" title="Female Only First">▼</button>
-                                        <button class="sort-btn" onclick="setGenderSort('mixed')" title="Mixed (Original)">■</button>
-                                    </th>
-                                    <th>DOB</th>
-                                    <th>ATTENDANCE / CONDUCT</th>
+                                    <th>NO.</th>
+                                    <th>NAME</th>
+                                    <th>IND. TEST (39)</th>
+                                    <th>GRP. TEST (20)</th>
+                                    <th>IND. TEST (36)</th>
+                                    <th>PROJECT (20)</th>
+                                    <th>TOTAL SBA (100)</th>
+                                    <th>C.S. (50%)</th>
+                                    <th>EXAMS (100)</th>
+                                    <th>E.S. (50%)</th>
+                                    <th>OVERALL (50+50)</th>
+                                    <th>GRADE</th>
                                     <th>ACTION</th>
                                 </tr>
                             </thead>
@@ -979,7 +952,7 @@
                             </div>
                         </div>
                         <div style="margin-top: 10px;">
-                            <button class="btn-filter" style="background: var(--accent-color);" onclick="addStudent()">+ Add Student to Class</button>
+                            <button class="btn-filter" style="background: var(--accent-color);" onclick="addStudent()">+ Add Student to Cloud</button>
                         </div>
                         <h4 style="color: #333; margin-top: 20px;">Enrolled Students Roster</h4>
                         <table class="roster-table">
@@ -1008,22 +981,15 @@
     <script>
         var googleFormUrl = "https://docs.google.com/forms/d/e/1FAIpQLSfJ9YjaoZFiASufb_pis0CymTuIp1ZYdDlWLyZK1OhL7JfA/viewform?usp=dialog";
         var currentLoggedInUser = "";
-        var currentGenderSortMode = "mixed";
-        var schoolRosters = {
-            "Basic 1": [],
-            "Basic 2": [],
-            "Basic 3": [],
-            "Basic 4": [],
-            "Basic 5": [],
-            "Basic 6": [],
-            "JHS 1": []
-        };
-        var savedScores = {};
+        var cloudStudentsList = [];
+        var cloudScoresData = {};
+        
         window.addEventListener('DOMContentLoaded', () => {
             loadPersistedPortalData();
             checkUrlHashSync();
             checkMaintenanceStatus();
         });
+
         function checkUrlHashSync() {
             try {
                 if (window.location.hash && window.location.hash.length > 1) {
@@ -1031,15 +997,6 @@
                     if (decodedData.notice) localStorage.setItem('wps_latest_notice', decodedData.notice);
                     if (decodedData.gallery) localStorage.setItem('wps_gallery_html', decodedData.gallery);
                     if (decodedData.media) localStorage.setItem('wps_latest_media_html', decodedData.media);
-                    if (decodedData.rosters) {
-                        schoolRosters = decodedData.rosters;
-                        localStorage.setItem('wps_school_rosters', JSON.stringify(schoolRosters));
-                    }
-                    if (decodedData.primary) {
-                        localStorage.setItem('wps_theme_primary', decodedData.primary);
-                        localStorage.setItem('wps_theme_accent', decodedData.accent);
-                        localStorage.setItem('wps_theme_bg', decodedData.bg);
-                    }
                     if (decodedData.maintenance !== undefined) {
                         localStorage.setItem('wps_maintenance_mode', decodedData.maintenance);
                     }
@@ -1049,6 +1006,7 @@
                 console.log("Cloud sync check error:", e);
             }
         }
+
         function checkMaintenanceStatus() {
             var isMaintenance = localStorage.getItem('wps_maintenance_mode') === 'true';
             var toggle = document.getElementById('maintenanceToggle');
@@ -1059,6 +1017,7 @@
                 document.getElementById('maintenanceScreen').style.display = 'none';
             }
         }
+
         function toggleMaintenanceMode() {
             if (currentLoggedInUser !== "head@wps.com") {
                 alert("Unauthorized! Only head@wps.com can change maintenance settings.");
@@ -1066,24 +1025,31 @@
             }
             var isChecked = document.getElementById('maintenanceToggle').checked;
             localStorage.setItem('wps_maintenance_mode', isChecked);
-            pushDataToCloud();
+            pushDataToCloudHash();
             if (isChecked) {
                 alert("Maintenance mode ENABLED! All teachers will now see a maintenance lockout screen.");
             } else {
                 alert("Maintenance mode DISABLED! Teachers can now access the portal normally.");
             }
         }
+
         function syncCloudUpdates() {
             checkUrlHashSync();
             loadPersistedPortalData();
             checkMaintenanceStatus();
-            updateDashboardStats();
+            
+            if (typeof loadCloudStudentsFromFirebase === 'function') loadCloudStudentsFromFirebase();
+            if (typeof loadAnnouncements === 'function') loadAnnouncements();
+            if (typeof loadTeacherPhotos === 'function') loadTeacherPhotos();
+            if (typeof loadCloudScores === 'function') loadCloudScores();
+
             var isMaintenance = localStorage.getItem('wps_maintenance_mode') === 'true';
             if (!isMaintenance || currentLoggedInUser === "head@wps.com") {
                 showAnnouncementPopup();
             }
-            alert("Portal successfully synced! Latest student rosters, announcements, and updates are now loaded.");
+            alert("Portal fully synchronized with cloud! All student rosters, assessment scores, shared photos, and announcements are updated.");
         }
+
         function handleLogin() {
             var emailInput = document.getElementById('email').value.trim().toLowerCase();
             var passInput = document.getElementById('password').value.trim();
@@ -1115,12 +1081,14 @@
             document.getElementById('userDisplay').innerText = "Logged in: " + currentLoggedInUser;
             
             updateAdminRestrictions();
-            updateDashboardStats();
-            loadClassStudents();
             checkAdminAccess();
             
+            if (typeof loadCloudStudentsFromFirebase === 'function') loadCloudStudentsFromFirebase();
+            if (typeof loadCloudScores === 'function') loadCloudScores();
+
             showAnnouncementPopup();
         }
+
         function updateAdminRestrictions() {
             var navAdm = document.getElementById('navAdmission');
             var navStu = document.getElementById('navManageStudents');
@@ -1138,16 +1106,19 @@
                 if (badgeStu) badgeStu.style.display = "none";
             }
         }
+
         function showAnnouncementPopup() {
-            var storedNotice = localStorage.getItem('wps_latest_notice') || "Welcome back to a new term at Wesley Prep (Assorko - Essaman). Please ensure continuous assessment scores are synced before the deadline.";
+            var storedNotice = localStorage.getItem('wps_latest_notice') || "Welcome back to Wesley Prep. Continuous assessments auto-calculate and sync instantly across all devices.";
             var storedMediaHTML = localStorage.getItem('wps_latest_media_html') || "";
             document.getElementById('modalAnnouncementText').innerHTML = `<b>Notice:</b> ${storedNotice}`;
             document.getElementById('modalMediaContainer').innerHTML = storedMediaHTML;
             document.getElementById('announcementModal').style.display = 'flex';
         }
+
         function dismissAnnouncement() {
             document.getElementById('announcementModal').style.display = 'none';
         }
+
         function signOut() {
             if (confirm("Are you sure you want to sign out?")) {
                 currentLoggedInUser = "";
@@ -1159,6 +1130,7 @@
                 document.getElementById('userDisplay').innerText = "Not Logged In";
             }
         }
+
         function switchTab(tabName) {
             if ((tabName === 'admission' || tabName === 'students') && currentLoggedInUser !== "head@wps.com") {
                 alert("Access Denied! Only the Headteacher / Administrator can register students and make admissions.");
@@ -1167,21 +1139,24 @@
             document.querySelectorAll('.panel-view').forEach(panel => panel.classList.remove('active'));
             if (tabName === 'home') {
                 document.getElementById('panel-home').classList.add('active');
-                updateDashboardStats();
             } else if (tabName === 'admission') {
                 document.getElementById('panel-admission').classList.add('active');
             } else if (tabName === 'admin-upload') {
                 document.getElementById('panel-admin-upload').classList.add('active');
                 checkAdminAccess();
+            } else if (tabName === 'teacher-photos') {
+                document.getElementById('panel-teacher-photos').classList.add('active');
+                if (typeof loadTeacherPhotos === 'function') loadTeacherPhotos();
             } else if (tabName === 'season-theme') {
                 document.getElementById('panel-season-theme').classList.add('active');
             } else if (tabName === 'assessment') {
                 document.getElementById('panel-assessment').classList.add('active');
             } else if (tabName === 'students') {
                 document.getElementById('panel-students').classList.add('active');
-                loadClassStudents();
+                if (typeof loadClassStudents === 'function') loadClassStudents();
             }
         }
+
         function checkAdminAccess() {
             var lockMsg = document.getElementById('adminLockMessage');
             var formContent = document.getElementById('adminFormContent');
@@ -1199,34 +1174,20 @@
                 if (badgeTheme) badgeTheme.style.display = "block";
             }
         }
+
         function applyPresetTheme() {
             var preset = document.getElementById('presetTheme').value;
             var primary = document.getElementById('customPrimaryColor');
             var accent = document.getElementById('customAccentColor');
             var bg = document.getElementById('customBgColor');
-            if (preset === 'christmas') {
-                primary.value = '#1b4d3e';
-                accent.value = '#d4af37';
-                bg.value = '#f4f9f5';
-            } else if (preset === 'easter') {
-                primary.value = '#512b58';
-                accent.value = '#e4a11b';
-                bg.value = '#fcf8f2';
-            } else if (preset === 'independence') {
-                primary.value = '#b31924';
-                accent.value = '#006b3f';
-                bg.value = '#fef9e7';
-            } else {
-                primary.value = '#0a2540';
-                accent.value = '#b31924';
-                bg.value = '#fbf9f4';
-            }
+            if (preset === 'christmas') { primary.value = '#1b4d3e'; accent.value = '#d4af37'; bg.value = '#f4f9f5'; }
+            else if (preset === 'easter') { primary.value = '#512b58'; accent.value = '#e4a11b'; bg.value = '#fcf8f2'; }
+            else if (preset === 'independence') { primary.value = '#b31924'; accent.value = '#006b3f'; bg.value = '#fef9e7'; }
+            else { primary.value = '#0a2540'; accent.value = '#b31924'; bg.value = '#fbf9f4'; }
         }
+
         function saveCustomTheme() {
-            if (currentLoggedInUser !== "head@wps.com") {
-                alert("Unauthorized! Only head@wps.com can change portal themes.");
-                return;
-            }
+            if (currentLoggedInUser !== "head@wps.com") { alert("Unauthorized!"); return; }
             var primary = document.getElementById('customPrimaryColor').value;
             var accent = document.getElementById('customAccentColor').value;
             var bg = document.getElementById('customBgColor').value;
@@ -1234,19 +1195,18 @@
             localStorage.setItem('wps_theme_accent', accent);
             localStorage.setItem('wps_theme_bg', bg);
             applyThemeValues(primary, accent, bg);
-            pushDataToCloud();
-            alert("Portal seasonal theme successfully updated and synced!");
+            pushDataToCloudHash();
+            alert("Theme updated successfully!");
         }
+
         function applyThemeValues(primary, accent, bg) {
             document.documentElement.style.setProperty('--primary-color', primary);
             document.documentElement.style.setProperty('--accent-color', accent);
             document.documentElement.style.setProperty('--bg-color', bg);
         }
+
         function publishMediaFiles() {
-            if (currentLoggedInUser !== "head@wps.com") {
-                alert("Unauthorized action! Only head@wps.com can upload materials.");
-                return;
-            }
+            if (currentLoggedInUser !== "head@wps.com") { alert("Unauthorized!"); return; }
             var mediaInput = document.getElementById('infoMediaFiles');
             var noticeText = document.getElementById('infoAnnouncement').value.trim();
             if (noticeText !== "") {
@@ -1261,12 +1221,10 @@
                 for (var i = 0; i < totalFiles; i++) {
                     let file = mediaInput.files[i];
                     let reader = new FileReader();
-                    
                     reader.onload = (function(f) {
                         return function(e) {
                             var itemDiv = document.createElement('div');
                             itemDiv.className = 'gallery-item';
-                            
                             if (f.type.startsWith('video/')) {
                                 itemDiv.innerHTML = `<video src="${e.target.result}" class="gallery-video" controls></video><div style="font-size: 12px; font-weight: bold; margin-top: 5px; color: var(--primary-color);">${f.name}</div>`;
                                 modalMediaHTML += `<video src="${e.target.result}" class="modal-media-preview" controls></video>`;
@@ -1274,65 +1232,47 @@
                                 itemDiv.innerHTML = `<img src="${e.target.result}" class="gallery-img"><div style="font-size: 12px; font-weight: bold; margin-top: 5px; color: var(--primary-color);">${f.name}</div>`;
                                 modalMediaHTML += `<img src="${e.target.result}" class="modal-media-preview">`;
                             }
-                            
                             galleryGrid.appendChild(itemDiv);
                             filesProcessed++;
                             if (filesProcessed === totalFiles) {
                                 localStorage.setItem('wps_gallery_html', galleryGrid.innerHTML);
                                 localStorage.setItem('wps_latest_media_html', modalMediaHTML);
-                                pushDataToCloud();
-                                alert("Photos and videos successfully published and synced across all devices!");
+                                pushDataToCloudHash();
+                                alert("Published successfully!");
                             }
                         };
                     })(file);
-                    
                     reader.readAsDataURL(file);
                 }
                 document.getElementById('infoMediaFiles').value = "";
                 document.getElementById('infoAnnouncement').value = "";
-            } else {
-                if (noticeText !== "") {
-                    localStorage.setItem('wps_latest_notice', noticeText);
-                    pushDataToCloud();
-                    alert("Notice board announcement successfully published and synced!");
-                } else {
-                    alert("Please select files or enter an announcement before publishing.");
-                }
+            } else if (noticeText !== "") {
+                localStorage.setItem('wps_latest_notice', noticeText);
+                pushDataToCloudHash();
+                alert("Announcement published successfully!");
             }
         }
-        function pushDataToCloud() {
+
+        function pushDataToCloudHash() {
             try {
                 var payload = {
                     notice: localStorage.getItem('wps_latest_notice') || "",
                     gallery: localStorage.getItem('wps_gallery_html') || "",
                     media: localStorage.getItem('wps_latest_media_html') || "",
-                    rosters: schoolRosters,
                     primary: localStorage.getItem('wps_theme_primary') || "",
                     accent: localStorage.getItem('wps_theme_accent') || "",
                     bg: localStorage.getItem('wps_theme_bg') || "",
                     maintenance: localStorage.getItem('wps_maintenance_mode') || "false"
                 };
-                var encoded = btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
-                window.location.hash = encoded;
-            } catch (err) {
-                console.log("Cloud push skipped.");
-            }
+                window.location.hash = btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
+            } catch (err) {}
         }
+
         function loadPersistedPortalData() {
-            var savedRosters = localStorage.getItem('wps_school_rosters');
-            if (savedRosters) {
-                try {
-                    schoolRosters = JSON.parse(savedRosters);
-                } catch(e) {}
-            }
             var savedNotice = localStorage.getItem('wps_latest_notice');
-            if (savedNotice) {
-                document.getElementById('noticeBoardDisplay').innerHTML = `<b>Latest Notice:</b> ${savedNotice}`;
-            }
+            if (savedNotice) document.getElementById('noticeBoardDisplay').innerHTML = `<b>Latest Notice:</b> ${savedNotice}`;
             var savedGallery = localStorage.getItem('wps_gallery_html');
-            if (savedGallery) {
-                document.getElementById('dynamicGalleryGrid').innerHTML = savedGallery;
-            }
+            if (savedGallery) document.getElementById('dynamicGalleryGrid').innerHTML = savedGallery;
             var pColor = localStorage.getItem('wps_theme_primary');
             var aColor = localStorage.getItem('wps_theme_accent');
             var bColor = localStorage.getItem('wps_theme_bg');
@@ -1346,181 +1286,154 @@
             var toggle = document.getElementById('maintenanceToggle');
             if (toggle) toggle.checked = isMaintenance;
         }
+
         function submitAdmission(e) {
             e.preventDefault();
             if (currentLoggedInUser !== "head@wps.com") {
-                alert("Access Denied! Only the Admin can make admissions.");
+                alert("Access Denied! Only Admin can make admissions.");
                 return;
             }
-            var name = document.getElementById('admFullName').value.trim().toUpperCase();
-            var className = document.getElementById('admClass').value;
-            var gender = document.getElementById('admGender').value;
-            var dob = document.getElementById('admDob').value;
-            var randomId = "250" + Math.floor(10000000 + Math.random() * 90000000);
-            var todayStr = new Date().toISOString().split('T')[0];
-            if (!schoolRosters[className]) schoolRosters[className] = [];
-            schoolRosters[className].push({
-                id: randomId,
-                name: name,
-                gender: gender,
-                dob: dob,
-                entryDate: todayStr,
-                attendance: "70/70",
-                conduct: "Good"
-            });
-            alert(`Admission Successful! ${name} has been officially enrolled into ${className} with ID: ${randomId} and synced to the cloud.`);
-            document.getElementById('admissionForm').reset();
-            updateDashboardStats();
-            switchTab('students');
+            if (typeof addStudentToFirebase === 'function') {
+                addStudentToFirebase();
+            }
         }
-        function updateDashboardStats() {
-            var totalCount = 0;
-            var maleCount = 0;
-            var femaleCount = 0;
-            Object.values(schoolRosters).forEach(list => {
-                totalCount += list.length;
-                list.forEach(s => {
-                    if (s.gender === "MALE") maleCount++;
-                    else if (s.gender === "FEMALE") femaleCount++;
-                });
-            });
-            document.getElementById('statTotalStudents').innerText = totalCount;
-            document.getElementById('statMale').innerText = maleCount;
-            document.getElementById('statFemale').innerText = femaleCount;
-            document.getElementById('statBasic1').innerText = (schoolRosters["Basic 1"] ? schoolRosters["Basic 1"].length : 0);
-            var malePct = totalCount > 0 ? Math.round((maleCount / totalCount) * 100) : 0;
-            var femalePct = totalCount > 0 ? (100 - malePct) : 0;
-            document.getElementById('pctMale').innerText = malePct + "%";
-            document.getElementById('pctFemale').innerText = femalePct + "%";
-            drawPieChart(malePct, femalePct);
-        }
-        function drawPieChart(malePct, femalePct) {
-            var canvas = document.getElementById('genderPieChart');
-            if (!canvas.getContext) return;
-            var ctx = canvas.getContext('2d');
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            if (malePct === 0 && femalePct === 0) return;
-            var centerX = canvas.width / 2;
-            var centerY = canvas.height / 2;
-            var radius = 45;
-            var maleAngle = (malePct / 100) * 2 * Math.PI;
-            ctx.beginPath();
-            ctx.moveTo(centerX, centerY);
-            ctx.arc(centerX, centerY, radius, 0, maleAngle);
-            ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--primary-color') || '#0a2540';
-            ctx.fill();
-            ctx.beginPath();
-            ctx.moveTo(centerX, centerY);
-            ctx.arc(centerX, centerY, radius, maleAngle, 2 * Math.PI);
-            ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--accent-color') || '#b31924';
-            ctx.fill();
-        }
+
         function applyFilter() {
             var selectedClass = document.getElementById('filterClassSelect').value;
-            var mode = document.getElementById('modeSelect').value;
-            var subject = document.getElementById('subSelect').value;
-            if (mode.includes("SELECT") || subject.includes("SELECT")) {
-                alert("Please select both a valid Assessment Mode and Subject before filtering.");
-                return;
-            }
             document.getElementById('resultsSection').style.display = 'block';
-            renderAssessmentTable(selectedClass);
+            renderAutomatedAssessmentTable(selectedClass);
         }
-        function setGenderSort(mode) {
-            currentGenderSortMode = mode;
-            var selectedClass = document.getElementById('filterClassSelect').value;
-            renderAssessmentTable(selectedClass);
-        }
-        function renderAssessmentTable(className, filterQuery = "") {
-            var students = [...(schoolRosters[className] || [])];
+
+        function renderAutomatedAssessmentTable(className, filterQuery = "") {
+            var classStudents = cloudStudentsList.filter(s => s.class === className);
             var tbody = document.getElementById('assessmentTableBody');
             tbody.innerHTML = "";
-            var subKey = document.getElementById('subSelect').value + "_" + document.getElementById('modeSelect').value + "_" + className;
             
-            if (currentGenderSortMode === 'up') {
-                students.sort((a, b) => (a.gender === 'MALE' ? -1 : 1));
-            } else if (currentGenderSortMode === 'down') {
-                students.sort((a, b) => (a.gender === 'FEMALE' ? -1 : 1));
-            }
-            var filteredStudents = students.filter(s => s.name.toLowerCase().includes(filterQuery.toLowerCase()));
-            document.getElementById('totalStudentsText').innerText = "TOTAL NUMBER OF STUDENTS: " + filteredStudents.length + "/" + students.length;
-            if (filteredStudents.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:#777;">No students registered in ${className} yet. Only Admin can add students via Online Admission.</td></tr>`;
+            var year = document.getElementById('yearSelect').value;
+            var sem = document.getElementById('semSelect').value;
+            var subject = document.getElementById('subSelect').value;
+            var keyBase = `${year}_${sem}_${className}_${subject}`;
+
+            var filtered = classStudents.filter(s => s.name.toLowerCase().includes(filterQuery.toLowerCase()));
+            document.getElementById('totalStudentsText').innerText = "TOTAL NUMBER OF STUDENTS: " + filtered.length + "/" + classStudents.length;
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="13" style="text-align:center; color:#777;">No students found in ${className}. Admin must register students first.</td></tr>`;
                 return;
             }
-            filteredStudents.forEach((student) => {
-                var currentScore = (savedScores[subKey] && savedScores[subKey][student.id] !== undefined) ? savedScores[subKey][student.id] : "";
-                var row = `<tr>
-                    <td><input type="number" class="score-input" data-id="${student.id}" value="${currentScore}" placeholder="0"></td>
-                    <td>${student.id}</td>
-                    <td><b>${student.name}</b></td>
-                    <td>${student.gender}</td>
-                    <td>${student.dob}</td>
-                    <td>Att: ${student.attendance} | Cond: ${student.conduct}</td>
-                    <td><button onclick="printStudentReport('${student.id}', '${student.name}', '${className}', '${student.attendance}', '${student.conduct}')" style="background:var(--primary-color); color:white; border:none; padding:5px 10px; border-radius:3px; cursor:pointer; font-size:11px;">Print Report</button></td>
+
+            // Calculate totals and sort for rankings/grades automatically
+            let evaluatedList = filtered.map(student => {
+                let scores = cloudScoresData[keyBase]?.[student.id] || { t39: 0, t20: 0, t36: 0, proj: 0, exams: 0 };
+                let t39 = parseFloat(scores.t39) || 0;
+                let t20 = parseFloat(scores.t20) || 0;
+                let t36 = parseFloat(scores.t36) || 0;
+                let proj = parseFloat(scores.proj) || 0;
+                let exams = parseFloat(scores.exams) || 0;
+
+                let totalSBA = t39 + t20 + t36 + proj; // out of 100
+                let cs50 = (totalSBA * 0.5); // 50%
+                let es50 = (exams * 0.5); // 50%
+                let overall = cs50 + es50; // out of 100
+
+                return { student, t39, t20, t36, proj, totalSBA, cs50, exams, es50, overall };
+            });
+
+            // Sort descending by overall score for automated positioning
+            evaluatedList.sort((a, b) => b.overall - a.overall);
+
+            evaluatedList.forEach((item, index) => {
+                let s = item.student;
+                let pos = (index + 1);
+                let ordinal = pos === 1 ? '1st' : pos === 2 ? '2nd' : pos === 3 ? '3rd' : pos + 'th';
+
+                let row = `<tr>
+                    <td><b>${pos}</b></td>
+                    <td style="text-align:left;"><b>${s.name}</b><br><small style="color:#666;">ID: ${s.id}</small></td>
+                    <td><input type="number" class="score-input" data-id="${s.id}" data-field="t39" value="${item.t39 || ''}" oninput="autoCalculateRow(this)" placeholder="0"></td>
+                    <td><input type="number" class="score-input" data-id="${s.id}" data-field="t20" value="${item.t20 || ''}" oninput="autoCalculateRow(this)" placeholder="0"></td>
+                    <td><input type="number" class="score-input" data-id="${s.id}" data-field="t36" value="${item.t36 || ''}" oninput="autoCalculateRow(this)" placeholder="0"></td>
+                    <td><input type="number" class="score-input" data-id="${s.id}" data-field="proj" value="${item.proj || ''}" oninput="autoCalculateRow(this)" placeholder="0"></td>
+                    <td><span id="totSba_${s.id}" style="font-weight:bold; color:var(--primary-color);">${item.totalSBA.toFixed(1)}</span></td>
+                    <td><span id="cs50_${s.id}" style="font-weight:bold;">${item.cs50.toFixed(1)}</span></td>
+                    <td><input type="number" class="score-input" data-id="${s.id}" data-field="exams" value="${item.exams || ''}" oninput="autoCalculateRow(this)" placeholder="0"></td>
+                    <td><span id="es50_${s.id}" style="font-weight:bold;">${item.es50.toFixed(1)}</span></td>
+                    <td><span id="overall_${s.id}" style="font-weight:bold; color:var(--accent-color); font-size:13px;">${item.overall.toFixed(1)}</span></td>
+                    <td><span id="grade_${s.id}" style="background:#f0ebd8; padding:3px 8px; border-radius:4px; font-weight:bold;">${ordinal}</span></td>
+                    <td><button onclick="printStudentReport('${s.id}', '${s.name}', '${className}', '${item.overall.toFixed(1)}', '${ordinal}')" style="background:var(--primary-color); color:white; border:none; padding:4px 8px; border-radius:3px; cursor:pointer; font-size:11px;">Report</button></td>
                 </tr>`;
                 tbody.innerHTML += row;
             });
         }
+
+        function autoCalculateRow(input) {
+            var studentId = input.getAttribute('data-id');
+            var row = input.closest('tr');
+            
+            var t39 = parseFloat(row.querySelector('[data-field="t39"]').value) || 0;
+            var t20 = parseFloat(row.querySelector('[data-field="t20"]').value) || 0;
+            var t36 = parseFloat(row.querySelector('[data-field="t36"]').value) || 0;
+            var proj = parseFloat(row.querySelector('[data-field="proj"]').value) || 0;
+            var exams = parseFloat(row.querySelector('[data-field="exams"]').value) || 0;
+
+            var totalSBA = t39 + t20 + t36 + proj;
+            var cs50 = totalSBA * 0.5;
+            var es50 = exams * 0.5;
+            var overall = cs50 + es50;
+
+            row.querySelector(`#totSba_${studentId}`).innerText = totalSBA.toFixed(1);
+            row.querySelector(`#cs50_${studentId}`).innerText = cs50.toFixed(1);
+            row.querySelector(`#es50_${studentId}`).innerText = es50.toFixed(1);
+            row.querySelector(`#overall_${studentId}`).innerText = overall.toFixed(1);
+
+            // Instant auto-save to memory structure
+            var year = document.getElementById('yearSelect').value;
+            var sem = document.getElementById('semSelect').value;
+            var className = document.getElementById('filterClassSelect').value;
+            var subject = document.getElementById('subSelect').value;
+            var keyBase = `${year}_${sem}_${className}_${subject}`;
+
+            if (!cloudScoresData[keyBase]) cloudScoresData[keyBase] = {};
+            if (!cloudScoresData[keyBase][studentId]) cloudScoresData[keyBase][studentId] = {};
+
+            cloudScoresData[keyBase][studentId] = { t39, t20, t36, proj, exams, totalSBA, cs50, es50, overall };
+        }
+
         function filterStudentTable() {
             var query = document.getElementById('studentSearchBox').value;
             var className = document.getElementById('filterClassSelect').value;
-            renderAssessmentTable(className, query);
+            renderAutomatedAssessmentTable(className, query);
         }
-        function refreshStudentScores() {
+
+        function downloadOfficialSBA_CSV() {
             var className = document.getElementById('filterClassSelect').value;
-            var subKey = document.getElementById('subSelect').value + "_" + document.getElementById('modeSelect').value + "_" + className;
-            var inputs = document.querySelectorAll('.score-input');
-            if (!savedScores[subKey]) savedScores[subKey] = {};
-            inputs.forEach(input => {
-                var id = input.getAttribute('data-id');
-                savedScores[subKey][id] = input.value;
-            });
-            renderAssessmentTable(className);
-            alert("Table refreshed successfully! All typed marks for each student are loaded.");
-        }
-        function submitAssessmentData() {
-            var className = document.getElementById('filterClassSelect').value;
-            var subKey = document.getElementById('subSelect').value + "_" + document.getElementById('modeSelect').value + "_" + className;
-            var inputs = document.querySelectorAll('.score-input');
+            var year = document.getElementById('yearSelect').value;
+            var sem = document.getElementById('semSelect').value;
+            var subject = document.getElementById('subSelect').value;
+            var keyBase = `${year}_${sem}_${className}_${subject}`;
+
+            var classStudents = cloudStudentsList.filter(s => s.class === className);
+            var csvContent = "data:text/csv;charset=utf-8,NO.,NAME,IND. CLASS TEST 39,GRP. CLASS TEST 20,IND. CLASS TEST 36,PROJECT HOMEWORK 20,TOTAL SBA 100,C.S. 50%,END OF TERM EXAMS 100,E.S. 50%,OVERALL TOTAL 50+50,GRADE/POSITION\n";
             
-            if (!savedScores[subKey]) savedScores[subKey] = {};
-            inputs.forEach(input => {
-                var id = input.getAttribute('data-id');
-                savedScores[subKey][id] = input.value;
+            classStudents.forEach((s, idx) => {
+                var sc = cloudScoresData[keyBase]?.[s.id] || { t39: 0, t20: 0, t36: 0, proj: 0, exams: 0, totalSBA: 0, cs50: 0, es50: 0, overall: 0 };
+                csvContent += `${idx + 1},"${s.name}",${sc.t39 || 0},${sc.t20 || 0},${sc.t36 || 0},${sc.proj || 0},${sc.totalSBA || 0},${sc.cs50 || 0},${sc.exams || 0},${sc.es50 || 0},${sc.overall || 0},"-\n`;
             });
-            alert("Assessment saved successfully! Opening Google Form to sync data to your master sheet...");
-            window.open(googleFormUrl, '_blank');
-        }
-        function downloadDatasetCSV() {
-            var className = document.getElementById('filterClassSelect').value;
-            var students = schoolRosters[className] || [];
-            var csvContent = "data:text/csv;charset=utf-8,ASST_REF.ID,CANDIDATE_NAME,GENDER,DOB,ATTENDANCE,CONDUCT\n";
-            
-            students.forEach(s => {
-                csvContent += `${s.id},"${s.name}",${s.gender},${s.dob},${s.attendance},${s.conduct}\n`;
-            });
+
             var encodedUri = encodeURI(csvContent);
             var link = document.createElement("a");
             link.setAttribute("href", encodedUri);
-            link.setAttribute("download", `WPS_${className}_Assessment_Roster.csv`);
+            link.setAttribute("download", `WPS_${className}_${subject}_Termly_SBA.csv`);
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
+            alert("Official SBA spreadsheet downloaded in exact paper format!");
         }
-        function changeOverallScorePrompt() {
-            var newScore = prompt("Enter new overall score maximum:", document.getElementById('overallScoreInput').value);
-            if (newScore !== null && newScore.trim() !== "") {
-                document.getElementById('overallScoreInput').value = newScore;
-                alert("Overall score limit successfully changed to " + newScore);
-            }
-        }
-        function printStudentReport(studentId, studentName, className, attendance, conduct) {
+
+        function printStudentReport(studentId, studentName, className, overallScore, gradePosition) {
             var year = document.getElementById('yearSelect').value;
             var semester = document.getElementById('semSelect').value;
             var subject = document.getElementById('subSelect').value;
-            var subKey = subject + "_" + document.getElementById('modeSelect').value + "_" + className;
-            var scoreObtained = (savedScores[subKey] && savedScores[subKey][studentId] !== undefined) ? savedScores[subKey][studentId] : "N/A";
             
             var reportWindow = window.open('', '_blank');
             reportWindow.document.write(`
@@ -1542,25 +1455,22 @@
                 <body>
                     <div class="header">
                         <div class="school-title">WESLEY PREPARATORY SCHOOL (ASSORKO - ESSAMAN)</div>
-                        <div class="sub-title">Official Student Term Assessment & Conduct Report Card</div>
+                        <div class="sub-title">Official Student Termly SBA & Assessment Report Card</div>
                     </div>
                     <div class="student-info">
                         <b>Student Name:</b> ${studentName} &nbsp;&nbsp;|&nbsp;&nbsp; <b>ID Ref:</b> ${studentId}<br>
                         <b>Class:</b> ${className} &nbsp;&nbsp;|&nbsp;&nbsp; <b>Academic Year:</b> ${year} &nbsp;&nbsp;|&nbsp;&nbsp; <b>Term:</b> ${semester}<br>
-                        <b>Attendance:</b> ${attendance} &nbsp;&nbsp;|&nbsp;&nbsp; <b>Conduct:</b> ${conduct}
                     </div>
                     <table>
                         <tr>
                             <th>Subject Assessed</th>
-                            <th>Assessment Mode</th>
-                            <th>Score Obtained</th>
-                            <th>Overall Max</th>
+                            <th>Overall Calculated Score</th>
+                            <th>Class Position / Grade</th>
                         </tr>
                         <tr>
-                            <td>${subject !== "**SELECT SUBJECT**" ? subject : "General Assessment"}</td>
-                            <td>${document.getElementById('modeSelect').value}</td>
-                            <td><b>${scoreObtained}</b></td>
-                            <td>${document.getElementById('overallScoreInput').value}</td>
+                            <td><b>${subject}</b></td>
+                            <td><b>${overallScore} / 100</b></td>
+                            <td><b>${gradePosition}</b></td>
                         </tr>
                     </table>
                     <div class="footer">
@@ -1573,197 +1483,203 @@
             `);
             reportWindow.document.close();
         }
+
         function loadClassStudents() {
             var selectedClass = document.getElementById('adminClassSelect').value;
-            var students = schoolRosters[selectedClass] || [];
+            var classStudents = cloudStudentsList.filter(s => s.class === selectedClass);
             var tbody = document.getElementById('studentTableBody');
             tbody.innerHTML = "";
-            if (students.length === 0) {
+            if (classStudents.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#777;">No students registered for ${selectedClass} yet.</td></tr>`;
                 return;
             }
-            students.forEach((student, index) => {
+            classStudents.forEach((student, index) => {
                 var row = `<tr>
                     <td>${index + 1}</td>
                     <td>${student.id}</td>
                     <td><b>${student.name}</b></td>
                     <td>${student.gender}</td>
                     <td>${student.dob}</td>
-                    <td><button onclick="removeStudent('${selectedClass}', ${index})" style="background:var(--accent-color); color:white; border:none; padding:4px 8px; border-radius:3px; cursor:pointer;">Remove</button></td>
+                    <td><button onclick="removeCloudStudent('${student.id}')" style="background:var(--accent-color); color:white; border:none; padding:4px 8px; border-radius:3px; cursor:pointer;">Remove</button></td>
                 </tr>`;
                 tbody.innerHTML += row;
             });
         }
-        function addStudent() {
-            if (currentLoggedInUser !== "head@wps.com") {
-                alert("Access Denied! Only the Admin can add students.");
-                return;
-            }
-            var selectedClass = document.getElementById('adminClassSelect').value;
-            var nameInput = document.getElementById('newStudentName');
-            var genderInput = document.getElementById('newStudentGender').value;
-            var dobInput = document.getElementById('newStudentDob').value;
-            var studentName = nameInput.value.trim().toUpperCase();
-            if (!studentName) {
-                alert("Please enter a valid student full name.");
-                return;
-            }
-            if (!schoolRosters[selectedClass]) {
-                schoolRosters[selectedClass] = [];
-            }
-            var randomId = "250" + Math.floor(10000000 + Math.random() * 90000000);
-            var todayStr = new Date().toISOString().split('T')[0];
-            schoolRosters[selectedClass].push({
-                id: randomId,
-                name: studentName,
-                gender: genderInput,
-                dob: dobInput,
-                entryDate: todayStr,
-                attendance: "70/70",
-                conduct: "Good"
-            });
-            localStorage.setItem('wps_school_rosters', JSON.stringify(schoolRosters));
-            pushDataToCloud();
-            nameInput.value = "";
-            loadClassStudents();
-            updateDashboardStats();
-            alert(studentName + " successfully added to " + selectedClass + " and synced!");
-        }
-        function removeStudent(className, index) {
-            if (currentLoggedInUser !== "head@wps.com") {
-                alert("Access Denied! Only the Admin can remove students.");
-                return;
-            }
-            if (confirm("Are you sure you want to remove this student?")) {
-                schoolRosters[className].splice(index, 1);
-                localStorage.setItem('wps_school_rosters', JSON.stringify(schoolRosters));
-                pushDataToCloud();
-                loadClassStudents();
-                updateDashboardStats();
-            }
-        }
     </script>
+
 <script type="module">
   import { db } from './firebase.js';
-  import { collection, addDoc, getDocs, query, orderBy, limit, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-  
-  // 1. Register student to the cloud
-  window.addStudent = async function() {
-      const name = document.getElementById('newStudentName').value;
-      const gender = document.getElementById('newStudentGender').value;
-      const dob = document.getElementById('newStudentDob').value;
-      const studentClass = document.getElementById('adminClassSelect') ? document.getElementById('adminClassSelect').value : 'Basic 1';
+  import { collection, addDoc, getDocs, doc, setDoc, deleteDoc, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+  // 1. Add Student to Firebase Cloud
+  window.addStudentToFirebase = async function() {
+      const name = document.getElementById('admFullName').value.trim().toUpperCase();
+      const studentClass = document.getElementById('admClass').value;
+      const gender = document.getElementById('admGender').value;
+      const dob = document.getElementById('admDob').value;
       
       if (!name) {
-          alert("Please enter the student's full name.");
+          alert("Please enter student full name.");
           return;
       }
       try {
           await addDoc(collection(db, "students"), {
-              name: name.trim().toUpperCase(),
+              name: name,
               class: studentClass,
               gender: gender,
               dob: dob,
               registeredAt: new Date()
           });
-          alert("Student registered successfully to the cloud!");
-          document.getElementById('newStudentName').value = '';
-          if (typeof loadClassStudents === 'function') loadClassStudents();
+          alert(`Admission Successful! ${name} enrolled into ${studentClass} and saved to cloud.`);
+          document.getElementById('admissionForm').reset();
+          loadCloudStudentsFromFirebase();
+          switchTab('students');
       } catch (error) {
           console.error("Error adding student: ", error);
-          alert("Error saving to cloud. Check your connection.");
+          alert("Failed to save student to cloud.");
       }
   };
 
-  // 2. Load students from Firestore for any teacher/device
-  window.loadClassStudents = async function(className) {
+  // 2. Load Students from Firebase Cloud
+  window.loadCloudStudentsFromFirebase = async function() {
       try {
           const querySnapshot = await getDocs(collection(db, "students"));
-          const studentContainer = document.getElementById('studentTableBody'); 
-          if (!studentContainer) return;
-          studentContainer.innerHTML = "";
-          let index = 1;
-          
+          cloudStudentsList = [];
           querySnapshot.forEach((docSnap) => {
-              const student = docSnap.data();
-              const targetClass = className || document.getElementById('adminClassSelect')?.value;
-              
-              if (!targetClass || student.class === targetClass) {
-                  studentContainer.innerHTML += `
-                      <tr>
-                          <td>${index++}</td>
-                          <td>${docSnap.id}</td>
-                          <td><b>${student.name}</b></td>
-                          <td>${student.gender}</td>
-                          <td>${student.dob}</td>
-                          <td><button onclick="removeCloudStudent('${docSnap.id}')" style="background:#b31924; color:white; border:none; padding:4px 8px; border-radius:3px; cursor:pointer;">Remove</button></td>
-                      </tr>
-                  `;
+              cloudStudentsList.push({ id: docSnap.id, ...docSnap.data() });
+          });
+          if (typeof loadClassStudents === 'function') loadClassStudents();
+          if (document.getElementById('panel-home')?.classList.contains('active')) {
+              updateDashboardStatsFromCloud();
+          }
+      } catch (error) {
+          console.error("Error loading students:", error);
+      }
+  };
+
+  // 3. Remove Student from Cloud
+  window.removeCloudStudent = async function(docId) {
+      if (currentLoggedInUser !== "head@wps.com") { alert("Unauthorized!"); return; }
+      if (confirm("Are you sure you want to remove this student from the cloud?")) {
+          try {
+              await deleteDoc(doc(db, "students", docId));
+              loadCloudStudentsFromFirebase();
+              alert("Student removed successfully.");
+          } catch (e) {
+              alert("Failed to remove student.");
+          }
+      }
+  };
+
+  // 4. Save All Assessment Scores to Cloud automatically
+  window.saveAllScoresToCloud = async function() {
+      try {
+          for (let keyBase in cloudScoresData) {
+              for (let studentId in cloudScoresData[keyBase]) {
+                  let docRef = doc(db, "assessment_scores", `${keyBase}_${studentId}`);
+                  await setDoc(docRef, {
+                      keyBase: keyBase,
+                      studentId: studentId,
+                      scores: cloudScoresData[keyBase][studentId],
+                      updatedAt: new Date()
+                  }, { merge: true });
+              }
+          }
+          alert("All assessment scores saved and synced successfully to Firebase Cloud!");
+      } catch (error) {
+          console.error("Error saving scores:", error);
+          alert("Failed to sync scores to cloud.");
+      }
+  };
+
+  // 5. Load Assessment Scores from Cloud
+  window.loadCloudScores = async function() {
+      try {
+          const querySnapshot = await getDocs(collection(db, "assessment_scores"));
+          cloudScoresData = {};
+          querySnapshot.forEach((docSnap) => {
+              let data = docSnap.data();
+              if (data.keyBase && data.studentId) {
+                  if (!cloudScoresData[data.keyBase]) cloudScoresData[data.keyBase] = {};
+                  cloudScoresData[data.keyBase][data.studentId] = data.scores;
               }
           });
       } catch (error) {
-          console.error("Error loading students from cloud:", error);
+          console.error("Error loading cloud scores:", error);
       }
   };
 
-  // 3. Save student scores to Firestore
-  window.saveStudentScores = async function(studentId, termScores) {
-      try {
-          const studentRef = doc(db, "students", studentId);
-          await updateDoc(studentRef, {
-              scores: termScores,
-              lastUpdated: new Date()
-          });
-          alert("Scores saved successfully to the cloud!");
-      } catch (error) {
-          console.error("Error updating scores: ", error);
-          alert("Failed to save scores. Check connection.");
-      }
-  };
-
-  // 4. Post an announcement to the cloud
-  window.postAnnouncement = async function(title, message, author) {
-      try {
-          await addDoc(collection(db, "announcements"), {
-              title: title,
-              message: message,
-              author: author || "Admin",
-              date: new Date()
-          });
-          alert("Announcement posted to the cloud successfully!");
-          loadAnnouncements();
-      } catch (error) {
-          console.error("Error posting announcement: ", error);
-      }
-  };
-
-  // 5. Load announcements on the portal
+  // 6. Announcements & Photos
   window.loadAnnouncements = async function() {
       try {
           const q = query(collection(db, "announcements"), orderBy("date", "desc"), limit(5));
           const querySnapshot = await getDocs(q);
           const container = document.getElementById('announcementsContainer');
           if (!container) return;
-          
           container.innerHTML = "";
           querySnapshot.forEach((docSnap) => {
               const item = docSnap.data();
-              container.innerHTML += `
-                  <div class="announcement-card" style="margin-bottom: 15px; padding: 10px; border-left: 4px solid #007bff; background: #f8f9fa;">
-                      <h4>${item.title}</h4>
-                      <p>${item.message}</p>
-                      <small style="color: #6c757d;">By ${item.author} (${item.date?.toDate ? item.date.toDate().toLocaleDateString() : 'Recent'})</small>
-                  </div>
-              `;
+              container.innerHTML += `<div><h4>${item.title}</h4><p>${item.message}</p></div>`;
           });
-      } catch (error) {
-          console.error("Error loading announcements:", error);
-      }
+      } catch (e) {}
   };
 
+  window.uploadTeacherPhoto = async function() {
+      const fileInput = document.getElementById('teacherPhotoFile');
+      const captionInput = document.getElementById('teacherPhotoCaption');
+      if (!fileInput.files || fileInput.files.length === 0) { alert("Select an image."); return; }
+      const reader = new FileReader();
+      reader.onload = async function(e) {
+          try {
+              await addDoc(collection(db, "teacher_photos"), {
+                  image: e.target.result,
+                  caption: captionInput.value.trim() || "Classroom Activity",
+                  teacher: currentLoggedInUser || "Staff",
+                  date: new Date()
+              });
+              alert("Photo uploaded and synced!");
+              fileInput.value = ""; captionInput.value = "";
+              loadTeacherPhotos();
+          } catch (err) { alert("Upload failed."); }
+      };
+      reader.readAsDataURL(fileInput.files[0]);
+  };
+
+  window.loadTeacherPhotos = async function() {
+      try {
+          const querySnapshot = await getDocs(collection(db, "teacher_photos"));
+          const grid = document.getElementById('teacherPhotoGalleryGrid');
+          if (!grid) return;
+          grid.innerHTML = "";
+          querySnapshot.forEach((docSnap) => {
+              const data = docSnap.data();
+              grid.innerHTML += `<div class="gallery-item"><img src="${data.image}" style="width:100%;height:130px;object-fit:cover;border-radius:4px;"><div style="font-size:12px;font-weight:bold;margin-top:5px;">${data.caption}</div><div style="font-size:10px;color:#666;">By: ${data.teacher}</div></div>`;
+          });
+      } catch (e) {}
+  };
+
+  function updateDashboardStatsFromCloud() {
+      let total = cloudStudentsList.length;
+      let male = cloudStudentsList.filter(s => s.gender === "MALE").length;
+      let female = cloudStudentsList.filter(s => s.gender === "FEMALE").length;
+      let b1 = cloudStudentsList.filter(s => s.class === "Basic 1").length;
+
+      document.getElementById('statTotalStudents').innerText = total;
+      document.getElementById('statMale').innerText = male;
+      document.getElementById('statFemale').innerText = female;
+      document.getElementById('statBasic1').innerText = b1;
+
+      let malePct = total > 0 ? Math.round((male / total) * 100) : 0;
+      let femalePct = total > 0 ? (100 - malePct) : 0;
+      document.getElementById('pctMale').innerText = malePct + "%";
+      document.getElementById('pctFemale').innerText = femalePct + "%";
+  }
+
   window.addEventListener('DOMContentLoaded', () => {
+      loadCloudStudentsFromFirebase();
+      loadCloudScores();
       loadAnnouncements();
-      if (typeof loadClassStudents === 'function') loadClassStudents();
+      loadTeacherPhotos();
   });
 </script>
 </body>
