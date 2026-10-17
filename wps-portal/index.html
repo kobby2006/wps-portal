@@ -1414,7 +1414,7 @@
             
             classStudents.forEach((s, idx) => {
                 var sc = cloudScoresData[keyBase]?.[s.id] || { t39: 0, t20: 0, t36: 0, proj: 0, exams: 0, totalSBA: 0, cs50: 0, es50: 0, overall: 0 };
-                csvContent += `${idx + 1},"${s.name}",${sc.t39 || 0},${sc.t20 \vert{}\vert{} 0},${sc.t36 || 0},${sc.proj \vert{}\vert{} 0},${sc.totalSBA || 0},${sc.cs50 \vert{}\vert{} 0},${sc.exams || 0},${sc.es50 \vert{}\vert{} 0},${sc.overall || 0},"-\n`;
+                csvContent += `${idx + 1},"${s.name}",${sc.t39 || 0},${sc.t20 || 0},${sc.t36 || 0},${sc.proj || 0},${sc.totalSBA || 0},${sc.cs50 || 0},${sc.exams || 0},${sc.es50 || 0},${sc.overall || 0},"-\n`;
             });
 
             var encodedUri = encodeURI(csvContent);
@@ -1447,4 +1447,151 @@
                         th, td { border: 1px solid #ccc; padding: 10px; text-align: left; font-size: 13px; }
                         th { background-color: #0a2540; color: white; }
                         .footer { margin-top: 40px; display: flex; justify-content: space-between; font-size: 13px; }
-                    </
+                    </style>
+                </head>
+                <body>
+                    <div class="header">
+                        <div class="school-title">WESLEY PREPARATORY SCHOOL (ASSORKO - ESSAMAN)</div>
+                        <div class="sub-title">Official Student Termly SBA & Assessment Report Card</div>
+                    </div>
+                    <div class="student-info">
+                        <b>Student Name:</b> ${studentName} &nbsp;&nbsp;|&nbsp;&nbsp; <b>ID Ref:</b> ${studentId}<br>
+                        <b>Class:</b> ${className} &nbsp;&nbsp;|&nbsp;&nbsp; <b>Academic Year:</b> ${year} &nbsp;&nbsp;|&nbsp;&nbsp; <b>Term:</b> ${semester}<br>
+                    </div>
+                    <table>
+                        <tr>
+                            <th>Subject Assessed</th>
+                            <th>Overall Calculated Score</th>
+                            <th>Class Position / Grade</th>
+                        </tr>
+                        <tr>
+                            <td><b>${subject}</b></td>
+                            <td><b>${overallScore} / 100</b></td>
+                            <td><b>${gradePosition}</b></td>
+                        </tr>
+                    </table>
+                    <div class="footer">
+                        <div>Headteacher Signature: ______________________</div>
+                        <div>Date Issued: ${new Date().toISOString().split('T')[0]}</div>
+                    </div>
+                    <script>window.print();<\/script>
+                </body>
+                </html>
+            `);
+            reportWindow.document.close();
+        }
+
+        function loadClassStudents() {
+            var selectedClass = document.getElementById('adminClassSelect').value;
+            var classStudents = cloudStudentsList.filter(s => s.class === selectedClass);
+            var tbody = document.getElementById('studentTableBody');
+            tbody.innerHTML = "";
+            if (classStudents.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#777;">No students registered for ${selectedClass} yet.</td></tr>`;
+                return;
+            }
+            classStudents.forEach((student, index) => {
+                var row = `<tr>
+                    <td>${index + 1}</td>
+                    <td>${student.id}</td>
+                    <td><b>${student.name}</b></td>
+                    <td>${student.gender}</td>
+                    <td>${student.dob}</td>
+                    <td><button onclick="removeCloudStudent('${student.id}')" style="background:var(--accent-color); color:white; border:none; padding:4px 8px; border-radius:3px; cursor:pointer;">Remove</button></td>
+                </tr>`;
+                tbody.innerHTML += row;
+            });
+        }
+    </script>
+
+    <!-- FIREBASE MODULE SCRIPT -->
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+      import { getFirestore, collection, addDoc, getDocs, doc, setDoc, deleteDoc, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyAgB-npNhw-e6JtQo03wB4G86ZFnnXm8cA",
+        authDomain: "wps-gh.firebaseapp.com",
+        projectId: "wps-gh",
+        storageBucket: "wps-gh.firebasestorage.app",
+        messagingSenderId: "442533477217",
+        appId: "1:442533477217:web:65a408746cc2241bda2320",
+        measurementId: "G-4LRS0F2BSV"
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+
+      window.addStudentToFirebase = async function(formType) {
+          let name = "", studentClass = "Basic 1", gender = "MALE", dob = "2012-01-01";
+
+          if (formType === 'admission') {
+              name = document.getElementById('admFullName').value.trim().toUpperCase();
+              studentClass = document.getElementById('admClass').value;
+              gender = document.getElementById('admGender').value;
+              dob = document.getElementById('admDob').value;
+          } else {
+              name = document.getElementById('newStudentName').value.trim().toUpperCase();
+              studentClass = document.getElementById('adminClassSelect').value;
+              gender = document.getElementById('newStudentGender').value;
+              dob = document.getElementById('newStudentDob').value;
+          }
+          
+          if (!name) {
+              alert("Please enter student full name.");
+              return;
+          }
+          try {
+              await addDoc(collection(db, "students"), {
+                  name: name,
+                  class: studentClass,
+                  gender: gender,
+                  dob: dob,
+                  registeredAt: new Date()
+              });
+              alert(`Admission Successful! ${name} enrolled into ${studentClass} and saved to cloud.`);
+              
+              if (formType === 'admission') {
+                  document.getElementById('admissionForm').reset();
+                  switchTab('home');
+              } else {
+                  document.getElementById('newStudentName').value = '';
+              }
+              window.loadCloudStudentsFromFirebase();
+          } catch (error) {
+              console.error("Error adding student: ", error);
+              alert("Failed to save student to cloud.");
+          }
+      };
+
+      window.loadCloudStudentsFromFirebase = async function() {
+          try {
+              const querySnapshot = await getDocs(collection(db, "students"));
+              window.cloudStudentsList = [];
+              querySnapshot.forEach((docSnap) => {
+                  window.cloudStudentsList.push({ id: docSnap.id, ...docSnap.data() });
+              });
+              
+              // Update Dashboard Statistics Cards
+              document.getElementById('statTotalStudents').innerText = window.cloudStudentsList.length;
+              document.getElementById('statBasic4').innerText = window.cloudStudentsList.filter(s => s.class === "Basic 4").length;
+              var males = window.cloudStudentsList.filter(s => s.gender === "MALE").length;
+              var females = window.cloudStudentsList.filter(s => s.gender === "FEMALE").length;
+              document.getElementById('statMale').innerText = males;
+              document.getElementById('statFemale').innerText = females;
+
+              if (typeof loadClassStudents === 'function') loadClassStudents();
+          } catch (error) {
+              console.error("Error loading students:", error);
+          }
+      };
+
+      window.removeCloudStudent = async function(docId) {
+          if (currentLoggedInUser !== "head@wps.com") { alert("Unauthorized!"); return; }
+          if (confirm("Are you sure you want to remove this student from the cloud?")) {
+              try {
+                  await deleteDoc(doc(db, "students", docId));
+                  window.loadCloudStudentsFromFirebase();
+                  alert("Student removed successfully.");
+              } catch (e) {
+                  alert
