@@ -1466,8 +1466,25 @@
                 conduct: "Good"
             });
 
-            localStorage.setItem('wps_school_rosters', JSON.stringify(schoolRosters));
-            pushDataToCloud();
+
+// Function to save student scores to Firestore
+async function saveStudentScores(studentId, termScores) {
+    try {
+        const studentRef = doc(db, "students", studentId);
+        
+        // Update the student document with the new scores
+        await updateDoc(studentRef, {
+            scores: termScores,
+            lastUpdated: new Date()
+        });
+        
+        alert("Scores saved successfully to the cloud!");
+    } catch (error) {
+        console.error("Error updating scores: ", error);
+        alert("Failed to save scores. Check connection.");
+    }
+}
+
 
             alert(`Admission Successful! ${name} has been officially enrolled into ${className} with ID: ${randomId} and synced to the cloud.`);
             document.getElementById('admissionForm').reset();
@@ -1785,7 +1802,68 @@
                 loadClassStudents();
                 updateDashboardStats();
             }
-        }
+        }  // 1. Function to save student scores to Firestore
+  window.saveStudentScores = async function(studentId, termScores) {
+      try {
+          const studentRef = doc(db, "students", studentId);
+          await updateDoc(studentRef, {
+              scores: termScores,
+              lastUpdated: new Date()
+          });
+          alert("Scores saved successfully to the cloud!");
+      } catch (error) {
+          console.error("Error updating scores: ", error);
+          alert("Failed to save scores. Check connection.");
+      }
+  };
+
+  // 2. Function to post an announcement to the cloud
+  window.postAnnouncement = async function(title, message, author) {
+      try {
+          await addDoc(collection(db, "announcements"), {
+              title: title,
+              message: message,
+              author: author || "Admin",
+              date: new Date()
+          });
+          alert("Announcement posted to the cloud successfully!");
+          loadAnnouncements(); // Refresh list after posting
+      } catch (error) {
+          console.error("Error posting announcement: ", error);
+      }
+  };
+
+  // 3. Function to load announcements on the portal
+  window.loadAnnouncements = async function() {
+      try {
+          const q = query(collection(db, "announcements"), orderBy("date", "desc"), limit(5));
+          const querySnapshot = await getDocs(q);
+          
+          const container = document.getElementById('announcementsContainer');
+          if (!container) return;
+          
+          container.innerHTML = "";
+          querySnapshot.forEach((doc) => {
+              const item = doc.data();
+              container.innerHTML += `
+                  <div class="announcement-card" style="margin-bottom: 15px; padding: 10px; border-left: 4px solid #007bff; background: #f8f9fa;">
+                      <h4>${item.title}</h4>
+                      <p>${item.message}</p>
+                      <small style="color: #6c757d;">By ${item.author} (${new Date(item.date.seconds * 1000).toLocaleDateString()})</small>
+                  </div>
+              `;
+          });
+      } catch (error) {
+          console.error("Error loading announcements:", error);
+      }
+  };
+
+  // Automatically load announcements when the page opens
+  window.addEventListener('DOMContentLoaded', () => {
+      loadAnnouncements();
+  });
+</script>
+
     </script>
 <script type="module">
   import { db } from './firebase.js';
