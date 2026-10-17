@@ -25,7 +25,7 @@
         .top-header {
             background-color: var(--primary-color);
             color: #fbf9f4;
-            padding: 12px 20px;
+            padding: 10px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -33,15 +33,17 @@
             flex-wrap: wrap;
             gap: 10px;
         }
+        .header-brand { display: flex; align-items: center; gap: 12px; }
+        .school-badge { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid #fff; background: #fff; }
         .top-header h2 { margin: 0; font-size: 14px; font-weight: 600; }
         .header-right { display: flex; align-items: center; gap: 8px; }
         .user-info { font-size: 11px; background: rgba(255,255,255,0.15); padding: 4px 8px; border-radius: 4px; }
         .btn-signout { background-color: var(--accent-color); color: white; border: none; padding: 5px 10px; border-radius: 4px; font-weight: 600; font-size: 11px; cursor: pointer; }
+        
         .workspace { display: flex; flex: 1; width: 100%; box-sizing: border-box; }
         .sidebar { width: 220px; background-color: var(--card-bg); border-right: 1px solid #e0dcd0; padding-top: 15px; flex-shrink: 0; }
-        .nav-link, .nav-link-sub { display: block; padding: 12px 15px; color: var(--primary-color); text-decoration: none; font-size: 12px; font-weight: 600; cursor: pointer; border-left: 3px solid transparent; }
-        .nav-link-sub { color: #444; font-weight: normal; padding-left: 25px; }
-        .nav-link:hover, .nav-link-sub:hover { background-color: #f0ebd8; border-left-color: var(--accent-color); }
+        .nav-link { display: block; padding: 12px 15px; color: var(--primary-color); text-decoration: none; font-size: 12px; font-weight: 600; cursor: pointer; border-left: 3px solid transparent; }
+        .nav-link:hover { background-color: #f0ebd8; border-left-color: var(--accent-color); }
         .content-area { flex: 1; padding: 15px; background-color: var(--bg-color); min-width: 0; }
         
         #loginScreen { display: flex; justify-content: center; align-items: center; flex: 1; padding: 20px; }
@@ -52,24 +54,26 @@
         .btn-submit { width: 100%; background: var(--primary-color); color: white; border: none; padding: 11px; font-weight: 600; border-radius: 4px; cursor: pointer; font-size: 13px; }
         .btn-submit:hover { opacity: 0.9; }
 
-        #dashboardScreen { display: none; flex-direction: column; flex: 1; }
         .panel-view { display: none; flex: 1; flex-direction: column; }
         .panel-view.active { display: flex; }
         .capture-container { background: var(--card-bg); padding: 20px; border-radius: 6px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); border-top: 3px solid var(--primary-color); box-sizing: border-box; margin-bottom: 20px; }
         .roster-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        .roster-table th, .roster-table td { border: 1px solid #dee2e6; padding: 10px; text-align: center; font-size: 11px; }
+        .roster-table th, .roster-table td { border: 1px solid #dee2e6; padding: 8px; text-align: center; font-size: 11px; }
         .roster-table th { background-color: #f0ebd8; color: var(--primary-color); }
         
         @media screen and (max-width: 768px) {
             .workspace { flex-direction: column; }
             .sidebar { width: 100%; display: flex; flex-wrap: wrap; padding: 5px; }
-            .nav-link, .nav-link-sub { padding: 8px 10px; font-size: 11px; border-left: none; }
+            .nav-link { padding: 8px 10px; font-size: 11px; border-left: none; }
         }
     </style>
 </head>
 <body>
     <div class="top-header">
-        <h2>WESLEY PREP (ASSORKO - ESSAMAN)</h2>
+        <div class="header-brand">
+            <img src="badge.jpg" alt="School Badge" class="school-badge" onerror="this.style.display='none'">
+            <h2>WESLEY PREP (ASSORKO - ESSAMAN)</h2>
+        </div>
         <div class="header-right">
             <div class="user-info" id="userDisplay">Not Logged In</div>
             <button class="btn-signout" onclick="signOut()">Sign Out</button>
@@ -93,19 +97,19 @@
     </div>
 
     <!-- DASHBOARD SCREEN -->
-    <div id="dashboardScreen">
+    <div id="dashboardScreen" style="display: none; flex-direction: column; flex: 1;">
         <div class="workspace">
             <div class="sidebar">
                 <a class="nav-link" onclick="switchTab('assessment')">📊 Assessment & Scores</a>
                 <a class="nav-link" onclick="switchTab('students')" id="navManageStudents" style="display:none;">📝 Manage Students</a>
-                <a class="nav-link" onclick="switchTab('admission')">📋 Online Admission Form</a>
+                <a class="nav-link" onclick="switchTab('admission')">📋 Online Admission</a>
                 <a class="nav-link" onclick="switchTab('theme')">🎨 Theme Editor</a>
-                <a class="nav-link" onclick="switchTab('photos')">📷 Teacher Media & Photos</a>
+                <a class="nav-link" onclick="switchTab('photos')">📷 Teacher Media</a>
                 <a class="nav-link" onclick="signOut()" style="color: var(--accent-color);">🚪 Sign Out</a>
             </div>
             <div class="content-area">
                 
-                <!-- 1. ASSESSMENT PANEL -->
+                <!-- 1. ASSESSMENT & SCORES PANEL -->
                 <div id="panel-assessment" class="panel-view active">
                     <div class="capture-container">
                         <h3>Termly Assessment & SBA Register</h3>
@@ -114,26 +118,27 @@
                                 <option value="Basic 1">Basic 1</option>
                                 <option value="Basic 2">Basic 2</option>
                                 <option value="Basic 3">Basic 3</option>
-                                <option value="Basic 4">Basic 4</option>
+                                <option value="Basic 4" selected>Basic 4</option>
                                 <option value="Basic 5">Basic 5</option>
                                 <option value="Basic 6">Basic 6</option>
                                 <option value="JHS 1">JHS 1</option>
                             </select>
                             <button class="btn-submit" style="width: auto; padding: 8px 15px;" onclick="renderAssessmentTable()">Load Register</button>
-                            <button class="btn-submit" style="width: auto; padding: 8px 15px; background: #28a745;" onclick="syncUpdates()">🔄 Sync Cloud Updates</button>
+                            <button class="btn-submit" style="width: auto; padding: 8px 15px; background: #28a745;" onclick="syncUpdates()">🔄 Sync Cloud Data</button>
                         </div>
                         <table class="roster-table">
                             <thead>
                                 <tr>
                                     <th>No.</th>
-                                    <th>Student Full Name</th>
+                                    <th>Student Name</th>
                                     <th>Class</th>
-                                    <th>SBA / Exams Score</th>
-                                    <th>Action</th>
+                                    <th>Class Score (50%)</th>
+                                    <th>Exams Score (50%)</th>
+                                    <th>Total (100%)</th>
                                 </tr>
                             </thead>
                             <tbody id="assessmentTableBody">
-                                <tr><td colspan="5">Click Load Register to view students</td></tr>
+                                <tr><td colspan="6">Click Load Register to view class records</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -142,16 +147,15 @@
                 <!-- 2. MANAGE STUDENTS PANEL (ADMIN ONLY) -->
                 <div id="panel-students" class="panel-view">
                     <div class="capture-container">
-                        <h3>Administration - Student Roster Management</h3>
-                        <p style="font-size: 12px; color: #666;">Tap below to instantly enroll students into the cloud database via secure mobile dialog.</p>
+                        <h3>Student Roster & Cloud Management</h3>
+                        <p style="font-size: 12px; color: #666;">Enroll students directly into the cloud database.</p>
                         <button type="button" class="btn-submit" style="background: var(--accent-color); margin-bottom: 15px; padding: 12px;" onclick="promptAddStudent()">+ Add Student to Cloud</button>
                         
-                        <h4 style="margin: 15px 0 5px 0;">Enrolled Cloud Student Roster</h4>
                         <table class="roster-table">
                             <thead>
                                 <tr>
                                     <th>No.</th>
-                                    <th>ASST_REF.ID</th>
+                                    <th>Ref ID</th>
                                     <th>Student Full Name</th>
                                     <th>Class</th>
                                     <th>Gender</th>
@@ -159,13 +163,13 @@
                                 </tr>
                             </thead>
                             <tbody id="studentTableBody">
-                                <tr><td colspan="6">Loading cloud roster...</td></tr>
+                                <tr><td colspan="6">Loading roster...</td></tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
 
-                <!-- 3. ONLINE ADMISSION FORM PANEL -->
+                <!-- 3. ONLINE ADMISSION PANEL -->
                 <div id="panel-admission" class="panel-view">
                     <div class="capture-container">
                         <h3>Online Student Admission Portal</h3>
@@ -192,7 +196,7 @@
                                 <option value="FEMALE">FEMALE</option>
                             </select>
                         </div>
-                        <button type="button" class="btn-submit" style="background: var(--accent-color);" onclick="submitOnlineAdmission()">Complete Student Admission & Enroll to Cloud</button>
+                        <button type="button" class="btn-submit" style="background: var(--accent-color);" onclick="submitOnlineAdmission()">Complete Admission & Save to Cloud</button>
                     </div>
                 </div>
 
@@ -211,13 +215,13 @@
                     </div>
                 </div>
 
-                <!-- 5. TEACHER MEDIA & PHOTOS PANEL -->
+                <!-- 5. TEACHER MEDIA PANEL -->
                 <div id="panel-photos" class="panel-view">
                     <div class="capture-container">
                         <h3>Teacher Media & Photo Share</h3>
-                        <p style="font-size: 12px; color: #666;">Upload classroom moments and event snapshots to share across staff devices.</p>
+                        <p style="font-size: 12px; color: #666;">Upload classroom moments.</p>
                         <input type="file" id="mediaUploadInput" accept="image/*" style="margin-bottom: 15px; font-size: 12px;">
-                        <button type="button" class="btn-submit" style="width: auto; padding: 8px 15px;" onclick="alert('Photo ready for sharing!')">Upload Photo</button>
+                        <button type="button" class="btn-submit" style="width: auto; padding: 8px 15px;" onclick="alert('Photo ready!')">Upload Photo</button>
                     </div>
                 </div>
 
@@ -225,7 +229,7 @@
         </div>
     </div>
 
-    <!-- CORE SYSTEM LOGIC SCRIPT -->
+    <!-- SYSTEM LOGIC SCRIPT -->
     <script>
         var currentLoggedInUser = "";
         var cloudStudentsList = [];
@@ -287,22 +291,23 @@
             tbody.innerHTML = "";
             var filtered = cloudStudentsList.filter(s => s.class === cls);
             if (filtered.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5">No students registered in ${cls} yet. Admin can add them under Manage Students.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="6">No students found in ${cls}. Add students via Manage Students or Online Admission.</td></tr>`;
                 return;
             }
             filtered.forEach((s, i) => {
                 tbody.innerHTML += `<tr>
                     <td>${i+1}</td>
-                    <td><b>${s.name}</b></td>
+                    <td style="text-align:left; padding-left:10px;"><b>${s.name}</b></td>
                     <td>${s.class}</td>
-                    <td><input type="number" placeholder="Score" style="width:60px; padding:4px; text-align:center;"></td>
-                    <td><span style="color:green; font-weight:600;">Active</span></td>
+                    <td><input type="number" placeholder="Class" style="width:50px; padding:3px; text-align:center;"></td>
+                    <td><input type="number" placeholder="Exam" style="width:50px; padding:3px; text-align:center;"></td>
+                    <td><span style="font-weight:600; color:#0a2540;">--</span></td>
                 </tr>`;
             });
         }
     </script>
 
-    <!-- FIREBASE CLOUD SYNC MODULE (EMBEDDED CONFIG) -->
+    <!-- FIREBASE CLOUD SYNC MODULE -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, addDoc, getDocs, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
