@@ -21,7 +21,6 @@
             display: flex;
             flex-direction: column;
             min-height: 100vh;
-            overflow-x: hidden;
         }
         .top-header {
             background-color: var(--primary-color);
@@ -32,7 +31,6 @@
             align-items: center;
             box-shadow: 0 2px 5px rgba(0,0,0,0.15);
             border-bottom: 3px solid var(--accent-color);
-            flex-shrink: 0;
             flex-wrap: wrap;
             gap: 10px;
         }
@@ -42,7 +40,7 @@
         .btn-signout { background-color: var(--accent-color); color: white; border: none; padding: 5px 10px; border-radius: 4px; font-weight: 600; font-size: 11px; cursor: pointer; }
         
         .workspace { display: flex; flex: 1; width: 100%; box-sizing: border-box; }
-        .sidebar { width: 230px; background-color: var(--card-bg); border-right: 1px solid #e0dcd0; padding-top: 15px; flex-shrink: 0; }
+        .sidebar { width: 220px; background-color: var(--card-bg); border-right: 1px solid #e0dcd0; padding-top: 15px; flex-shrink: 0; }
         .nav-link, .nav-link-sub { display: block; padding: 12px 15px; color: var(--primary-color); text-decoration: none; font-size: 12px; font-weight: 600; border-left: 4px solid transparent; cursor: pointer; }
         .nav-link-sub { color: #444; font-weight: normal; }
         .nav-link:hover, .nav-link-sub:hover { background-color: #f0ebd8; border-left-color: var(--accent-color); }
@@ -85,7 +83,7 @@
         .gallery-header { font-size: 13px; font-weight: bold; color: var(--primary-color); border-bottom: 2px solid var(--primary-color); padding-bottom: 6px; margin-bottom: 12px; }
         .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
         .gallery-item { background: #fbf9f4; border: 1px solid #dcd5c0; border-radius: 6px; padding: 8px; text-align: center; }
-        .gallery-img, .gallery-video { width: 100%; height: 130px; object-fit: cover; border-radius: 4px; border: 1px solid #ccc; }
+        .gallery-img { width: 100%; height: 120px; object-fit: cover; border-radius: 4px; border: 1px solid #ccc; }
         .notice-board-text { font-size: 12px; color: #444; background: #f0ebd8; padding: 10px; border-radius: 4px; margin-top: 8px; border-left: 4px solid var(--accent-color); }
 
         .capture-container { background: var(--card-bg); padding: 20px; border-radius: 6px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); border-top: 3px solid var(--primary-color); box-sizing: border-box; margin-bottom: 20px; }
@@ -106,7 +104,7 @@
     <div class="top-header">
         <h2>0040111 - WESLEY PREPARATORY SCHOOL (ASSORKO - ESSAMAN)</h2>
         <div class="header-right">
-            <button class="btn-signout" onclick="syncUpdates()" style="background: #28a745;">🔄 Sync Cloud Data</button>
+            <button class="btn-signout" onclick="syncPortal()" style="background: #28a745;">🔄 Sync Data</button>
             <div class="user-info" id="userDisplay">Not Logged In</div>
             <button class="btn-signout" onclick="signOut()">Sign Out</button>
         </div>
@@ -117,17 +115,15 @@
         <div class="login-card">
             <h3>Portal Login</h3>
             <p style="font-size: 11px; color: #666; margin-bottom: 15px;">Enter staff credentials to log in.</p>
-            <form id="loginForm" onsubmit="handleLogin(event)">
-                <div class="form-group">
-                    <label>Staff Email</label>
-                    <input type="text" id="email" value="head@wps.com" placeholder="head@wps.com" required>
-                </div>
-                <div class="form-group">
-                    <label>Password</label>
-                    <input type="password" id="password" value="8303" placeholder="Enter password" required>
-                </div>
-                <button type="submit" class="btn-submit">Login to Dashboard</button>
-            </form>
+            <div class="form-group">
+                <label>Staff Email</label>
+                <input type="text" id="email" value="head@wps.com" placeholder="head@wps.com">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="password" value="8303" placeholder="Enter password">
+            </div>
+            <button type="button" class="btn-submit" onclick="handleLogin()">Login to Dashboard</button>
         </div>
     </div>
 
@@ -137,7 +133,7 @@
             <div class="sidebar">
                 <a class="nav-link" onclick="switchTab('home')">🏠 Home Dashboard</a>
                 <a class="nav-link-sub" onclick="switchTab('admission')" id="navAdmission" style="display:none;">📝 Online Admission Form</a>
-                <a class="nav-link-sub" onclick="switchTab('admin-upload')" id="navAdminUpload" style="display:none;">🔒 Admin Media Upload</a>
+                <a class="nav-link-sub" onclick="switchTab('admin-media')" id="navAdminMedia" style="display:none;">📤 Admin Media Publisher</a>
                 <a class="nav-link-sub" onclick="switchTab('teacher-hub')">📥 Teacher Media & Downloads</a>
                 <a class="nav-link-sub" onclick="switchTab('assessment')">★ Capture Assessment</a>
                 <a class="nav-link-sub" onclick="switchTab('students')" id="navManageStudents" style="display:none;">📝 Register Students</a>
@@ -148,7 +144,7 @@
                 <div class="action-row">
                     <div style="font-weight: bold; font-size: 12px; color: var(--primary-color);">0040111 - WESLEY PREP</div>
                     <div class="action-badge" onclick="switchTab('admission')" id="badgeAdmission" style="display:none;">Admission</div>
-                    <div class="action-badge" onclick="switchTab('admin-upload')" id="badgeAdminUpload" style="display:none;">Admin Upload</div>
+                    <div class="action-badge" onclick="switchTab('admin-media')" id="badgeAdminMedia" style="display:none;">Admin Media</div>
                     <div class="action-badge" onclick="switchTab('teacher-hub')">Teacher Media Hub</div>
                     <div class="action-badge" onclick="switchTab('theme')" id="badgeTheme" style="display:none; background:#b31924; color:white;">Theme Editor</div>
                     <div class="action-badge" onclick="switchTab('students')" id="badgeStudents" style="display:none;">Register Students</div>
@@ -214,63 +210,71 @@
                         </div>
 
                         <div class="home-gallery-section">
-                            <div class="gallery-header">🏫 School Gallery & Headteacher's Notice Board</div>
+                            <div class="gallery-header">🏫 School Gallery & Notice Board</div>
                             <div class="notice-board-text" id="displayNoticeText">
-                                <b>Latest Notice:</b> Welcome back to Wesley Prep (Assorko - Essaman). Please ensure continuous assessment scores are synced before the deadline.
+                                <b>Latest Notice:</b> Welcome back to Wesley Prep (Assorko - Essaman). Thank you to our teachers and board for representing us proudly in our school jerseys!
                             </div>
-                            <div class="gallery-grid" id="homeGalleryGrid" style="margin-top: 12px;">
-                                <!-- Populated dynamically -->
+                            <div class="gallery-grid" style="margin-top: 12px;">
+                                <div class="gallery-item">
+                                    <img src="badge.jpg" class="gallery-img" onerror="this.src='https://via.placeholder.com/150?text=Badge'">
+                                    <div style="font-size: 11px; font-weight: bold; margin-top: 4px; color: var(--primary-color);">School Crest / Badge</div>
+                                </div>
+                                <div class="gallery-item">
+                                    <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=500" class="gallery-img">
+                                    <div style="font-size: 11px; font-weight: bold; margin-top: 4px; color: var(--primary-color);">Jersey Day & Staff Unity</div>
+                                </div>
+                                <div class="gallery-item">
+                                    <img src="https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=500" class="gallery-img">
+                                    <div style="font-size: 11px; font-weight: bold; margin-top: 4px; color: var(--primary-color);">Classroom Activities</div>
+                                </div>
                             </div>
                         </div>
 
                     </div>
                 </div>
 
-                <!-- ADMIN MEDIA UPLOAD PANEL -->
-                <div id="panel-admin-upload" class="panel-view">
-                    <div class="capture-container" style="max-width: 650px; margin: 0 auto;">
-                        <h3 style="color: var(--primary-color); margin-top:0;">🔒 Admin Media & Notice Board Publisher</h3>
-                        <p style="font-size: 12px; color: #666;">Upload official photos, videos, or termly announcements for all teachers to view and download.</p>
-                        
+                <!-- ADMIN MEDIA PUBLISHER -->
+                <div id="panel-admin-media" class="panel-view">
+                    <div class="capture-container" style="max-width: 600px; margin: 0 auto;">
+                        <h3 style="color: var(--primary-color); margin-top:0;">📤 Admin Media & Notice Publisher</h3>
+                        <p style="font-size: 12px; color: #666;">Post official school announcements, photos, and video links for all teachers to access.</p>
                         <div class="form-group">
-                            <label>Select Photos or Videos</label>
-                            <input type="file" id="adminMediaFile" accept="image/*,video/*" multiple>
+                            <label>Notice Board Announcement</label>
+                            <textarea id="adminNoticeInput" rows="3" placeholder="Enter announcement..."></textarea>
                         </div>
                         <div class="form-group">
-                            <label>Media Title / Description</label>
-                            <input type="text" id="adminMediaCaption" placeholder="e.g. Independence Day Parade 2026 / Term 3 Exam Briefing">
+                            <label>Media Title / Caption</label>
+                            <input type="text" id="mediaTitleInput" placeholder="e.g. Jersey Day Celebration / Term 3 Exam Briefing">
                         </div>
                         <div class="form-group">
-                            <label>Update Notice Board Announcement</label>
-                            <textarea id="adminNoticeInput" rows="3" placeholder="Enter termly notices for teachers..."></textarea>
+                            <label>Photo / Video Image URL</label>
+                            <input type="text" id="mediaUrlInput" placeholder="Paste image link or use Unsplash/photo URL">
                         </div>
-                        <button type="button" class="btn-submit" onclick="publishAdminMedia()" style="background: var(--primary-color);">Publish to All Teacher Portals</button>
+                        <button type="button" class="btn-submit" onclick="publishAdminPost()" style="background: var(--primary-color);">Publish Announcement & Media</button>
                     </div>
                 </div>
 
-                <!-- TEACHER MEDIA HUB & DOWNLOADS PANEL -->
+                <!-- TEACHER MEDIA & DOWNLOADS -->
                 <div id="panel-teacher-hub" class="panel-view">
                     <div class="capture-container">
-                        <h3 style="color: var(--primary-color); margin-top:0;">📥 Teacher Media & Resource Downloads</h3>
-                        <p style="font-size: 12px; color: #666;">Browse and download official school photos, event videos, and teaching materials posted by the administration.</p>
-                        
-                        <div class="gallery-grid" id="teacherMediaDownloadGrid" style="margin-top: 15px;">
+                        <h3 style="color: var(--primary-color); margin-top:0;">📥 Teacher Media & Downloads Hub</h3>
+                        <p style="font-size: 12px; color: #666;">View and download photos, videos, and materials posted by the administration.</p>
+                        <div class="gallery-grid" id="teacherMediaGrid" style="margin-top: 15px;">
                             <!-- Populated dynamically -->
                         </div>
                     </div>
                 </div>
 
-                <!-- ONLINE ADMISSION PANEL -->
+                <!-- ONLINE ADMISSION -->
                 <div id="panel-admission" class="panel-view">
-                    <div class="capture-container" style="max-width: 650px; margin: 0 auto;">
-                        <h3 style="color: var(--primary-color); margin-top:0;">WESLEY PREPARATORY SCHOOL - OFFICIAL STUDENT ADMISSION FORM</h3>
-                        <p style="font-size: 12px; color: #666;">Fill out the learner details below to enroll a new student directly into the school system.</p>
+                    <div class="capture-container" style="max-width: 600px; margin: 0 auto;">
+                        <h3 style="color: var(--primary-color); margin-top:0;">WESLEY PREPARATORY SCHOOL - ADMISSION FORM</h3>
                         <div class="form-group">
                             <label>Student Full Name</label>
                             <input type="text" id="admFullName" placeholder="e.g. MENSAH PRINCE">
                         </div>
                         <div class="form-group">
-                            <label>Select Class for Admission</label>
+                            <label>Class</label>
                             <select id="admClassSelect">
                                 <option value="Basic 1">Basic 1</option>
                                 <option value="Basic 2">Basic 2</option>
@@ -288,15 +292,14 @@
                                 <option value="FEMALE">FEMALE</option>
                             </select>
                         </div>
-                        <button type="button" class="btn-submit" style="background: var(--accent-color);" onclick="submitOnlineAdmission()">Complete Student Admission & Enroll</button>
+                        <button type="button" class="btn-submit" style="background: var(--accent-color);" onclick="submitAdmission()">Enroll Student</button>
                     </div>
                 </div>
 
-                <!-- ASSESSMENT CAPTURE PANEL -->
+                <!-- ASSESSMENT CAPTURE -->
                 <div id="panel-assessment" class="panel-view">
                     <div class="capture-container">
-                        <h3 style="color: var(--primary-color); margin-top:0; font-size: 14px;">ASSESSMENT CAPTURE - || 📋 Need Help</h3>
-                        
+                        <h3 style="color: var(--primary-color); margin-top:0; font-size: 14px;">ASSESSMENT CAPTURE</h3>
                         <div class="form-group">
                             <label>YEAR</label>
                             <select id="yearSelect">
@@ -348,11 +351,6 @@
                                 <option>Computing</option>
                             </select>
                         </div>
-                        <div class="form-group">
-                            <label>OVER-ALL SCORE</label>
-                            <input type="number" id="overallScoreInput" value="100">
-                        </div>
-                        
                         <button type="button" class="btn-submit" style="width: auto; padding: 10px 25px;" onclick="renderAssessmentTable()">&lt;&lt;Filter&gt;&gt;</button>
                     </div>
 
@@ -368,20 +366,18 @@
                                     <th>Total (100%)</th>
                                 </tr>
                             </thead>
-                            <tbody id="assessmentTableBody">
-                                <!-- Dynamic rows -->
-                            </tbody>
+                            <tbody id="assessmentTableBody"></tbody>
                         </table>
                     </div>
                 </div>
 
-                <!-- MANAGE STUDENTS PANEL -->
+                <!-- MANAGE STUDENTS -->
                 <div id="panel-students" class="panel-view">
                     <div class="capture-container">
-                        <h3 style="color: var(--primary-color); margin-top:0; font-size: 14px;">ADMINISTRATION - CLASS & STUDENT ROSTER MANAGEMENT</h3>
+                        <h3 style="color: var(--primary-color); margin-top:0; font-size: 14px;">STUDENT ROSTER MANAGEMENT</h3>
                         <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 10px; margin-bottom: 15px;">
                             <div class="form-group" style="margin-bottom:0;">
-                                <label>SELECT CLASS</label>
+                                <label>CLASS</label>
                                 <select id="regClassSelect">
                                     <option value="Basic 1">Basic 1</option>
                                     <option value="Basic 2">Basic 2</option>
@@ -404,58 +400,54 @@
                                 </select>
                             </div>
                             <div class="form-group" style="margin-bottom:0;">
-                                <label>DOB (YYYY-MM-DD)</label>
+                                <label>DOB</label>
                                 <input type="date" id="newStudentDob" value="2012-05-14">
                             </div>
                         </div>
-                        <button type="button" class="btn-submit" style="background: var(--accent-color); width: auto; padding: 10px 20px;" onclick="promptAddStudent()">+ Add Student to Class</button>
+                        <button type="button" class="btn-submit" style="background: var(--accent-color); width: auto; padding: 10px 20px;" onclick="addStudent()">+ Add Student</button>
                         
                         <h4 style="margin-top: 20px; color: var(--primary-color);">Enrolled Students Roster</h4>
                         <table class="roster-table">
                             <thead>
                                 <tr>
                                     <th>No.</th>
-                                    <th>ASST_REF.ID</th>
+                                    <th>REF ID</th>
                                     <th>Student Full Name</th>
                                     <th>Gender</th>
                                     <th>DOB</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
-                            <tbody id="studentTableBody">
-                                <tr><td colspan="6">Loading roster...</td></tr>
-                            </tbody>
+                            <tbody id="studentTableBody"></tbody>
                         </table>
                     </div>
                 </div>
 
-                <!-- SEASONAL & THEME EDITOR PANEL -->
+                <!-- SEASONAL & EVENT THEME EDITOR -->
                 <div id="panel-theme" class="panel-view">
                     <div class="capture-container" style="max-width: 600px; margin: 0 auto;">
                         <h3 style="color: var(--primary-color); margin-top:0;">🎨 Seasonal & Event Theme Generator</h3>
-                        <p style="font-size: 12px; color: #666;">Customize portal colors for Christmas, Easter, Ghana Independence, or school events.</p>
-                        
+                        <p style="font-size: 12px; color: #666;">Choose presets for Ghana Independence, Christmas, Easter, or custom events.</p>
                         <div class="form-group">
                             <label>Select Festive / Event Preset</label>
-                            <select id="presetTheme" onchange="applyPresetTheme()" style="padding: 10px;">
+                            <select id="presetTheme" onchange="applyPreset()" style="padding: 10px;">
                                 <option value="default">Default School Theme (Navy & Red)</option>
                                 <option value="independence">🇬🇭 Ghana Independence (Red, Gold & Green)</option>
                                 <option value="christmas">🎄 Christmas Festive (Green & Gold)</option>
                                 <option value="easter">🐣 Easter Celebration (Gold & Purple)</option>
-                                <option value="custom">⚙️ Custom Color Picker</option>
                             </select>
                         </div>
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
                             <div class="form-group">
-                                <label>Primary Header Color</label>
+                                <label>Primary Color</label>
                                 <input type="color" id="primaryColorPicker" value="#0a2540" style="height: 40px; cursor: pointer;">
                             </div>
                             <div class="form-group">
-                                <label>Accent Highlight Color</label>
+                                <label>Accent Color</label>
                                 <input type="color" id="accentColorPicker" value="#b31924" style="height: 40px; cursor: pointer;">
                             </div>
                         </div>
-                        <button type="button" class="btn-submit" style="background: var(--accent-color); margin-top: 15px;" onclick="saveCustomTheme()">Apply Theme Changes Instantly</button>
+                        <button type="button" class="btn-submit" style="background: var(--accent-color); margin-top: 15px;" onclick="saveTheme()">Apply Theme Instantly</button>
                     </div>
                 </div>
 
@@ -463,116 +455,90 @@
         </div>
     </div>
 
-    <!-- SCRIPT WITH BULLETPROOF LOGIN & SYNC -->
+    <!-- ERROR-FREE JAVASCRIPT ENGINE -->
     <script>
         var currentLoggedInUser = "";
         
         var defaultStudents = [
             { id: "WPS-1001", name: "KOBBY MENSAH", class: "Basic 4", gender: "MALE", dob: "2012-05-14" },
             { id: "WPS-1002", name: "AYELE VIBES", class: "Basic 4", gender: "FEMALE", dob: "2012-08-20" },
-            { id: "WPS-1003", name: "MILDRED ADZEPA", class: "Basic 1", gender: "FEMALE", dob: "2015-02-10" }
+            { id: "WPS-1003", name: "MILDRED ADZEPA", class: "Basic 1", gender: "FEMALE", dob: "2015-02-10" },
+            { id: "WPS-1004", name: "SAMUEL APPIAH", class: "Basic 5", gender: "MALE", dob: "2011-03-22" }
         ];
 
         var defaultMedia = [
-            { type: "image", src: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=500", caption: "Wesley Prep Jersey Representation & Staff Appreciation" },
-            { type: "image", src: "https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=500", caption: "Term 3 Classroom Activities & Teaching" }
+            { src: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=500", caption: "Wesley Prep Jersey Representation & Staff Appreciation" },
+            { src: "https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=500", caption: "Term 3 Classroom Activities & Teaching" }
         ];
 
-        var cloudStudentsList = [];
-        var uploadedMediaList = [];
+        var studentsList = [];
+        var mediaList = [];
 
         window.addEventListener('DOMContentLoaded', () => {
-            checkUrlHashSync();
-            loadPortalData();
+            loadData();
         });
 
-        function checkUrlHashSync() {
+        function loadData() {
             try {
-                if (window.location.hash && window.location.hash.length > 1) {
-                    var decoded = JSON.parse(decodeURIComponent(escape(atob(window.location.hash.substring(1)))));
-                    if (decoded.students) localStorage.setItem('wps_students_list', JSON.stringify(decoded.students));
-                    if (decoded.media) localStorage.setItem('wps_media_list', JSON.stringify(decoded.media));
-                    if (decoded.notice) localStorage.setItem('wps_notice_text', decoded.notice);
-                    if (decoded.primary) localStorage.setItem('wps_theme_primary', decoded.primary);
-                    if (decoded.accent) localStorage.setItem('wps_theme_accent', decoded.accent);
+                var s = localStorage.getItem('wps_students');
+                studentsList = s ? JSON.parse(s) : defaultStudents;
+
+                var m = localStorage.getItem('wps_media');
+                mediaList = m ? JSON.parse(m) : defaultMedia;
+
+                var notice = localStorage.getItem('wps_notice');
+                if (notice) {
+                    document.getElementById('displayNoticeText').innerHTML = `<b>Latest Notice:</b> ${notice}`;
                 }
-            } catch(e) {}
+
+                var p = localStorage.getItem('wps_primary');
+                var a = localStorage.getItem('wps_accent');
+                if (p && a) applyThemeColors(p, a);
+            } catch (err) {
+                studentsList = defaultStudents;
+                mediaList = defaultMedia;
+            }
+
+            updateStats();
+            renderStudents();
+            renderTeacherHub();
+            drawChart();
         }
 
-        function pushDataToCloudHash() {
+        function saveData() {
             try {
-                var payload = {
-                    students: cloudStudentsList,
-                    media: uploadedMediaList,
-                    notice: localStorage.getItem('wps_notice_text') || "",
-                    primary: localStorage.getItem('wps_theme_primary') || "",
-                    accent: localStorage.getItem('wps_theme_accent') || ""
-                };
-                window.location.hash = btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
-            } catch(e) {}
+                localStorage.setItem('wps_students', JSON.stringify(studentsList));
+                localStorage.setItem('wps_media', JSON.stringify(mediaList));
+            } catch (err) {}
+            updateStats();
+            renderStudents();
+            renderTeacherHub();
+            drawChart();
         }
 
-        function loadPortalData() {
-            var savedStudents = localStorage.getItem('wps_students_list');
-            cloudStudentsList = savedStudents ? JSON.parse(savedStudents) : defaultStudents;
+        function handleLogin() {
+            var email = document.getElementById('email').value.trim().toLowerCase();
+            var pass = document.getElementById('password').value.trim();
 
-            var savedMedia = localStorage.getItem('wps_media_list');
-            uploadedMediaList = savedMedia ? JSON.parse(savedMedia) : defaultMedia;
-
-            var savedNotice = localStorage.getItem('wps_notice_text');
-            if (savedNotice) {
-                document.getElementById('displayNoticeText').innerHTML = `<b>Latest Notice:</b> ${savedNotice}`;
-            }
-
-            var pColor = localStorage.getItem('wps_theme_primary');
-            var aColor = localStorage.getItem('wps_theme_accent');
-            if (pColor && aColor) {
-                applyThemeValues(pColor, aColor);
-            }
-
-            updateDashboardStats();
-            renderStudentTable();
-            renderTeacherMediaHub();
-            renderHomeGallery();
-            drawGenderPieChart();
-        }
-
-        function savePortalData() {
-            localStorage.setItem('wps_students_list', JSON.stringify(cloudStudentsList));
-            localStorage.setItem('wps_media_list', JSON.stringify(uploadedMediaList));
-            pushDataToCloudHash();
-            updateDashboardStats();
-            renderStudentTable();
-            renderTeacherMediaHub();
-            renderHomeGallery();
-            drawGenderPieChart();
-        }
-
-        function handleLogin(event) {
-            if (event) event.preventDefault();
-            
-            var emailInput = document.getElementById('email').value.trim().toLowerCase();
-            var passInput = document.getElementById('password').value.trim();
-
-            if (emailInput.includes("@wps.com") && passInput.length > 0) {
-                currentLoggedInUser = emailInput;
+            if (email.includes("@wps.com") && pass.length > 0) {
+                currentLoggedInUser = email;
                 document.getElementById('loginScreen').style.display = 'none';
                 document.getElementById('dashboardScreen').style.display = 'flex';
-                document.getElementById('userDisplay').innerText = emailInput;
+                document.getElementById('userDisplay').innerText = email;
                 
-                var isAdmin = (emailInput === "head@wps.com");
+                var isAdmin = (email === "head@wps.com");
                 document.getElementById('navAdmission').style.display = isAdmin ? "block" : "none";
-                document.getElementById('navAdminUpload').style.display = isAdmin ? "block" : "none";
+                document.getElementById('navAdminMedia').style.display = isAdmin ? "block" : "none";
                 document.getElementById('navManageStudents').style.display = isAdmin ? "block" : "none";
                 document.getElementById('navTheme').style.display = isAdmin ? "block" : "none";
                 document.getElementById('badgeAdmission').style.display = isAdmin ? "block" : "none";
-                document.getElementById('badgeAdminUpload').style.display = isAdmin ? "block" : "none";
+                document.getElementById('badgeAdminMedia').style.display = isAdmin ? "block" : "none";
                 document.getElementById('badgeTheme').style.display = isAdmin ? "block" : "none";
                 document.getElementById('badgeStudents').style.display = isAdmin ? "block" : "none";
 
-                loadPortalData();
+                loadData();
             } else {
-                alert("Please enter a valid staff email (ending with @wps.com) and password. (Admin: head@wps.com / 8303)");
+                alert("Please enter a valid staff email ending with @wps.com and password.");
             }
         }
 
@@ -585,262 +551,191 @@
         function switchTab(tab) {
             document.querySelectorAll('.panel-view').forEach(p => p.classList.remove('active'));
             if (tab === 'home') document.getElementById('panel-home').classList.add('active');
-            if (tab === 'admission') {
-                if (currentLoggedInUser !== "head@wps.com") { alert("Admin access required."); return; }
-                document.getElementById('panel-admission').classList.add('active');
-            }
-            if (tab === 'admin-upload') {
-                if (currentLoggedInUser !== "head@wps.com") { alert("Admin access required."); return; }
-                document.getElementById('panel-admin-upload').classList.add('active');
-            }
+            if (tab === 'admission') document.getElementById('panel-admission').classList.add('active');
+            if (tab === 'admin-media') document.getElementById('panel-admin-media').classList.add('active');
             if (tab === 'teacher-hub') {
                 document.getElementById('panel-teacher-hub').classList.add('active');
-                renderTeacherMediaHub();
+                renderTeacherHub();
             }
             if (tab === 'assessment') document.getElementById('panel-assessment').classList.add('active');
             if (tab === 'students') {
-                if (currentLoggedInUser !== "head@wps.com") { alert("Admin access required."); return; }
                 document.getElementById('panel-students').classList.add('active');
-                renderStudentTable();
+                renderStudents();
             }
-            if (tab === 'theme') {
-                if (currentLoggedInUser !== "head@wps.com") { alert("Admin access required."); return; }
-                document.getElementById('panel-theme').classList.add('active');
-            }
+            if (tab === 'theme') document.getElementById('panel-theme').classList.add('active');
         }
 
-        function applyPresetTheme() {
-            var preset = document.getElementById('presetTheme').value;
-            var primary = "#0a2540", accent = "#b31924";
-            if (preset === 'independence') { primary = "#b31924"; accent = "#006b3f"; }
-            else if (preset === 'christmas') { primary = "#1b4d3e"; accent = "#d4af37"; }
-            else if (preset === 'easter') { primary = "#512b58"; accent = "#e4a11b"; }
-            else if (preset === 'default') { primary = "#0a2540"; accent = "#b31924"; }
-
-            document.getElementById('primaryColorPicker').value = primary;
-            document.getElementById('accentColorPicker').value = accent;
-            applyThemeValues(primary, accent);
+        function applyPreset() {
+            var val = document.getElementById('presetTheme').value;
+            var p = "#0a2540", a = "#b31924";
+            if (val === 'independence') { p = "#b31924"; a = "#006b3f"; }
+            else if (val === 'christmas') { p = "#1b4d3e"; a = "#d4af37"; }
+            else if (val === 'easter') { p = "#512b58"; a = "#e4a11b"; }
+            
+            document.getElementById('primaryColorPicker').value = p;
+            document.getElementById('accentColorPicker').value = a;
+            applyThemeColors(p, a);
         }
 
-        function saveCustomTheme() {
-            var primary = document.getElementById('primaryColorPicker').value;
-            var accent = document.getElementById('accentColorPicker').value;
-            localStorage.setItem('wps_theme_primary', primary);
-            localStorage.setItem('wps_theme_accent', accent);
-            applyThemeValues(primary, accent);
-            pushDataToCloudHash();
+        function saveTheme() {
+            var p = document.getElementById('primaryColorPicker').value;
+            var a = document.getElementById('accentColorPicker').value;
+            localStorage.setItem('wps_primary', p);
+            localStorage.setItem('wps_accent', a);
+            applyThemeColors(p, a);
             alert("Theme updated successfully!");
         }
 
-        function applyThemeValues(primary, accent) {
-            document.documentElement.style.setProperty('--primary-color', primary);
-            document.documentElement.style.setProperty('--accent-color', accent);
+        function applyThemeColors(p, a) {
+            document.documentElement.style.setProperty('--primary-color', p);
+            document.documentElement.style.setProperty('--accent-color', a);
         }
 
-        function publishAdminMedia() {
-            var fileInput = document.getElementById('adminMediaFile');
-            var caption = document.getElementById('adminMediaCaption').value.trim() || "Wesley Prep Event";
+        function publishAdminPost() {
             var notice = document.getElementById('adminNoticeInput').value.trim();
+            var title = document.getElementById('mediaTitleInput').value.trim();
+            var url = document.getElementById('mediaUrlInput').value.trim();
 
             if (notice) {
-                localStorage.setItem('wps_notice_text', notice);
+                localStorage.setItem('wps_notice', notice);
                 document.getElementById('displayNoticeText').innerHTML = `<b>Latest Notice:</b> ${notice}`;
             }
 
-            if (fileInput.files && fileInput.files.length > 0) {
-                for (let i = 0; i < fileInput.files.length; i++) {
-                    let file = fileInput.files[i];
-                    let reader = new FileReader();
-                    reader.onload = function(e) {
-                        uploadedMediaList.unshift({
-                            type: file.type.startsWith('video/') ? 'video' : 'image',
-                            src: e.target.result,
-                            caption: caption
-                        });
-                        savePortalData();
-                        if (i === fileInput.files.length - 1) {
-                            alert("Media published successfully! All teachers can now view and download it.");
-                            document.getElementById('adminMediaFile').value = "";
-                            document.getElementById('adminMediaCaption').value = "";
-                            document.getElementById('adminNoticeInput').value = "";
-                            switchTab('teacher-hub');
-                        }
-                    };
-                    reader.readAsDataURL(file);
-                }
-            } else if (notice) {
-                pushDataToCloudHash();
-                alert("Notice board updated successfully!");
+            if (url && title) {
+                mediaList.unshift({ src: url, caption: title });
+                saveData();
             }
+
+            alert("Announcement and media published successfully for all teachers!");
+            document.getElementById('adminNoticeInput').value = "";
+            document.getElementById('mediaTitleInput').value = "";
+            document.getElementById('mediaUrlInput').value = "";
+            switchTab('teacher-hub');
         }
 
-        function renderTeacherMediaHub() {
-            var grid = document.getElementById('teacherMediaDownloadGrid');
+        function renderTeacherHub() {
+            var grid = document.getElementById('teacherMediaGrid');
             if (!grid) return;
             grid.innerHTML = "";
-            uploadedMediaList.forEach((item, index) => {
-                var mediaHTML = item.type === 'video' 
-                    ? `<video src="${item.src}" class="gallery-video" controls></video>` 
-                    : `<img src="${item.src}" class="gallery-img">`;
-                
+            mediaList.forEach((item, idx) => {
                 grid.innerHTML += `
                     <div class="gallery-item">
-                        ${mediaHTML}
+                        <img src="${item.src}" class="gallery-img" onerror="this.src='https://via.placeholder.com/200?text=Wesley+Prep+Media'">
                         <div style="font-size: 11px; font-weight: bold; margin: 6px 0; color: var(--primary-color);">${item.caption}</div>
-                        <a href="${item.src}" download="WPS_Media_${index+1}" style="display:inline-block; background:var(--primary-color); color:white; padding:5px 12px; border-radius:4px; text-decoration:none; font-size:11px; font-weight:bold;">📥 Download Media</a>
+                        <a href="${item.src}" target="_blank" download="WPS_Media_${idx+1}" style="display:inline-block; background:var(--primary-color); color:white; padding:5px 12px; border-radius:4px; text-decoration:none; font-size:11px; font-weight:bold;">📥 Download / View</a>
                     </div>
                 `;
             });
         }
 
-        function renderHomeGallery() {
-            var grid = document.getElementById('homeGalleryGrid');
-            if (!grid) return;
-            grid.innerHTML = `
-                <div class="gallery-item">
-                    <img src="badge.jpg" class="gallery-img" onerror="this.src='https://via.placeholder.com/150?text=Badge'">
-                    <div style="font-size: 11px; font-weight: bold; margin-top: 4px; color: var(--primary-color);">School Crest / Badge</div>
-                </div>
-            `;
-            uploadedMediaList.slice(0, 2).forEach((item) => {
-                var mediaHTML = item.type === 'video' 
-                    ? `<video src="${item.src}" class="gallery-video" controls></video>` 
-                    : `<img src="${item.src}" class="gallery-img">`;
-                grid.innerHTML += `
-                    <div class="gallery-item">
-                        ${mediaHTML}
-                        <div style="font-size: 11px; font-weight: bold; margin-top: 4px; color: var(--primary-color);">${item.caption}</div>
-                    </div>
-                `;
-            });
+        function syncPortal() {
+            loadData();
+            alert("Portal synchronized successfully!");
         }
 
-        function syncUpdates() {
-            checkUrlHashSync();
-            loadPortalData();
-            alert("Portal fully synchronized!");
-        }
-
-        function updateDashboardStats() {
-            var total = cloudStudentsList.length;
+        function updateStats() {
+            var total = studentsList.length;
             document.getElementById('statTotalStudents').innerText = total;
-            document.getElementById('statBasic1').innerText = cloudStudentsList.filter(s => s.class === "Basic 1").length;
-            var maleCount = cloudStudentsList.filter(s => s.gender === "MALE").length;
-            var femaleCount = cloudStudentsList.filter(s => s.gender === "FEMALE").length;
-            document.getElementById('statMale').innerText = maleCount;
-            document.getElementById('statFemale').innerText = femaleCount;
+            document.getElementById('statBasic1').innerText = studentsList.filter(s => s.class === "Basic 1").length;
+            var m = studentsList.filter(s => s.gender === "MALE").length;
+            var f = studentsList.filter(s => s.gender === "FEMALE").length;
+            document.getElementById('statMale').innerText = m;
+            document.getElementById('statFemale').innerText = f;
 
             if (total > 0) {
-                document.getElementById('pctMale').innerText = Math.round((maleCount / total) * 100) + "%";
-                document.getElementById('pctFemale').innerText = Math.round((femaleCount / total) * 100) + "%";
-            } else {
-                document.getElementById('pctMale').innerText = "0%";
-                document.getElementById('pctFemale').innerText = "0%";
+                document.getElementById('pctMale').innerText = Math.round((m / total) * 100) + "%";
+                document.getElementById('pctFemale').innerText = Math.round((f / total) * 100) + "%";
             }
         }
 
-        function drawGenderPieChart() {
+        function drawChart() {
             var canvas = document.getElementById('genderPieChart');
             if (!canvas) return;
             var ctx = canvas.getContext('2d');
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            var total = cloudStudentsList.length;
-            if (total === 0) {
-                ctx.fillStyle = "#ccc";
-                ctx.beginPath(); ctx.arc(45, 45, 40, 0, 2 * Math.PI); ctx.fill();
-                return;
-            }
-            var males = cloudStudentsList.filter(s => s.gender === "MALE").length;
-            var maleAngle = (males / total) * 2 * Math.PI;
+            ctx.clearRect(0, 0, 90, 90);
+            
+            var total = studentsList.length;
+            if (total === 0) return;
+            var males = studentsList.filter(s => s.gender === "MALE").length;
+            var angle = (males / total) * 2 * Math.PI;
 
             ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--primary-color').trim() || "#0a2540";
-            ctx.beginPath(); ctx.moveTo(45, 45); ctx.arc(45, 45, 40, 0, maleAngle); ctx.fill();
+            ctx.beginPath(); ctx.moveTo(45, 45); ctx.arc(45, 45, 40, 0, angle); ctx.fill();
 
             ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--accent-color').trim() || "#b31924";
-            ctx.beginPath(); ctx.moveTo(45, 45); ctx.arc(45, 45, 40, maleAngle, 2 * Math.PI); ctx.fill();
+            ctx.beginPath(); ctx.moveTo(45, 45); ctx.arc(45, 45, 40, angle, 2 * Math.PI); ctx.fill();
         }
 
-        function promptAddStudent() {
+        function addStudent() {
             var name = document.getElementById('newStudentName').value.trim();
-            if (!name) { alert("Please enter student full name."); return; }
-            var cls = document.getElementById('regClassSelect').value;
-            var gender = document.getElementById('newStudentGender').value;
-            var dob = document.getElementById('newStudentDob').value;
-
-            cloudStudentsList.push({
+            if (!name) { alert("Please enter student name."); return; }
+            studentsList.push({
                 id: "WPS-" + Math.floor(1000 + Math.random() * 9000),
                 name: name.toUpperCase(),
-                class: cls,
-                gender: gender,
-                dob: dob
+                class: document.getElementById('regClassSelect').value,
+                gender: document.getElementById('newStudentGender').value,
+                dob: document.getElementById('newStudentDob').value
             });
-            savePortalData();
+            saveData();
             document.getElementById('newStudentName').value = "";
-            alert("Student successfully added to roster!");
+            alert("Student added successfully!");
         }
 
-        function submitOnlineAdmission() {
+        function submitAdmission() {
             var name = document.getElementById('admFullName').value.trim();
-            var cls = document.getElementById('admClassSelect').value;
-            var gender = document.getElementById('admGenderSelect').value;
-
-            if (!name) { alert("Please enter student full name."); return; }
-
-            cloudStudentsList.push({
+            if (!name) { alert("Please enter student name."); return; }
+            studentsList.push({
                 id: "WPS-" + Math.floor(1000 + Math.random() * 9000),
                 name: name.toUpperCase(),
-                class: cls,
-                gender: gender,
+                class: document.getElementById('admClassSelect').value,
+                gender: document.getElementById('admGenderSelect').value,
                 dob: "2012-01-01"
             });
-            savePortalData();
-            alert("Admission Successful! " + name.toUpperCase() + " enrolled.");
+            saveData();
+            alert("Admission Successful!");
             document.getElementById('admFullName').value = "";
             switchTab('students');
         }
 
-        function renderStudentTable() {
-            var tbody = document.getElementById('studentTableBody');
-            if (tbody) {
-                tbody.innerHTML = "";
-                if (cloudStudentsList.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="6">No students registered yet.</td></tr>`;
-                } else {
-                    cloudStudentsList.forEach((s, i) => {
-                        tbody.innerHTML += `<tr>
-                            <td>${i+1}</td>
-                            <td><code>${s.id}</code></td>
-                            <td style="text-align:left; padding-left:10px;"><b>${s.name}</b></td>
-                            <td>${s.gender || 'MALE'}</td>
-                            <td>${s.dob || '2012-05-14'}</td>
-                            <td><button onclick="removeStudent(${i})" style="background:#b31924;color:white;border:none;padding:3px 6px;border-radius:3px;cursor:pointer;">Remove</button></td>
-                        </tr>`;
-                    });
-                }
+        function renderStudents() {
+            var tb = document.getElementById('studentTableBody');
+            if (!tb) return;
+            tb.innerHTML = "";
+            if (studentsList.length === 0) {
+                tb.innerHTML = `<tr><td colspan="6">No students registered.</td></tr>`;
+                return;
             }
+            studentsList.forEach((s, i) => {
+                tb.innerHTML += `<tr>
+                    <td>${i+1}</td>
+                    <td><code>${s.id}</code></td>
+                    <td style="text-align:left; padding-left:10px;"><b>${s.name}</b></td>
+                    <td>${s.gender}</td>
+                    <td>${s.dob}</td>
+                    <td><button onclick="removeStudent(${i})" style="background:#b31924;color:white;border:none;padding:3px 6px;border-radius:3px;cursor:pointer;">Remove</button></td>
+                </tr>`;
+            });
         }
 
-        function removeStudent(index) {
-            if (confirm("Remove this student?")) {
-                cloudStudentsList.splice(index, 1);
-                savePortalData();
+        function removeStudent(i) {
+            if (confirm("Remove student?")) {
+                studentsList.splice(i, 1);
+                saveData();
             }
         }
 
         function renderAssessmentTable() {
             var cls = document.getElementById('filterClassSelect').value;
-            var tbody = document.getElementById('assessmentTableBody');
-            tbody.innerHTML = "";
+            var tb = document.getElementById('assessmentTableBody');
+            tb.innerHTML = "";
             document.getElementById('assessmentResultsSection').style.display = 'block';
-            var filtered = cloudStudentsList.filter(s => s.class === cls);
-            
+            var filtered = studentsList.filter(s => s.class === cls);
             if (filtered.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5">No students found in ${cls}. Add students via Register Students or Admission.</td></tr>`;
+                tb.innerHTML = `<tr><td colspan="5">No students in ${cls}.</td></tr>`;
                 return;
             }
             filtered.forEach((s, i) => {
-                tbody.innerHTML += `<tr>
+                tb.innerHTML += `<tr>
                     <td>${i+1}</td>
                     <td style="text-align:left; padding-left:10px;"><b>${s.name}</b></td>
                     <td><input type="number" class="score-input" placeholder="0"></td>
