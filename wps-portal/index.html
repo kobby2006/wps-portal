@@ -1787,6 +1787,46 @@
             }
         }
     </script>
+<script type="module">
+  import { db } from './firebase.js';
+  import { collection, addDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+  // Make addStudent available globally so your button's onclick="addStudent()" works
+  window.addStudent = async function() {
+      // Grab values using your exact element IDs
+      const name = document.getElementById('newStudentName').value;
+      const gender = document.getElementById('newStudentGender').value;
+      const dob = document.getElementById('newStudentDob').value;
+      
+      // Change 'newStudentClass' if your class dropdown has a different ID
+      const studentClass = document.getElementById('newStudentClass') ? document.getElementById('newStudentClass').value : '';
+
+      if (!name) {
+          alert("Please enter the student's full name.");
+          return;
+      }
+
+      try {
+          // Save the student data to Firestore
+          await addDoc(collection(db, "students"), {
+              name: name,
+              class: studentClass,
+              gender: gender,
+              dob: dob,
+              registeredAt: new Date()
+          });
+
+          alert("Student registered successfully to the cloud!");
+          
+          // Clear inputs
+          document.getElementById('newStudentName').value = '';
+          document.getElementById('newStudentDob').value = '';
+      } catch (error) {
+          console.error("Error adding student: ", error);
+          alert("Error saving to cloud. Check your connection.");
+      }
+  };
+</script>
 
 </body>
 </html>
