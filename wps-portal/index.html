@@ -355,8 +355,12 @@
                     </div>
 
                     <div id="assessmentResultsSection" style="display:none;" class="capture-container">
-                        <h4 style="color: var(--primary-color);">Class Register & Scores Entry</h4>
-                        <table class="roster-table">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 10px;">
+        <h4 style="color: var(--primary-color); margin: 0;">Class Register & Scores Entry</h4>
+        <button type="button" onclick="submitAllScores()" style="background: #28a745; color: white; border: none; padding: 8px 15px; border-radius: 4px; font-weight: bold; cursor: pointer;">💾 Submit / Finalize Scores</button>
+    </div>
+    <table class="roster-table">
+        
                             <thead>
                                 <tr>
                                     <th>No.</th>
