@@ -40,7 +40,7 @@
         .btn-signout { background-color: var(--accent-color); color: white; border: none; padding: 5px 10px; border-radius: 4px; font-weight: 600; font-size: 11px; cursor: pointer; }
         
         .workspace { display: flex; flex: 1; width: 100%; box-sizing: border-box; }
-        .sidebar { width: 220px; background-color: var(--card-bg); border-right: 1px solid #e0dcd0; padding-top: 15px; flex-shrink: 0; }
+        .sidebar { width: 230px; background-color: var(--card-bg); border-right: 1px solid #e0dcd0; padding-top: 15px; flex-shrink: 0; }
         .nav-link, .nav-link-sub { display: block; padding: 12px 15px; color: var(--primary-color); text-decoration: none; font-size: 12px; font-weight: 600; border-left: 4px solid transparent; cursor: pointer; }
         .nav-link-sub { color: #444; font-weight: normal; }
         .nav-link:hover, .nav-link-sub:hover { background-color: #f0ebd8; border-left-color: var(--accent-color); }
@@ -92,16 +92,23 @@
         .roster-table th { background-color: #f0ebd8; color: var(--primary-color); }
         .score-input { width: 50px; padding: 3px; border: 1px solid #ccc; border-radius: 3px; text-align: center; font-size: 11px; }
 
-        @media screen and (max-width: 768px) {
-            .workspace { flex-direction: column; }
-            .sidebar { width: 100%; display: flex; flex-wrap: wrap; padding: 5px; }
-            .stats-grid { grid-template-columns: repeat(2, 1fr); }
-            .gallery-grid { grid-template-columns: 1fr; }
+        /* Report Card Print Layout */
+        .report-card-box { background: white; border: 2px solid var(--primary-color); padding: 25px; border-radius: 8px; max-width: 800px; margin: 0 auto; }
+        .report-header { text-align: center; border-bottom: 3px double var(--primary-color); padding-bottom: 10px; margin-bottom: 15px; }
+        .report-header h3 { margin: 2px 0; color: var(--primary-color); font-size: 16px; }
+        .report-header p { margin: 2px 0; font-size: 11px; color: #555; }
+        .report-meta { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 12px; background: #fbf9f4; padding: 10px; border-radius: 4px; margin-bottom: 15px; border: 1px solid #e0dcd0; }
+
+        @media print {
+            body * { visibility: hidden; }
+            #reportCardPrintArea, #reportCardPrintArea * { visibility: visible; }
+            #reportCardPrintArea { position: absolute; left: 0; top: 0; width: 100%; }
+            .no-print { display: none !important; }
         }
     </style>
 </head>
 <body>
-    <div class="top-header">
+    <div class="top-header no-print">
         <h2>0040111 - WESLEY PREPARATORY SCHOOL (ASSORKO - ESSAMAN)</h2>
         <div class="header-right">
             <button class="btn-signout" onclick="syncCloudData()" style="background: #28a745;">🔄 Sync Live Data</button>
@@ -130,25 +137,26 @@
     <!-- DASHBOARD SCREEN -->
     <div id="dashboardScreen" style="display: none; flex-direction: column; flex: 1;">
         <div class="workspace">
-            <div class="sidebar">
+            <div class="sidebar no-print">
                 <a class="nav-link" onclick="switchTab('home')">🏠 Home Dashboard</a>
                 <a class="nav-link-sub" onclick="switchTab('admission')" id="navAdmission" style="display:none;">📝 Online Admission Form</a>
                 <a class="nav-link-sub" onclick="switchTab('admin-media')" id="navAdminMedia" style="display:none;">📤 Admin Media Publisher</a>
                 <a class="nav-link-sub" onclick="switchTab('teacher-hub')">📥 Teacher Media & Downloads</a>
                 <a class="nav-link-sub" onclick="switchTab('assessment')">★ Capture Assessment</a>
+                <a class="nav-link-sub" onclick="switchTab('attendance')">📋 Attendance Register</a>
+                <a class="nav-link-sub" onclick="switchTab('report-card')">🖨️ Termly Report Card Printout</a>
                 <a class="nav-link-sub" onclick="switchTab('students')" id="navManageStudents" style="display:none;">📝 Register Students</a>
                 <a class="nav-link-sub" onclick="switchTab('theme')" id="navTheme" style="display:none;">🎨 Seasonal Theme Editor</a>
                 <a class="nav-link-sub" onclick="signOut()" style="color: var(--accent-color);">🚪 Sign Out</a>
             </div>
             <div class="content-area">
-                <div class="action-row">
+                <div class="action-row no-print">
                     <div style="font-weight: bold; font-size: 12px; color: var(--primary-color);">0040111 - WESLEY PREP</div>
-                    <div class="action-badge" onclick="switchTab('admission')" id="badgeAdmission" style="display:none;">Admission</div>
-                    <div class="action-badge" onclick="switchTab('admin-media')" id="badgeAdminMedia" style="display:none;">Admin Media</div>
-                    <div class="action-badge" onclick="switchTab('teacher-hub')">Teacher Media Hub</div>
-                    <div class="action-badge" onclick="switchTab('theme')" id="badgeTheme" style="display:none; background:#b31924; color:white;">Theme Editor</div>
-                    <div class="action-badge" onclick="switchTab('students')" id="badgeStudents" style="display:none;">Register Students</div>
+                    <div class="action-badge" onclick="switchTab('teacher-hub')">Teacher Hub</div>
                     <div class="action-badge" onclick="switchTab('assessment')">Assessment</div>
+                    <div class="action-badge" onclick="switchTab('attendance')">Attendance</div>
+                    <div class="action-badge" onclick="switchTab('report-card')">Report Cards</div>
+                    <div class="action-badge" onclick="switchTab('students')" id="badgeStudents" style="display:none;">Register Students</div>
                 </div>
 
                 <!-- HOME PANEL -->
@@ -212,7 +220,7 @@
                         <div class="home-gallery-section">
                             <div class="gallery-header">🏫 School Gallery & Notice Board</div>
                             <div class="notice-board-text" id="displayNoticeText">
-                                <b>Latest Notice:</b> Welcome back to Wesley Prep (Assorko - Essaman). Thank you to our teachers and board for representing us proudly in our school jerseys!
+                                <b>Latest Notice:</b> Welcome back to Wesley Prep (Assorko - Essaman). Please ensure continuous assessment and attendance records are updated.
                             </div>
                             <div class="gallery-grid" style="margin-top: 12px;">
                                 <div class="gallery-item">
@@ -237,18 +245,17 @@
                 <div id="panel-admin-media" class="panel-view">
                     <div class="capture-container" style="max-width: 600px; margin: 0 auto;">
                         <h3 style="color: var(--primary-color); margin-top:0;">📤 Admin Media & Notice Publisher</h3>
-                        <p style="font-size: 12px; color: #666;">Post official school announcements, photos, and video links for all teachers to access.</p>
                         <div class="form-group">
                             <label>Notice Board Announcement</label>
                             <textarea id="adminNoticeInput" rows="3" placeholder="Enter announcement..."></textarea>
                         </div>
                         <div class="form-group">
                             <label>Media Title / Caption</label>
-                            <input type="text" id="mediaTitleInput" placeholder="e.g. Jersey Day Celebration / Term 3 Exam Briefing">
+                            <input type="text" id="mediaTitleInput" placeholder="e.g. Jersey Day Celebration">
                         </div>
                         <div class="form-group">
                             <label>Photo / Video Image URL</label>
-                            <input type="text" id="mediaUrlInput" placeholder="Paste image link or use Unsplash/photo URL">
+                            <input type="text" id="mediaUrlInput" placeholder="Paste image link">
                         </div>
                         <button type="button" class="btn-submit" onclick="publishAdminPost()" style="background: var(--primary-color);">Publish Announcement & Media</button>
                     </div>
@@ -258,10 +265,7 @@
                 <div id="panel-teacher-hub" class="panel-view">
                     <div class="capture-container">
                         <h3 style="color: var(--primary-color); margin-top:0;">📥 Teacher Media & Downloads Hub</h3>
-                        <p style="font-size: 12px; color: #666;">View and download photos, videos, and materials posted by the administration.</p>
-                        <div class="gallery-grid" id="teacherMediaGrid" style="margin-top: 15px;">
-                            <!-- Populated dynamically -->
-                        </div>
+                        <div class="gallery-grid" id="teacherMediaGrid" style="margin-top: 15px;"></div>
                     </div>
                 </div>
 
@@ -301,31 +305,6 @@
                     <div class="capture-container">
                         <h3 style="color: var(--primary-color); margin-top:0; font-size: 14px;">ASSESSMENT CAPTURE</h3>
                         <div class="form-group">
-                            <label>YEAR</label>
-                            <select id="yearSelect">
-                                <option value="" disabled selected>**SELECT YEAR**</option>
-                                <option>2025/2026 Academic Year</option>
-                                <option>2026/2027 Academic Year</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>SEMESTER</label>
-                            <select id="semSelect">
-                                <option value="" disabled selected>**SELECT SEM**</option>
-                                <option>Term 1 / 1st Semester</option>
-                                <option>Term 2 / 2nd Semester</option>
-                                <option>Term 3 / 3rd Semester</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>ASSESSMENT_MODE</label>
-                            <select id="assessmentModeSelect">
-                                <option value="" disabled selected>**SELECT MODE OF ASSESSMENT**</option>
-                                <option>Continuous Assessment & SBA</option>
-                                <option>End of Term Examination</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
                             <label>CLASS</label>
                             <select id="filterClassSelect">
                                 <option value="Basic 1">Basic 1</option>
@@ -340,27 +319,25 @@
                         <div class="form-group">
                             <label>SUBJECT</label>
                             <select id="subSelect">
-                                <option value="" disabled selected>**SELECT SUBJECT**</option>
-                                <option>Mathematics</option>
-                                <option>English Language</option>
-                                <option>Integrated Science</option>
-                                <option>History</option>
-                                <option>R. M. E</option>
-                                <option>Fante</option>
-                                <option>Creative Arts</option>
-                                <option>Computing</option>
+                                <option value="Mathematics">Mathematics</option>
+                                <option value="English Language">English Language</option>
+                                <option value="Integrated Science">Integrated Science</option>
+                                <option value="History">History</option>
+                                <option value="R. M. E">R. M. E</option>
+                                <option value="Fante">Fante</option>
+                                <option value="Creative Arts">Creative Arts</option>
+                                <option value="Computing">Computing</option>
                             </select>
                         </div>
                         <button type="button" class="btn-submit" style="width: auto; padding: 10px 25px;" onclick="renderAssessmentTable()">&lt;&lt;Filter&gt;&gt;</button>
                     </div>
 
                     <div id="assessmentResultsSection" style="display:none;" class="capture-container">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 10px;">
-        <h4 style="color: var(--primary-color); margin: 0;">Class Register & Scores Entry</h4>
-        <button type="button" onclick="submitAllScores()" style="background: #28a745; color: white; border: none; padding: 8px 15px; border-radius: 4px; font-weight: bold; cursor: pointer;">💾 Submit / Finalize Scores</button>
-    </div>
-    <table class="roster-table">
-        
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 10px;">
+                            <h4 style="color: var(--primary-color); margin: 0;">Class Register & Scores Entry</h4>
+                            <button type="button" onclick="submitAllScores()" style="background: #28a745; color: white; border: none; padding: 8px 15px; border-radius: 4px; font-weight: bold; cursor: pointer;">💾 Submit / Finalize Scores</button>
+                        </div>
+                        <table class="roster-table">
                             <thead>
                                 <tr>
                                     <th>No.</th>
@@ -372,6 +349,97 @@
                             </thead>
                             <tbody id="assessmentTableBody"></tbody>
                         </table>
+                    </div>
+                </div>
+
+                <!-- ATTENDANCE REGISTER PANEL -->
+                <div id="panel-attendance" class="panel-view">
+                    <div class="capture-container">
+                        <h3 style="color: var(--primary-color); margin-top:0;">📋 Termly Attendance Register</h3>
+                        <div class="form-group" style="max-width: 300px;">
+                            <label>Select Class</label>
+                            <select id="attClassSelect" onchange="renderAttendanceTable()">
+                                <option value="Basic 1">Basic 1</option>
+                                <option value="Basic 2">Basic 2</option>
+                                <option value="Basic 3">Basic 3</option>
+                                <option value="Basic 4" selected>Basic 4</option>
+                                <option value="Basic 5">Basic 5</option>
+                                <option value="Basic 6">Basic 6</option>
+                                <option value="JHS 1">JHS 1</option>
+                            </select>
+                        </div>
+                        <table class="roster-table">
+                            <thead>
+                                <tr>
+                                    <th>No.</th>
+                                    <th>Student Name</th>
+                                    <th>Total Days Present</th>
+                                    <th>Total Days Absent</th>
+                                </tr>
+                            </thead>
+                            <tbody id="attendanceTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- TERMLY REPORT CARD PRINTOUT PANEL -->
+                <div id="panel-report-card" class="panel-view">
+                    <div class="capture-container no-print" style="max-width: 700px; margin: 0 auto;">
+                        <h3 style="color: var(--primary-color); margin-top:0;">🖨️ Termly Report Card Generator</h3>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                            <div class="form-group">
+                                <label>Select Class</label>
+                                <select id="repClassSelect" onchange="updateReportStudentDropdown()">
+                                    <option value="Basic 1">Basic 1</option>
+                                    <option value="Basic 2">Basic 2</option>
+                                    <option value="Basic 3">Basic 3</option>
+                                    <option value="Basic 4" selected>Basic 4</option>
+                                    <option value="Basic 5">Basic 5</option>
+                                    <option value="Basic 6">Basic 6</option>
+                                    <option value="JHS 1">JHS 1</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Select Student</label>
+                                <select id="repStudentSelect"></select>
+                            </div>
+                        </div>
+                        <button type="button" class="btn-submit" style="background: var(--primary-color); margin-top: 10px;" onclick="generateReportCard()">Generate Report Card</button>
+                    </div>
+
+                    <div id="reportCardPrintArea" style="display:none; margin-top: 20px;">
+                        <div class="report-card-box">
+                            <div class="report-header">
+                                <h3 style="letter-spacing: 1px;">WESLEY PREPARATORY SCHOOL</h3>
+                                <p>ASSORKO - ESSAMAN | DIGITAL ADDRESS: WR-247-7150</p>
+                                <p style="font-weight: bold; color: var(--accent-color); margin-top: 4px;">TERMINAL REPORT CARD & ACADEMIC TRANSCRIPT</p>
+                            </div>
+                            <div class="report-meta">
+                                <div><b>Student Name:</b> <span id="rcStudentName">--</span></div>
+                                <div><b>Student ID:</b> <span id="rcStudentId">--</span></div>
+                                <div><b>Class:</b> <span id="rcStudentClass">--</span></div>
+                                <div><b>Attendance:</b> Present: <span id="rcPresent">0</span> | Absent: <span id="rcAbsent">0</span></div>
+                            </div>
+                            <table class="roster-table" style="margin-bottom: 15px;">
+                                <thead>
+                                    <tr>
+                                        <th>Subject</th>
+                                        <th>Class Score (50%)</th>
+                                        <th>Exams Score (50%)</th>
+                                        <th>Total (100%)</th>
+                                        <th>Grade / Remark</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="rcSubjectsBody"></tbody>
+                            </table>
+                            <div style="font-size: 11px; background: #fbf9f4; padding: 10px; border: 1px solid #ddd; border-radius: 4px;">
+                                <div><b>Class Teacher's Remark:</b> <span id="rcTeacherRemark">Good performance. Keep up the hard work!</span></div>
+                                <div style="margin-top: 5px;"><b>Headteacher's Signature:</b> ___________________________</div>
+                            </div>
+                        </div>
+                        <div style="text-align: center; margin-top: 15px;" class="no-print">
+                            <button type="button" class="btn-submit" style="width: auto; padding: 10px 30px; background: #28a745;" onclick="window.print()">🖨️ Print / Save PDF</button>
+                        </div>
                     </div>
                 </div>
 
@@ -431,7 +499,6 @@
                 <div id="panel-theme" class="panel-view">
                     <div class="capture-container" style="max-width: 600px; margin: 0 auto;">
                         <h3 style="color: var(--primary-color); margin-top:0;">🎨 Seasonal & Event Theme Generator</h3>
-                        <p style="font-size: 12px; color: #666;">Choose presets for Ghana Independence, Christmas, Easter, or custom events.</p>
                         <div class="form-group">
                             <label>Select Festive / Event Preset</label>
                             <select id="presetTheme" onchange="applyPreset()" style="padding: 10px;">
@@ -459,37 +526,29 @@
         </div>
     </div>
 
-    <!-- CLOUD-SYNC JAVASCRIPT ENGINE -->
+    <!-- FULL PORTAL JAVASCRIPT ENGINE -->
     <script>
         var currentLoggedInUser = "";
-        
-        var defaultStudents = [
-            { id: "WPS-1001", name: "KOBBY MENSAH", class: "Basic 4", gender: "MALE", dob: "2012-05-14" },
-            { id: "WPS-1002", name: "AYELE VIBES", class: "Basic 4", gender: "FEMALE", dob: "2012-08-20" },
-            { id: "WPS-1003", name: "MILDRED ADZEPA", class: "Basic 1", gender: "FEMALE", dob: "2015-02-10" },
-            { id: "WPS-1004", name: "SAMUEL APPIAH", class: "Basic 5", gender: "MALE", dob: "2011-03-22" }
-        ];
-
-        var defaultMedia = [
-            { src: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=500", caption: "Wesley Prep Jersey Representation & Staff Appreciation" },
-            { src: "https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=500", caption: "Term 3 Classroom Activities & Teaching" }
-        ];
-
         var studentsList = [];
         var mediaList = [];
+        var assessmentScores = {};
+        var attendanceRecords = {};
+
+        var allSubjects = ["Mathematics", "English Language", "Integrated Science", "History", "R. M. E", "Fante", "Creative Arts", "Computing"];
 
         window.addEventListener('DOMContentLoaded', () => {
             checkHashSync();
             loadData();
         });
 
-        // Enables instant sharing across different devices/teachers via URL hash payload
         function checkHashSync() {
             try {
                 if (window.location.hash && window.location.hash.length > 1) {
                     var decoded = JSON.parse(decodeURIComponent(escape(atob(window.location.hash.substring(1)))));
                     if (decoded.students) localStorage.setItem('wps_students_cloud', JSON.stringify(decoded.students));
                     if (decoded.media) localStorage.setItem('wps_media_cloud', JSON.stringify(decoded.media));
+                    if (decoded.scores) localStorage.setItem('wps_scores_cloud', JSON.stringify(decoded.scores));
+                    if (decoded.attendance) localStorage.setItem('wps_attendance_cloud', JSON.stringify(decoded.attendance));
                     if (decoded.notice) localStorage.setItem('wps_notice_cloud', decoded.notice);
                     if (decoded.primary) localStorage.setItem('wps_primary_cloud', decoded.primary);
                     if (decoded.accent) localStorage.setItem('wps_accent_cloud', decoded.accent);
@@ -502,6 +561,8 @@
                 var payload = {
                     students: studentsList,
                     media: mediaList,
+                    scores: assessmentScores,
+                    attendance: attendanceRecords,
                     notice: localStorage.getItem('wps_notice_cloud') || "",
                     primary: localStorage.getItem('wps_primary_cloud') || "",
                     accent: localStorage.getItem('wps_accent_cloud') || ""
@@ -513,10 +574,19 @@
         function loadData() {
             try {
                 var s = localStorage.getItem('wps_students_cloud');
-                studentsList = s ? JSON.parse(s) : defaultStudents;
+                studentsList = s ? JSON.parse(s) : [];
 
                 var m = localStorage.getItem('wps_media_cloud');
-                mediaList = m ? JSON.parse(m) : defaultMedia;
+                mediaList = m ? JSON.parse(m) : [
+                    { src: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=500", caption: "Wesley Prep Jersey Representation & Staff Appreciation" },
+                    { src: "https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=500", caption: "Term 3 Classroom Activities & Teaching" }
+                ];
+
+                var sc = localStorage.getItem('wps_scores_cloud');
+                assessmentScores = sc ? JSON.parse(sc) : {};
+
+                var att = localStorage.getItem('wps_attendance_cloud');
+                attendanceRecords = att ? JSON.parse(att) : {};
 
                 var notice = localStorage.getItem('wps_notice_cloud');
                 if (notice) {
@@ -527,20 +597,22 @@
                 var a = localStorage.getItem('wps_accent_cloud');
                 if (p && a) applyThemeColors(p, a);
             } catch (err) {
-                studentsList = defaultStudents;
-                mediaList = defaultMedia;
+                studentsList = [];
             }
 
             updateStats();
             renderStudents();
             renderTeacherHub();
             drawChart();
+            updateReportStudentDropdown();
         }
 
         function saveData() {
             try {
                 localStorage.setItem('wps_students_cloud', JSON.stringify(studentsList));
                 localStorage.setItem('wps_media_cloud', JSON.stringify(mediaList));
+                localStorage.setItem('wps_scores_cloud', JSON.stringify(assessmentScores));
+                localStorage.setItem('wps_attendance_cloud', JSON.stringify(attendanceRecords));
                 pushToCloudHash();
             } catch (err) {}
             updateStats();
@@ -564,9 +636,6 @@
                 document.getElementById('navAdminMedia').style.display = isAdmin ? "block" : "none";
                 document.getElementById('navManageStudents').style.display = isAdmin ? "block" : "none";
                 document.getElementById('navTheme').style.display = isAdmin ? "block" : "none";
-                document.getElementById('badgeAdmission').style.display = isAdmin ? "block" : "none";
-                document.getElementById('badgeAdminMedia').style.display = isAdmin ? "block" : "none";
-                document.getElementById('badgeTheme').style.display = isAdmin ? "block" : "none";
                 document.getElementById('badgeStudents').style.display = isAdmin ? "block" : "none";
 
                 checkHashSync();
@@ -592,6 +661,14 @@
                 renderTeacherHub();
             }
             if (tab === 'assessment') document.getElementById('panel-assessment').classList.add('active');
+            if (tab === 'attendance') {
+                document.getElementById('panel-attendance').classList.add('active');
+                renderAttendanceTable();
+            }
+            if (tab === 'report-card') {
+                document.getElementById('panel-report-card').classList.add('active');
+                updateReportStudentDropdown();
+            }
             if (tab === 'students') {
                 document.getElementById('panel-students').classList.add('active');
                 renderStudents();
@@ -715,6 +792,7 @@
             saveData();
             document.getElementById('newStudentName').value = "";
             alert("Student added successfully!");
+            updateReportStudentDropdown();
         }
 
         function submitAdmission() {
@@ -731,6 +809,7 @@
             alert("Admission Successful!");
             document.getElementById('admFullName').value = "";
             switchTab('students');
+            updateReportStudentDropdown();
         }
 
         function renderStudents() {
@@ -738,7 +817,7 @@
             if (!tb) return;
             tb.innerHTML = "";
             if (studentsList.length === 0) {
-                tb.innerHTML = `<tr><td colspan="6">No students registered.</td></tr>`;
+                tb.innerHTML = `<tr><td colspan="6">No students registered. Total registered: 0</td></tr>`;
                 return;
             }
             studentsList.forEach((s, i) => {
@@ -757,28 +836,150 @@
             if (confirm("Remove student?")) {
                 studentsList.splice(i, 1);
                 saveData();
+                updateReportStudentDropdown();
             }
         }
 
         function renderAssessmentTable() {
             var cls = document.getElementById('filterClassSelect').value;
+            var sub = document.getElementById('subSelect').value;
             var tb = document.getElementById('assessmentTableBody');
             tb.innerHTML = "";
             document.getElementById('assessmentResultsSection').style.display = 'block';
             var filtered = studentsList.filter(s => s.class === cls);
             if (filtered.length === 0) {
-                tb.innerHTML = `<tr><td colspan="5">No students in ${cls}.</td></tr>`;
+                tb.innerHTML = `<tr><td colspan="5">No students registered in ${cls}. Please register students first.</td></tr>`;
                 return;
             }
             filtered.forEach((s, i) => {
+                var key = s.id + "_" + sub;
+                var savedData = assessmentScores[key] || { classScore: "", examScore: "" };
+                var totalVal = "--";
+                if (savedData.classScore !== "" || savedData.examScore !== "") {
+                    var cs = parseFloat(savedData.classScore) || 0;
+                    var es = parseFloat(savedData.examScore) || 0;
+                    totalVal = cs + es;
+                }
+
                 tb.innerHTML += `<tr>
                     <td>${i+1}</td>
                     <td style="text-align:left; padding-left:10px;"><b>${s.name}</b></td>
-                    <td><input type="number" class="score-input" placeholder="0"></td>
-                    <td><input type="number" class="score-input" placeholder="0"></td>
-                    <td><span style="font-weight:600; color:#0a2540;">--</span></td>
+                    <td><input type="number" class="score-input" id="cs_${s.id}" value="${savedData.classScore}" oninput="autoSaveScore('${s.id}')" placeholder="0"></td>
+                    <td><input type="number" class="score-input" id="es_${s.id}" value="${savedData.examScore}" oninput="autoSaveScore('${s.id}')" placeholder="0"></td>
+                    <td><span id="tot_${s.id}" style="font-weight:600; color:#0a2540;">${totalVal}</span></td>
                 </tr>`;
             });
+        }
+
+        function autoSaveScore(studentId) {
+            var sub = document.getElementById('subSelect').value;
+            var csInput = document.getElementById('cs_' + studentId).value;
+            var esInput = document.getElementById('es_' + studentId).value;
+
+            var key = studentId + "_" + sub;
+            assessmentScores[key] = { classScore: csInput, examScore: esInput };
+
+            var cs = parseFloat(csInput) || 0;
+            var es = parseFloat(esInput) || 0;
+            var total = (csInput !== "" || esInput !== "") ? (cs + es) : "--";
+            document.getElementById('tot_' + studentId).innerText = total;
+
+            saveData();
+        }
+
+        function submitAllScores() {
+            saveData();
+            alert("All assessment scores have been successfully submitted and saved!");
+        }
+
+        function renderAttendanceTable() {
+            var cls = document.getElementById('attClassSelect').value;
+            var tb = document.getElementById('attendanceTableBody');
+            tb.innerHTML = "";
+            var filtered = studentsList.filter(s => s.class === cls);
+            if (filtered.length === 0) {
+                tb.innerHTML = `<tr><td colspan="4">No students registered in ${cls}.</td></tr>`;
+                return;
+            }
+            filtered.forEach((s, i) => {
+                var attData = attendanceRecords[s.id] || { present: 65, absent: 0 };
+                tb.innerHTML += `<tr>
+                    <td>${i+1}</td>
+                    <td style="text-align:left; padding-left:10px;"><b>${s.name}</b></td>
+                    <td><input type="number" class="score-input" id="pres_${s.id}" value="${attData.present}" oninput="saveAttendance('${s.id}')"></td>
+                    <td><input type="number" class="score-input" id="abs_${s.id}" value="${attData.absent}" oninput="saveAttendance('${s.id}')"></td>
+                </tr>`;
+            });
+        }
+
+        function saveAttendance(studentId) {
+            var p = document.getElementById('pres_' + studentId).value;
+            var a = document.getElementById('abs_' + studentId).value;
+            attendanceRecords[studentId] = { present: p, absent: a };
+            saveData();
+        }
+
+        function updateReportStudentDropdown() {
+            var cls = document.getElementById('repClassSelect').value;
+            var sel = document.getElementById('repStudentSelect');
+            if (!sel) return;
+            sel.innerHTML = "";
+            var filtered = studentsList.filter(s => s.class === cls);
+            if (filtered.length === 0) {
+                sel.innerHTML = `<option value="">No students in ${cls}</option>`;
+                return;
+            }
+            filtered.forEach(s => {
+                sel.innerHTML += `<option value="${s.id}">${s.name} (${s.id})</option>`;
+            });
+        }
+
+        function generateReportCard() {
+            var studentId = document.getElementById('repStudentSelect').value;
+            var student = studentsList.find(s => s.id === studentId);
+            if (!student) { alert("Please select a valid student."); return; }
+
+            document.getElementById('rcStudentName').innerText = student.name;
+            document.getElementById('rcStudentId').innerText = student.id;
+            document.getElementById('rcStudentClass').innerText = student.class;
+
+            var att = attendanceRecords[student.id] || { present: 65, absent: 0 };
+            document.getElementById('rcPresent').innerText = att.present;
+            document.getElementById('rcAbsent').innerText = att.absent;
+
+            var tbody = document.getElementById('rcSubjectsBody');
+            tbody.innerHTML = "";
+
+            allSubjects.forEach(sub => {
+                var key = student.id + "_" + sub;
+                var scData = assessmentScores[key] || { classScore: "-", examScore: "-" };
+                var cs = parseFloat(scData.classScore);
+                var es = parseFloat(scData.examScore);
+                var total = (!isNaN(cs) && !isNaN(es)) ? (cs + es) : "-";
+                
+                var grade = "-";
+                if (!isNaN(total)) {
+                    if (total >= 80) grade = "A1 (Excellent)";
+                    else if (total >= 70) grade = "B2 (Very Good)";
+                    else if (total >= 60) grade = "B3 (Good)";
+                    else if (total >= 50) grade = "C4 (Credit)";
+                    else if (total >= 45) grade = "C5 (Credit)";
+                    else if (total >= 40) grade = "D6 (Pass)";
+                    else grade = "F9 (Fail)";
+                }
+
+                tbody.innerHTML += `
+                    <tr>
+                        <td style="text-align:left; padding-left:10px;"><b>${sub}</b></td>
+                        <td>${scData.classScore}</td>
+                        <td>${scData.examScore}</td>
+                        <td><b>${total}</b></td>
+                        <td>${grade}</td>
+                    </tr>
+                `;
+            });
+
+            document.getElementById('reportCardPrintArea').style.display = 'block';
         }
     </script>
 </body>
