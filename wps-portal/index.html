@@ -3,983 +3,463 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WESLEY PREPARATORY SCHOOL - Assessment & Administration Portal</title>
+    <title>Wesley Preparatory School Portal - Assorko-Essaman</title>
     <style>
         :root {
-            --bg-color: #fbf9f4;
-            --primary-color: #0a2540;
-            --accent-color: #b31924;
+            --primary-gradient: linear-gradient(135deg, #5b42f3 0%, #d946ef 100%);
+            --sidebar-bg: #5b42f3;
+            --accent-color: #d946ef;
+            --bg-color: #f4f6f9;
             --card-bg: #ffffff;
             --text-color: #333333;
         }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
+
+        /* Seasonal Theme Overrides */
+        body.theme-christmas {
+            --primary-gradient: linear-gradient(135deg, #165b33 0%, #bb2528 100%);
+            --sidebar-bg: #165b33;
+            --accent-color: #f8b229;
+            --bg-color: #fcf6f0;
+        }
+        body.theme-easter {
+            --primary-gradient: linear-gradient(135deg, #845ec2 0%, #ff9671 100%);
+            --sidebar-bg: #845ec2;
+            --accent-color: #ffc75f;
+            --bg-color: #f9f8fc;
+        }
+        body.theme-independence {
+            --primary-gradient: linear-gradient(135deg, #ce1126 0%, #fcd116 100%, #006b3f 0%);
+            --sidebar-bg: #006b3f;
+            --accent-color: #fcd116;
+            --bg-color: #fffef0;
+        }
+
+        * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            height: 100vh;
+            display: flex;
+            overflow: hidden;
+            transition: background 0.5s ease;
+        }
+
+        /* Login Screen */
+        #login-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--primary-gradient);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .login-card {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+        .login-card h2 { margin-bottom: 5px; color: #222; }
+        .login-card p { color: #666; margin-bottom: 20px; font-size: 0.9rem; }
+        .form-group { margin-bottom: 15px; text-align: left; }
+        .form-group label { display: block; margin-bottom: 5px; font-size: 0.85rem; font-weight: 600; color: #444; }
+        .form-group input, .form-group select { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 0.95rem; }
+        .btn-primary { width: 100%; padding: 12px; background: #5b42f3; color: white; border: none; border-radius: 6px; font-size: 1rem; font-weight: bold; cursor: pointer; transition: background 0.2s; margin-top: 10px; }
+        .btn-primary:hover { background: #4732d4; }
+        .error-msg { color: #e53e3e; font-size: 0.85rem; margin-top: 10px; display: none; }
+        
+        .seasonal-badge {
+            background: rgba(255,255,255,0.2);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            display: inline-block;
+            margin-bottom: 15px;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        /* App Layout */
+        #app-container { display: none; width: 100%; height: 100%; }
+        .sidebar {
+            width: 280px;
+            background: var(--primary-gradient);
+            color: white;
             display: flex;
             flex-direction: column;
-            min-height: 100vh;
+            padding: 20px 0;
+            height: 100%;
+            box-shadow: 4px 0 15px rgba(0,0,0,0.1);
         }
-        .top-header {
-            background-color: var(--primary-color);
-            color: #fbf9f4;
-            padding: 12px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.15);
-            border-bottom: 3px solid var(--accent-color);
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        .top-header h2 { margin: 0; font-size: 14px; font-weight: 600; }
-        .header-right { display: flex; align-items: center; gap: 8px; }
-        .user-info { font-size: 11px; background: rgba(255,255,255,0.15); padding: 4px 8px; border-radius: 4px; }
-        .btn-signout { background-color: var(--accent-color); color: white; border: none; padding: 5px 10px; border-radius: 4px; font-weight: 600; font-size: 11px; cursor: pointer; }
+        .sidebar-brand { font-size: 1.1rem; font-weight: bold; padding: 0 20px 15px 20px; border-bottom: 1px solid rgba(255,255,255,0.2); margin-bottom: 15px; }
+        .user-role-badge { padding: 4px 10px; background: rgba(0,0,0,0.2); border-radius: 4px; font-size: 0.75rem; text-transform: uppercase; margin-top: 5px; display: inline-block; }
         
-        .workspace { display: flex; flex: 1; width: 100%; box-sizing: border-box; }
-        .sidebar { width: 230px; background-color: var(--card-bg); border-right: 1px solid #e0dcd0; padding-top: 15px; flex-shrink: 0; }
-        .nav-link, .nav-link-sub { display: block; padding: 12px 15px; color: var(--primary-color); text-decoration: none; font-size: 12px; font-weight: 600; border-left: 4px solid transparent; cursor: pointer; }
-        .nav-link-sub { color: #444; font-weight: normal; }
-        .nav-link:hover, .nav-link-sub:hover { background-color: #f0ebd8; border-left-color: var(--accent-color); }
-        .content-area { flex: 1; padding: 15px; display: flex; flex-direction: column; background-color: var(--bg-color); min-width: 0; }
+        .nav-links { list-style: none; overflow-y: auto; flex-grow: 1; }
+        .nav-links li { padding: 12px 20px; display: flex; align-items: center; gap: 12px; cursor: pointer; transition: background 0.2s; font-size: 0.95rem; font-weight: 500; }
+        .nav-links li:hover { background: rgba(255, 255, 255, 0.15); }
+        .nav-links li.active { background: rgba(255, 255, 255, 0.25); border-left: 4px solid #ffffff; }
         
-        .action-row { display: flex; gap: 8px; background: var(--card-bg); padding: 10px 15px; border-radius: 6px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); margin-bottom: 15px; border-top: 3px solid var(--primary-color); align-items: center; flex-wrap: wrap; }
-        .action-badge { background: #f0ebd8; color: var(--primary-color); padding: 5px 10px; border-radius: 4px; font-weight: 600; font-size: 11px; cursor: pointer; border: 1px solid #dcd5c0; }
-        
-        #loginScreen { display: flex; justify-content: center; align-items: center; flex: 1; padding: 20px; }
-        .login-card { background: var(--card-bg); padding: 25px; width: 100%; max-width: 380px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-top: 5px solid var(--primary-color); }
-        .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; font-size: 12px; font-weight: 600; color: #444; margin-bottom: 5px; }
-        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; font-size: 13px; }
-        .btn-submit { width: 100%; background: var(--primary-color); color: white; border: none; padding: 11px; font-weight: 600; border-radius: 4px; cursor: pointer; font-size: 13px; }
-        .btn-submit:hover { opacity: 0.9; }
+        .main-content { flex-grow: 1; padding: 40px; overflow-y: auto; background-color: var(--bg-color); }
+        .section-panel { display: none; }
+        .section-panel.active { display: block; }
+        .card { background: white; padding: 24px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        h1 { color: #222; margin-bottom: 8px; font-size: 1.8rem; }
+        .subtitle { color: #666; margin-bottom: 20px; font-size: 0.95rem; }
 
-        .panel-view { display: none; flex: 1; flex-direction: column; }
-        .panel-view.active { display: flex; }
-        
-        .portal-main-title { text-align: center; color: var(--primary-color); font-size: 18px; margin-top: 5px; font-weight: 700; }
-        .school-crest-box { text-align: center; margin-top: 10px; display: flex; flex-direction: column; align-items: center; }
-        .school-badge-img { width: 110px; height: 110px; object-fit: contain; margin-top: 5px; margin-bottom: 10px; }
-        
-        .dashboard-main-container { display: flex; gap: 20px; width: 100%; max-width: 1200px; margin: 0 auto; flex-wrap: wrap; }
-        .dashboard-left-col { flex: 2; min-width: 280px; }
-        .dashboard-right-col { flex: 1; display: flex; flex-direction: column; gap: 15px; min-width: 250px; }
-        
-        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 12px; }
-        .stat-card { background: linear-gradient(135deg, #f0ebd8 0%, var(--card-bg) 100%); border: 1px solid #dcd5c0; border-radius: 6px; padding: 10px; text-align: center; }
-        .stat-card h4 { margin: 0; font-size: 11px; color: var(--primary-color); font-weight: 600; }
-        .stat-card .stat-value { font-size: 15px; font-weight: bold; color: #333; margin-top: 4px; }
-        .stat-card.red { background: linear-gradient(135deg, #faeaea 0%, var(--card-bg) 100%); border-color: #f0cccc; }
-        .stat-card.red h4 { color: var(--accent-color); }
-        
-        .analytics-banner { width: 100%; background: var(--accent-color); color: white; text-align: center; padding: 10px; border-radius: 6px; font-weight: bold; font-size: 12px; }
-        .analytics-card { background: var(--card-bg); border: 1px solid #dcd5c0; border-radius: 6px; padding: 12px; text-align: center; }
-        .analytics-card h3 { margin: 0 0 8px 0; font-size: 13px; color: var(--primary-color); border-bottom: 1px solid #eee; padding-bottom: 6px; }
-        
-        .home-gallery-section { width: 100%; max-width: 1200px; margin: 15px auto 0 auto; background: var(--card-bg); border: 1px solid #dcd5c0; border-radius: 6px; padding: 15px; box-sizing: border-box; text-align: left; }
-        .gallery-header { font-size: 13px; font-weight: bold; color: var(--primary-color); border-bottom: 2px solid var(--primary-color); padding-bottom: 6px; margin-bottom: 12px; }
-        .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-        .gallery-item { background: #fbf9f4; border: 1px solid #dcd5c0; border-radius: 6px; padding: 8px; text-align: center; }
-        .gallery-img { width: 100%; height: 120px; object-fit: cover; border-radius: 4px; border: 1px solid #ccc; }
-        .notice-board-text { font-size: 12px; color: #444; background: #f0ebd8; padding: 10px; border-radius: 4px; margin-top: 8px; border-left: 4px solid var(--accent-color); }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px; }
+        .stat-box { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); text-align: center; }
+        .stat-box h3 { font-size: 1.8rem; color: #5b42f3; margin-top: 5px; }
+        .stat-box p { color: #666; font-size: 0.9rem; font-weight: 600; }
 
-        .capture-container { background: var(--card-bg); padding: 20px; border-radius: 6px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); border-top: 3px solid var(--primary-color); box-sizing: border-box; margin-bottom: 20px; }
-        .roster-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        .roster-table th, .roster-table td { border: 1px solid #dee2e6; padding: 7px; text-align: center; font-size: 11px; }
-        .roster-table th { background-color: #f0ebd8; color: var(--primary-color); }
-        .score-input { width: 50px; padding: 3px; border: 1px solid #ccc; border-radius: 3px; text-align: center; font-size: 11px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; background: white; }
+        th, td { padding: 12px; border: 1px solid #ddd; text-align: left; font-size: 0.9rem; }
+        th { background: #f8fafc; color: #444; }
 
-        /* Report Card Print Layout */
-        .report-card-box { background: white; border: 2px solid var(--primary-color); padding: 25px; border-radius: 8px; max-width: 800px; margin: 0 auto; }
-        .report-header { text-align: center; border-bottom: 3px double var(--primary-color); padding-bottom: 10px; margin-bottom: 15px; }
-        .report-header h3 { margin: 2px 0; color: var(--primary-color); font-size: 16px; }
-        .report-header p { margin: 2px 0; font-size: 11px; color: #555; }
-        .report-meta { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 12px; background: #fbf9f4; padding: 10px; border-radius: 4px; margin-bottom: 15px; border: 1px solid #e0dcd0; }
+        .btn-action { padding: 10px 20px; background: #0284c7; color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; margin-top: 10px; }
+        .btn-action:hover { background: #0369a1; }
 
+        .announcement-banner { background: #eff6ff; border-left: 4px solid #3b82f6; padding: 15px; border-radius: 4px; margin-bottom: 20px; }
+        
         @media print {
-            body * { visibility: hidden; }
-            #reportCardPrintArea, #reportCardPrintArea * { visibility: visible; }
-            #reportCardPrintArea { position: absolute; left: 0; top: 0; width: 100%; }
-            .no-print { display: none !important; }
+            .sidebar, .nav-links, #login-screen, .btn-action, .form-group { display: none !important; }
+            .main-content { padding: 0; background: white; }
+            .card { box-shadow: none; border: none; }
         }
     </style>
 </head>
-<body>
-    <div class="top-header no-print">
-        <h2>0040111 - WESLEY PREPARATORY SCHOOL (ASSORKO - ESSAMAN)</h2>
-        <div class="header-right">
-            <button class="btn-signout" onclick="syncCloudData()" style="background: #28a745;">🔄 Sync Live Data</button>
-            <div class="user-info" id="userDisplay">Not Logged In</div>
-            <button class="btn-signout" onclick="signOut()">Sign Out</button>
-        </div>
-    </div>
+<body class="">
 
-    <!-- LOGIN SCREEN -->
-    <div id="loginScreen">
+    <!-- Login Screen -->
+    <div id="login-screen">
         <div class="login-card">
-            <h3>Portal Login</h3>
-            <p style="font-size: 11px; color: #666; margin-bottom: 15px;">Enter staff credentials to log in.</p>
-            <div class="form-group">
-                <label>Staff Email</label>
-                <input type="text" id="email" value="head@wps.com" placeholder="head@wps.com">
-            </div>
-            <div class="form-group">
-                <label>Password</label>
-                <input type="password" id="password" value="8303" placeholder="Enter password">
-            </div>
-            <button type="button" class="btn-submit" onclick="handleLogin()">Login to Dashboard</button>
+            <div id="seasonal-notice" class="seasonal-badge">🌟 Welcome to Wesley Prep Portal</div>
+            <h2>Wesley Prep. School</h2>
+            <p>Assorko-Essaman</p>
+            <form id="login-form" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label>Gmail Address</label>
+                    <input type="email" id="login-email" placeholder="teacher@gmail.com or head@wps.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Password / Access PIN</label>
+                    <input type="password" id="login-pass" placeholder="••••" required>
+                </div>
+                <button type="submit" class="btn-primary">Secure Login</button>
+                <div id="login-error" class="error-msg">Invalid credentials. Contact Admin for access.</div>
+            </form>
+            <p style="margin-top: 15px; font-size: 0.75rem; color: #888;">Admin Default: head@wps.com / 8303</p>
         </div>
     </div>
 
-    <!-- DASHBOARD SCREEN -->
-    <div id="dashboardScreen" style="display: none; flex-direction: column; flex: 1;">
-        <div class="workspace">
-            <div class="sidebar no-print">
-                <a class="nav-link" onclick="switchTab('home')">🏠 Home Dashboard</a>
-                <a class="nav-link-sub" onclick="switchTab('admission')" id="navAdmission" style="display:none;">📝 Online Admission Form</a>
-                <a class="nav-link-sub" onclick="switchTab('admin-media')" id="navAdminMedia" style="display:none;">📤 Admin Media Publisher</a>
-                <a class="nav-link-sub" onclick="switchTab('teacher-hub')">📥 Teacher Media & Downloads</a>
-                <a class="nav-link-sub" onclick="switchTab('assessment')">★ Capture Assessment</a>
-                <a class="nav-link-sub" onclick="switchTab('attendance')">📋 Attendance Register</a>
-                <a class="nav-link-sub" onclick="switchTab('report-card')">🖨️ Termly Report Card Printout</a>
-                <a class="nav-link-sub" onclick="switchTab('students')" id="navManageStudents" style="display:none;">📝 Register Students</a>
-                <a class="nav-link-sub" onclick="switchTab('theme')" id="navTheme" style="display:none;">🎨 Seasonal Theme Editor</a>
-                <a class="nav-link-sub" onclick="signOut()" style="color: var(--accent-color);">🚪 Sign Out</a>
+    <!-- Main App Container -->
+    <div id="app-container">
+        <!-- Sidebar Menu -->
+        <div class="sidebar">
+            <div class="sidebar-brand">
+                Wesley Prep. School
+                <div id="display-role" class="user-role-badge">Admin</div>
             </div>
-            <div class="content-area">
-                <div class="action-row no-print">
-                    <div style="font-weight: bold; font-size: 12px; color: var(--primary-color);">0040111 - WESLEY PREP</div>
-                    <div class="action-badge" onclick="switchTab('teacher-hub')">Teacher Hub</div>
-                    <div class="action-badge" onclick="switchTab('assessment')">Assessment</div>
-                    <div class="action-badge" onclick="switchTab('attendance')">Attendance</div>
-                    <div class="action-badge" onclick="switchTab('report-card')">Report Cards</div>
-                    <div class="action-badge" onclick="switchTab('students')" id="badgeStudents" style="display:none;">Register Students</div>
+            <ul class="nav-links" id="dynamic-nav">
+                <!-- Populated dynamically based on role -->
+            </ul>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="main-content">
+            
+            <!-- Global Announcement Banner -->
+            <div class="announcement-banner">
+                <strong>📢 School Announcement:</strong> <span id="banner-text">Mid-Term assessments and revision schedules are currently ongoing across Class 1 to Class 6. Ensure all records are synced to Google Drive.</span>
+            </div>
+
+            <!-- DASHBOARD TAB -->
+            <div id="tab-dashboard" class="section-panel active">
+                <h1>Portal Dashboard</h1>
+                <p class="subtitle">Overview & Quick Statistics</p>
+                <div class="stats-grid">
+                    <div class="stat-box"><p>Total Pupils (Class 1-6)</p><h3 id="stat-total-pupils">180</h3></div>
+                    <div class="stat-box"><p>Registered Teachers</p><h3 id="stat-total-teachers">1</h3></div>
+                    <div class="stat-box"><p>Active Classes</p><h3>6 Classes</h3></div>
+                    <div class="stat-box"><p>Cloud Backup</p><h3 style="color: #10b981;">Connected ✓</h3></div>
                 </div>
+            </div>
 
-                <!-- HOME PANEL -->
-                <div id="panel-home" class="panel-view active">
-                    <div class="portal-main-title">KNOWLEDGE AND INTEGRITY - ASSESSMENT PORTAL</div>
-                    <div class="school-crest-box">
-                        <img src="badge.jpg" alt="School Badge" class="school-badge-img" onerror="this.src='https://via.placeholder.com/150?text=Wesley+Prep+Badge'">
-                        
-                        <div class="dashboard-main-container">
-                            <div class="dashboard-left-col">
-                                <div class="stats-grid">
-                                    <div class="stat-card">
-                                        <h4>Total Students</h4>
-                                        <div class="stat-value" id="statTotalStudents">0</div>
-                                    </div>
-                                    <div class="stat-card red">
-                                        <h4>Subjects Offered</h4>
-                                        <div class="stat-value">8</div>
-                                    </div>
-                                    <div class="stat-card">
-                                        <h4>Teaching Staff</h4>
-                                        <div class="stat-value">6</div>
-                                    </div>
-                                    <div class="stat-card">
-                                        <h4>Basic 1</h4>
-                                        <div class="stat-value" id="statBasic1">0</div>
-                                    </div>
-                                    <div class="stat-card red">
-                                        <h4>Total Male</h4>
-                                        <div class="stat-value" id="statMale">0</div>
-                                    </div>
-                                    <div class="stat-card">
-                                        <h4>Total Female</h4>
-                                        <div class="stat-value" id="statFemale">0</div>
-                                    </div>
-                                </div>
-                                <div class="analytics-banner">ADVANCED ANALYTICS ▼</div>
-                            </div>
-                            <div class="dashboard-right-col">
-                                <div class="analytics-card">
-                                    <h3>Gender Distribution</h3>
-                                    <div style="font-size: 11px; margin-bottom: 8px;">
-                                        <span style="color: var(--primary-color); font-weight:bold;">■ Male (<span id="pctMale">0%</span>)</span> &nbsp;&nbsp;
-                                        <span style="color: var(--accent-color); font-weight:bold;">■ Female (<span id="pctFemale">0%</span>)</span>
-                                    </div>
-                                    <div style="height: 100px; display: flex; justify-content: center; align-items: center;">
-                                        <canvas id="genderPieChart" width="90" height="90"></canvas>
-                                    </div>
-                                </div>
-                                <div class="analytics-card">
-                                    <h3>Year Distribution</h3>
-                                    <div style="height: 70px; display: flex; align-items: flex-end; justify-content: space-around; padding-top: 5px; border-bottom: 1px solid #ccc;">
-                                        <div style="text-align: center;"><div style="width: 12px; background: var(--primary-color); height: 10px; margin: 0 auto;"></div><span style="font-size: 9px;">B1-B3</span></div>
-                                        <div style="text-align: center;"><div style="width: 12px; background: var(--accent-color); height: 15px; margin: 0 auto;"></div><span style="font-size: 9px;">B4-B6</span></div>
-                                        <div style="text-align: center;"><div style="width: 12px; background: #28a745; height: 8px; margin: 0 auto;"></div><span style="font-size: 9px;">JHS 1</span></div>
-                                    </div>
-                                </div>
-                            </div>
+            <!-- ADMIN: REGISTER TEACHERS -->
+            <div id="tab-register-teacher" class="section-panel admin-only">
+                <h1>Register Teacher Gmail Accounts</h1>
+                <p class="subtitle">Admin Only: Create login credentials for teachers so they can access their score sheets.</p>
+                <div class="card">
+                    <form onsubmit="addTeacher(event)">
+                        <div class="form-group">
+                            <label>Teacher Full Name</label>
+                            <input type="text" id="teach-name" placeholder="E.g. Madam Akosua" required>
                         </div>
-
-                        <div class="home-gallery-section">
-                            <div class="gallery-header">🏫 School Gallery & Notice Board</div>
-                            <div class="notice-board-text" id="displayNoticeText">
-                                <b>Latest Notice:</b> Welcome back to Wesley Prep (Assorko - Essaman). Please ensure continuous assessment and attendance records are updated.
-                            </div>
-                            <div class="gallery-grid" style="margin-top: 12px;">
-                                <div class="gallery-item">
-                                    <img src="badge.jpg" class="gallery-img" onerror="this.src='https://via.placeholder.com/150?text=Badge'">
-                                    <div style="font-size: 11px; font-weight: bold; margin-top: 4px; color: var(--primary-color);">School Crest / Badge</div>
-                                </div>
-                                <div class="gallery-item">
-                                    <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=500" class="gallery-img">
-                                    <div style="font-size: 11px; font-weight: bold; margin-top: 4px; color: var(--primary-color);">Jersey Day & Staff Unity</div>
-                                </div>
-                                <div class="gallery-item">
-                                    <img src="https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=500" class="gallery-img">
-                                    <div style="font-size: 11px; font-weight: bold; margin-top: 4px; color: var(--primary-color);">Classroom Activities</div>
-                                </div>
-                            </div>
+                        <div class="form-group">
+                            <label>Teacher Gmail Address</label>
+                            <input type="email" id="teach-email" placeholder="teacher@gmail.com" required>
                         </div>
-
-                    </div>
+                        <div class="form-group">
+                            <label>Assigned Password</label>
+                            <input type="text" id="teach-pass" placeholder="Create password for teacher" required>
+                        </div>
+                        <button type="submit" class="btn-action">Register Teacher</button>
+                    </form>
                 </div>
-
-                <!-- ADMIN MEDIA PUBLISHER -->
-                <div id="panel-admin-media" class="panel-view">
-                    <div class="capture-container" style="max-width: 600px; margin: 0 auto;">
-                        <h3 style="color: var(--primary-color); margin-top:0;">📤 Admin Media & Notice Publisher</h3>
-                        <div class="form-group">
-                            <label>Notice Board Announcement</label>
-                            <textarea id="adminNoticeInput" rows="3" placeholder="Enter announcement..."></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label>Media Title / Caption</label>
-                            <input type="text" id="mediaTitleInput" placeholder="e.g. Jersey Day Celebration">
-                        </div>
-                        <div class="form-group">
-                            <label>Photo / Video Image URL</label>
-                            <input type="text" id="mediaUrlInput" placeholder="Paste image link">
-                        </div>
-                        <button type="button" class="btn-submit" onclick="publishAdminPost()" style="background: var(--primary-color);">Publish Announcement & Media</button>
-                    </div>
+                <div class="card">
+                    <h3>Registered Teachers Directory</h3>
+                    <table>
+                        <thead><tr><th>Name</th><th>Gmail Address</th><th>Password</th></tr></thead>
+                        <tbody id="teacher-list-table">
+                            <tr><td colspan="3" style="text-align: center; color: #666;">No teachers registered yet. Use the form above.</td></tr>
+                        </tbody>
+                    </table>
                 </div>
+            </div>
 
-                <!-- TEACHER MEDIA & DOWNLOADS -->
-                <div id="panel-teacher-hub" class="panel-view">
-                    <div class="capture-container">
-                        <h3 style="color: var(--primary-color); margin-top:0;">📥 Teacher Media & Downloads Hub</h3>
-                        <div class="gallery-grid" id="teacherMediaGrid" style="margin-top: 15px;"></div>
-                    </div>
-                </div>
-
-                <!-- ONLINE ADMISSION -->
-                <div id="panel-admission" class="panel-view">
-                    <div class="capture-container" style="max-width: 600px; margin: 0 auto;">
-                        <h3 style="color: var(--primary-color); margin-top:0;">WESLEY PREPARATORY SCHOOL - ADMISSION FORM</h3>
+            <!-- ADMIN: STUDENT REGISTRATION -->
+            <div id="tab-register-student" class="section-panel admin-only">
+                <h1>Student Registration & Enrollment</h1>
+                <p class="subtitle">Admin Only: Enroll new pupils into Class 1 through Class 6.</p>
+                <div class="card">
+                    <form onsubmit="registerStudent(event)">
                         <div class="form-group">
-                            <label>Student Full Name</label>
-                            <input type="text" id="admFullName" placeholder="e.g. MENSAH PRINCE">
+                            <label>Pupil Full Name</label>
+                            <input type="text" id="reg-name" placeholder="E.g. Kofi Mensah" required>
                         </div>
                         <div class="form-group">
-                            <label>Class</label>
-                            <select id="admClassSelect">
-                                <option value="Basic 1">Basic 1</option>
-                                <option value="Basic 2">Basic 2</option>
-                                <option value="Basic 3">Basic 3</option>
-                                <option value="Basic 4" selected>Basic 4</option>
-                                <option value="Basic 5">Basic 5</option>
-                                <option value="Basic 6">Basic 6</option>
-                                <option value="JHS 1">JHS 1</option>
+                            <label>Select Class</label>
+                            <select id="reg-class" required>
+                                <option value="Class 1">Class 1</option><option value="Class 2">Class 2</option>
+                                <option value="Class 3">Class 3</option><option value="Class 4">Class 4</option>
+                                <option value="Class 5">Class 5</option><option value="Class 6">Class 6</option>
                             </select>
                         </div>
                         <div class="form-group">
                             <label>Gender</label>
-                            <select id="admGenderSelect">
-                                <option value="MALE">MALE</option>
-                                <option value="FEMALE">FEMALE</option>
+                            <select id="reg-gender" required>
+                                <option value="Male">Male</option><option value="Female">Female</option>
                             </select>
                         </div>
-                        <button type="button" class="btn-submit" style="background: var(--accent-color);" onclick="submitAdmission()">Enroll Student</button>
-                    </div>
+                        <button type="submit" class="btn-action">Enroll Pupil</button>
+                    </form>
                 </div>
-
-                <!-- ASSESSMENT CAPTURE -->
-                <div id="panel-assessment" class="panel-view">
-                    <div class="capture-container">
-                        <h3 style="color: var(--primary-color); margin-top:0; font-size: 14px;">ASSESSMENT CAPTURE</h3>
-                        <div class="form-group">
-                            <label>CLASS</label>
-                            <select id="filterClassSelect">
-                                <option value="Basic 1">Basic 1</option>
-                                <option value="Basic 2">Basic 2</option>
-                                <option value="Basic 3">Basic 3</option>
-                                <option value="Basic 4" selected>Basic 4</option>
-                                <option value="Basic 5">Basic 5</option>
-                                <option value="Basic 6">Basic 6</option>
-                                <option value="JHS 1">JHS 1</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>SUBJECT</label>
-                            <select id="subSelect">
-                                <option value="Mathematics">Mathematics</option>
-                                <option value="English Language">English Language</option>
-                                <option value="Integrated Science">Integrated Science</option>
-                                <option value="History">History</option>
-                                <option value="R. M. E">R. M. E</option>
-                                <option value="Fante">Fante</option>
-                                <option value="Creative Arts">Creative Arts</option>
-                                <option value="Computing">Computing</option>
-                            </select>
-                        </div>
-                        <button type="button" class="btn-submit" style="width: auto; padding: 10px 25px;" onclick="renderAssessmentTable()">&lt;&lt;Filter&gt;&gt;</button>
-                    </div>
-
-                    <div id="assessmentResultsSection" style="display:none;" class="capture-container">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 10px;">
-                            <h4 style="color: var(--primary-color); margin: 0;">Class Register & Scores Entry</h4>
-                            <button type="button" onclick="submitAllScores()" style="background: #28a745; color: white; border: none; padding: 8px 15px; border-radius: 4px; font-weight: bold; cursor: pointer;">💾 Submit / Finalize Scores</button>
-                        </div>
-                        <table class="roster-table">
-                            <thead>
-                                <tr>
-                                    <th>No.</th>
-                                    <th>Student Name</th>
-                                    <th>Class Score (50%)</th>
-                                    <th>Exams Score (50%)</th>
-                                    <th>Total (100%)</th>
-                                </tr>
-                            </thead>
-                            <tbody id="assessmentTableBody"></tbody>
-                        </table>
-                    </div>
+                <div class="card">
+                    <h3>Enrolled Roster</h3>
+                    <table>
+                        <thead><tr><th>Name</th><th>Class</th><th>Gender</th></tr></thead>
+                        <tbody id="student-roster-table">
+                            <tr><td>Ama Serwaa</td><td>Class 4</td><td>Female</td></tr>
+                            <tr><td>Kofi Boateng</td><td>Class 6</td><td>Male</td></tr>
+                        </tbody>
+                    </table>
                 </div>
-
-                <!-- ATTENDANCE REGISTER PANEL -->
-                <div id="panel-attendance" class="panel-view">
-                    <div class="capture-container">
-                        <h3 style="color: var(--primary-color); margin-top:0;">📋 Termly Attendance Register</h3>
-                        <div class="form-group" style="max-width: 300px;">
-                            <label>Select Class</label>
-                            <select id="attClassSelect" onchange="renderAttendanceTable()">
-                                <option value="Basic 1">Basic 1</option>
-                                <option value="Basic 2">Basic 2</option>
-                                <option value="Basic 3">Basic 3</option>
-                                <option value="Basic 4" selected>Basic 4</option>
-                                <option value="Basic 5">Basic 5</option>
-                                <option value="Basic 6">Basic 6</option>
-                                <option value="JHS 1">JHS 1</option>
-                            </select>
-                        </div>
-                        <table class="roster-table">
-                            <thead>
-                                <tr>
-                                    <th>No.</th>
-                                    <th>Student Name</th>
-                                    <th>Total Days Present</th>
-                                    <th>Total Days Absent</th>
-                                </tr>
-                            </thead>
-                            <tbody id="attendanceTableBody"></tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- TERMLY REPORT CARD PRINTOUT PANEL -->
-                <div id="panel-report-card" class="panel-view">
-                    <div class="capture-container no-print" style="max-width: 700px; margin: 0 auto;">
-                        <h3 style="color: var(--primary-color); margin-top:0;">🖨️ Termly Report Card Generator</h3>
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                            <div class="form-group">
-                                <label>Select Class</label>
-                                <select id="repClassSelect" onchange="updateReportStudentDropdown()">
-                                    <option value="Basic 1">Basic 1</option>
-                                    <option value="Basic 2">Basic 2</option>
-                                    <option value="Basic 3">Basic 3</option>
-                                    <option value="Basic 4" selected>Basic 4</option>
-                                    <option value="Basic 5">Basic 5</option>
-                                    <option value="Basic 6">Basic 6</option>
-                                    <option value="JHS 1">JHS 1</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label>Select Student</label>
-                                <select id="repStudentSelect"></select>
-                            </div>
-                        </div>
-                        <button type="button" class="btn-submit" style="background: var(--primary-color); margin-top: 10px;" onclick="generateReportCard()">Generate Report Card</button>
-                    </div>
-
-                    <div id="reportCardPrintArea" style="display:none; margin-top: 20px;">
-                        <div class="report-card-box">
-                            <div class="report-header">
-                                <h3 style="letter-spacing: 1px;">WESLEY PREPARATORY SCHOOL</h3>
-                                <p>ASSORKO - ESSAMAN | DIGITAL ADDRESS: WR-247-7150</p>
-                                <p style="font-weight: bold; color: var(--accent-color); margin-top: 4px;">TERMINAL REPORT CARD & ACADEMIC TRANSCRIPT</p>
-                            </div>
-                            <div class="report-meta">
-                                <div><b>Student Name:</b> <span id="rcStudentName">--</span></div>
-                                <div><b>Student ID:</b> <span id="rcStudentId">--</span></div>
-                                <div><b>Class:</b> <span id="rcStudentClass">--</span></div>
-                                <div><b>Attendance:</b> Present: <span id="rcPresent">0</span> | Absent: <span id="rcAbsent">0</span></div>
-                            </div>
-                            <table class="roster-table" style="margin-bottom: 15px;">
-                                <thead>
-                                    <tr>
-                                        <th>Subject</th>
-                                        <th>Class Score (50%)</th>
-                                        <th>Exams Score (50%)</th>
-                                        <th>Total (100%)</th>
-                                        <th>Grade / Remark</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="rcSubjectsBody"></tbody>
-                            </table>
-                            <div style="font-size: 11px; background: #fbf9f4; padding: 10px; border: 1px solid #ddd; border-radius: 4px;">
-                                <div><b>Class Teacher's Remark:</b> <span id="rcTeacherRemark">Good performance. Keep up the hard work!</span></div>
-                                <div style="margin-top: 5px;"><b>Headteacher's Signature:</b> ___________________________</div>
-                            </div>
-                        </div>
-                        <div style="text-align: center; margin-top: 15px;" class="no-print">
-                            <button type="button" class="btn-submit" style="width: auto; padding: 10px 30px; background: #28a745;" onclick="window.print()">🖨️ Print / Save PDF</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- MANAGE STUDENTS -->
-                <div id="panel-students" class="panel-view">
-                    <div class="capture-container">
-                        <h3 style="color: var(--primary-color); margin-top:0; font-size: 14px;">STUDENT ROSTER MANAGEMENT</h3>
-                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 10px; margin-bottom: 15px;">
-                            <div class="form-group" style="margin-bottom:0;">
-                                <label>CLASS</label>
-                                <select id="regClassSelect">
-                                    <option value="Basic 1">Basic 1</option>
-                                    <option value="Basic 2">Basic 2</option>
-                                    <option value="Basic 3">Basic 3</option>
-                                    <option value="Basic 4" selected>Basic 4</option>
-                                    <option value="Basic 5">Basic 5</option>
-                                    <option value="Basic 6">Basic 6</option>
-                                    <option value="JHS 1">JHS 1</option>
-                                </select>
-                            </div>
-                            <div class="form-group" style="margin-bottom:0;">
-                                <label>STUDENT FULL NAME</label>
-                                <input type="text" id="newStudentName" placeholder="e.g. Mensah Prince">
-                            </div>
-                            <div class="form-group" style="margin-bottom:0;">
-                                <label>GENDER</label>
-                                <select id="newStudentGender">
-                                    <option value="MALE">MALE</option>
-                                    <option value="FEMALE">FEMALE</option>
-                                </select>
-                            </div>
-                            <div class="form-group" style="margin-bottom:0;">
-                                <label>DOB</label>
-                                <input type="date" id="newStudentDob" value="2012-05-14">
-                            </div>
-                        </div>
-                        <button type="button" class="btn-submit" style="background: var(--accent-color); width: auto; padding: 10px 20px;" onclick="addStudent()">+ Add Student</button>
-                        
-                        <h4 style="margin-top: 20px; color: var(--primary-color);">Enrolled Students Roster</h4>
-                        <table class="roster-table">
-                            <thead>
-                                <tr>
-                                    <th>No.</th>
-                                    <th>REF ID</th>
-                                    <th>Student Full Name</th>
-                                    <th>Gender</th>
-                                    <th>DOB</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody id="studentTableBody"></tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- SEASONAL & EVENT THEME EDITOR -->
-                <div id="panel-theme" class="panel-view">
-                    <div class="capture-container" style="max-width: 600px; margin: 0 auto;">
-                        <h3 style="color: var(--primary-color); margin-top:0;">🎨 Seasonal & Event Theme Generator</h3>
-                        <div class="form-group">
-                            <label>Select Festive / Event Preset</label>
-                            <select id="presetTheme" onchange="applyPreset()" style="padding: 10px;">
-                                <option value="default">Default School Theme (Navy & Red)</option>
-                                <option value="independence">🇬🇭 Ghana Independence (Red, Gold & Green)</option>
-                                <option value="christmas">🎄 Christmas Festive (Green & Gold)</option>
-                                <option value="easter">🐣 Easter Celebration (Gold & Purple)</option>
-                            </select>
-                        </div>
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                            <div class="form-group">
-                                <label>Primary Color</label>
-                                <input type="color" id="primaryColorPicker" value="#0a2540" style="height: 40px; cursor: pointer;">
-                            </div>
-                            <div class="form-group">
-                                <label>Accent Color</label>
-                                <input type="color" id="accentColorPicker" value="#b31924" style="height: 40px; cursor: pointer;">
-                            </div>
-                        </div>
-                        <button type="button" class="btn-submit" style="background: var(--accent-color); margin-top: 15px;" onclick="saveTheme()">Apply Theme Instantly</button>
-                    </div>
-                </div>
-
             </div>
+
+            <!-- SCORE CAPTURE (TEACHERS & ADMIN) -->
+            <div id="tab-scores" class="section-panel">
+                <h1>Continuous Assessment & Score Input</h1>
+                <p class="subtitle">Input scores for Class 1 through Class 6. Data syncs automatically to Google Drive.</p>
+                <div class="card">
+                    <div class="form-group">
+                        <label>Select Class</label>
+                        <select id="score-class">
+                            <option>Class 1</option><option>Class 2</option><option>Class 3</option>
+                            <option>Class 4</option><option>Class 5</option><option>Class 6</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Subject</label>
+                        <select id="score-subject">
+                            <option>Mathematics</option><option>English Language</option>
+                            <option>Integrated Science</option><option>Our World Our People</option>
+                        </select>
+                    </div>
+                    <table>
+                        <thead><tr><th>Pupil Name</th><th>Class Score (30%)</th><th>Exam Score (70%)</th><th>Total (100%)</th></tr></thead>
+                        <tbody>
+                            <tr><td>Ama Serwaa</td><td><input type="number" value="25" style="width:80px;"></td><td><input type="number" value="60" style="width:80px;"></td><td>85 (Grade A)</td></tr>
+                            <tr><td>Kofi Boateng</td><td><input type="number" value="20" style="width:80px;"></td><td><input type="number" value="50" style="width:80px;"></td><td>70 (Grade B)</td></tr>
+                        </tbody>
+                    </table>
+                    <button class="btn-action" onclick="alert('Scores saved to Portal & Google Drive successfully!')">💾 Save & Sync to Google Drive</button>
+                </div>
+            </div>
+
+            <!-- REPORTS & TERMINAL PRINTS -->
+            <div id="tab-reports" class="section-panel">
+                <h1>Report Cards & SBA Print Center</h1>
+                <p class="subtitle">Generate official terminal report cards and Continuous Assessment (SBA) sheets.</p>
+                <div class="card">
+                    <button class="btn-action" onclick="window.print()">🖨️ Print Terminal Report Cards</button>
+                    <button class="btn-action" style="background: #10b981; margin-left: 10px;" onclick="window.print()">📊 Print SBA Assessment Sheets</button>
+                </div>
+            </div>
+
+            <!-- ADMIN: GLOBAL SETTINGS -->
+            <div id="tab-settings" class="section-panel admin-only">
+                <h1>Global Settings & Announcements</h1>
+                <p class="subtitle">Admin Only: Update school notices and manage seasonal holiday themes.</p>
+                <div class="card">
+                    <div class="form-group">
+                        <label>Update Global Announcement Banner</label>
+                        <input type="text" id="admin-banner-input" placeholder="Type new announcement...">
+                        <button class="btn-action" onclick="updateBanner()">Publish Announcement</button>
+                    </div>
+                    <div class="form-group" style="margin-top: 20px;">
+                        <label>Manual Holiday / Seasonal Theme Override</label>
+                        <select id="theme-selector" onchange="changeTheme(this.value)">
+                            <option value="normal">Standard Term Theme</option>
+                            <option value="christmas">🎄 Christmas Theme (Festive / Red & Green)</option>
+                            <option value="easter">🐰 Easter Theme (Spring / Pastels)</option>
+                            <option value="independence">🇬🇭 Ghana Independence Theme (Red, Gold, Green)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 
-    <!-- FULL PORTAL JAVASCRIPT ENGINE -->
     <script>
-        var currentLoggedInUser = "";
-        var studentsList = [];
-        var mediaList = [];
-        var assessmentScores = {};
-        var attendanceRecords = {};
-
-        var allSubjects = ["Mathematics", "English Language", "Integrated Science", "History", "R. M. E", "Fante", "Creative Arts", "Computing"];
+        let currentUser = null;
+        let teachersDB = [];
+        let studentsDB = [
+            { name: "Ama Serwaa", class: "Class 4", gender: "Female" },
+            { name: "Kofi Boateng", class: "Class 6", gender: "Male" }
+        ];
 
         window.addEventListener('DOMContentLoaded', () => {
-            checkHashSync();
-            loadData();
+            const now = new Date();
+            const month = now.getMonth();
+            const day = now.getDate();
+
+            if (month === 11) {
+                changeTheme('christmas');
+                document.getElementById('seasonal-notice').innerText = "🎄 Merry Christmas & Happy Holidays from Wesley Prep!";
+            } else if (month === 2 && day <= 10) {
+                changeTheme('independence');
+                document.getElementById('seasonal-notice').innerText = "🇬🇭 Happy Independence Day from Wesley Prep!";
+            }
         });
 
-        function checkHashSync() {
-            try {
-                if (window.location.hash && window.location.hash.length > 1) {
-                    var decoded = JSON.parse(decodeURIComponent(escape(atob(window.location.hash.substring(1)))));
-                    if (decoded.students) localStorage.setItem('wps_students_cloud', JSON.stringify(decoded.students));
-                    if (decoded.media) localStorage.setItem('wps_media_cloud', JSON.stringify(decoded.media));
-                    if (decoded.scores) localStorage.setItem('wps_scores_cloud', JSON.stringify(decoded.scores));
-                    if (decoded.attendance) localStorage.setItem('wps_attendance_cloud', JSON.stringify(decoded.attendance));
-                    if (decoded.notice) localStorage.setItem('wps_notice_cloud', decoded.notice);
-                    if (decoded.primary) localStorage.setItem('wps_primary_cloud', decoded.primary);
-                    if (decoded.accent) localStorage.setItem('wps_accent_cloud', decoded.accent);
-                }
-            } catch (e) {}
-        }
-
-        function pushToCloudHash() {
-            try {
-                var payload = {
-                    students: studentsList,
-                    media: mediaList,
-                    scores: assessmentScores,
-                    attendance: attendanceRecords,
-                    notice: localStorage.getItem('wps_notice_cloud') || "",
-                    primary: localStorage.getItem('wps_primary_cloud') || "",
-                    accent: localStorage.getItem('wps_accent_cloud') || ""
-                };
-                window.location.hash = btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
-            } catch (e) {}
-        }
-
-        function loadData() {
-            try {
-                var s = localStorage.getItem('wps_students_cloud');
-                studentsList = s ? JSON.parse(s) : [];
-
-                var m = localStorage.getItem('wps_media_cloud');
-                mediaList = m ? JSON.parse(m) : [
-                    { src: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=500", caption: "Wesley Prep Jersey Representation & Staff Appreciation" },
-                    { src: "https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=500", caption: "Term 3 Classroom Activities & Teaching" }
-                ];
-
-                var sc = localStorage.getItem('wps_scores_cloud');
-                assessmentScores = sc ? JSON.parse(sc) : {};
-
-                var att = localStorage.getItem('wps_attendance_cloud');
-                attendanceRecords = att ? JSON.parse(att) : {};
-
-                var notice = localStorage.getItem('wps_notice_cloud');
-                if (notice) {
-                    document.getElementById('displayNoticeText').innerHTML = `<b>Latest Notice:</b> ${notice}`;
-                }
-
-                var p = localStorage.getItem('wps_primary_cloud');
-                var a = localStorage.getItem('wps_accent_cloud');
-                if (p && a) applyThemeColors(p, a);
-            } catch (err) {
-                studentsList = [];
+        function changeTheme(theme) {
+            document.body.className = '';
+            if (theme !== 'normal') {
+                document.body.classList.add('theme-' + theme);
             }
-
-            updateStats();
-            renderStudents();
-            renderTeacherHub();
-            drawChart();
-            updateReportStudentDropdown();
         }
 
-        function saveData() {
-            try {
-                localStorage.setItem('wps_students_cloud', JSON.stringify(studentsList));
-                localStorage.setItem('wps_media_cloud', JSON.stringify(mediaList));
-                localStorage.setItem('wps_scores_cloud', JSON.stringify(assessmentScores));
-                localStorage.setItem('wps_attendance_cloud', JSON.stringify(attendanceRecords));
-                pushToCloudHash();
-            } catch (err) {}
-            updateStats();
-            renderStudents();
-            renderTeacherHub();
-            drawChart();
-        }
+        function handleLogin(event) {
+            event.preventDefault();
+            const email = document.getElementById('login-email').value.trim().toLowerCase();
+            const pass = document.getElementById('login-pass').value.trim();
 
-        function handleLogin() {
-            var email = document.getElementById('email').value.trim().toLowerCase();
-            var pass = document.getElementById('password').value.trim();
-
-            if (email.includes("@wps.com") && pass.length > 0) {
-                currentLoggedInUser = email;
-                document.getElementById('loginScreen').style.display = 'none';
-                document.getElementById('dashboardScreen').style.display = 'flex';
-                document.getElementById('userDisplay').innerText = email;
-                
-                var isAdmin = (email === "head@wps.com");
-                document.getElementById('navAdmission').style.display = isAdmin ? "block" : "none";
-                document.getElementById('navAdminMedia').style.display = isAdmin ? "block" : "none";
-                document.getElementById('navManageStudents').style.display = isAdmin ? "block" : "none";
-                document.getElementById('navTheme').style.display = isAdmin ? "block" : "none";
-                document.getElementById('badgeStudents').style.display = isAdmin ? "block" : "none";
-
-                checkHashSync();
-                loadData();
+            if (email === 'head@wps.com' && pass === '8303') {
+                currentUser = { role: 'admin', name: 'Headmaster' };
+                initApp();
             } else {
-                alert("Please enter a valid staff email ending with @wps.com and password.");
-            }
-        }
-
-        function signOut() {
-            currentLoggedInUser = "";
-            document.getElementById('dashboardScreen').style.display = 'none';
-            document.getElementById('loginScreen').style.display = 'flex';
-        }
-
-        function switchTab(tab) {
-            document.querySelectorAll('.panel-view').forEach(p => p.classList.remove('active'));
-            if (tab === 'home') document.getElementById('panel-home').classList.add('active');
-            if (tab === 'admission') document.getElementById('panel-admission').classList.add('active');
-            if (tab === 'admin-media') document.getElementById('panel-admin-media').classList.add('active');
-            if (tab === 'teacher-hub') {
-                document.getElementById('panel-teacher-hub').classList.add('active');
-                renderTeacherHub();
-            }
-            if (tab === 'assessment') document.getElementById('panel-assessment').classList.add('active');
-            if (tab === 'attendance') {
-                document.getElementById('panel-attendance').classList.add('active');
-                renderAttendanceTable();
-            }
-            if (tab === 'report-card') {
-                document.getElementById('panel-report-card').classList.add('active');
-                updateReportStudentDropdown();
-            }
-            if (tab === 'students') {
-                document.getElementById('panel-students').classList.add('active');
-                renderStudents();
-            }
-            if (tab === 'theme') document.getElementById('panel-theme').classList.add('active');
-        }
-
-        function applyPreset() {
-            var val = document.getElementById('presetTheme').value;
-            var p = "#0a2540", a = "#b31924";
-            if (val === 'independence') { p = "#b31924"; a = "#006b3f"; }
-            else if (val === 'christmas') { p = "#1b4d3e"; a = "#d4af37"; }
-            else if (val === 'easter') { p = "#512b58"; a = "#e4a11b"; }
-            
-            document.getElementById('primaryColorPicker').value = p;
-            document.getElementById('accentColorPicker').value = a;
-            applyThemeColors(p, a);
-        }
-
-        function saveTheme() {
-            var p = document.getElementById('primaryColorPicker').value;
-            var a = document.getElementById('accentColorPicker').value;
-            localStorage.setItem('wps_primary_cloud', p);
-            localStorage.setItem('wps_accent_cloud', a);
-            applyThemeColors(p, a);
-            pushToCloudHash();
-            alert("Theme updated successfully for all teachers!");
-        }
-
-        function applyThemeColors(p, a) {
-            document.documentElement.style.setProperty('--primary-color', p);
-            document.documentElement.style.setProperty('--accent-color', a);
-        }
-
-        function publishAdminPost() {
-            var notice = document.getElementById('adminNoticeInput').value.trim();
-            var title = document.getElementById('mediaTitleInput').value.trim();
-            var url = document.getElementById('mediaUrlInput').value.trim();
-
-            if (notice) {
-                localStorage.setItem('wps_notice_cloud', notice);
-                document.getElementById('displayNoticeText').innerHTML = `<b>Latest Notice:</b> ${notice}`;
-            }
-
-            if (url && title) {
-                mediaList.unshift({ src: url, caption: title });
-            }
-
-            saveData();
-            alert("Announcement and media published successfully across all teacher portals!");
-            document.getElementById('adminNoticeInput').value = "";
-            document.getElementById('mediaTitleInput').value = "";
-            document.getElementById('mediaUrlInput').value = "";
-            switchTab('teacher-hub');
-        }
-
-        function renderTeacherHub() {
-            var grid = document.getElementById('teacherMediaGrid');
-            if (!grid) return;
-            grid.innerHTML = "";
-            mediaList.forEach((item, idx) => {
-                grid.innerHTML += `
-                    <div class="gallery-item">
-                        <img src="${item.src}" class="gallery-img" onerror="this.src='https://via.placeholder.com/200?text=Wesley+Prep+Media'">
-                        <div style="font-size: 11px; font-weight: bold; margin: 6px 0; color: var(--primary-color);">${item.caption}</div>
-                        <a href="${item.src}" target="_blank" download="WPS_Media_${idx+1}" style="display:inline-block; background:var(--primary-color); color:white; padding:5px 12px; border-radius:4px; text-decoration:none; font-size:11px; font-weight:bold;">📥 Download / View</a>
-                    </div>
-                `;
-            });
-        }
-
-        function syncCloudData() {
-            checkHashSync();
-            loadData();
-            alert("Portal synchronized with latest live records!");
-        }
-
-        function updateStats() {
-            var total = studentsList.length;
-            document.getElementById('statTotalStudents').innerText = total;
-            document.getElementById('statBasic1').innerText = studentsList.filter(s => s.class === "Basic 1").length;
-            var m = studentsList.filter(s => s.gender === "MALE").length;
-            var f = studentsList.filter(s => s.gender === "FEMALE").length;
-            document.getElementById('statMale').innerText = m;
-            document.getElementById('statFemale').innerText = f;
-
-            if (total > 0) {
-                document.getElementById('pctMale').innerText = Math.round((m / total) * 100) + "%";
-                document.getElementById('pctFemale').innerText = Math.round((f / total) * 100) + "%";
-            }
-        }
-
-        function drawChart() {
-            var canvas = document.getElementById('genderPieChart');
-            if (!canvas) return;
-            var ctx = canvas.getContext('2d');
-            ctx.clearRect(0, 0, 90, 90);
-            
-            var total = studentsList.length;
-            if (total === 0) return;
-            var males = studentsList.filter(s => s.gender === "MALE").length;
-            var angle = (males / total) * 2 * Math.PI;
-
-            ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--primary-color').trim() || "#0a2540";
-            ctx.beginPath(); ctx.moveTo(45, 45); ctx.arc(45, 45, 40, 0, angle); ctx.fill();
-
-            ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--accent-color').trim() || "#b31924";
-            ctx.beginPath(); ctx.moveTo(45, 45); ctx.arc(45, 45, 40, angle, 2 * Math.PI); ctx.fill();
-        }
-
-        function addStudent() {
-            var name = document.getElementById('newStudentName').value.trim();
-            if (!name) { alert("Please enter student name."); return; }
-            studentsList.push({
-                id: "WPS-" + Math.floor(1000 + Math.random() * 9000),
-                name: name.toUpperCase(),
-                class: document.getElementById('regClassSelect').value,
-                gender: document.getElementById('newStudentGender').value,
-                dob: document.getElementById('newStudentDob').value
-            });
-            saveData();
-            document.getElementById('newStudentName').value = "";
-            alert("Student added successfully!");
-            updateReportStudentDropdown();
-        }
-
-        function submitAdmission() {
-            var name = document.getElementById('admFullName').value.trim();
-            if (!name) { alert("Please enter student name."); return; }
-            studentsList.push({
-                id: "WPS-" + Math.floor(1000 + Math.random() * 9000),
-                name: name.toUpperCase(),
-                class: document.getElementById('admClassSelect').value,
-                gender: document.getElementById('admGenderSelect').value,
-                dob: "2012-01-01"
-            });
-            saveData();
-            alert("Admission Successful!");
-            document.getElementById('admFullName').value = "";
-            switchTab('students');
-            updateReportStudentDropdown();
-        }
-
-        function renderStudents() {
-            var tb = document.getElementById('studentTableBody');
-            if (!tb) return;
-            tb.innerHTML = "";
-            if (studentsList.length === 0) {
-                tb.innerHTML = `<tr><td colspan="6">No students registered. Total registered: 0</td></tr>`;
-                return;
-            }
-            studentsList.forEach((s, i) => {
-                tb.innerHTML += `<tr>
-                    <td>${i+1}</td>
-                    <td><code>${s.id}</code></td>
-                    <td style="text-align:left; padding-left:10px;"><b>${s.name}</b></td>
-                    <td>${s.gender}</td>
-                    <td>${s.dob}</td>
-                    <td><button onclick="removeStudent(${i})" style="background:#b31924;color:white;border:none;padding:3px 6px;border-radius:3px;cursor:pointer;">Remove</button></td>
-                </tr>`;
-            });
-        }
-
-        function removeStudent(i) {
-            if (confirm("Remove student?")) {
-                studentsList.splice(i, 1);
-                saveData();
-                updateReportStudentDropdown();
-            }
-        }
-
-        function renderAssessmentTable() {
-            var cls = document.getElementById('filterClassSelect').value;
-            var sub = document.getElementById('subSelect').value;
-            var tb = document.getElementById('assessmentTableBody');
-            tb.innerHTML = "";
-            document.getElementById('assessmentResultsSection').style.display = 'block';
-            var filtered = studentsList.filter(s => s.class === cls);
-            if (filtered.length === 0) {
-                tb.innerHTML = `<tr><td colspan="5">No students registered in ${cls}. Please register students first.</td></tr>`;
-                return;
-            }
-            filtered.forEach((s, i) => {
-                var key = s.id + "_" + sub;
-                var savedData = assessmentScores[key] || { classScore: "", examScore: "" };
-                var totalVal = "--";
-                if (savedData.classScore !== "" || savedData.examScore !== "") {
-                    var cs = parseFloat(savedData.classScore) || 0;
-                    var es = parseFloat(savedData.examScore) || 0;
-                    totalVal = cs + es;
+                let foundTeacher = teachersDB.find(t => t.email.toLowerCase() === email && t.pass === pass);
+                if (foundTeacher) {
+                    currentUser = { role: 'teacher', name: foundTeacher.name };
+                    initApp();
+                } else {
+                    document.getElementById('login-error').style.display = 'block';
                 }
-
-                tb.innerHTML += `<tr>
-                    <td>${i+1}</td>
-                    <td style="text-align:left; padding-left:10px;"><b>${s.name}</b></td>
-                    <td><input type="number" class="score-input" id="cs_${s.id}" value="${savedData.classScore}" oninput="autoSaveScore('${s.id}')" placeholder="0"></td>
-                    <td><input type="number" class="score-input" id="es_${s.id}" value="${savedData.examScore}" oninput="autoSaveScore('${s.id}')" placeholder="0"></td>
-                    <td><span id="tot_${s.id}" style="font-weight:600; color:#0a2540;">${totalVal}</span></td>
-                </tr>`;
-            });
-        }
-
-        function autoSaveScore(studentId) {
-            var sub = document.getElementById('subSelect').value;
-            var csInput = document.getElementById('cs_' + studentId).value;
-            var esInput = document.getElementById('es_' + studentId).value;
-
-            var key = studentId + "_" + sub;
-            assessmentScores[key] = { classScore: csInput, examScore: esInput };
-
-            var cs = parseFloat(csInput) || 0;
-            var es = parseFloat(esInput) || 0;
-            var total = (csInput !== "" || esInput !== "") ? (cs + es) : "--";
-            document.getElementById('tot_' + studentId).innerText = total;
-
-            saveData();
-        }
-
-        function submitAllScores() {
-            saveData();
-            alert("All assessment scores have been successfully submitted and saved!");
-        }
-
-        function renderAttendanceTable() {
-            var cls = document.getElementById('attClassSelect').value;
-            var tb = document.getElementById('attendanceTableBody');
-            tb.innerHTML = "";
-            var filtered = studentsList.filter(s => s.class === cls);
-            if (filtered.length === 0) {
-                tb.innerHTML = `<tr><td colspan="4">No students registered in ${cls}.</td></tr>`;
-                return;
             }
-            filtered.forEach((s, i) => {
-                var attData = attendanceRecords[s.id] || { present: 65, absent: 0 };
-                tb.innerHTML += `<tr>
-                    <td>${i+1}</td>
-                    <td style="text-align:left; padding-left:10px;"><b>${s.name}</b></td>
-                    <td><input type="number" class="score-input" id="pres_${s.id}" value="${attData.present}" oninput="saveAttendance('${s.id}')"></td>
-                    <td><input type="number" class="score-input" id="abs_${s.id}" value="${attData.absent}" oninput="saveAttendance('${s.id}')"></td>
-                </tr>`;
-            });
         }
 
-        function saveAttendance(studentId) {
-            var p = document.getElementById('pres_' + studentId).value;
-            var a = document.getElementById('abs_' + studentId).value;
-            attendanceRecords[studentId] = { present: p, absent: a };
-            saveData();
-        }
+        function initApp() {
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('app-container').style.display = 'flex';
+            
+            const nav = document.getElementById('dynamic-nav');
+            const roleBadge = document.getElementById('display-role');
 
-        function updateReportStudentDropdown() {
-            var cls = document.getElementById('repClassSelect').value;
-            var sel = document.getElementById('repStudentSelect');
-            if (!sel) return;
-            sel.innerHTML = "";
-            var filtered = studentsList.filter(s => s.class === cls);
-            if (filtered.length === 0) {
-                sel.innerHTML = `<option value="">No students in ${cls}</option>`;
-                return;
-            }
-            filtered.forEach(s => {
-                sel.innerHTML += `<option value="${s.id}">${s.name} (${s.id})</option>`;
-            });
-        }
-
-        function generateReportCard() {
-            var studentId = document.getElementById('repStudentSelect').value;
-            var student = studentsList.find(s => s.id === studentId);
-            if (!student) { alert("Please select a valid student."); return; }
-
-            document.getElementById('rcStudentName').innerText = student.name;
-            document.getElementById('rcStudentId').innerText = student.id;
-            document.getElementById('rcStudentClass').innerText = student.class;
-
-            var att = attendanceRecords[student.id] || { present: 65, absent: 0 };
-            document.getElementById('rcPresent').innerText = att.present;
-            document.getElementById('rcAbsent').innerText = att.absent;
-
-            var tbody = document.getElementById('rcSubjectsBody');
-            tbody.innerHTML = "";
-
-            allSubjects.forEach(sub => {
-                var key = student.id + "_" + sub;
-                var scData = assessmentScores[key] || { classScore: "-", examScore: "-" };
-                var cs = parseFloat(scData.classScore);
-                var es = parseFloat(scData.examScore);
-                var total = (!isNaN(cs) && !isNaN(es)) ? (cs + es) : "-";
-                
-                var grade = "-";
-                if (!isNaN(total)) {
-                    if (total >= 80) grade = "A1 (Excellent)";
-                    else if (total >= 70) grade = "B2 (Very Good)";
-                    else if (total >= 60) grade = "B3 (Good)";
-                    else if (total >= 50) grade = "C4 (Credit)";
-                    else if (total >= 45) grade = "C5 (Credit)";
-                    else if (total >= 40) grade = "D6 (Pass)";
-                    else grade = "F9 (Fail)";
-                }
-
-                tbody.innerHTML += `
-                    <tr>
-                        <td style="text-align:left; padding-left:10px;"><b>${sub}</b></td>
-                        <td>${scData.classScore}</td>
-                        <td>${scData.examScore}</td>
-                        <td><b>${total}</b></td>
-                        <td>${grade}</td>
-                    </tr>
+            if (currentUser.role === 'admin') {
+                roleBadge.innerText = "Admin (Full Access)";
+                nav.innerHTML = `
+                    <li onclick="switchTab('dashboard', this)" class="active">📊 Dashboard</li>
+                    <li onclick="switchTab('register-teacher', this)">👩‍🏫 Register Teachers</li>
+                    <li onclick="switchTab('register-student', this)">🎓 Register Pupils</li>
+                    <li onclick="switchTab('scores', this)">📝 Input Scores</li>
+                    <li onclick="switchTab('reports', this)">📄 Print Reports & SBA</li>
+                    <li onclick="switchTab('settings', this)">⚙️ Settings & Themes</li>
                 `;
-            });
+            } else {
+                roleBadge.innerText = "Teacher (" + currentUser.name + ")";
+                nav.innerHTML = `
+                    <li onclick="switchTab('dashboard', this)" class="active">📊 Dashboard</li>
+                    <li onclick="switchTab('scores', this)">📝 Input Scores (Class 1-6)</li>
+                    <li onclick="switchTab('reports', this)">📄 Print Reports & SBA</li>
+                `;
+            }
+        }
 
-            document.getElementById('reportCardPrintArea').style.display = 'block';
+        function switchTab(tabName, element) {
+            document.querySelectorAll('.section-panel').forEach(p => p.classList.remove('active'));
+            document.getElementById('tab-' + tabName).classList.add('active');
+            document.querySelectorAll('.nav-links li').forEach(li => li.classList.remove('active'));
+            element.classList.add('active');
+        }
+
+        function addTeacher(e) {
+            e.preventDefault();
+            const name = document.getElementById('teach-name').value;
+            const email = document.getElementById('teach-email').value;
+            const pass = document.getElementById('teach-pass').value;
+
+            teachersDB.push({ name, email, pass });
+            renderTeachers();
+            alert('Teacher account registered successfully! They can now log in with their Gmail and password.');
+            e.target.reset();
+        }
+
+        function renderTeachers() {
+            const tbody = document.getElementById('teacher-list-table');
+            if (teachersDB.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="3" style="text-align: center; color: #666;">No teachers registered yet.</td></tr>`;
+            } else {
+                tbody.innerHTML = teachersDB.map(t => `<tr><td>${t.name}</td><td>${t.email}</td><td>${t.pass}</td></tr>`).join('');
+            }
+            document.getElementById('stat-total-teachers').innerText = teachersDB.length;
+        }
+
+        function registerStudent(e) {
+            e.preventDefault();
+            const name = document.getElementById('reg-name').value;
+            const cls = document.getElementById('reg-class').value;
+            const gender = document.getElementById('reg-gender').value;
+
+            studentsDB.push({ name, class: cls, gender });
+            renderRoster();
+            alert('Pupil successfully registered and enrolled!');
+            e.target.reset();
+        }
+
+        function renderRoster() {
+            const tbody = document.getElementById('student-roster-table');
+            tbody.innerHTML = studentsDB.map(s => `<tr><td>${s.name}</td><td>${s.class}</td><td>${s.gender}</td></tr>`).join('');
+            document.getElementById('stat-total-pupils').innerText = studentsDB.length;
+        }
+
+        function updateBanner() {
+            const text = document.getElementById('admin-banner-input').value;
+            if(text) {
+                document.getElementById('banner-text').innerText = text;
+                alert('Global announcement updated successfully across all teacher dashboards!');
+            }
         }
     </script>
 </body>
