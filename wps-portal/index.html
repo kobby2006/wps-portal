@@ -127,8 +127,10 @@
         th, td { padding: 12px; border: 1px solid #ddd; text-align: left; font-size: 0.9rem; }
         th { background: #f8fafc; color: #444; }
 
-        .btn-action { padding: 10px 20px; background: #0284c7; color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; margin-top: 10px; }
+        .btn-action { padding: 8px 16px; background: #0284c7; color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; }
         .btn-action:hover { background: #0369a1; }
+        .btn-danger { background: #e53e3e; }
+        .btn-danger:hover { background: #c53030; }
 
         .announcement-banner { background: #eff6ff; border-left: 4px solid #3b82f6; padding: 15px; border-radius: 4px; margin-bottom: 20px; }
         
@@ -139,7 +141,7 @@
         }
     </style>
 </head>
-<body class="">
+<body>
 
     <!-- Login Screen -->
     <div id="login-screen">
@@ -149,15 +151,15 @@
             <p>Assorko-Essaman</p>
             <form id="login-form" onsubmit="handleLogin(event)">
                 <div class="form-group">
-                    <label>Gmail Address</label>
+                    <label>Gmail / Admin ID</label>
                     <input type="email" id="login-email" placeholder="teacher@gmail.com or head@wps.com" required>
                 </div>
                 <div class="form-group">
-                    <label>Password / Access PIN</label>
+                    <label>Password</label>
                     <input type="password" id="login-pass" placeholder="••••" required>
                 </div>
                 <button type="submit" class="btn-primary">Secure Login</button>
-                <div id="login-error" class="error-msg">Invalid credentials. Contact Admin for access.</div>
+                <div id="login-error" class="error-msg">Invalid credentials. Contact Admin.</div>
             </form>
             <p style="margin-top: 15px; font-size: 0.75rem; color: #888;">Admin Default: head@wps.com / 8303</p>
         </div>
@@ -171,58 +173,53 @@
                 Wesley Prep. School
                 <div id="display-role" class="user-role-badge">Admin</div>
             </div>
-            <ul class="nav-links" id="dynamic-nav">
-                <!-- Populated dynamically based on role -->
-            </ul>
+            <ul class="nav-links" id="dynamic-nav"></ul>
         </div>
 
         <!-- Main Content Area -->
         <div class="main-content">
             
-            <!-- Global Announcement Banner -->
             <div class="announcement-banner">
-                <strong>📢 School Announcement:</strong> <span id="banner-text">Mid-Term assessments and revision schedules are currently ongoing across Class 1 to Class 6. Ensure all records are synced to Google Drive.</span>
+                <strong>📢 School Announcement:</strong> <span id="banner-text">Mid-Term assessments and revision schedules are currently ongoing across Class 1 to Class 6. Ensure records are synced to Google Drive.</span>
             </div>
 
-            <!-- DASHBOARD TAB -->
+            <!-- DASHBOARD -->
             <div id="tab-dashboard" class="section-panel active">
                 <h1>Portal Dashboard</h1>
-                <p class="subtitle">Overview & Quick Statistics</p>
+                <p class="subtitle">Wesley Preparatory School (Assorko-Essaman)</p>
                 <div class="stats-grid">
-                    <div class="stat-box"><p>Total Pupils (Class 1-6)</p><h3 id="stat-total-pupils">180</h3></div>
-                    <div class="stat-box"><p>Registered Teachers</p><h3 id="stat-total-teachers">1</h3></div>
-                    <div class="stat-box"><p>Active Classes</p><h3>6 Classes</h3></div>
-                    <div class="stat-box"><p>Cloud Backup</p><h3 style="color: #10b981;">Connected ✓</h3></div>
+                    <div class="stat-box"><p>Total Pupils (Class 1-6)</p><h3 id="stat-total-pupils">2</h3></div>
+                    <div class="stat-box"><p>Registered Teachers</p><h3 id="stat-total-teachers">0</h3></div>
+                    <div class="stat-box"><p>Active Classes</p><h3>Class 1 - 6</h3></div>
+                    <div class="stat-box"><p>Google Drive Sync</p><h3 style="color: #10b981;">Connected ✓</h3></div>
                 </div>
             </div>
 
-            <!-- ADMIN: REGISTER TEACHERS -->
-            <div id="tab-register-teacher" class="section-panel admin-only">
-                <h1>Register Teacher Gmail Accounts</h1>
-                <p class="subtitle">Admin Only: Create login credentials for teachers so they can access their score sheets.</p>
+            <!-- ADMIN: REGISTER NEW USER / TEACHER -->
+            <div id="tab-register-user" class="section-panel admin-only">
+                <h1>Register New User Account</h1>
+                <p class="subtitle">Admin Only: Create login credentials for teachers[span_0](start_span)[span_0](end_span).</p>
                 <div class="card">
                     <form onsubmit="addTeacher(event)">
-                        <div class="form-group">
-                            <label>Teacher Full Name</label>
-                            <input type="text" id="teach-name" placeholder="E.g. Madam Akosua" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Teacher Gmail Address</label>
-                            <input type="email" id="teach-email" placeholder="teacher@gmail.com" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Assigned Password</label>
-                            <input type="text" id="teach-pass" placeholder="Create password for teacher" required>
-                        </div>
-                        <button type="submit" class="btn-action">Register Teacher</button>
+                        <div class="form-group"><label>Full Name *</label><input type="text" id="teach-name" placeholder="E.g. Madam Akosua" required></div>
+                        <div class="form-group"><label>Phone Number *</label><input type="text" id="teach-phone" placeholder="0240000000" required></div>
+                        <div class="form-group"><label>E-Mail (Gmail) *</label><input type="email" id="teach-email" placeholder="teacher@gmail.com" required></div>
+                        <div class="form-group"><label>Password *</label><input type="password" id="teach-pass" placeholder="Create password" required></div>
+                        <button type="submit" class="btn-action">Submit User Account</button>
                     </form>
                 </div>
+            </div>
+
+            <!-- ADMIN: MANAGE USERS -->
+            <div id="tab-manage-users" class="section-panel admin-only">
+                <h1>Manage Users & Privileges</h1>
+                <p class="subtitle">Admin Only: Manage teacher access rights[span_1](start_span)[span_1](end_span)[span_2](start_span)[span_2](end_span).</p>
                 <div class="card">
-                    <h3>Registered Teachers Directory</h3>
+                    <h3>Staff Accounts Directory</h3>
                     <table>
-                        <thead><tr><th>Name</th><th>Gmail Address</th><th>Password</th></tr></thead>
+                        <thead><tr><th>Staff Name</th><th>Gmail ID</th><th>Phone No.</th><th>Actions</th></tr></thead>
                         <tbody id="teacher-list-table">
-                            <tr><td colspan="3" style="text-align: center; color: #666;">No teachers registered yet. Use the form above.</td></tr>
+                            <tr><td colspan="4" style="text-align: center; color: #666;">No teachers registered yet.</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -230,33 +227,23 @@
 
             <!-- ADMIN: STUDENT REGISTRATION -->
             <div id="tab-register-student" class="section-panel admin-only">
-                <h1>Student Registration & Enrollment</h1>
-                <p class="subtitle">Admin Only: Enroll new pupils into Class 1 through Class 6.</p>
+                <h1>Student Enrolment (Class 1 - 6)</h1>
+                <p class="subtitle">Admin Only: Register pupils into the school system.</p>
                 <div class="card">
                     <form onsubmit="registerStudent(event)">
-                        <div class="form-group">
-                            <label>Pupil Full Name</label>
-                            <input type="text" id="reg-name" placeholder="E.g. Kofi Mensah" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Select Class</label>
+                        <div class="form-group"><label>Pupil Full Name</label><input type="text" id="reg-name" placeholder="E.g. Kofi Mensah" required></div>
+                        <div class="form-group"><label>Select Class</label>
                             <select id="reg-class" required>
-                                <option value="Class 1">Class 1</option><option value="Class 2">Class 2</option>
-                                <option value="Class 3">Class 3</option><option value="Class 4">Class 4</option>
-                                <option value="Class 5">Class 5</option><option value="Class 6">Class 6</option>
+                                <option>Class 1</option><option>Class 2</option><option>Class 3</option>
+                                <option>Class 4</option><option>Class 5</option><option>Class 6</option>
                             </select>
                         </div>
-                        <div class="form-group">
-                            <label>Gender</label>
-                            <select id="reg-gender" required>
-                                <option value="Male">Male</option><option value="Female">Female</option>
-                            </select>
-                        </div>
+                        <div class="form-group"><label>Gender</label><select id="reg-gender"><option>Male</option><option>Female</option></select></div>
                         <button type="submit" class="btn-action">Enroll Pupil</button>
                     </form>
                 </div>
                 <div class="card">
-                    <h3>Enrolled Roster</h3>
+                    <h3>Enrolled Pupil Roster</h3>
                     <table>
                         <thead><tr><th>Name</th><th>Class</th><th>Gender</th></tr></thead>
                         <tbody id="student-roster-table">
@@ -267,58 +254,68 @@
                 </div>
             </div>
 
-            <!-- SCORE CAPTURE (TEACHERS & ADMIN) -->
+            <!-- SCORE CAPTURE & SCORE UPDATE -->
             <div id="tab-scores" class="section-panel">
-                <h1>Continuous Assessment & Score Input</h1>
-                <p class="subtitle">Input scores for Class 1 through Class 6. Data syncs automatically to Google Drive.</p>
+                <h1>Assessment Score Capture & Update</h1>
+                <p class="subtitle">Input or modify continuous assessment and exam scores across all 8 core subjects for Class 1 to Class 6[span_3](start_span)[span_3](end_span)[span_4](start_span)[span_4](end_span).</p>
                 <div class="card">
-                    <div class="form-group">
-                        <label>Select Class</label>
-                        <select id="score-class">
+                    <div class="form-group"><label>Select Class</label>
+                        <select>
                             <option>Class 1</option><option>Class 2</option><option>Class 3</option>
                             <option>Class 4</option><option>Class 5</option><option>Class 6</option>
                         </select>
                     </div>
-                    <div class="form-group">
-                        <label>Subject</label>
-                        <select id="score-subject">
-                            <option>Mathematics</option><option>English Language</option>
-                            <option>Integrated Science</option><option>Our World Our People</option>
+                    <div class="form-group"><label>Select Subject (8 Core Subjects)</label>
+                        <select id="subject-select">
+                            <option>Mathematics</option>
+                            <option>Science</option>
+                            <option>English</option>
+                            <option>RME</option>
+                            <option>Fante</option>
+                            <option>History</option>
+                            <option>Computing</option>
+                            <option>C. Art</option>
                         </select>
                     </div>
                     <table>
-                        <thead><tr><th>Pupil Name</th><th>Class Score (30%)</th><th>Exam Score (70%)</th><th>Total (100%)</th></tr></thead>
+                        <thead><tr><th>Pupil Name</th><th>Class Score (30%)</th><th>Exam Score (70%)</th><th>Total</th><th>Action</th></tr></thead>
                         <tbody>
-                            <tr><td>Ama Serwaa</td><td><input type="number" value="25" style="width:80px;"></td><td><input type="number" value="60" style="width:80px;"></td><td>85 (Grade A)</td></tr>
-                            <tr><td>Kofi Boateng</td><td><input type="number" value="20" style="width:80px;"></td><td><input type="number" value="50" style="width:80px;"></td><td>70 (Grade B)</td></tr>
+                            <tr>
+                                <td>Ama Serwaa</td>
+                                <td><input type="number" value="25" style="width:60px;"></td>
+                                <td><input type="number" value="60" style="width:60px;"></td>
+                                <td>85 (A)</td>
+                                <td><button class="btn-action" style="padding:4px 8px;" onclick="alert('Score updated successfully!')">✓ Correct Mark</button></td>
+                            </tr>
                         </tbody>
                     </table>
-                    <button class="btn-action" onclick="alert('Scores saved to Portal & Google Drive successfully!')">💾 Save & Sync to Google Drive</button>
+                    <button class="btn-action" style="margin-top: 15px;" onclick="alert('Scores saved successfully and synced to Google Drive!')">💾 Save & Sync</button>
                 </div>
             </div>
 
-            <!-- REPORTS & TERMINAL PRINTS -->
+            <!-- REPORTS, TRANSCRIPTS & SBA -->
             <div id="tab-reports" class="section-panel">
-                <h1>Report Cards & SBA Print Center</h1>
-                <p class="subtitle">Generate official terminal report cards and Continuous Assessment (SBA) sheets.</p>
+                <h1>Report Cards, Transcripts & SBA</h1>
+                <p class="subtitle">Print terminal report cards, student statements of results, and continuous assessment sheets[span_5](start_span)[span_5](end_span).</p>
                 <div class="card">
-                    <button class="btn-action" onclick="window.print()">🖨️ Print Terminal Report Cards</button>
-                    <button class="btn-action" style="background: #10b981; margin-left: 10px;" onclick="window.print()">📊 Print SBA Assessment Sheets</button>
+                    <button class="btn-action" onclick="window.print()">🖨️ Print Terminal Reports</button>
+                    <button class="btn-action" style="background: #0284c7; margin-left: 10px;" onclick="window.print()">📄 Print Statement of Results / Transcript[span_6](start_span)[span_6](end_span)</button>
+                    <button class="btn-action" style="background: #10b981; margin-left: 10px;" onclick="window.print()">📊 Print SBA Sheets</button>
                 </div>
             </div>
 
-            <!-- ADMIN: GLOBAL SETTINGS -->
+            <!-- ADMIN: SETTINGS -->
             <div id="tab-settings" class="section-panel admin-only">
-                <h1>Global Settings & Announcements</h1>
-                <p class="subtitle">Admin Only: Update school notices and manage seasonal holiday themes.</p>
+                <h1>School Settings & Themes</h1>
+                <p class="subtitle">Admin Only: Update school details and manage holiday themes.</p>
                 <div class="card">
                     <div class="form-group">
-                        <label>Update Global Announcement Banner</label>
-                        <input type="text" id="admin-banner-input" placeholder="Type new announcement...">
-                        <button class="btn-action" onclick="updateBanner()">Publish Announcement</button>
+                        <label>Update Global Announcement</label>
+                        <input type="text" id="admin-banner-input" placeholder="Type new school announcement...">
+                        <button class="btn-action" style="margin-top: 5px;" onclick="updateBanner()">Publish Announcement</button>
                     </div>
                     <div class="form-group" style="margin-top: 20px;">
-                        <label>Manual Holiday / Seasonal Theme Override</label>
+                        <label>Seasonal Holiday Theme Override</label>
                         <select id="theme-selector" onchange="changeTheme(this.value)">
                             <option value="normal">Standard Term Theme</option>
                             <option value="christmas">🎄 Christmas Theme (Festive / Red & Green)</option>
@@ -344,7 +341,6 @@
             const now = new Date();
             const month = now.getMonth();
             const day = now.getDate();
-
             if (month === 11) {
                 changeTheme('christmas');
                 document.getElementById('seasonal-notice').innerText = "🎄 Merry Christmas & Happy Holidays from Wesley Prep!";
@@ -356,9 +352,7 @@
 
         function changeTheme(theme) {
             document.body.className = '';
-            if (theme !== 'normal') {
-                document.body.classList.add('theme-' + theme);
-            }
+            if (theme !== 'normal') document.body.classList.add('theme-' + theme);
         }
 
         function handleLogin(event) {
@@ -391,18 +385,19 @@
                 roleBadge.innerText = "Admin (Full Access)";
                 nav.innerHTML = `
                     <li onclick="switchTab('dashboard', this)" class="active">📊 Dashboard</li>
-                    <li onclick="switchTab('register-teacher', this)">👩‍🏫 Register Teachers</li>
+                    <li onclick="switchTab('register-user', this)">➕ Add / Update User[span_7](start_span)[span_7](end_span)</li>
+                    <li onclick="switchTab('manage-users', this)">👥 Manage Users[span_8](start_span)[span_8](end_span)</li>
                     <li onclick="switchTab('register-student', this)">🎓 Register Pupils</li>
-                    <li onclick="switchTab('scores', this)">📝 Input Scores</li>
-                    <li onclick="switchTab('reports', this)">📄 Print Reports & SBA</li>
+                    <li onclick="switchTab('scores', this)">📝 Capture & Score Update[span_9](start_span)[span_9](end_span)</li>
+                    <li onclick="switchTab('reports', this)">📄 Reports, Transcripts & SBA[span_10](start_span)[span_10](end_span)</li>
                     <li onclick="switchTab('settings', this)">⚙️ Settings & Themes</li>
                 `;
             } else {
                 roleBadge.innerText = "Teacher (" + currentUser.name + ")";
                 nav.innerHTML = `
                     <li onclick="switchTab('dashboard', this)" class="active">📊 Dashboard</li>
-                    <li onclick="switchTab('scores', this)">📝 Input Scores (Class 1-6)</li>
-                    <li onclick="switchTab('reports', this)">📄 Print Reports & SBA</li>
+                    <li onclick="switchTab('scores', this)">📝 Capture & Score Update[span_11](start_span)[span_11](end_span)</li>
+                    <li onclick="switchTab('reports', this)">📄 Reports, Transcripts & SBA[span_12](start_span)[span_12](end_span)</li>
                 `;
             }
         }
@@ -417,21 +412,29 @@
         function addTeacher(e) {
             e.preventDefault();
             const name = document.getElementById('teach-name').value;
+            const phone = document.getElementById('teach-phone').value;
             const email = document.getElementById('teach-email').value;
             const pass = document.getElementById('teach-pass').value;
 
-            teachersDB.push({ name, email, pass });
+            teachersDB.push({ name, phone, email, pass });
             renderTeachers();
-            alert('Teacher account registered successfully! They can now log in with their Gmail and password.');
+            alert('User successfully added! They can now log in using their Gmail and password.');
             e.target.reset();
         }
 
         function renderTeachers() {
             const tbody = document.getElementById('teacher-list-table');
             if (teachersDB.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="3" style="text-align: center; color: #666;">No teachers registered yet.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: #666;">No teachers registered yet.</td></tr>`;
             } else {
-                tbody.innerHTML = teachersDB.map(t => `<tr><td>${t.name}</td><td>${t.email}</td><td>${t.pass}</td></tr>`).join('');
+                tbody.innerHTML = teachersDB.map((t, index) => `
+                    <tr>
+                        <td>${t.name}</td>
+                        <td>${t.email}</td>
+                        <td>${t.phone}</td>
+                        <td><button class="btn-action" style="background:#e53e3e; padding:4px 8px;" onclick="teachersDB.splice(${index},1); renderTeachers();">Deactivate</button></td>
+                    </tr>
+                `).join('');
             }
             document.getElementById('stat-total-teachers').innerText = teachersDB.length;
         }
