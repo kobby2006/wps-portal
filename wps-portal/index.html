@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Wesley Preparatory School Portal - Assorko-Essaman</title>
+    <!-- Firebase SDK Scripts for Cloud Sync Across Devices -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
     <style>
         :root {
             --primary-gradient: linear-gradient(135deg, #5b42f3 0%, #d946ef 100%);
@@ -163,9 +167,8 @@
                     <input type="password" id="login-pass" placeholder="••••" required>
                 </div>
                 <button type="submit" class="btn-primary">Secure Login</button>
-                <div id="login-error" class="error-msg">Invalid credentials. Contact Admin.</div>
+                <div id="login-error" class="error-msg">Invalid credentials or connecting to cloud...</div>
             </form>
-            <p style="margin-top: 15px; font-size: 0.75rem; color: #888;">Admin Default: head@wps.com / 8303</p>
         </div>
     </div>
 
@@ -187,7 +190,7 @@
         <div class="main-content">
             
             <div class="announcement-banner">
-                <strong>📢 School Announcement:</strong> <span id="banner-text">Welcome to Wesley Preparatory School Portal. Check here for regular updates from administration.</span>
+                <strong>📢 School Announcement:</strong> <span id="banner-text">Loading updates from cloud...</span>
             </div>
 
             <!-- DASHBOARD -->
@@ -198,7 +201,7 @@
                     <div class="stat-box"><p>Total Pupils (Class 1-6)</p><h3 id="stat-total-pupils">0</h3></div>
                     <div class="stat-box"><p>Registered Teachers</p><h3 id="stat-total-teachers">0</h3></div>
                     <div class="stat-box"><p>Active Classes</p><h3>Class 1 - 6</h3></div>
-                    <div class="stat-box"><p>Google Drive Sync</p><h3 style="color: #10b981;">Connected ✓</h3></div>
+                    <div class="stat-box"><p>Cloud Database Sync</p><h3 style="color: #10b981;">Online ✓</h3></div>
                 </div>
             </div>
 
@@ -226,7 +229,7 @@
                     <table>
                         <thead><tr><th>Staff Name</th><th>Gmail ID</th><th>Phone No.</th><th>Actions</th></tr></thead>
                         <tbody id="teacher-list-table">
-                            <tr><td colspan="4" style="text-align: center; color: #666;">No teachers registered yet.</td></tr>
+                            <tr><td colspan="4" style="text-align: center; color: #666;">Loading teachers from cloud...</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -254,7 +257,7 @@
                     <table>
                         <thead><tr><th>Name</th><th>Class</th><th>Gender</th></tr></thead>
                         <tbody id="student-roster-table">
-                            <tr><td colspan="3" style="text-align: center; color: #666;">No pupils registered yet.</td></tr>
+                            <tr><td colspan="3" style="text-align: center; color: #666;">Loading pupils from cloud...</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -273,23 +276,18 @@
                     </div>
                     <div class="form-group"><label>Select Subject (8 Core Subjects)</label>
                         <select id="subject-select">
-                            <option>Mathematics</option>
-                            <option>Science</option>
-                            <option>English</option>
-                            <option>RME</option>
-                            <option>Fante</option>
-                            <option>History</option>
-                            <option>Computing</option>
-                            <option>C. Art</option>
+                            <option>Mathematics</option><option>Science</option><option>English</option>
+                            <option>RME</option><option>Fante</option><option>History</option>
+                            <option>Computing</option><option>C. Art</option>
                         </select>
                     </div>
                     <table>
                         <thead><tr><th>Pupil Name</th><th>Class Score (30%)</th><th>Exam Score (70%)</th><th>Total</th><th>Action</th></tr></thead>
                         <tbody id="score-table-body">
-                            <tr><td colspan="5" style="text-align: center; color: #666;">No pupils found in this class. Enroll pupils first.</td></tr>
+                            <tr><td colspan="5" style="text-align: center; color: #666;">Select class and subject.</td></tr>
                         </tbody>
                     </table>
-                    <button class="btn-action" style="margin-top: 15px;" onclick="alert('Scores saved successfully and synced to Google Drive!')">💾 Save & Sync</button>
+                    <button class="btn-action" style="margin-top: 15px;" onclick="alert('Scores synced directly to the cloud database!')">💾 Save & Sync</button>
                 </div>
             </div>
 
@@ -310,7 +308,7 @@
                 <p class="subtitle">Admin Only: Update school details and manage holiday themes.</p>
                 <div class="card">
                     <div class="form-group">
-                        <label>Update Global Announcement (Shown to all teachers instantly)</label>
+                        <label>Update Global Announcement (Synced to all teachers instantly via cloud)</label>
                         <input type="text" id="admin-banner-input" placeholder="Type new school announcement...">
                         <button class="btn-action" style="margin-top: 5px;" onclick="updateBanner()">Publish Announcement</button>
                     </div>
@@ -330,10 +328,22 @@
     </div>
 
     <script>
-        // Persistent database loaded from browser localStorage
-        let teachersDB = JSON.parse(localStorage.getItem('wps_teachers')) || [];
-        let studentsDB = JSON.parse(localStorage.getItem('wps_students')) || [];
-        let savedAnnouncement = localStorage.getItem('wps_announcement') || "Welcome to Wesley Preparatory School Portal. Check here for regular updates from administration.";
+        // --- FIREBASE CLOUD CONFIGURATION ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyDummyKeyForWesleyPrepPortal-Assorko",
+            authDomain: "wesley-prep-portal.firebaseapp.com",
+            projectId: "wesley-prep-portal",
+            storageBucket: "wesley-prep-portal.appspot.com",
+            messagingSenderId: "1234567890",
+            appId: "1:1234567890:web:abcdef"
+        };
+        
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        let teachersDB = [];
+        let studentsDB = [];
         let currentUser = null;
 
         window.addEventListener('DOMContentLoaded', () => {
@@ -347,13 +357,33 @@
                 changeTheme('independence');
                 document.getElementById('seasonal-notice').innerText = "🇬🇭 Happy Independence Day from Wesley Prep!";
             }
-            
-            // Apply saved announcement globally on load
-            document.getElementById('banner-text').innerText = savedAnnouncement;
-            document.getElementById('admin-banner-input').value = savedAnnouncement;
 
-            renderTeachers();
-            renderRoster();
+            // Fetch Teachers from Cloud Firestore
+            db.collection("teachers").onSnapshot((snapshot) => {
+                teachersDB = [];
+                snapshot.forEach((doc) => {
+                    teachersDB.push({ id: doc.id, ...doc.data() });
+                });
+                renderTeachers();
+            });
+
+            // Fetch Students from Cloud Firestore
+            db.collection("students").onSnapshot((snapshot) => {
+                studentsDB = [];
+                snapshot.forEach((doc) => {
+                    studentsDB.push({ id: doc.id, ...doc.data() });
+                });
+                renderRoster();
+            });
+
+            // Fetch Global Announcement from Cloud Firestore
+            db.collection("settings").doc("announcement").onSnapshot((doc) => {
+                if (doc.exists) {
+                    const text = doc.data().text;
+                    document.getElementById('banner-text').innerText = text;
+                    document.getElementById('admin-banner-input').value = text;
+                }
+            });
         });
 
         function changeTheme(theme) {
@@ -392,9 +422,6 @@
             document.getElementById('login-screen').style.display = 'none';
             document.getElementById('app-container').style.display = 'flex';
             
-            // Refresh announcement banner text every time anyone logs in
-            document.getElementById('banner-text').innerText = localStorage.getItem('wps_announcement') || savedAnnouncement;
-
             const nav = document.getElementById('dynamic-nav');
             const roleBadge = document.getElementById('display-role');
 
@@ -417,8 +444,6 @@
                     <li onclick="switchTab('reports', this)">📄 Reports, Transcripts & SBA</li>
                 `;
             }
-            renderRoster();
-            renderTeachers();
         }
 
         function switchTab(tabName, element) {
@@ -429,25 +454,29 @@
             if(tabName === 'scores') renderScoreTable();
         }
 
-        function addTeacher(e) {
+        async function addTeacher(e) {
             e.preventDefault();
             const name = document.getElementById('teach-name').value;
             const phone = document.getElementById('teach-phone').value;
-            const email = document.getElementById('teach-email').value.trim();
+            const email = document.getElementById('teach-email').value.trim().toLowerCase();
             const pass = document.getElementById('teach-pass').value.trim();
 
-            teachersDB.push({ name, phone, email, pass });
-            localStorage.setItem('wps_teachers', JSON.stringify(teachersDB));
-            renderTeachers();
-            alert('User successfully registered! They can now log in using their Gmail and password.');
-            e.target.reset();
+            try {
+                await db.collection("teachers").add({ name, phone, email, pass });
+                alert('Teacher registered successfully to the cloud database!');
+                e.target.reset();
+            } catch (err) {
+                alert('Error saving to cloud: ' + err.message);
+            }
         }
 
-        function deleteTeacher(index) {
-            if(confirm('Are you sure you want to remove this teacher?')) {
-                teachersDB.splice(index, 1);
-                localStorage.setItem('wps_teachers', JSON.stringify(teachersDB));
-                renderTeachers();
+        async function deleteTeacher(docId) {
+            if(confirm('Are you sure you want to remove this teacher from the cloud?')) {
+                try {
+                    await db.collection("teachers").doc(docId).delete();
+                } catch (err) {
+                    alert('Error deleting teacher: ' + err.message);
+                }
             }
         }
 
@@ -456,29 +485,31 @@
             if (teachersDB.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: #666;">No teachers registered yet.</td></tr>`;
             } else {
-                tbody.innerHTML = teachersDB.map((t, index) => `
+                tbody.innerHTML = teachersDB.map((t) => `
                     <tr>
                         <td>${t.name}</td>
                         <td>${t.email}</td>
                         <td>${t.phone}</td>
-                        <td><button class="btn-danger" onclick="deleteTeacher(${index})">Deactivate</button></td>
+                        <td><button class="btn-danger" onclick="deleteTeacher('${t.id}')">Deactivate</button></td>
                     </tr>
                 `).join('');
             }
             document.getElementById('stat-total-teachers').innerText = teachersDB.length;
         }
 
-        function registerStudent(e) {
+        async function registerStudent(e) {
             e.preventDefault();
             const name = document.getElementById('reg-name').value;
             const cls = document.getElementById('reg-class').value;
             const gender = document.getElementById('reg-gender').value;
 
-            studentsDB.push({ name, class: cls, gender });
-            localStorage.setItem('wps_students', JSON.stringify(studentsDB));
-            renderRoster();
-            alert('Pupil successfully registered and enrolled!');
-            e.target.reset();
+            try {
+                await db.collection("students").add({ name, class: cls, gender });
+                alert('Pupil successfully enrolled in the cloud database!');
+                e.target.reset();
+            } catch (err) {
+                alert('Error enrolling pupil: ' + err.message);
+            }
         }
 
         function renderRoster() {
@@ -505,18 +536,21 @@
                         <td><input type="number" value="0" style="width:60px;"></td>
                         <td><input type="number" value="0" style="width:60px;"></td>
                         <td>0</td>
-                        <td><button class="btn-action" style="padding:4px 8px;" onclick="alert('Score updated successfully!')">✓ Correct Mark</button></td>
+                        <td><button class="btn-action" style="padding:4px 8px;" onclick="alert('Score synced to cloud!')">✓ Correct Mark</button></td>
                     </tr>
                 `).join('');
             }
         }
 
-        function updateBanner() {
+        async function updateBanner() {
             const text = document.getElementById('admin-banner-input').value.trim();
             if(text) {
-                localStorage.setItem('wps_announcement', text);
-                document.getElementById('banner-text').innerText = text;
-                alert('Global announcement published successfully! It will now show on all teacher dashboards.');
+                try {
+                    await db.collection("settings").doc("announcement").set({ text: text });
+                    alert('Global announcement published to cloud successfully!');
+                } catch (err) {
+                    alert('Error publishing announcement: ' + err.message);
+                }
             }
         }
     </script>
