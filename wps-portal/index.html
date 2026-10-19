@@ -188,7 +188,7 @@
                 <h1>Portal Dashboard</h1>
                 <p class="subtitle">Wesley Preparatory School (Assorko-Essaman)</p>
                 <div class="stats-grid">
-                    <div class="stat-box"><p>Total Pupils (Class 1-6)</p><h3 id="stat-total-pupils">2</h3></div>
+                    <div class="stat-box"><p>Total Pupils (Class 1-6)</p><h3 id="stat-total-pupils">0</h3></div>
                     <div class="stat-box"><p>Registered Teachers</p><h3 id="stat-total-teachers">0</h3></div>
                     <div class="stat-box"><p>Active Classes</p><h3>Class 1 - 6</h3></div>
                     <div class="stat-box"><p>Google Drive Sync</p><h3 style="color: #10b981;">Connected ✓</h3></div>
@@ -247,8 +247,7 @@
                     <table>
                         <thead><tr><th>Name</th><th>Class</th><th>Gender</th></tr></thead>
                         <tbody id="student-roster-table">
-                            <tr><td>Ama Serwaa</td><td>Class 4</td><td>Female</td></tr>
-                            <tr><td>Kofi Boateng</td><td>Class 6</td><td>Male</td></tr>
+                            <tr><td colspan="3" style="text-align: center; color: #666;">No pupils registered yet. Use the form above.</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -260,7 +259,7 @@
                 <p class="subtitle">Input or modify continuous assessment and exam scores across all 8 core subjects for Class 1 to Class 6[span_3](start_span)[span_3](end_span)[span_4](start_span)[span_4](end_span).</p>
                 <div class="card">
                     <div class="form-group"><label>Select Class</label>
-                        <select>
+                        <select id="score-class" onchange="renderScoreTable()">
                             <option>Class 1</option><option>Class 2</option><option>Class 3</option>
                             <option>Class 4</option><option>Class 5</option><option>Class 6</option>
                         </select>
@@ -279,14 +278,8 @@
                     </div>
                     <table>
                         <thead><tr><th>Pupil Name</th><th>Class Score (30%)</th><th>Exam Score (70%)</th><th>Total</th><th>Action</th></tr></thead>
-                        <tbody>
-                            <tr>
-                                <td>Ama Serwaa</td>
-                                <td><input type="number" value="25" style="width:60px;"></td>
-                                <td><input type="number" value="60" style="width:60px;"></td>
-                                <td>85 (A)</td>
-                                <td><button class="btn-action" style="padding:4px 8px;" onclick="alert('Score updated successfully!')">✓ Correct Mark</button></td>
-                            </tr>
+                        <tbody id="score-table-body">
+                            <tr><td colspan="5" style="text-align: center; color: #666;">No pupils found in this class. Enroll pupils first.</td></tr>
                         </tbody>
                     </table>
                     <button class="btn-action" style="margin-top: 15px;" onclick="alert('Scores saved successfully and synced to Google Drive!')">💾 Save & Sync</button>
@@ -296,10 +289,10 @@
             <!-- REPORTS, TRANSCRIPTS & SBA -->
             <div id="tab-reports" class="section-panel">
                 <h1>Report Cards, Transcripts & SBA</h1>
-                <p class="subtitle">Print terminal report cards, student statements of results, and continuous assessment sheets[span_5](start_span)[span_5](end_span).</p>
+                <p class="subtitle">Print terminal report cards, student statements of results, and continuous assessment sheets.</p>
                 <div class="card">
                     <button class="btn-action" onclick="window.print()">🖨️ Print Terminal Reports</button>
-                    <button class="btn-action" style="background: #0284c7; margin-left: 10px;" onclick="window.print()">📄 Print Statement of Results / Transcript[span_6](start_span)[span_6](end_span)</button>
+                    <button class="btn-action" style="background: #0284c7; margin-left: 10px;" onclick="window.print()">📄 Print Statement of Results / Transcript</button>
                     <button class="btn-action" style="background: #10b981; margin-left: 10px;" onclick="window.print()">📊 Print SBA Sheets</button>
                 </div>
             </div>
@@ -332,10 +325,7 @@
     <script>
         let currentUser = null;
         let teachersDB = [];
-        let studentsDB = [
-            { name: "Ama Serwaa", class: "Class 4", gender: "Female" },
-            { name: "Kofi Boateng", class: "Class 6", gender: "Male" }
-        ];
+        let studentsDB = []; // Starts completely clean with zero dummy students
 
         window.addEventListener('DOMContentLoaded', () => {
             const now = new Date();
@@ -385,19 +375,19 @@
                 roleBadge.innerText = "Admin (Full Access)";
                 nav.innerHTML = `
                     <li onclick="switchTab('dashboard', this)" class="active">📊 Dashboard</li>
-                    <li onclick="switchTab('register-user', this)">➕ Add / Update User[span_7](start_span)[span_7](end_span)</li>
-                    <li onclick="switchTab('manage-users', this)">👥 Manage Users[span_8](start_span)[span_8](end_span)</li>
+                    <li onclick="switchTab('register-user', this)">➕ Add / Update User[span_5](start_span)[span_5](end_span)</li>
+                    <li onclick="switchTab('manage-users', this)">👥 Manage Users[span_6](start_span)[span_6](end_span)</li>
                     <li onclick="switchTab('register-student', this)">🎓 Register Pupils</li>
-                    <li onclick="switchTab('scores', this)">📝 Capture & Score Update[span_9](start_span)[span_9](end_span)</li>
-                    <li onclick="switchTab('reports', this)">📄 Reports, Transcripts & SBA[span_10](start_span)[span_10](end_span)</li>
+                    <li onclick="switchTab('scores', this)">📝 Capture & Score Update[span_7](start_span)[span_7](end_span)</li>
+                    <li onclick="switchTab('reports', this)">📄 Reports, Transcripts & SBA</li>
                     <li onclick="switchTab('settings', this)">⚙️ Settings & Themes</li>
                 `;
             } else {
                 roleBadge.innerText = "Teacher (" + currentUser.name + ")";
                 nav.innerHTML = `
                     <li onclick="switchTab('dashboard', this)" class="active">📊 Dashboard</li>
-                    <li onclick="switchTab('scores', this)">📝 Capture & Score Update[span_11](start_span)[span_11](end_span)</li>
-                    <li onclick="switchTab('reports', this)">📄 Reports, Transcripts & SBA[span_12](start_span)[span_12](end_span)</li>
+                    <li onclick="switchTab('scores', this)">📝 Capture & Score Update[span_8](start_span)[span_8](end_span)</li>
+                    <li onclick="switchTab('reports', this)">📄 Reports, Transcripts & SBA</li>
                 `;
             }
         }
@@ -407,6 +397,7 @@
             document.getElementById('tab-' + tabName).classList.add('active');
             document.querySelectorAll('.nav-links li').forEach(li => li.classList.remove('active'));
             element.classList.add('active');
+            if(tabName === 'scores') renderScoreTable();
         }
 
         function addTeacher(e) {
@@ -453,8 +444,32 @@
 
         function renderRoster() {
             const tbody = document.getElementById('student-roster-table');
-            tbody.innerHTML = studentsDB.map(s => `<tr><td>${s.name}</td><td>${s.class}</td><td>${s.gender}</td></tr>`).join('');
+            if (studentsDB.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="3" style="text-align: center; color: #666;">No pupils registered yet.</td></tr>`;
+            } else {
+                tbody.innerHTML = studentsDB.map(s => `<tr><td>${s.name}</td><td>${s.class}</td><td>${s.gender}</td></tr>`).join('');
+            }
             document.getElementById('stat-total-pupils').innerText = studentsDB.length;
+        }
+
+        function renderScoreTable() {
+            const selectedClass = document.getElementById('score-class').value;
+            const tbody = document.getElementById('score-table-body');
+            const classStudents = studentsDB.filter(s => s.class === selectedClass);
+
+            if (classStudents.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: #666;">No pupils registered for ${selectedClass} yet.</td></tr>`;
+            } else {
+                tbody.innerHTML = classStudents.map(s => `
+                    <tr>
+                        <td>${s.name}</td>
+                        <td><input type="number" value="0" style="width:60px;"></td>
+                        <td><input type="number" value="0" style="width:60px;"></td>
+                        <td>0</td>
+                        <td><button class="btn-action" style="padding:4px 8px;" onclick="alert('Score updated successfully!')">✓ Correct Mark</button></td>
+                    </tr>
+                `).join('');
+            }
         }
 
         function updateBanner() {
