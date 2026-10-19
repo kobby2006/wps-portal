@@ -129,13 +129,17 @@
 
         .btn-action { padding: 8px 16px; background: #0284c7; color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; }
         .btn-action:hover { background: #0369a1; }
-        .btn-danger { background: #e53e3e; }
+        .btn-danger { background: #e53e3e; color: white; padding: 6px 12px; border: none; border-radius: 4px; cursor: pointer; }
         .btn-danger:hover { background: #c53030; }
+
+        .signout-container { padding: 15px 20px; border-top: 1px solid rgba(255,255,255,0.2); }
+        .btn-signout { width: 100%; padding: 10px; background: rgba(229, 62, 62, 0.8); color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; transition: background 0.2s; }
+        .btn-signout:hover { background: #e53e3e; }
 
         .announcement-banner { background: #eff6ff; border-left: 4px solid #3b82f6; padding: 15px; border-radius: 4px; margin-bottom: 20px; }
         
         @media print {
-            .sidebar, .nav-links, #login-screen, .btn-action, .form-group { display: none !important; }
+            .sidebar, .nav-links, #login-screen, .btn-action, .form-group, .signout-container { display: none !important; }
             .main-content { padding: 0; background: white; }
             .card { box-shadow: none; border: none; }
         }
@@ -174,13 +178,16 @@
                 <div id="display-role" class="user-role-badge">Admin</div>
             </div>
             <ul class="nav-links" id="dynamic-nav"></ul>
+            <div class="signout-container">
+                <button class="btn-signout" onclick="signOut()">🚪 Sign Out</button>
+            </div>
         </div>
 
         <!-- Main Content Area -->
         <div class="main-content">
             
             <div class="announcement-banner">
-                <strong>📢 School Announcement:</strong> <span id="banner-text">Mid-Term assessments and revision schedules are currently ongoing across Class 1 to Class 6. Ensure records are synced to Google Drive.</span>
+                <strong>📢 School Announcement:</strong> <span id="banner-text">Welcome to Wesley Preparatory School Portal. Check here for regular updates from administration.</span>
             </div>
 
             <!-- DASHBOARD -->
@@ -198,7 +205,7 @@
             <!-- ADMIN: REGISTER NEW USER / TEACHER -->
             <div id="tab-register-user" class="section-panel admin-only">
                 <h1>Register New User Account</h1>
-                <p class="subtitle">Admin Only: Create login credentials for teachers[span_0](start_span)[span_0](end_span).</p>
+                <p class="subtitle">Admin Only: Create login credentials for teachers.</p>
                 <div class="card">
                     <form onsubmit="addTeacher(event)">
                         <div class="form-group"><label>Full Name *</label><input type="text" id="teach-name" placeholder="E.g. Madam Akosua" required></div>
@@ -213,7 +220,7 @@
             <!-- ADMIN: MANAGE USERS -->
             <div id="tab-manage-users" class="section-panel admin-only">
                 <h1>Manage Users & Privileges</h1>
-                <p class="subtitle">Admin Only: Manage teacher access rights[span_1](start_span)[span_1](end_span)[span_2](start_span)[span_2](end_span).</p>
+                <p class="subtitle">Admin Only: Manage teacher access rights.</p>
                 <div class="card">
                     <h3>Staff Accounts Directory</h3>
                     <table>
@@ -247,7 +254,7 @@
                     <table>
                         <thead><tr><th>Name</th><th>Class</th><th>Gender</th></tr></thead>
                         <tbody id="student-roster-table">
-                            <tr><td colspan="3" style="text-align: center; color: #666;">No pupils registered yet. Use the form above.</td></tr>
+                            <tr><td colspan="3" style="text-align: center; color: #666;">No pupils registered yet.</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -256,7 +263,7 @@
             <!-- SCORE CAPTURE & SCORE UPDATE -->
             <div id="tab-scores" class="section-panel">
                 <h1>Assessment Score Capture & Update</h1>
-                <p class="subtitle">Input or modify continuous assessment and exam scores across all 8 core subjects for Class 1 to Class 6[span_3](start_span)[span_3](end_span)[span_4](start_span)[span_4](end_span).</p>
+                <p class="subtitle">Input or modify continuous assessment and exam scores across all 8 core subjects for Class 1 to Class 6.</p>
                 <div class="card">
                     <div class="form-group"><label>Select Class</label>
                         <select id="score-class" onchange="renderScoreTable()">
@@ -303,7 +310,7 @@
                 <p class="subtitle">Admin Only: Update school details and manage holiday themes.</p>
                 <div class="card">
                     <div class="form-group">
-                        <label>Update Global Announcement</label>
+                        <label>Update Global Announcement (Shown to all teachers instantly)</label>
                         <input type="text" id="admin-banner-input" placeholder="Type new school announcement...">
                         <button class="btn-action" style="margin-top: 5px;" onclick="updateBanner()">Publish Announcement</button>
                     </div>
@@ -323,9 +330,11 @@
     </div>
 
     <script>
+        // Persistent database loaded from browser localStorage
+        let teachersDB = JSON.parse(localStorage.getItem('wps_teachers')) || [];
+        let studentsDB = JSON.parse(localStorage.getItem('wps_students')) || [];
+        let savedAnnouncement = localStorage.getItem('wps_announcement') || "Welcome to Wesley Preparatory School Portal. Check here for regular updates from administration.";
         let currentUser = null;
-        let teachersDB = [];
-        let studentsDB = []; // Starts completely clean with zero dummy students
 
         window.addEventListener('DOMContentLoaded', () => {
             const now = new Date();
@@ -338,6 +347,13 @@
                 changeTheme('independence');
                 document.getElementById('seasonal-notice').innerText = "🇬🇭 Happy Independence Day from Wesley Prep!";
             }
+            
+            // Apply saved announcement globally on load
+            document.getElementById('banner-text').innerText = savedAnnouncement;
+            document.getElementById('admin-banner-input').value = savedAnnouncement;
+
+            renderTeachers();
+            renderRoster();
         });
 
         function changeTheme(theme) {
@@ -364,10 +380,21 @@
             }
         }
 
+        function signOut() {
+            currentUser = null;
+            document.getElementById('app-container').style.display = 'none';
+            document.getElementById('login-screen').style.display = 'flex';
+            document.getElementById('login-form').reset();
+            document.getElementById('login-error').style.display = 'none';
+        }
+
         function initApp() {
             document.getElementById('login-screen').style.display = 'none';
             document.getElementById('app-container').style.display = 'flex';
             
+            // Refresh announcement banner text every time anyone logs in
+            document.getElementById('banner-text').innerText = localStorage.getItem('wps_announcement') || savedAnnouncement;
+
             const nav = document.getElementById('dynamic-nav');
             const roleBadge = document.getElementById('display-role');
 
@@ -375,10 +402,10 @@
                 roleBadge.innerText = "Admin (Full Access)";
                 nav.innerHTML = `
                     <li onclick="switchTab('dashboard', this)" class="active">📊 Dashboard</li>
-                    <li onclick="switchTab('register-user', this)">➕ Add / Update User[span_5](start_span)[span_5](end_span)</li>
-                    <li onclick="switchTab('manage-users', this)">👥 Manage Users[span_6](start_span)[span_6](end_span)</li>
+                    <li onclick="switchTab('register-user', this)">➕ Add / Update User</li>
+                    <li onclick="switchTab('manage-users', this)">👥 Manage Users</li>
                     <li onclick="switchTab('register-student', this)">🎓 Register Pupils</li>
-                    <li onclick="switchTab('scores', this)">📝 Capture & Score Update[span_7](start_span)[span_7](end_span)</li>
+                    <li onclick="switchTab('scores', this)">📝 Capture & Score Update</li>
                     <li onclick="switchTab('reports', this)">📄 Reports, Transcripts & SBA</li>
                     <li onclick="switchTab('settings', this)">⚙️ Settings & Themes</li>
                 `;
@@ -386,10 +413,12 @@
                 roleBadge.innerText = "Teacher (" + currentUser.name + ")";
                 nav.innerHTML = `
                     <li onclick="switchTab('dashboard', this)" class="active">📊 Dashboard</li>
-                    <li onclick="switchTab('scores', this)">📝 Capture & Score Update[span_8](start_span)[span_8](end_span)</li>
+                    <li onclick="switchTab('scores', this)">📝 Capture & Score Update</li>
                     <li onclick="switchTab('reports', this)">📄 Reports, Transcripts & SBA</li>
                 `;
             }
+            renderRoster();
+            renderTeachers();
         }
 
         function switchTab(tabName, element) {
@@ -404,13 +433,22 @@
             e.preventDefault();
             const name = document.getElementById('teach-name').value;
             const phone = document.getElementById('teach-phone').value;
-            const email = document.getElementById('teach-email').value;
-            const pass = document.getElementById('teach-pass').value;
+            const email = document.getElementById('teach-email').value.trim();
+            const pass = document.getElementById('teach-pass').value.trim();
 
             teachersDB.push({ name, phone, email, pass });
+            localStorage.setItem('wps_teachers', JSON.stringify(teachersDB));
             renderTeachers();
-            alert('User successfully added! They can now log in using their Gmail and password.');
+            alert('User successfully registered! They can now log in using their Gmail and password.');
             e.target.reset();
+        }
+
+        function deleteTeacher(index) {
+            if(confirm('Are you sure you want to remove this teacher?')) {
+                teachersDB.splice(index, 1);
+                localStorage.setItem('wps_teachers', JSON.stringify(teachersDB));
+                renderTeachers();
+            }
         }
 
         function renderTeachers() {
@@ -423,7 +461,7 @@
                         <td>${t.name}</td>
                         <td>${t.email}</td>
                         <td>${t.phone}</td>
-                        <td><button class="btn-action" style="background:#e53e3e; padding:4px 8px;" onclick="teachersDB.splice(${index},1); renderTeachers();">Deactivate</button></td>
+                        <td><button class="btn-danger" onclick="deleteTeacher(${index})">Deactivate</button></td>
                     </tr>
                 `).join('');
             }
@@ -437,6 +475,7 @@
             const gender = document.getElementById('reg-gender').value;
 
             studentsDB.push({ name, class: cls, gender });
+            localStorage.setItem('wps_students', JSON.stringify(studentsDB));
             renderRoster();
             alert('Pupil successfully registered and enrolled!');
             e.target.reset();
@@ -473,10 +512,11 @@
         }
 
         function updateBanner() {
-            const text = document.getElementById('admin-banner-input').value;
+            const text = document.getElementById('admin-banner-input').value.trim();
             if(text) {
+                localStorage.setItem('wps_announcement', text);
                 document.getElementById('banner-text').innerText = text;
-                alert('Global announcement updated successfully across all teacher dashboards!');
+                alert('Global announcement published successfully! It will now show on all teacher dashboards.');
             }
         }
     </script>
