@@ -3,555 +3,369 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wesley Preparatory School Portal - Assorko-Essaman</title>
-    <!-- Firebase SDK Scripts for Cloud Sync Across Devices -->
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-
+    <title>Wesley Preparatory School - Portal</title>
+    <!-- Include Supabase JS SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root {
-            --primary-gradient: linear-gradient(135deg, #5b42f3 0%, #d946ef 100%);
-            --sidebar-bg: #5b42f3;
-            --accent-color: #d946ef;
-            --bg-color: #f4f6f9;
-            --card-bg: #ffffff;
-            --text-color: #333333;
+            --primary-color: #1b4d3e;
+            --accent-color: #c5a059;
+            --bg-color: #f4f6f5;
+            --text-color: #333;
         }
-
-        /* Seasonal Theme Overrides */
-        body.theme-christmas {
-            --primary-gradient: linear-gradient(135deg, #165b33 0%, #bb2528 100%);
-            --sidebar-bg: #165b33;
-            --accent-color: #f8b229;
-            --bg-color: #fcf6f0;
-        }
-        body.theme-easter {
-            --primary-gradient: linear-gradient(135deg, #845ec2 0%, #ff9671 100%);
-            --sidebar-bg: #845ec2;
-            --accent-color: #ffc75f;
-            --bg-color: #f9f8fc;
-        }
-        body.theme-independence {
-            --primary-gradient: linear-gradient(135deg, #ce1126 0%, #fcd116 100%, #006b3f 0%);
-            --sidebar-bg: #006b3f;
-            --accent-color: #fcd116;
-            --bg-color: #fffef0;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            height: 100vh;
-            display: flex;
-            overflow: hidden;
-            transition: background 0.5s ease;
-        }
-
-        /* Login Screen */
-        #login-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--primary-gradient);
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-color); padding: 20px; }
+        
+        .container { max-width: 900px; margin: 0 auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        
+        /* Auth Screen */
+        #loginScreen { max-width: 400px; margin: 50px auto; padding: 30px; background: white; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: center; }
+        
+        /* Login Page Badge Styling */
+        #loginScreen .login-badge-container {
             display: flex;
             justify-content: center;
-            align-items: center;
-            z-index: 1000;
+            margin-bottom: 25px;
         }
-        .login-card {
-            background: white;
-            padding: 40px;
-            border-radius: 12px;
-            width: 100%;
-            max-width: 420px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-            text-align: center;
+        #loginScreen img.login-school-badge {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
         }
-        .login-card h2 { margin-bottom: 5px; color: #222; }
-        .login-card p { color: #666; margin-bottom: 20px; font-size: 0.9rem; }
+
+        #loginScreen h2 { color: var(--primary-color); margin-bottom: 20px; font-size: 20px; }
         .form-group { margin-bottom: 15px; text-align: left; }
-        .form-group label { display: block; margin-bottom: 5px; font-size: 0.85rem; font-weight: 600; color: #444; }
-        .form-group input, .form-group select { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 0.95rem; }
-        .btn-primary { width: 100%; padding: 12px; background: #5b42f3; color: white; border: none; border-radius: 6px; font-size: 1rem; font-weight: bold; cursor: pointer; transition: background 0.2s; margin-top: 10px; }
-        .btn-primary:hover { background: #4732d4; }
-        .error-msg { color: #e53e3e; font-size: 0.85rem; margin-top: 10px; display: none; }
+        .form-group label { display: block; font-weight: bold; margin-bottom: 5px; font-size: 13px; }
+        .form-group input, .form-group select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; }
         
-        .seasonal-badge {
-            background: rgba(255,255,255,0.2);
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            display: inline-block;
-            margin-bottom: 15px;
-            font-weight: bold;
-            color: #fff;
-        }
+        #portalContent { display: none; }
 
-        /* App Layout */
-        #app-container { display: none; width: 100%; height: 100%; }
-        .sidebar {
-            width: 280px;
-            background: var(--primary-gradient);
-            color: white;
-            display: flex;
-            flex-direction: column;
-            padding: 20px 0;
-            height: 100%;
-            box-shadow: 4px 0 15px rgba(0,0,0,0.1);
-        }
-        .sidebar-brand { font-size: 1.1rem; font-weight: bold; padding: 0 20px 15px 20px; border-bottom: 1px solid rgba(255,255,255,0.2); margin-bottom: 15px; }
-        .user-role-badge { padding: 4px 10px; background: rgba(0,0,0,0.2); border-radius: 4px; font-size: 0.75rem; text-transform: uppercase; margin-top: 5px; display: inline-block; }
+        /* Header Section */
+        .school-header { text-align: center; border-bottom: 2px solid var(--primary-color); padding-bottom: 15px; margin-bottom: 20px; }
+        .school-header img.main-school-badge { width: 70px; height: 70px; object-fit: contain; margin-bottom: 5px; }
+        .school-header h1 { font-size: 22px; color: var(--primary-color); text-transform: uppercase; letter-spacing: 1px; }
+        .school-header p { font-size: 13px; color: #666; margin-top: 3px; }
+        .report-title { font-size: 16px; font-weight: bold; margin-top: 10px; text-decoration: underline; color: #222; }
+
+        /* Bio Data Grid */
+        .biodata-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 10px 20px; margin-bottom: 20px; font-size: 14px; }
+        .biodata-item { display: flex; align-items: baseline; border-bottom: 1px dotted #999; padding-bottom: 4px; }
+        .biodata-item label { font-weight: bold; margin-right: 8px; color: #444; min-width: 120px; }
+        .biodata-item input, .biodata-item select { border: none; border-bottom: 1px solid #ccc; outline: none; width: 100%; font-size: 14px; padding: 2px 4px; background: #fafafa; }
+        .biodata-item input:focus, .biodata-item select:focus { background: #fff; border-bottom: 2px solid var(--primary-color); }
+
+        /* Tables */
+        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 13px; }
+        th, td { border: 1px solid #333; padding: 6px 8px; text-align: center; }
+        th { background-color: var(--primary-color); color: white; font-weight: 600; font-size: 12px; text-transform: uppercase; }
+        td input { width: 100%; border: none; text-align: center; font-size: 13px; background: transparent; outline: none; }
+        td input:focus { background: #eef5f2; }
+        td.subject-name { text-align: left; font-weight: 500; }
+
+        /* Attendance & Remarks Section */
+        .meta-section { font-size: 13px; margin-bottom: 20px; border: 1px solid #ccc; padding: 15px; border-radius: 6px; background: #fafafa; }
+        .meta-row { display: flex; gap: 15px; margin-bottom: 10px; align-items: center; }
+        .meta-row label { font-weight: bold; min-width: 140px; }
+        .meta-row input { flex: 1; border: none; border-bottom: 1px solid #999; padding: 3px; background: transparent; outline: none; }
         
-        .nav-links { list-style: none; overflow-y: auto; flex-grow: 1; }
-        .nav-links li { padding: 12px 20px; display: flex; align-items: center; gap: 12px; cursor: pointer; transition: background 0.2s; font-size: 0.95rem; font-weight: 500; }
-        .nav-links li:hover { background: rgba(255, 255, 255, 0.15); }
-        .nav-links li.active { background: rgba(255, 255, 255, 0.25); border-left: 4px solid #ffffff; }
-        
-        .main-content { flex-grow: 1; padding: 40px; overflow-y: auto; background-color: var(--bg-color); }
-        .section-panel { display: none; }
-        .section-panel.active { display: block; }
-        .card { background: white; padding: 24px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 20px; }
-        h1 { color: #222; margin-bottom: 8px; font-size: 1.8rem; }
-        .subtitle { color: #666; margin-bottom: 20px; font-size: 0.95rem; }
+        .remarks-box { margin-bottom: 15px; }
+        .remarks-box label { display: block; font-weight: bold; margin-bottom: 4px; font-size: 13px; }
+        .remarks-box input { width: 100%; border: none; border-bottom: 1px solid #999; padding: 4px; font-size: 13px; background: transparent; outline: none; }
 
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px; }
-        .stat-box { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); text-align: center; }
-        .stat-box h3 { font-size: 1.8rem; color: #5b42f3; margin-top: 5px; }
-        .stat-box p { color: #666; font-size: 0.9rem; font-weight: 600; }
+        /* Fees Table */
+        .fees-container { width: 60%; margin-left: auto; margin-right: 0; margin-bottom: 30px; }
+        .fees-container th { background-color: #444; }
 
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; background: white; }
-        th, td { padding: 12px; border: 1px solid #ddd; text-align: left; font-size: 0.9rem; }
-        th { background: #f8fafc; color: #444; }
+        /* Buttons */
+        .btn-container { text-align: center; margin-top: 20px; display: flex; justify-content: center; gap: 15px; }
+        .btn { background-color: var(--primary-color); color: white; border: none; padding: 10px 25px; font-size: 15px; font-weight: bold; border-radius: 5px; cursor: pointer; transition: background 0.2s; }
+        .btn:hover { background-color: #14372c; }
+        .btn-secondary { background-color: #c5a059; }
 
-        .btn-action { padding: 8px 16px; background: #0284c7; color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; }
-        .btn-action:hover { background: #0369a1; }
-        .btn-danger { background: #e53e3e; color: white; padding: 6px 12px; border: none; border-radius: 4px; cursor: pointer; }
-        .btn-danger:hover { background: #c53030; }
-
-        .signout-container { padding: 15px 20px; border-top: 1px solid rgba(255,255,255,0.2); }
-        .btn-signout { width: 100%; padding: 10px; background: rgba(229, 62, 62, 0.8); color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; transition: background 0.2s; }
-        .btn-signout:hover { background: #e53e3e; }
-
-        .announcement-banner { background: #eff6ff; border-left: 4px solid #3b82f6; padding: 15px; border-radius: 4px; margin-bottom: 20px; }
-        
+        /* Print Settings */
         @media print {
-            .sidebar, .nav-links, #login-screen, .btn-action, .form-group, .signout-container { display: none !important; }
-            .main-content { padding: 0; background: white; }
-            .card { box-shadow: none; border: none; }
+            body { background: white; padding: 0; }
+            .container { box-shadow: none; padding: 10px; max-width: 100%; }
+            .btn-container, #loginScreen, .logout-btn { display: none !important; }
+            input { border: none !important; background: transparent !important; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Login Screen -->
-    <div id="login-screen">
-        <div class="login-card">
-            <div id="seasonal-notice" class="seasonal-badge">🌟 Welcome to Wesley Prep Portal</div>
-            <h2>Wesley Prep. School</h2>
-            <p>Assorko-Essaman</p>
-            <form id="login-form" onsubmit="handleLogin(event)">
-                <div class="form-group">
-                    <label>Gmail / Admin ID</label>
-                    <input type="email" id="login-email" placeholder="teacher@gmail.com or head@wps.com" required>
-                </div>
-                <div class="form-group">
-                    <label>Password</label>
-                    <input type="password" id="login-pass" placeholder="••••" required>
-                </div>
-                <button type="submit" class="btn-primary">Secure Login</button>
-                <div id="login-error" class="error-msg">Invalid credentials or connecting to cloud...</div>
-            </form>
+    <!-- Teacher Login Screen -->
+    <div id="loginScreen">
+        <!-- School Badge on Login Page -->
+        <div class="login-badge-container">
+            <img src="badge.jpg" alt="School Badge" class="login-school-badge" onerror="this.style.display='none'">
         </div>
+        
+        <h2>Wesley Preparatory Teacher Login</h2>
+        <div class="form-group">
+            <label>Teacher Email:</label>
+            <input type="email" id="teacherEmailInput" placeholder="teacher@wesleyprep.edu">
+        </div>
+        <div class="form-group">
+            <label>Password:</label>
+            <input type="password" id="teacherPasswordInput" placeholder="••••••••">
+        </div>
+        <button class="btn" onclick="loginTeacher()" style="width: 100%;">Login to Portal</button>
     </div>
 
-    <!-- Main App Container -->
-    <div id="app-container">
-        <!-- Sidebar Menu -->
-        <div class="sidebar">
-            <div class="sidebar-brand">
-                Wesley Prep. School
-                <div id="display-role" class="user-role-badge">Admin</div>
+    <!-- Main Report Card & Portal Screen -->
+    <div class="container" id="portalContent">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <span id="loggedInUserDisplay" style="font-size: 12px; color: #666; font-weight: bold;"></span>
+            <button class="btn logout-btn" onclick="logoutTeacher()" style="padding: 4px 10px; font-size: 12px; background: #d9534f;">Logout</button>
+        </div>
+
+        <!-- School Header -->
+        <div class="school-header">
+            <img src="badge.jpg" alt="School Badge" class="main-school-badge" onerror="this.style.display='none'">
+            <h1>Wesley Preparatory School</h1>
+            <p>P. O. BOX 16 16, SHAMA | ASSORKU - ESSAMAN</p>
+            <div class="report-title">END OF TERM REPORT CARD</div>
+        </div>
+
+        <!-- Student Bio Data -->
+        <div class="biodata-grid">
+            <div class="biodata-item">
+                <label>NAME OF PUPIL:</label>
+                <input type="text" id="studentNameInput" placeholder="Enter pupil's full name">
             </div>
-            <ul class="nav-links" id="dynamic-nav"></ul>
-            <div class="signout-container">
-                <button class="btn-signout" onclick="signOut()">🚪 Sign Out</button>
+            <div class="biodata-item">
+                <label>NO. ON ROLL:</label>
+                <input type="text" id="noOnRollInput" placeholder="e.g. 35">
+            </div>
+            <div class="biodata-item">
+                <label>CLASS:</label>
+                <select id="classNameInput">
+                    <option value="Basic 4">Basic 4</option>
+                    <option value="Basic 5">Basic 5</option>
+                    <option value="Basic 6">Basic 6</option>
+                    <option value="JHS 1">JHS 1</option>
+                    <option value="JHS 2">JHS 2</option>
+                    <option value="JHS 3">JHS 3</option>
+                </select>
+            </div>
+            <div class="biodata-item">
+                <label>TERM:</label>
+                <input type="text" id="termInput" value="Term 1">
+            </div>
+            <div class="biodata-item">
+                <label>ACADEMIC YEAR:</label>
+                <input type="text" id="yearInput" value="2025/2026">
+            </div>
+            <div class="biodata-item">
+                <label>RE-OPENING DATE:</label>
+                <input type="text" id="reopeningInput" placeholder="Enter date">
+            </div>
+            <div class="biodata-item">
+                <label>POSITION IN CLASS:</label>
+                <input type="text" id="positionInput" placeholder="e.g. 2nd">
             </div>
         </div>
 
-        <!-- Main Content Area -->
-        <div class="main-content">
-            
-            <div class="announcement-banner">
-                <strong>📢 School Announcement:</strong> <span id="banner-text">Loading updates from cloud...</span>
-            </div>
+        <!-- Main Score Table -->
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 30%;">SUBJECT</th>
+                    <th style="width: 11%;">CLASS SCORE (50%)</th>
+                    <th style="width: 11%;">EXAMS SCORE (50%)</th>
+                    <th style="width: 12%;">TOTAL SCORE (100%)</th>
+                    <th style="width: 12%;">POSITION</th>
+                    <th style="width: 10%;">GRADE</th>
+                    <th style="width: 14%;">REMARKS</th>
+                </tr>
+            </thead>
+            <tbody id="scoresTableBody">
+                <!-- Rows generated via JS -->
+            </tbody>
+        </table>
 
-            <!-- DASHBOARD -->
-            <div id="tab-dashboard" class="section-panel active">
-                <h1>Portal Dashboard</h1>
-                <p class="subtitle">Wesley Preparatory School (Assorko-Essaman)</p>
-                <div class="stats-grid">
-                    <div class="stat-box"><p>Total Pupils (Class 1-6)</p><h3 id="stat-total-pupils">0</h3></div>
-                    <div class="stat-box"><p>Registered Teachers</p><h3 id="stat-total-teachers">0</h3></div>
-                    <div class="stat-box"><p>Active Classes</p><h3>Class 1 - 6</h3></div>
-                    <div class="stat-box"><p>Cloud Database Sync</p><h3 style="color: #10b981;">Online ✓</h3></div>
-                </div>
+        <!-- Attendance & Behavioral Meta Section -->
+        <div class="meta-section">
+            <div class="meta-row">
+                <label>ATTENDANCE MADE:</label>
+                <input type="text" id="attendanceMade" placeholder="e.g. 68">
+                <label style="min-width: 110px;">OUT OF TOTAL:</label>
+                <input type="text" id="attendanceTotal" placeholder="e.g. 70">
+                <label style="min-width: 110px;">PROMOTED TO:</label>
+                <input type="text" id="promotedTo" placeholder="e.g. Basic 5">
             </div>
-
-            <!-- ADMIN: REGISTER NEW USER / TEACHER -->
-            <div id="tab-register-user" class="section-panel admin-only">
-                <h1>Register New User Account</h1>
-                <p class="subtitle">Admin Only: Create login credentials for teachers.</p>
-                <div class="card">
-                    <form onsubmit="addTeacher(event)">
-                        <div class="form-group"><label>Full Name *</label><input type="text" id="teach-name" placeholder="E.g. Madam Akosua" required></div>
-                        <div class="form-group"><label>Phone Number *</label><input type="text" id="teach-phone" placeholder="0240000000" required></div>
-                        <div class="form-group"><label>E-Mail (Gmail) *</label><input type="email" id="teach-email" placeholder="teacher@gmail.com" required></div>
-                        <div class="form-group"><label>Password *</label><input type="password" id="teach-pass" placeholder="Create password" required></div>
-                        <button type="submit" class="btn-action">Submit User Account</button>
-                    </form>
-                </div>
+            <div class="remarks-box" style="margin-bottom: 10px;">
+                <label>CONDUCT:</label>
+                <input type="text" id="conductInput" placeholder="e.g. Well-behaved and disciplined">
             </div>
-
-            <!-- ADMIN: MANAGE USERS -->
-            <div id="tab-manage-users" class="section-panel admin-only">
-                <h1>Manage Users & Privileges</h1>
-                <p class="subtitle">Admin Only: Manage teacher access rights.</p>
-                <div class="card">
-                    <h3>Staff Accounts Directory</h3>
-                    <table>
-                        <thead><tr><th>Staff Name</th><th>Gmail ID</th><th>Phone No.</th><th>Actions</th></tr></thead>
-                        <tbody id="teacher-list-table">
-                            <tr><td colspan="4" style="text-align: center; color: #666;">Loading teachers from cloud...</td></tr>
-                        </tbody>
-                    </table>
-                </div>
+            <div class="remarks-box" style="margin-bottom: 10px;">
+                <label>INTEREST:</label>
+                <input type="text" id="interestInput" placeholder="e.g. Keen interest in sports and reading">
             </div>
-
-            <!-- ADMIN: STUDENT REGISTRATION -->
-            <div id="tab-register-student" class="section-panel admin-only">
-                <h1>Student Enrolment (Class 1 - 6)</h1>
-                <p class="subtitle">Admin Only: Register pupils into the school system.</p>
-                <div class="card">
-                    <form onsubmit="registerStudent(event)">
-                        <div class="form-group"><label>Pupil Full Name</label><input type="text" id="reg-name" placeholder="E.g. Kofi Mensah" required></div>
-                        <div class="form-group"><label>Select Class</label>
-                            <select id="reg-class" required>
-                                <option>Class 1</option><option>Class 2</option><option>Class 3</option>
-                                <option>Class 4</option><option>Class 5</option><option>Class 6</option>
-                            </select>
-                        </div>
-                        <div class="form-group"><label>Gender</label><select id="reg-gender"><option>Male</option><option>Female</option></select></div>
-                        <button type="submit" class="btn-action">Enroll Pupil</button>
-                    </form>
-                </div>
-                <div class="card">
-                    <h3>Enrolled Pupil Roster</h3>
-                    <table>
-                        <thead><tr><th>Name</th><th>Class</th><th>Gender</th></tr></thead>
-                        <tbody id="student-roster-table">
-                            <tr><td colspan="3" style="text-align: center; color: #666;">Loading pupils from cloud...</td></tr>
-                        </tbody>
-                    </table>
-                </div>
+            <div class="remarks-box" style="margin-bottom: 10px;">
+                <label>CLASS TEACHER'S REMARKS:</label>
+                <input type="text" id="teacherRemarks" placeholder="e.g. Excellent performance this term. Keep it up!">
             </div>
-
-            <!-- SCORE CAPTURE & SCORE UPDATE -->
-            <div id="tab-scores" class="section-panel">
-                <h1>Assessment Score Capture & Update</h1>
-                <p class="subtitle">Input or modify continuous assessment and exam scores across all 8 core subjects for Class 1 to Class 6.</p>
-                <div class="card">
-                    <div class="form-group"><label>Select Class</label>
-                        <select id="score-class" onchange="renderScoreTable()">
-                            <option>Class 1</option><option>Class 2</option><option>Class 3</option>
-                            <option>Class 4</option><option>Class 5</option><option>Class 6</option>
-                        </select>
-                    </div>
-                    <div class="form-group"><label>Select Subject (8 Core Subjects)</label>
-                        <select id="subject-select">
-                            <option>Mathematics</option><option>Science</option><option>English</option>
-                            <option>RME</option><option>Fante</option><option>History</option>
-                            <option>Computing</option><option>C. Art</option>
-                        </select>
-                    </div>
-                    <table>
-                        <thead><tr><th>Pupil Name</th><th>Class Score (30%)</th><th>Exam Score (70%)</th><th>Total</th><th>Action</th></tr></thead>
-                        <tbody id="score-table-body">
-                            <tr><td colspan="5" style="text-align: center; color: #666;">Select class and subject.</td></tr>
-                        </tbody>
-                    </table>
-                    <button class="btn-action" style="margin-top: 15px;" onclick="alert('Scores synced directly to the cloud database!')">💾 Save & Sync</button>
-                </div>
+            <div class="remarks-box" style="margin-bottom: 0;">
+                <label>HEAD TEACHER'S REMARKS:</label>
+                <input type="text" id="headRemarks" placeholder="e.g. A very promising student with great potential.">
             </div>
+        </div>
 
-            <!-- REPORTS, TRANSCRIPTS & SBA -->
-            <div id="tab-reports" class="section-panel">
-                <h1>Report Cards, Transcripts & SBA</h1>
-                <p class="subtitle">Print terminal report cards, student statements of results, and continuous assessment sheets.</p>
-                <div class="card">
-                    <button class="btn-action" onclick="window.print()">🖨️ Print Terminal Reports</button>
-                    <button class="btn-action" style="background: #0284c7; margin-left: 10px;" onclick="window.print()">📄 Print Statement of Results / Transcript</button>
-                    <button class="btn-action" style="background: #10b981; margin-left: 10px;" onclick="window.print()">📊 Print SBA Sheets</button>
-                </div>
-            </div>
+        <!-- Next Term Fees Table -->
+        <table class="fees-container">
+            <thead>
+                <tr>
+                    <th style="text-align: left; padding-left: 10px;">NEXT TERM FEE STRUCTURE</th>
+                    <th style="width: 35%;">AMOUNT (GH₵)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="text-align: left; padding-left: 10px;">TUITION FEE FOR NEXT TERM:</td>
+                    <td><input type="text" id="feeTuition" placeholder="200.00"></td>
+                </tr>
+                <tr>
+                    <td style="text-align: left; padding-left: 10px;">PRINTING FEE FOR NEXT TERM:</td>
+                    <td><input type="text" id="feePrinting" placeholder="25.00"></td>
+                </tr>
+                <tr>
+                    <td style="text-align: left; padding-left: 10px;">P.T.A. DUES FOR NEXT TERM:</td>
+                    <td><input type="text" id="feePta" placeholder="5.00"></td>
+                </tr>
+                <tr>
+                    <td style="text-align: left; padding-left: 10px;">OTHER FEES FOR NEXT TERM:</td>
+                    <td><input type="text" id="feeOther" placeholder="20.00"></td>
+                </tr>
+                <tr>
+                    <td style="text-align: left; padding-left: 10px;">ARREARS FOR LAST TERM:</td>
+                    <td><input type="text" id="feeArrears" placeholder="0.00"></td>
+                </tr>
+                <tr style="font-weight: bold; background: #f0f0f0;">
+                    <td style="text-align: left; padding-left: 10px;">TOTAL FOR NEXT TERM:</td>
+                    <td><input type="text" id="feeTotal" readonly placeholder="250.00"></td>
+                </tr>
+            </tbody>
+        </table>
 
-            <!-- ADMIN: SETTINGS -->
-            <div id="tab-settings" class="section-panel admin-only">
-                <h1>School Settings & Themes</h1>
-                <p class="subtitle">Admin Only: Update school details and manage holiday themes.</p>
-                <div class="card">
-                    <div class="form-group">
-                        <label>Update Global Announcement (Synced to all teachers instantly via cloud)</label>
-                        <input type="text" id="admin-banner-input" placeholder="Type new school announcement...">
-                        <button class="btn-action" style="margin-top: 5px;" onclick="updateBanner()">Publish Announcement</button>
-                    </div>
-                    <div class="form-group" style="margin-top: 20px;">
-                        <label>Seasonal Holiday Theme Override</label>
-                        <select id="theme-selector" onchange="changeTheme(this.value)">
-                            <option value="normal">Standard Term Theme</option>
-                            <option value="christmas">🎄 Christmas Theme (Festive / Red & Green)</option>
-                            <option value="easter">🐰 Easter Theme (Spring / Pastels)</option>
-                            <option value="independence">🇬🇭 Ghana Independence Theme (Red, Gold, Green)</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-
+        <!-- Action Buttons -->
+        <div class="btn-container">
+            <button class="btn btn-secondary" onclick="saveScoresToCloud()">☁️ Save Scores to Cloud</button>
+            <button class="btn" onclick="window.print()">🖨️ Print Report Card</button>
         </div>
     </div>
 
     <script>
-                // --- FIREBASE CLOUD CONFIGURATION ---
-        const firebaseConfig = {
-            apiKey: "AIzaSyAgB-npNhw-e6JtQo03wB4G86ZFnnXm8cA",
-            authDomain: "wps-gh.firebaseapp.com",
-            projectId: "wps-gh",
-            storageBucket: "wps-gh.firebasestorage.app",
-            messagingSenderId: "442533477217",
-            appId: "1:442533477217:web:65a408746cc2241bda2320",
-            measurementId: "G-4LRS0F2BSV"
-        };
+        // Supabase Initialization
+        const SUPABASE_URL = 'https://lhqacoxyfyklxjhabzfe.supabase.co';
+        const SUPABASE_KEY = 'Sb_publishable_3zcdTnUZDnA1tQ7IHFaBMQ_FA5nciMB';
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
+        let currentTeacherEmail = '';
 
-        let teachersDB = [];
-        let studentsDB = [];
-        let currentUser = null;
+        const subjectsList = [
+            "ENGLISH LANGUAGE", "MATHEMATICS", "SCIENCE", "R. M. E.", 
+            "CREATIVE ARTS", "HISTORY", "COMPUTING", "GHANAIAN LANGUAGE", "O. W. O. P."
+        ];
 
-        window.addEventListener('DOMContentLoaded', () => {
-            const now = new Date();
-            const month = now.getMonth();
-            const day = now.getDate();
-            if (month === 11) {
-                changeTheme('christmas');
-                document.getElementById('seasonal-notice').innerText = "🎄 Merry Christmas & Happy Holidays from Wesley Prep!";
-            } else if (month === 2 && day <= 10) {
-                changeTheme('independence');
-                document.getElementById('seasonal-notice').innerText = "🇬🇭 Happy Independence Day from Wesley Prep!";
-            }
-
-            // Fetch Teachers from Cloud Firestore
-            db.collection("teachers").onSnapshot((snapshot) => {
-                teachersDB = [];
-                snapshot.forEach((doc) => {
-                    teachersDB.push({ id: doc.id, ...doc.data() });
-                });
-                renderTeachers();
-            });
-
-            // Fetch Students from Cloud Firestore
-            db.collection("students").onSnapshot((snapshot) => {
-                studentsDB = [];
-                snapshot.forEach((doc) => {
-                    studentsDB.push({ id: doc.id, ...doc.data() });
-                });
-                renderRoster();
-            });
-
-            // Fetch Global Announcement from Cloud Firestore
-            db.collection("settings").doc("announcement").onSnapshot((doc) => {
-                if (doc.exists) {
-                    const text = doc.data().text;
-                    document.getElementById('banner-text').innerText = text;
-                    document.getElementById('admin-banner-input').value = text;
-                }
-            });
+        // Build the subject rows dynamically
+        const tbody = document.getElementById('scoresTableBody');
+        subjectsList.forEach((subj, index) => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td class="subject-name">${subj}</td>
+                <td><input type="number" min="0" max="50" class="class-score" data-index="${index}"></td>
+                <td><input type="number" min="0" max="50" class="exams-score" data-index="${index}"></td>
+                <td><input type="text" class="total-score" readonly data-index="${index}"></td>
+                <td><input type="text" class="pos-score" data-index="${index}"></td>
+                <td><input type="text" class="grade-score" data-index="${index}"></td>
+                <td><input type="text" class="remarks-score" data-index="${index}"></td>
+            `;
+            tbody.appendChild(tr);
         });
 
-        function changeTheme(theme) {
-            document.body.className = '';
-            if (theme !== 'normal') document.body.classList.add('theme-' + theme);
-        }
+        // Auto-calculate totals
+        document.querySelectorAll('#scoresTableBody tr').forEach(row => {
+            const classInput = row.querySelector('.class-score');
+            const examsInput = row.querySelector('.exams-score');
+            const totalInput = row.querySelector('.total-score');
 
-        function handleLogin(event) {
-            event.preventDefault();
-            const email = document.getElementById('login-email').value.trim().toLowerCase();
-            const pass = document.getElementById('login-pass').value.trim();
+            const calculate = () => {
+                const c = parseFloat(classInput.value) || 0;
+                const e = parseFloat(examsInput.value) || 0;
+                totalInput.value = (c + e).toFixed(1);
+            };
+            classInput.addEventListener('input', calculate);
+            examsInput.addEventListener('input', calculate);
+        });
 
-            if (email === 'head@wps.com' && pass === '8303') {
-                currentUser = { role: 'admin', name: 'Headmaster' };
-                initApp();
+        // Teacher Login Handler
+        async function loginTeacher() {
+            const email = document.getElementById('teacherEmailInput').value.trim();
+            const password = document.getElementById('teacherPasswordInput').value.trim();
+
+            if (!email || !password) {
+                alert('Please enter both email and password.');
+                return;
+            }
+
+            const { data, error } = await supabaseClient.auth.signInWithPassword({
+                email: email,
+                password: password,
+            });
+
+            if (error) {
+                alert('Login failed: ' + error.message);
             } else {
-                let foundTeacher = teachersDB.find(t => t.email.toLowerCase() === email && t.pass === pass);
-                if (foundTeacher) {
-                    currentUser = { role: 'teacher', name: foundTeacher.name };
-                    initApp();
-                } else {
-                    document.getElementById('login-error').style.display = 'block';
-                }
+                currentTeacherEmail = email;
+                document.getElementById('loggedInUserDisplay').innerText = 'Logged in as: ' + email;
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('portalContent').style.display = 'block';
             }
         }
 
-        function signOut() {
-            currentUser = null;
-            document.getElementById('app-container').style.display = 'none';
-            document.getElementById('login-screen').style.display = 'flex';
-            document.getElementById('login-form').reset();
-            document.getElementById('login-error').style.display = 'none';
+        async function logoutTeacher() {
+            await supabaseClient.auth.signOut();
+            document.getElementById('loginScreen').style.display = 'block';
+            document.getElementById('portalContent').style.display = 'none';
         }
 
-        function initApp() {
-            document.getElementById('login-screen').style.display = 'none';
-            document.getElementById('app-container').style.display = 'flex';
-            
-            const nav = document.getElementById('dynamic-nav');
-            const roleBadge = document.getElementById('display-role');
+        // Save Scores to Supabase Cloud Table
+        async function saveScoresToCloud() {
+            const studentName = document.getElementById('studentNameInput').value.trim();
+            const className = document.getElementById('classNameInput').value;
 
-            if (currentUser.role === 'admin') {
-                roleBadge.innerText = "Admin (Full Access)";
-                nav.innerHTML = `
-                    <li onclick="switchTab('dashboard', this)" class="active">📊 Dashboard</li>
-                    <li onclick="switchTab('register-user', this)">➕ Add / Update User</li>
-                    <li onclick="switchTab('manage-users', this)">👥 Manage Users</li>
-                    <li onclick="switchTab('register-student', this)">🎓 Register Pupils</li>
-                    <li onclick="switchTab('scores', this)">📝 Capture & Score Update</li>
-                    <li onclick="switchTab('reports', this)">📄 Reports, Transcripts & SBA</li>
-                    <li onclick="switchTab('settings', this)">⚙️ Settings & Themes</li>
-                `;
+            if (!studentName) {
+                alert('Please enter the pupil name before saving.');
+                return;
+            }
+
+            const rows = document.querySelectorAll('#scoresTableBody tr');
+            let recordsToInsert = [];
+
+            rows.forEach((row, index) => {
+                const subject = subjectsList[index];
+                const classScore = parseFloat(row.querySelector('.class-score').value) || 0;
+                const examsScore = parseFloat(row.querySelector('.exams-score').value) || 0;
+
+                recordsToInsert.push({
+                    teacher_email: currentTeacherEmail,
+                    student_name: studentName,
+                    class_name: className,
+                    subject: subject,
+                    class_score: classScore,
+                    exams_score: examsScore
+                });
+            });
+
+            const { data, error } = await supabaseClient
+                .from('scores')
+                .insert(recordsToInsert);
+
+            if (error) {
+                alert('Error saving to cloud: ' + error.message);
             } else {
-                roleBadge.innerText = "Teacher (" + currentUser.name + ")";
-                nav.innerHTML = `
-                    <li onclick="switchTab('dashboard', this)" class="active">📊 Dashboard</li>
-                    <li onclick="switchTab('scores', this)">📝 Capture & Score Update</li>
-                    <li onclick="switchTab('reports', this)">📄 Reports, Transcripts & SBA</li>
-                `;
-            }
-        }
-
-        function switchTab(tabName, element) {
-            document.querySelectorAll('.section-panel').forEach(p => p.classList.remove('active'));
-            document.getElementById('tab-' + tabName).classList.add('active');
-            document.querySelectorAll('.nav-links li').forEach(li => li.classList.remove('active'));
-            element.classList.add('active');
-            if(tabName === 'scores') renderScoreTable();
-        }
-
-        async function addTeacher(e) {
-            e.preventDefault();
-            const name = document.getElementById('teach-name').value;
-            const phone = document.getElementById('teach-phone').value;
-            const email = document.getElementById('teach-email').value.trim().toLowerCase();
-            const pass = document.getElementById('teach-pass').value.trim();
-
-            try {
-                await db.collection("teachers").add({ name, phone, email, pass });
-                alert('Teacher registered successfully to the cloud database!');
-                e.target.reset();
-            } catch (err) {
-                alert('Error saving to cloud: ' + err.message);
-            }
-        }
-
-        async function deleteTeacher(docId) {
-            if(confirm('Are you sure you want to remove this teacher from the cloud?')) {
-                try {
-                    await db.collection("teachers").doc(docId).delete();
-                } catch (err) {
-                    alert('Error deleting teacher: ' + err.message);
-                }
-            }
-        }
-
-        function renderTeachers() {
-            const tbody = document.getElementById('teacher-list-table');
-            if (teachersDB.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: #666;">No teachers registered yet.</td></tr>`;
-            } else {
-                tbody.innerHTML = teachersDB.map((t) => `
-                    <tr>
-                        <td>${t.name}</td>
-                        <td>${t.email}</td>
-                        <td>${t.phone}</td>
-                        <td><button class="btn-danger" onclick="deleteTeacher('${t.id}')">Deactivate</button></td>
-                    </tr>
-                `).join('');
-            }
-            document.getElementById('stat-total-teachers').innerText = teachersDB.length;
-        }
-
-        async function registerStudent(e) {
-            e.preventDefault();
-            const name = document.getElementById('reg-name').value;
-            const cls = document.getElementById('reg-class').value;
-            const gender = document.getElementById('reg-gender').value;
-
-            try {
-                await db.collection("students").add({ name, class: cls, gender });
-                alert('Pupil successfully enrolled in the cloud database!');
-                e.target.reset();
-            } catch (err) {
-                alert('Error enrolling pupil: ' + err.message);
-            }
-        }
-
-        function renderRoster() {
-            const tbody = document.getElementById('student-roster-table');
-            if (studentsDB.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="3" style="text-align: center; color: #666;">No pupils registered yet.</td></tr>`;
-            } else {
-                tbody.innerHTML = studentsDB.map(s => `<tr><td>${s.name}</td><td>${s.class}</td><td>${s.gender}</td></tr>`).join('');
-            }
-            document.getElementById('stat-total-pupils').innerText = studentsDB.length;
-        }
-
-        function renderScoreTable() {
-            const selectedClass = document.getElementById('score-class').value;
-            const tbody = document.getElementById('score-table-body');
-            const classStudents = studentsDB.filter(s => s.class === selectedClass);
-
-            if (classStudents.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: #666;">No pupils registered for ${selectedClass} yet.</td></tr>`;
-            } else {
-                tbody.innerHTML = classStudents.map(s => `
-                    <tr>
-                        <td>${s.name}</td>
-                        <td><input type="number" value="0" style="width:60px;"></td>
-                        <td><input type="number" value="0" style="width:60px;"></td>
-                        <td>0</td>
-                        <td><button class="btn-action" style="padding:4px 8px;" onclick="alert('Score synced to cloud!')">✓ Correct Mark</button></td>
-                    </tr>
-                `).join('');
-            }
-        }
-
-        async function updateBanner() {
-            const text = document.getElementById('admin-banner-input').value.trim();
-            if(text) {
-                try {
-                    await db.collection("settings").doc("announcement").set({ text: text });
-                    alert('Global announcement published to cloud successfully!');
-                } catch (err) {
-                    alert('Error publishing announcement: ' + err.message);
-                }
+                alert('All scores successfully saved to the Wesley Preparatory cloud database!');
             }
         }
     </script>
