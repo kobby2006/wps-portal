@@ -95,7 +95,6 @@
 
     <!-- Teacher Login Screen -->
     <div id="loginScreen">
-        <!-- School Badge on Login Page -->
         <div class="login-badge-container">
             <img src="badge.jpg" alt="School Badge" class="login-school-badge" onerror="this.style.display='none'">
         </div>
@@ -256,9 +255,9 @@
     </div>
 
     <script>
-        // Supabase Initialization
+        // Supabase Initialization with correct anon key
         const SUPABASE_URL = 'https://lhqacoxyfyklxjhabzfe.supabase.co';
-        const SUPABASE_KEY = 'Sb_publishable_3zcdTnUZDnA1tQ7IHFaBMQ_FA5nciMB';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxocWFjb3h5ZnlrbHhqaGFiemZlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI1MTA2NTksImV4cCI6MjEwODA4NjY1OX0.w7eqLoS5uKKCGpTxGunl2iD3oDEzRxPaUQ2EbhsGSDA';
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         let currentTeacherEmail = '';
