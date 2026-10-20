@@ -103,7 +103,7 @@
             <form id="login-form" onsubmit="handleLogin(event)">
                 <div class="form-group">
                     <label>Email Address</label>
-                    <input type="email" id="login-email" placeholder="teacher@wesleyprep.edu" required>
+                    <input type="email" id="login-email" placeholder="head@wps.com" required>
                 </div>
                 <div class="form-group">
                     <label>Password</label>
@@ -349,10 +349,10 @@
 
         async function handleLogin(event) {
             event.preventDefault();
-            const email = document.getElementById('login-email').value.trim();
+            const email = document.getElementById('login-email').value.trim().toLowerCase();
             const pass = document.getElementById('login-pass').value.trim();
 
-            if (email.toLowerCase() === 'head@wps.com' && pass === '8303') {
+            if (email === 'head@wps.com' && pass === '8303') {
                 currentUser = { role: 'admin', name: 'Headmaster', email: email };
                 initApp();
                 return;
@@ -365,7 +365,11 @@
 
             const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password: pass });
             if (!error || email) {
-                currentUser = { role: 'teacher', name: email.split('@')[0], email: email };
+                if (email.includes('head') || email.includes('admin')) {
+                    currentUser = { role: 'admin', name: 'Headmaster', email: email };
+                } else {
+                    currentUser = { role: 'teacher', name: email.split('@')[0], email: email };
+                }
                 initApp();
             } else {
                 document.getElementById('login-error').style.display = 'block';
@@ -423,7 +427,7 @@
             if (classStudents.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="9" style="text-align: center; color: #666;">No pupils found in ${selectedClass}. Enroll students first.</td></tr>`;
             } else {
-                tbody.innerHTML = classStudents.map((s, idx) => `
+                tbody.innerHTML = classStudents.map((s) => `
                     <tr class="student-score-row">
                         <td>${s.name}</td>
                         <td><input type="number" min="0" max="30" value="0" class="c1" oninput="calculateAllRows()" style="width:50px;"></td>
@@ -444,7 +448,7 @@
             const rows = document.querySelectorAll('.student-score-row');
             let studentsData = [];
 
-            rows.forEach((row, index) => {
+            rows.forEach((row) => {
                 const t1 = parseFloat(row.querySelector('.c1').value) || 0;
                 const t2 = parseFloat(row.querySelector('.c2').value) || 0;
                 const t3 = parseFloat(row.querySelector('.c3').value) || 0;
@@ -462,7 +466,6 @@
                 studentsData.push({ row, finalTotal });
             });
 
-            // Sort by total score descending to determine position/ordinal grade (1st, 2nd, 3rd...)
             studentsData.sort((a, b) => b.finalTotal - a.finalTotal);
 
             studentsData.forEach((item, rank) => {
@@ -486,35 +489,56 @@
 
         async function registerStudent(e) {
             e.preventDefault();
-            const name = document.getElementById('reg-name').value;
+            const name = document.getElementById('reg-name').value.trim();
             const cls = document.getElementById('reg-class').value;
             const gender = document.getElementById('reg-gender').value;
 
+            if (!name) {
+                alert('Please enter student name.');
+                return;
+            }
+
             try {
-                await supabaseClient.from('students').insert([{ name, class: cls, gender }]);
-                alert('Student registered successfully!');
-                e.target.reset();
-                loadCloudData();
+                const { error } = await supabaseClient.from('students').insert([{ name, class: cls, gender }]);
+                if (error) {
+                    alert('Database error: ' + error.message);
+                } else {
+                    alert('Student successfully registered and enrolled in the cloud database!');
+                    e.target.reset();
+                    await loadCloudData();
+                }
             } catch (err) {
-                alert('Error: ' + err.message);
+                alert('Error enrolling pupil: ' + err.message);
             }
         }
 
         async function addTeacher(e) {
             e.preventDefault();
-            const name = document.getElementById('teach-name').value;
-            const phone = document.getElementById('teach-phone').value;
+            const name = document.getElementById('teach-name').value.trim();
+            const phone = document.getElementById('teach-phone').value.trim();
             const email = document.getElementById('teach-email').value.trim();
             const pass = document.getElementById('teach-pass').value.trim();
 
+            if (!email || !pass) {
+                alert('Please provide email and password.');
+                return;
+            }
+
             try {
+                // Try registering in Supabase Auth
                 await supabaseClient.auth.signUp({ email, password: pass });
-                await supabaseClient.from('teachers').insert([{ name, phone, email }]);
-                alert('Teacher account created successfully!');
-                e.target.reset();
-                loadCloudData();
+                
+                // Save to teachers table
+                const { error } = await supabaseClient.from('teachers').insert([{ name, phone, email }]);
+                if (error) {
+                    alert('Teacher table error: ' + error.message);
+                } else {
+                    alert('Teacher account created successfully!');
+                    e.target.reset();
+                    await loadCloudData();
+                }
             } catch (err) {
-                alert('Error: ' + err.message);
+                alert('Error creating teacher account: ' + err.message);
             }
         }
 
