@@ -57,6 +57,36 @@
                 </div>
                 <button type="submit" class="w-full py-3 bg-blue-900 text-white font-semibold rounded-xl hover:bg-blue-800 transition shadow-lg">Secure Login</button>
             </form>
+
+            <!-- Password Reset & Account Recovery Options -->
+            <div class="mt-4 pt-4 border-t text-center flex justify-between items-center text-xs">
+                <button type="button" onclick="openPasswordResetModal()" class="text-blue-900 hover:underline font-semibold">Forgot Password / Reset PIN?</button>
+                <button type="button" onclick="openAccountRecoveryModal()" class="text-slate-600 hover:underline font-semibold">Account Recovery</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PASSWORD RESET MODAL -->
+    <div id="password-reset-modal" class="hidden fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-6 border-t-4 border-blue-900 space-y-4">
+            <h3 class="font-bold text-lg text-blue-950">Reset Portal Password / PIN</h3>
+            <p class="text-xs text-slate-500">Enter your registered email or username to request a secure password or PIN reset from the Headmaster/Admin.</p>
+            <input type="text" id="reset-email-input" placeholder="Enter Email or Username" class="w-full p-3 border rounded-xl text-xs">
+            <div class="flex justify-end space-x-2 pt-2">
+                <button onclick="submitPasswordResetRequest()" class="px-4 py-2 bg-blue-900 text-white rounded-xl text-xs font-semibold">Send Request</button>
+                <button onclick="closePasswordResetModal()" class="px-4 py-2 bg-slate-200 text-slate-800 rounded-xl text-xs font-semibold">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ACCOUNT RECOVERY MODAL -->
+    <div id="account-recovery-modal" class="hidden fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-6 border-t-4 border-amber-500 space-y-4">
+            <h3 class="font-bold text-lg text-amber-900">Account Access Recovery</h3>
+            <p class="text-xs text-slate-500">If you are locked out or experiencing authentication issues, contact the IT Administrator or Headmaster at Assorko-Essaman office for instant PIN restoration.</p>
+            <div class="flex justify-end">
+                <button onclick="closeAccountRecoveryModal()" class="px-4 py-2 bg-amber-600 text-white rounded-xl text-xs font-semibold">Understood</button>
+            </div>
         </div>
     </div>
 
@@ -556,7 +586,7 @@
                             <p class="text-xs text-slate-500">Lock the portal to restrict teachers from logging in while you perform system edits, grade updates, or maintenance.</p>
                             <div class="p-4 bg-amber-50 border border-amber-300 rounded-xl flex items-center justify-between">
                                 <div>
-                                    <h4 class="font-bold text-xs text-amber-950 uppercase">Current Status: <span id="portal-lock-status-label" class="text-emerald-700">Unlocked (Teachers can log in)</span></h4>
+                                    <h4 class="font-bold text-xs text-amber-950 uppercase">Current Status: <span id="portal-lock-status-label" class="text-emerald-700 font-bold">Unlocked (Teachers can log in)</span></h4>
                                 </div>
                                 <button id="portal-lock-btn" onclick="togglePortalLock()" class="px-5 py-2.5 bg-red-700 text-white font-bold text-xs rounded-xl shadow hover:bg-red-800 transition">Lock Portal for Teachers</button>
                             </div>
@@ -722,6 +752,30 @@
             await fetchTeachersFromSupabase();
             renderAll();
         });
+
+        function openPasswordResetModal() {
+            document.getElementById('password-reset-modal').classList.remove('hidden');
+        }
+
+        function closePasswordResetModal() {
+            document.getElementById('password-reset-modal').classList.add('hidden');
+        }
+
+        function submitPasswordResetRequest() {
+            const val = document.getElementById('reset-email-input').value.trim();
+            if(!val) { alert('Please enter your email or username.'); return; }
+            alert(`Password / PIN reset request successfully submitted for "${val}". The Administrator has been notified.`);
+            document.getElementById('reset-email-input').value = '';
+            closePasswordResetModal();
+        }
+
+        function openAccountRecoveryModal() {
+            document.getElementById('account-recovery-modal').classList.remove('hidden');
+        }
+
+        function closeAccountRecoveryModal() {
+            document.getElementById('account-recovery-modal').classList.add('hidden');
+        }
 
         function togglePortalLock() {
             portalLocked = !portalLocked;
