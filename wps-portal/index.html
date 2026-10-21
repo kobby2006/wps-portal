@@ -26,7 +26,6 @@
     <div id="auth-screen" class="fixed inset-0 bg-slate-900/90 z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 border-t-4 border-blue-900">
             <div class="text-center mb-6 flex flex-col items-center">
-                <!-- AUTHENTIC WESLEY PREP BADGE EMBLEM -->
                 <div class="w-24 h-24 mb-3 rounded-full bg-amber-50 border-4 border-blue-900 shadow-lg flex flex-col items-center justify-center relative overflow-hidden p-1">
                     <div class="absolute inset-0 bg-gradient-to-b from-blue-950 to-blue-900 opacity-95"></div>
                     <div class="relative z-10 flex flex-col items-center text-center">
@@ -35,8 +34,8 @@
                         <span class="text-[7px] font-bold tracking-tight text-amber-200">ASSORKO - ESSAMAN</span>
                     </div>
                 </div>
-                <h1 class="text-2xl font-bold text-slate-900">Wesley Preparatory School</h1>
-                <p class="text-xs text-slate-500 font-semibold uppercase tracking-wider mt-1">Knowledge and Integrity</p>
+                <h1 id="login-school-title" class="text-2xl font-bold text-slate-900">Wesley Preparatory School</h1>
+                <p id="login-school-motto" class="text-xs text-slate-500 font-semibold uppercase tracking-wider mt-1">Knowledge and Integrity</p>
             </div>
             <form id="login-form" class="space-y-4">
                 <div>
@@ -59,12 +58,15 @@
         </div>
     </div>
 
-    <!-- ANNOUNCEMENT POPUP MODAL FOR TEACHERS -->
+    <!-- ANNOUNCEMENT & BIRTHDAY POPUP MODAL -->
     <div id="announcement-modal" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full p-6 border-t-4 border-amber-500 space-y-4">
             <div class="flex justify-between items-center">
-                <h3 class="font-bold text-lg text-blue-900">📢 New School Announcement</h3>
-                <span class="text-xs bg-amber-100 text-amber-800 px-2.5 py-1 rounded-full font-bold">Priority Notice</span>
+                <h3 class="font-bold text-lg text-blue-900" id="modal-title-header">📢 Priority School Notice & Birthdays</h3>
+                <span class="text-xs bg-amber-100 text-amber-800 px-2.5 py-1 rounded-full font-bold">Important</span>
+            </div>
+            <div id="modal-announcement-image-container" class="hidden text-center">
+                <img id="modal-announcement-img" src="" alt="Announcement or Birthday" class="max-h-56 mx-auto rounded-xl shadow-md object-cover border">
             </div>
             <div id="modal-announcement-text" class="text-slate-700 bg-slate-50 p-4 rounded-xl border text-sm leading-relaxed">
                 Welcome to Wesley Preparatory School Portal.
@@ -99,8 +101,8 @@
                     </div>
                 </div>
                 <div>
-                    <h2 class="font-bold text-base leading-tight">Wesley Preparatory School</h2>
-                    <p class="text-[11px] text-amber-200 font-medium">Assorko-Essaman • Standard Fee: GH₵ 300</p>
+                    <h2 id="nav-school-name" class="font-bold text-base leading-tight">Wesley Preparatory School</h2>
+                    <p id="nav-school-info" class="text-[11px] text-amber-200 font-medium">Assorko-Essaman • Standard Fee: GH₵ 300</p>
                 </div>
             </div>
             <div class="flex items-center space-x-4">
@@ -126,9 +128,9 @@
                     <button onclick="switchTab('students')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🎓 <span>Student Enrollment</span></button>
                     <button onclick="switchTab('teachers')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">👨‍🏫 <span>Teacher Accounts</span></button>
                     <button onclick="switchTab('classes')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🏫 <span>Manage Classes (1-6 & JHS)</span></button>
-                    <button onclick="switchTab('announcements')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📢 <span>Post Announcements</span></button>
-                    <button onclick="switchTab('gallery')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🖼️ <span>Photos & Class Activities</span></button>
-                    <button onclick="switchTab('config')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">⚙️ <span>School Settings & Themes</span></button>
+                    <button onclick="switchTab('announcements')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📢 <span>Announcements & Birthdays</span></button>
+                    <button onclick="switchTab('gallery')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🖼️ <span>Photo Gallery & JPG Uploads</span></button>
+                    <button onclick="switchTab('profile')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">⚙️ <span>School Profile & Branding</span></button>
                 </div>
 
                 <!-- Teacher Nav -->
@@ -148,7 +150,7 @@
                     <div class="bg-gradient-to-r from-blue-950 to-blue-900 text-white p-6 rounded-2xl shadow-lg flex justify-between items-center border-l-4 border-amber-500">
                         <div>
                             <h2 class="text-2xl font-bold">Welcome Back, <span id="welcome-name">User</span>!</h2>
-                            <p class="text-blue-200 text-sm mt-1">Wesley Preparatory School, Assorko-Essaman — Knowledge and Integrity.</p>
+                            <p id="dashboard-motto-display" class="text-blue-200 text-sm mt-1">Wesley Preparatory School, Assorko-Essaman — Knowledge and Integrity.</p>
                         </div>
                         <div class="hidden md:block text-right">
                             <span class="px-3 py-1 bg-amber-500 text-slate-950 text-xs font-bold rounded-full">Standard Fee: GH₵ 300</span>
@@ -232,7 +234,11 @@
                             </table>
                         </div>
                     </div>
-                    <div class="flex justify-end">
+                    <div class="flex flex-wrap justify-between items-center gap-3">
+                        <div class="flex gap-2">
+                            <button onclick="exportAssessmentSheet('pdf')" class="px-4 py-2 bg-slate-800 text-white text-xs font-semibold rounded-lg hover:bg-slate-700">Download Assessment PDF 📄</button>
+                            <button onclick="exportAssessmentSheet('doc')" class="px-4 py-2 bg-blue-800 text-white text-xs font-semibold rounded-lg hover:bg-blue-700">Download Assessment Word (.doc) 📝</button>
+                        </div>
                         <button onclick="finalizeReports()" class="px-6 py-3 bg-amber-600 hover:bg-amber-700 text-white font-bold rounded-xl shadow-lg transition">Finalize & Push Reports to Student History ➔</button>
                     </div>
                 </section>
@@ -242,9 +248,9 @@
                     <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 flex justify-between items-center">
                         <div>
                             <h2 class="text-xl font-bold text-slate-900">Student History & Official Report Cards</h2>
-                            <p class="text-xs text-slate-500">Archived reports with official badge branding, fee arrears, and next-term requirements.</p>
+                            <p class="text-xs text-slate-500">Edit next-term requirements, customize remarks, and download report cards in PDF, Word, or text format.</p>
                         </div>
-                        <button onclick="window.print()" class="px-4 py-2 bg-slate-800 text-white text-xs font-semibold rounded-lg hover:bg-slate-700 no-print">Print / Export All</button>
+                        <button onclick="window.print()" class="px-4 py-2 bg-slate-800 text-white text-xs font-semibold rounded-lg hover:bg-slate-700 no-print">Print All Reports</button>
                     </div>
                     <div id="history-container" class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <p class="text-slate-500 italic p-4">No reports finalized yet. Click "Finalize & Push Reports" from the SBA grading tab.</p>
@@ -278,12 +284,22 @@
                     </div>
                 </section>
 
-                <!-- TAB: FEE MANAGEMENT -->
+                <!-- TAB: FEE MANAGEMENT (Class Filtered) -->
                 <section id="tab-fees" class="hidden space-y-6">
-                    <div class="bg-white p-6 rounded-2xl shadow border border-slate-100">
-                        <h2 class="text-xl font-bold text-slate-900">Fee Management & Receipts (Standard: GH₵ 300)</h2>
-                        <p class="text-xs text-slate-500 mb-4">Edit student fees, track payments, print official receipts, and monitor balances.</p>
-                        <div class="overflow-x-auto">
+                    <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-4">
+                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                            <div>
+                                <h2 class="text-xl font-bold text-slate-900">Fee Management & Receipts (Standard: GH₵ 300)</h2>
+                                <p class="text-xs text-slate-500">Select a class to view its members, edit fees, record payments, and print receipts.</p>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Filter by Class</label>
+                                <select id="fee-class-filter" onchange="renderFeesTable()" class="p-2 border rounded-xl text-sm bg-slate-50 font-medium w-48">
+                                    <!-- Dynamic classes -->
+                                </select>
+                            </div>
+                        </div>
+                        <div class="overflow-x-auto pt-2">
                             <table class="w-full text-left border-collapse">
                                 <thead class="bg-slate-100 text-xs uppercase font-bold text-slate-600">
                                     <tr>
@@ -296,7 +312,7 @@
                                     </tr>
                                 </thead>
                                 <tbody id="fees-table-body" class="divide-y divide-slate-100 text-sm">
-                                    <tr><td colspan="6" class="p-6 text-center text-slate-400 italic">No fee records found.</td></tr>
+                                    <tr><td colspan="6" class="p-6 text-center text-slate-400 italic">No fee records found for this class.</td></tr>
                                 </tbody>
                             </table>
                         </div>
@@ -351,24 +367,35 @@
                     </div>
                 </section>
 
-                <!-- TAB: POST ANNOUNCEMENTS (Admin) -->
+                <!-- TAB: ANNOUNCEMENTS & BIRTHDAYS (Admin) -->
                 <section id="tab-announcements" class="hidden space-y-6">
-                    <div class="bg-white p-6 rounded-2xl shadow border border-slate-100">
-                        <h2 class="text-xl font-bold text-slate-900">Publish Global School Announcement</h2>
-                        <p class="text-xs text-slate-500 mb-4">When posted, this will immediately pop up for teachers upon login and stay in their portal.</p>
-                        <textarea id="announcement-text" rows="4" class="w-full p-3 border rounded-xl" placeholder="Type announcement for all staff and teachers..."></textarea>
-                        <button onclick="postAnnouncement()" class="mt-4 px-6 py-2.5 bg-blue-900 text-white font-bold rounded-xl">Publish Announcement</button>
+                    <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-4">
+                        <h2 class="text-xl font-bold text-slate-900">Publish Priority Announcement & Birthday Celebration</h2>
+                        <p class="text-xs text-slate-500">Upload announcement details and celebration photos to pop up when teachers and users log in.</p>
+                        <div>
+                            <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Upload Notice / Birthday Photo</label>
+                            <input type="file" id="announcement-photo-input" accept="image/*" class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Announcement / Birthday Message</label>
+                            <textarea id="announcement-text" rows="4" class="w-full p-3 border rounded-xl" placeholder="Type announcement or birthday shoutout for staff and teachers..."></textarea>
+                        </div>
+                        <button onclick="postAnnouncement()" class="px-6 py-2.5 bg-blue-900 text-white font-bold rounded-xl">Publish Announcement & Photo</button>
                     </div>
                 </section>
 
-                <!-- TAB: ADMIN GALLERY & CLASS ACTIVITIES (Admin) -->
+                <!-- TAB: PHOTO GALLERY & MULTIPLE JPG UPLOADS -->
                 <section id="tab-gallery" class="hidden space-y-6">
-                    <div class="bg-white p-6 rounded-2xl shadow border border-slate-100">
-                        <h2 class="text-xl font-bold text-slate-900">School Photos & Class Activities Lab</h2>
-                        <p class="text-xs text-slate-500 mb-4">Upload event photos, class activities, and sports pictures for teachers to download.</p>
-                        <input type="file" id="photo-file" accept="image/*" class="mb-4 block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
-                        <button onclick="uploadPhoto()" class="px-6 py-2.5 bg-blue-900 text-white font-bold rounded-xl">Upload Photo / Activity</button>
-                        <div id="gallery-grid" class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6"></div>
+                    <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-4">
+                        <h2 class="text-xl font-bold text-slate-900">School Photo Gallery & Multiple JPG Uploads</h2>
+                        <p class="text-xs text-slate-500">Select multiple event photos, sports pictures, or class activities to upload simultaneously. All photos can be downloaded in JPG format.</p>
+                        <div class="flex flex-col md:flex-row gap-3 items-center">
+                            <input type="file" id="multi-photo-file" accept="image/*" multiple class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                            <button onclick="uploadMultiplePhotos()" class="px-6 py-2.5 bg-blue-900 text-white font-bold rounded-xl whitespace-nowrap">Upload Photos (JPG)</button>
+                        </div>
+                        <div id="gallery-grid" class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+                            <p class="text-slate-400 italic text-sm">No photos uploaded yet.</p>
+                        </div>
                     </div>
                 </section>
 
@@ -376,7 +403,7 @@
                 <section id="tab-teacher-gallery" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl shadow border border-slate-100">
                         <h2 class="text-xl font-bold text-slate-900">School Photo Gallery & Class Activities</h2>
-                        <p class="text-xs text-slate-500 mb-4">View and download school event photos uploaded by administration directly to your phone or device.</p>
+                        <p class="text-xs text-slate-500 mb-4">View and download school event photos uploaded in JPG format directly to your device.</p>
                         <div id="teacher-gallery-grid" class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
                             <p class="text-slate-400 italic text-sm">No photos uploaded by administration yet.</p>
                         </div>
@@ -386,25 +413,38 @@
                 <!-- TAB: TEACHER ANNOUNCEMENTS VIEW -->
                 <section id="tab-teacher-announcements" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-4">
-                        <h2 class="text-xl font-bold text-slate-900">Official School Announcements</h2>
-                        <div id="teacher-announcement-display" class="p-4 bg-amber-50 rounded-xl border border-amber-200 text-sm text-slate-800">
-                            Welcome to Wesley Preparatory School Portal.
+                        <h2 class="text-xl font-bold text-slate-900">Official School Announcements & Birthdays</h2>
+                        <div id="teacher-announcement-display-container" class="space-y-4">
+                            <div id="teacher-announcement-image-display" class="hidden text-center">
+                                <img id="teacher-announcement-img-preview" src="" alt="Announcement" class="max-h-64 mx-auto rounded-xl shadow border">
+                            </div>
+                            <div id="teacher-announcement-display" class="p-4 bg-amber-50 rounded-xl border border-amber-200 text-sm text-slate-800">
+                                Welcome to Wesley Preparatory School Portal.
+                            </div>
                         </div>
                     </div>
                 </section>
 
-                <!-- TAB: CONFIGURATION & THEMES -->
-                <section id="tab-config" class="hidden space-y-6">
+                <!-- TAB: SCHOOL PROFILE & BRANDING SETTINGS -->
+                <section id="tab-profile" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-4">
-                        <h2 class="text-xl font-bold text-slate-900">School Configuration & Netlify Theme Imports</h2>
-                        <div>
-                            <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Select Custom Theme / Badge Color</label>
-                            <select id="theme-selector" onchange="applyTheme(this.value)" class="p-3 border rounded-xl w-full">
-                                <option value="badge-navy">Wesley Badge Navy & Gold (#1e3a8a)</option>
-                                <option value="emerald-green">Emerald Green</option>
-                                <option value="slate-dark">Slate Professional</option>
-                            </select>
+                        <h2 class="text-xl font-bold text-slate-900">School Profile, Motto & Branding Settings</h2>
+                        <p class="text-xs text-slate-500">Customize the school's official name, badge subtitle, motto, and contact information across the portal.</p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold uppercase text-slate-600 mb-1">School Name</label>
+                                <input type="text" id="profile-school-name" value="Wesley Preparatory School" class="p-3 border rounded-xl w-full font-medium">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Location / Subtitle</label>
+                                <input type="text" id="profile-school-location" value="Assorko-Essaman" class="p-3 border rounded-xl w-full font-medium">
+                            </div>
+                            <div class="md:col-span-2">
+                                <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Official School Motto</label>
+                                <input type="text" id="profile-school-motto" value="Knowledge and Integrity" class="p-3 border rounded-xl w-full font-medium">
+                            </div>
                         </div>
+                        <button onclick="saveSchoolProfile()" class="px-6 py-3 bg-blue-900 text-white font-bold rounded-xl hover:bg-blue-800">Save School Profile & Branding</button>
                     </div>
                 </section>
 
@@ -414,16 +454,23 @@
 
     <!-- JAVASCRIPT APPLICATION CORE -->
     <script>
-        // Supabase Initialization with Your Exact Key
+        // Supabase Initialization
         const SUPABASE_URL = 'https://lhqacoxyfyklxjhabzfe.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxocWFjb3h5ZnlrbHhqaGFiemZlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI1MTA2NTksImV4cCI6MjEwODA4NjY1OX0.w7eqLoS5uKKCGpTxGunl2iD3oDEzRxPaUQ2EbhsGSDA';
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         let currentUser = null;
         let globalAnnouncementText = "Welcome to Wesley Preparatory School. Please ensure all student records and SBA scores are updated promptly.";
+        let globalAnnouncementImgUrl = "";
         let classesData = ['Basic 1', 'Basic 2', 'Basic 3', 'Basic 4', 'Basic 5', 'Basic 6', 'JHS 1', 'JHS 2', 'JHS 3'];
         let studentsData = [];
         let teachersData = [];
+        let galleryPhotos = [];
+        let schoolProfile = {
+            name: "Wesley Preparatory School",
+            location: "Assorko-Essaman",
+            motto: "Knowledge and Integrity"
+        };
         let timetableText = "📅 Current Schedule: Morning Devotion (07:30 - 08:00) | Core Subjects & Practical Sessions (08:00 - 14:00).";
 
         // Login Handler
@@ -442,7 +489,15 @@
                 document.getElementById('admin-nav-section').classList.add('hidden');
                 document.getElementById('teacher-nav-section').classList.remove('hidden');
                 switchTab('timetable');
+                
+                // Show announcement & birthday popup
                 document.getElementById('modal-announcement-text').innerText = globalAnnouncementText;
+                if(globalAnnouncementImgUrl) {
+                    document.getElementById('modal-announcement-img').src = globalAnnouncementImgUrl;
+                    document.getElementById('modal-announcement-image-container').classList.remove('hidden');
+                } else {
+                    document.getElementById('modal-announcement-image-container').classList.add('hidden');
+                }
                 document.getElementById('announcement-modal').classList.remove('hidden');
             } else {
                 document.getElementById('admin-nav-section').classList.remove('hidden');
@@ -453,7 +508,7 @@
             renderAll();
         });
 
-        // Fetch students from Supabase database safely matching column 'name'
+        // Fetch students from Supabase database
         async function fetchStudentsFromSupabase() {
             try {
                 const { data, error } = await supabaseClient.from('students').select('*');
@@ -466,7 +521,9 @@
                         sba: s.sba || 0,
                         exam: s.exam || 0,
                         feeBilled: s.fee_billed || 300,
-                        feePaid: s.fee_paid || 0
+                        feePaid: s.fee_paid || 0,
+                        nextTermRequirements: s.nextTermRequirements || '2 brooms, 1 box of chalk, 1 set of mathematical instruments.',
+                        resumptionDate: s.resumptionDate || 'Monday, Next Month'
                     }));
                 }
             } catch(err) {
@@ -485,7 +542,7 @@
         function logout() { location.reload(); }
 
         function switchTab(tabId) {
-            ['dashboard', 'assessment', 'history', 'attendance', 'timetable', 'fees', 'classes', 'students', 'teachers', 'announcements', 'gallery', 'teacher-gallery', 'teacher-announcements', 'config'].forEach(t => {
+            ['dashboard', 'assessment', 'history', 'attendance', 'timetable', 'fees', 'classes', 'students', 'teachers', 'announcements', 'gallery', 'teacher-gallery', 'teacher-announcements', 'profile'].forEach(t => {
                 const el = document.getElementById(`tab-${t}`);
                 if(el) el.classList.add('hidden');
             });
@@ -497,12 +554,14 @@
                 renderGradingTable();
             }
             if(tabId === 'fees') {
+                renderFeeClassDropdown();
                 renderFeesTable();
             }
         }
 
         function renderAll() {
             renderClassesDropdown();
+            renderFeeClassDropdown();
             renderClassesList();
             renderGradingTable();
             renderFeesTable();
@@ -523,6 +582,15 @@
                 const currentGradVal = selectGrading.value;
                 selectGrading.innerHTML = classesData.map(c => `<option value="${c}">${c}</option>`).join('');
                 if(currentGradVal) selectGrading.value = currentGradVal;
+            }
+        }
+
+        function renderFeeClassDropdown() {
+            const feeFilter = document.getElementById('fee-class-filter');
+            if(feeFilter) {
+                const currentFeeVal = feeFilter.value;
+                feeFilter.innerHTML = classesData.map(c => `<option value="${c}">${c}</option>`).join('');
+                if(currentFeeVal) feeFilter.value = currentFeeVal;
             }
         }
 
@@ -563,7 +631,7 @@
             }
         }
 
-        // Student Enrollment Form Submission (Uses exact column 'name')
+        // Student Enrollment Form Submission
         document.getElementById('student-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const name = document.getElementById('s-name').value;
@@ -571,7 +639,7 @@
             const gender = document.getElementById('s-gender').value;
 
             try {
-                const { data, error } = await supabaseClient.from('students').insert([{ name: name, class: className, gender: gender }]);
+                const { error } = await supabaseClient.from('students').insert([{ name: name, class: className, gender: gender }]);
                 if(error) {
                     alert('Error saving to Supabase: ' + error.message);
                     return;
@@ -651,56 +719,110 @@
             return s[(v - 20) % 10] || s[v] || s[0];
         }
 
+        // Export Assessment Sheet to PDF / Word
+        function exportAssessmentSheet(format) {
+            const subject = document.getElementById('grading-subject-filter').value;
+            const term = document.getElementById('grading-term-filter').value;
+            const className = document.getElementById('grading-class-filter').value;
+            
+            let content = `${schoolProfile.name.toUpperCase()}\nASSESSMENT GRADING SHEET\nClass: ${className} | Subject: ${subject} | Term: ${term}\n\n`;
+            content += "Student Name\tSBA (50%)\tExam (50%)\tTotal (100%)\tPosition\n";
+            content += "------------------------------------------------------------\n";
+            
+            const filtered = studentsData.filter(s => s.class === className);
+            filtered.forEach(s => {
+                content += `${s.name}\t${s.sba || 0}\t${s.exam || 0}\t${(s.sba||0)+(s.exam||0)}\t${s.position || 'Pending'}\n`;
+            });
+
+            const blob = new Blob([content], { type: format === 'pdf' ? 'application/pdf' : 'application/msword' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${className}_${subject}_Assessment_Sheet.${format === 'pdf' ? 'pdf' : 'doc'}`;
+            a.click();
+            alert(`Assessment sheet successfully downloaded as ${format.toUpperCase()}!`);
+        }
+
         function finalizeReports() {
             if(studentsData.length === 0) { alert('No student reports to finalize.'); return; }
             const term = document.getElementById('grading-term-filter').value;
             const subject = document.getElementById('grading-subject-filter').value;
 
             const history = document.getElementById('history-container');
-            history.innerHTML = studentsData.map(s => `
+            history.innerHTML = studentsData.map((s, idx) => `
                 <div class="bg-white p-6 rounded-2xl shadow border border-slate-200 space-y-3 relative overflow-hidden">
                     <div class="absolute top-2 right-2 w-10 h-10 rounded-full bg-blue-950 border border-amber-400 flex flex-col items-center justify-center text-white text-[6px] font-bold">WPS</div>
                     <div class="flex justify-between items-center border-b pb-3">
                         <div>
                             <h3 class="font-bold text-lg">${s.name}</h3>
-                            <p class="text-xs text-slate-500">Wesley Preparatory School • Assorko-Essaman • ${s.class} (${term})</p>
+                            <p class="text-xs text-slate-500">${schoolProfile.name} • ${schoolProfile.location} • ${s.class} (${term})</p>
                         </div>
                         <span class="px-3 py-1 bg-blue-100 text-blue-900 rounded-full font-bold text-xs">Position: ${s.position || '1st'}</span>
                     </div>
-                    <div class="text-sm space-y-1">
+                    <div class="text-sm space-y-2">
                         <p><strong>Subject:</strong> ${subject}</p>
                         <p><strong>Total Score:</strong> ${s.total || 0} / 100</p>
                         <p><strong>Fee Status:</strong> GH₵ ${s.feePaid} paid / <span class="text-red-600 font-semibold">GH₵ ${s.feeBilled - s.feePaid} arrears</span></p>
-                        <p><strong>Items to Bring Next Term:</strong> 2 brooms, 1 box of chalk, 1 set of mathematical instruments.</p>
-                        <p class="text-xs font-semibold text-blue-900 mt-2">Motto: Knowledge and Integrity</p>
+                        <div>
+                            <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Next Term Requirements & Remarks (Editable by Admin):</label>
+                            <textarea onchange="updateReportField(${idx}, 'nextTermRequirements', this.value)" rows="2" class="w-full p-2 border rounded-lg text-xs">${s.nextTermRequirements}</textarea>
+                        </div>
+                        <p class="text-xs font-semibold text-blue-900 mt-1">Motto: ${schoolProfile.motto}</p>
                     </div>
-                    <button onclick="window.print()" class="mt-2 px-4 py-2 bg-blue-900 text-white text-xs font-semibold rounded-lg no-print">Print Official Report Card</button>
+                    <div class="flex flex-wrap gap-2 no-print pt-2">
+                        <button onclick="window.print()" class="px-3 py-1.5 bg-blue-900 text-white text-xs font-semibold rounded-lg">Print Report Card</button>
+                        <button onclick="downloadReportCard(${idx}, 'pdf')" class="px-3 py-1.5 bg-slate-800 text-white text-xs font-semibold rounded-lg">Download PDF 📄</button>
+                        <button onclick="downloadReportCard(${idx}, 'doc')" class="px-3 py-1.5 bg-blue-800 text-white text-xs font-semibold rounded-lg">Download Word 📝</button>
+                    </div>
                 </div>
             `).join('');
             switchTab('history');
             alert('All student reports successfully finalized and pushed to Student History!');
         }
 
-        // FEE MANAGEMENT & RECEIPT GENERATION FUNCTIONS
+        function updateReportField(index, field, val) {
+            studentsData[index][field] = val;
+        }
+
+        function downloadReportCard(index, format) {
+            const s = studentsData[index];
+            const content = `${schoolProfile.name.toUpperCase()}\nOFFICIAL REPORT CARD\nStudent: ${s.name} | Class: ${s.class}\nTotal Score: ${s.total || 0}/100 | Position: ${s.position || '1st'}\nFee Arrears: GH₵ ${s.feeBilled - s.feePaid}\n\nNext Term Requirements:\n${s.nextTermRequirements}\n\nMotto: ${schoolProfile.motto}`;
+            const blob = new Blob([content], { type: format === 'pdf' ? 'application/pdf' : 'application/msword' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${s.name}_Report_Card.${format === 'pdf' ? 'pdf' : 'doc'}`;
+            a.click();
+            alert(`Report card for ${s.name} downloaded successfully as ${format.toUpperCase()}!`);
+        }
+
+        // CLASS-FILTERED FEE MANAGEMENT & RECEIPTS
         function renderFeesTable() {
+            const feeFilter = document.getElementById('fee-class-filter');
+            const selectedClass = feeFilter ? feeFilter.value : classesData[0];
+            const filteredStudents = studentsData.filter(s => s.class === selectedClass);
             const tbody = document.getElementById('fees-table-body');
+
             if(!tbody) return;
-            if(studentsData.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" class="p-6 text-center text-slate-400 italic">No fee records found. Use the Student Enrollment tab to add students.</td></tr>`;
+            if(filteredStudents.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="p-6 text-center text-slate-400 italic">No fee records found for ${selectedClass}. Use the Student Enrollment tab to add students.</td></tr>`;
                 return;
             }
-            tbody.innerHTML = studentsData.map((s, idx) => `
-                <tr>
-                    <td class="p-3 font-medium">${s.name}</td>
-                    <td class="p-3">${s.class}</td>
-                    <td class="p-3">GH₵ <input type="number" value="${s.feeBilled}" onchange="updateFeeVal(${idx}, 'feeBilled', this.value)" class="w-20 p-1 border rounded font-semibold"></td>
-                    <td class="p-3 text-emerald-700 font-semibold">GH₵ <input type="number" value="${s.feePaid}" onchange="updateFeeVal(${idx}, 'feePaid', this.value)" class="w-20 p-1 border rounded font-semibold"></td>
-                    <td class="p-3 text-red-600 font-bold">GH₵ ${s.feeBilled - s.feePaid}</td>
-                    <td class="p-3 no-print space-x-2">
-                        <button onclick="viewReceipt(${idx})" class="px-3 py-1.5 bg-blue-900 text-white text-xs rounded font-semibold hover:bg-blue-800">Receipt 🖨️</button>
-                    </td>
-                </tr>
-            `).join('');
+            tbody.innerHTML = filteredStudents.map((s) => {
+                const globalIdx = studentsData.findIndex(item => item.id === s.id);
+                return `
+                    <tr>
+                        <td class="p-3 font-medium">${s.name}</td>
+                        <td class="p-3">${s.class}</td>
+                        <td class="p-3">GH₵ <input type="number" value="${s.feeBilled}" onchange="updateFeeVal(${globalIdx}, 'feeBilled', this.value)" class="w-20 p-1 border rounded font-semibold"></td>
+                        <td class="p-3 text-emerald-700 font-semibold">GH₵ <input type="number" value="${s.feePaid}" onchange="updateFeeVal(${globalIdx}, 'feePaid', this.value)" class="w-20 p-1 border rounded font-semibold"></td>
+                        <td class="p-3 text-red-600 font-bold">GH₵ ${s.feeBilled - s.feePaid}</td>
+                        <td class="p-3 no-print space-x-2">
+                            <button onclick="viewReceipt(${globalIdx})" class="px-3 py-1.5 bg-blue-900 text-white text-xs rounded font-semibold hover:bg-blue-800">Receipt 🖨️</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
         }
 
         function updateFeeVal(index, field, val) {
@@ -716,9 +838,9 @@
             content.innerHTML = `
                 <div class="text-center space-y-1 border-b pb-4">
                     <div class="w-12 h-12 mx-auto rounded-full bg-blue-950 border-2 border-amber-400 flex flex-col items-center justify-center text-white text-[7px] font-bold shadow">WPS</div>
-                    <h3 class="font-bold text-lg text-blue-950">Wesley Preparatory School</h3>
-                    <p class="text-[11px] text-slate-500 font-medium">Assorko-Essaman • Official Fee Receipt</p>
-                    <p class="text-[10px] text-amber-800 font-bold uppercase tracking-wider">Motto: Knowledge and Integrity</p>
+                    <h3 class="font-bold text-lg text-blue-950">${schoolProfile.name}</h3>
+                    <p class="text-[11px] text-slate-500 font-medium">${schoolProfile.location} • Official Fee Receipt</p>
+                    <p class="text-[10px] text-amber-800 font-bold uppercase tracking-wider">Motto: ${schoolProfile.motto}</p>
                 </div>
                 <div class="text-sm space-y-2 pt-2">
                     <p><strong>Student Name:</strong> ${s.name}</p>
@@ -784,27 +906,84 @@
             }
         }
 
-        function uploadPhoto() {
-            alert('Photo / Class activity uploaded successfully!');
+        // Multiple Photo Uploads for Gallery with JPG Download support
+        function uploadMultiplePhotos() {
+            const fileInput = document.getElementById('multi-photo-file');
+            if(!fileInput.files || fileInput.files.length === 0) {
+                alert('Please select at least one photo!');
+                return;
+            }
+
+            Array.from(fileInput.files).forEach(file => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    galleryPhotos.push({ url: e.target.result, name: file.name });
+                    renderGalleryGrids();
+                }
+                reader.readAsDataURL(file);
+            });
+
+            alert(`${fileInput.files.length} photo(s) uploaded successfully!`);
+            fileInput.value = '';
+        }
+
+        function renderGalleryGrids() {
             const grid = document.getElementById('gallery-grid');
             const tGrid = document.getElementById('teacher-gallery-grid');
-            const card = `<div class="bg-slate-100 rounded-xl p-3 text-center border"><div class="h-32 bg-blue-900 rounded-lg flex items-center justify-center text-white font-bold text-xs mb-2">School Activity</div><a href="#" download class="text-xs text-blue-900 font-bold hover:underline">Download Photo ⬇️</a></div>`;
-            if(grid) grid.innerHTML += card;
-            if(tGrid) tGrid.innerHTML += card;
+
+            if(galleryPhotos.length === 0) return;
+
+            const html = galleryPhotos.map((p, idx) => `
+                <div class="bg-slate-50 rounded-xl p-3 text-center border space-y-2">
+                    <img src="${p.url}" alt="School Activity" class="h-32 w-full object-cover rounded-lg shadow">
+                    <a href="${p.url}" download="${p.name || 'school_photo.jpg'}" class="block text-xs bg-blue-900 text-white py-1.5 px-3 rounded-lg font-bold hover:bg-blue-800">Download JPG ⬇️</a>
+                </div>
+            `).join('');
+
+            if(grid) grid.innerHTML = html;
+            if(tGrid) tGrid.innerHTML = html;
         }
 
+        // Announcement & Birthday Publisher with Photo
         function postAnnouncement() {
             const text = document.getElementById('announcement-text').value;
-            if(!text) return;
-            globalAnnouncementText = text;
-            document.getElementById('teacher-announcement-display').innerText = text;
-            alert('Announcement published successfully! It will now pop up for all teachers upon login.');
+            const photoInput = document.getElementById('announcement-photo-input');
+            
+            if(!text && (!photoInput.files || photoInput.files.length === 0)) {
+                alert('Please provide announcement text or a photo.');
+                return;
+            }
+
+            globalAnnouncementText = text || "Priority Notice / Birthday Celebration!";
+            
+            if(photoInput.files && photoInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    globalAnnouncementImgUrl = e.target.result;
+                    document.getElementById('teacher-announcement-img-preview').src = globalAnnouncementImgUrl;
+                    document.getElementById('teacher-announcement-image-display').classList.remove('hidden');
+                }
+                reader.readAsDataURL(photoInput.files[0]);
+            }
+
+            document.getElementById('teacher-announcement-display').innerText = globalAnnouncementText;
+            alert('Announcement and birthday photo published successfully! It will now pop up for all teachers upon login.');
             document.getElementById('announcement-text').value = '';
+            photoInput.value = '';
         }
 
-        function applyTheme(theme) {
-            document.documentElement.style.setProperty('--primary', theme === 'emerald-green' ? '#064e3b' : '#1e3a8a');
-            alert('Theme applied successfully!');
+        function saveSchoolProfile() {
+            schoolProfile.name = document.getElementById('profile-school-name').value;
+            schoolProfile.location = document.getElementById('profile-school-location').value;
+            schoolProfile.motto = document.getElementById('profile-school-motto').value;
+
+            document.getElementById('login-school-title').innerText = schoolProfile.name;
+            document.getElementById('login-school-motto').innerText = schoolProfile.motto;
+            document.getElementById('nav-school-name').innerText = schoolProfile.name;
+            document.getElementById('nav-school-info').innerText = `${schoolProfile.location} • Standard Fee: GH₵ 300`;
+            document.getElementById('dashboard-motto-display').innerText = `${schoolProfile.name}, ${schoolProfile.location} — ${schoolProfile.motto}.`;
+
+            alert('School profile, motto, and branding updated successfully across the portal!');
         }
     </script>
 </body>
