@@ -13,11 +13,7 @@
         :root {
             --primary: #1e3a8a; /* Badge Navy Blue */
             --accent: #991b1b;  /* Badge Red */
-            --cream: #fdfbf7;   /* Badge Cream */
         }
-        .theme-primary { background-color: var(--primary); }
-        .theme-text { color: var(--primary); }
-        .badge-border { border: 2px solid var(--primary); }
         @media print {
             .no-print { display: none !important; }
             body { background: white; color: black; }
@@ -29,14 +25,15 @@
     <!-- AUTH & LOGIN SCREEN -->
     <div id="auth-screen" class="fixed inset-0 bg-slate-900/90 z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 border-t-4 border-blue-900">
-            <div class="text-center mb-6">
-                <!-- OFFICIAL WESLEY PREP CIRCULAR BADGE -->
-                <div class="w-24 h-24 mx-auto mb-3 rounded-full bg-slate-900 border-4 border-amber-500 shadow-lg flex flex-col items-center justify-center text-white p-1 text-center relative overflow-hidden">
-                    <div class="absolute inset-0 bg-blue-950 opacity-90"></div>
-                    <div class="relative z-10 flex flex-col items-center">
-                        <div class="text-[9px] font-bold tracking-tighter uppercase text-amber-300">Wesley Prep. Sch.</div>
-                        <div class="w-8 h-8 my-0.5 rounded-full border border-red-600 bg-amber-50 flex items-center justify-center text-[8px] font-extrabold text-blue-900">WPS</div>
-                        <div class="text-[7px] font-semibold tracking-tighter text-amber-200">Assorko-Essaman</div>
+            <div class="text-center mb-6 flex flex-col items-center">
+                <!-- AUTHENTIC WESLEY PREP BADGE EMBLEM -->
+                <div class="w-24 h-24 mb-3 rounded-full bg-amber-50 border-4 border-blue-900 shadow-lg flex flex-col items-center justify-center relative overflow-hidden p-1">
+                    <div class="absolute inset-0 bg-gradient-to-b from-blue-950 to-blue-900 opacity-95"></div>
+                    <!-- Circular Badge Text Simulation -->
+                    <div class="relative z-10 flex flex-col items-center text-center">
+                        <span class="text-[8px] font-bold tracking-tighter uppercase text-amber-300">WESLEY PREP. SCH.</span>
+                        <div class="w-7 h-7 my-0.5 rounded-full border border-red-600 bg-amber-100 flex items-center justify-center text-[7px] font-black text-blue-950 shadow">WPS</div>
+                        <span class="text-[7px] font-bold tracking-tight text-amber-200">ASSORKO - ESSAMAN</span>
                     </div>
                 </div>
                 <h1 class="text-2xl font-bold text-slate-900">Wesley Preparatory School</h1>
@@ -87,10 +84,13 @@
         <!-- TOP NAVBAR -->
         <header class="bg-blue-950 text-white shadow-md px-6 py-3 flex justify-between items-center no-print border-b-2 border-amber-500">
             <div class="flex items-center space-x-3">
-                <!-- NAVBAR BADGE -->
-                <div class="w-10 h-10 rounded-full bg-slate-900 border-2 border-amber-400 flex flex-col items-center justify-center text-white overflow-hidden shadow">
-                    <div class="text-[7px] font-bold text-amber-300">WPS</div>
-                    <div class="text-[5px] text-slate-200">ASSORKO</div>
+                <!-- TOP NAVBAR BADGE -->
+                <div class="w-10 h-10 rounded-full bg-amber-50 border border-amber-400 flex flex-col items-center justify-center overflow-hidden shadow relative">
+                    <div class="absolute inset-0 bg-blue-950"></div>
+                    <div class="relative z-10 flex flex-col items-center">
+                        <span class="text-[6px] font-bold text-amber-300">WPS</span>
+                        <span class="text-[5px] text-slate-200">ASSORKO</span>
+                    </div>
                 </div>
                 <div>
                     <h2 class="font-bold text-base leading-tight">Wesley Preparatory School</h2>
@@ -119,12 +119,13 @@
                     <p class="px-4 text-xs font-bold uppercase tracking-wider text-slate-400">Administration</p>
                     <button onclick="switchTab('students')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🎓 <span>Student Enrollment</span></button>
                     <button onclick="switchTab('teachers')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">👨‍🏫 <span>Teacher Accounts</span></button>
+                    <button onclick="switchTab('classes')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🏫 <span>Manage Classes (1-6 & JHS)</span></button>
                     <button onclick="switchTab('announcements')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📢 <span>Post Announcements</span></button>
                     <button onclick="switchTab('gallery')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🖼️ <span>Photos & Class Activities</span></button>
                     <button onclick="switchTab('config')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">⚙️ <span>School Settings & Themes</span></button>
                 </div>
 
-                <!-- Teacher Nav (Visible only to Teachers) -->
+                <!-- Teacher Nav -->
                 <div id="teacher-nav-section" class="hidden pt-4 border-t border-slate-200 space-y-2">
                     <p class="px-4 text-xs font-bold uppercase tracking-wider text-slate-400">Staff Portal</p>
                     <button onclick="switchTab('teacher-gallery')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🖼️ <span>School Photo Gallery</span></button>
@@ -224,10 +225,15 @@
 
                 <!-- TAB: TIMETABLE MANAGEMENT -->
                 <section id="tab-timetable" class="hidden space-y-6">
-                    <div class="bg-white p-6 rounded-2xl shadow border border-slate-100">
-                        <h2 class="text-xl font-bold text-slate-900">School Timetable</h2>
-                        <p class="text-xs text-slate-500 mb-4">Class and subject schedules for Basic 4 to JHS.</p>
-                        <div class="p-4 bg-blue-50 rounded-xl border border-blue-100 text-sm text-blue-900 font-medium">
+                    <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-4">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <h2 class="text-xl font-bold text-slate-900">Timetable Management</h2>
+                                <p class="text-xs text-slate-500">Build and adjust class and subject schedules for Basic 1 to JHS.</p>
+                            </div>
+                            <button onclick="editTimetable()" class="px-4 py-2 bg-blue-900 text-white text-xs font-semibold rounded-lg">Edit Timetable Schedule</button>
+                        </div>
+                        <div id="timetable-display" class="p-4 bg-blue-50 rounded-xl border border-blue-100 text-sm text-blue-900 font-medium">
                             📅 Current Schedule: Morning Devotion (07:30 - 08:00) | Core Subjects & Practical Sessions (08:00 - 14:00).
                         </div>
                     </div>
@@ -257,6 +263,24 @@
                     </div>
                 </section>
 
+                <!-- TAB: MANAGE CLASSES (Admin) -->
+                <section id="tab-classes" class="hidden space-y-6">
+                    <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-4">
+                        <h2 class="text-xl font-bold text-slate-900">Manage School Classes (Basic 1 - 6 & JHS)</h2>
+                        <p class="text-xs text-slate-500">Add new classes or modify existing class levels in the system.</p>
+                        <div class="flex gap-3">
+                            <input type="text" id="new-class-input" placeholder="e.g. Basic 1 or Nursery" class="p-3 border rounded-xl flex-1">
+                            <button onclick="addClass()" class="px-6 py-3 bg-blue-900 text-white font-bold rounded-xl hover:bg-blue-800">Add Class</button>
+                        </div>
+                        <div class="mt-4">
+                            <h3 class="font-bold text-sm text-slate-700 mb-2">Active Classes List:</h3>
+                            <div id="classes-list-container" class="flex flex-wrap gap-2">
+                                <!-- Populated dynamically -->
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
                 <!-- TAB: STUDENT ENROLLMENT (Admin) -->
                 <section id="tab-students" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl shadow border border-slate-100">
@@ -264,12 +288,7 @@
                         <form id="student-form" class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
                             <input type="text" id="s-name" placeholder="Full Name *" required class="p-3 border rounded-xl">
                             <select id="s-class" class="p-3 border rounded-xl">
-                                <option value="Basic 4">Basic 4</option>
-                                <option value="Basic 5">Basic 5</option>
-                                <option value="Basic 6">Basic 6</option>
-                                <option value="JHS 1">JHS 1</option>
-                                <option value="JHS 2">JHS 2</option>
-                                <option value="JHS 3">JHS 3</option>
+                                <!-- Dynamic classes -->
                             </select>
                             <select id="s-gender" class="p-3 border rounded-xl">
                                 <option value="Male">Male</option>
@@ -368,8 +387,9 @@
 
         let currentUser = null;
         let globalAnnouncementText = "Welcome to Wesley Preparatory School. Please ensure all student records and SBA scores are updated promptly.";
-        let studentsData = []; // Clean start, admin manages everything
-        let galleryPhotos = [];
+        let classesData = ['Basic 1', 'Basic 2', 'Basic 3', 'Basic 4', 'Basic 5', 'Basic 6', 'JHS 1', 'JHS 2', 'JHS 3'];
+        let studentsData = [];
+        let timetableText = "📅 Current Schedule: Morning Devotion (07:30 - 08:00) | Core Subjects & Practical Sessions (08:00 - 14:00).";
 
         // Login Handler
         document.getElementById('login-form').addEventListener('submit', (e) => {
@@ -404,7 +424,7 @@
         function logout() { location.reload(); }
 
         function switchTab(tabId) {
-            ['dashboard', 'assessment', 'history', 'attendance', 'timetable', 'fees', 'students', 'teachers', 'announcements', 'gallery', 'teacher-gallery', 'teacher-announcements', 'config'].forEach(t => {
+            ['dashboard', 'assessment', 'history', 'attendance', 'timetable', 'fees', 'classes', 'students', 'teachers', 'announcements', 'gallery', 'teacher-gallery', 'teacher-announcements', 'config'].forEach(t => {
                 const el = document.getElementById(`tab-${t}`);
                 if(el) el.classList.add('hidden');
             });
@@ -416,7 +436,49 @@
             renderGradingTable();
             renderFeesTable();
             renderAttendance();
+            renderClassesDropdown();
+            renderClassesList();
             renderCharts();
+        }
+
+        function renderClassesDropdown() {
+            const select = document.getElementById('s-class');
+            select.innerHTML = classesData.map(c => `<option value="${c}">${c}</option>`).join('');
+        }
+
+        function renderClassesList() {
+            const container = document.getElementById('classes-list-container');
+            container.innerHTML = classesData.map(c => `
+                <span class="px-3 py-1.5 bg-blue-50 text-blue-900 border border-blue-200 rounded-xl text-sm font-semibold flex items-center gap-2">
+                    ${c}
+                    <button onclick="removeClass('${c}')" class="text-red-600 hover:text-red-800 font-bold text-xs">×</button>
+                </span>
+            `).join('');
+        }
+
+        function addClass() {
+            const input = document.getElementById('new-class-input');
+            const val = input.value.trim();
+            if(!val) return;
+            if(classesData.includes(val)) { alert('Class already exists!'); return; }
+            classesData.push(val);
+            input.value = '';
+            renderAll();
+            alert(`Class "${val}" added successfully!`);
+        }
+
+        function removeClass(c) {
+            classesData = classesData.filter(item => item !== c);
+            renderAll();
+        }
+
+        function editTimetable() {
+            const updated = prompt("Enter updated school timetable details:", timetableText);
+            if(updated) {
+                timetableText = updated;
+                document.getElementById('timetable-display').innerText = updated;
+                alert('Timetable updated successfully!');
+            }
         }
 
         // Student Enrollment Form Submission
@@ -429,10 +491,8 @@
             const newStudent = { id: Date.now(), name, class: className, gender, sba: 0, exam: 0, feeBilled: 300, feePaid: 0 };
             studentsData.push(newStudent);
 
-            // Save to Supabase table
             try {
-                const { error } = await supabaseClient.from('students').insert([{ student_name: name, class_name: className, gender }]);
-                if(error) console.log('Supabase notice:', error.message);
+                await supabaseClient.from('students').insert([{ student_name: name, class_name: className, gender }]);
             } catch(err) { console.log(err); }
 
             alert(`Student ${name} successfully enrolled to ${className}!`);
@@ -498,7 +558,7 @@
             const history = document.getElementById('history-container');
             history.innerHTML = studentsData.map(s => `
                 <div class="bg-white p-6 rounded-2xl shadow border border-slate-200 space-y-3 relative overflow-hidden">
-                    <div class="absolute top-2 right-2 w-10 h-10 rounded-full bg-slate-900 border border-amber-400 flex flex-col items-center justify-center text-white text-[7px] font-bold">WPS</div>
+                    <div class="absolute top-2 right-2 w-10 h-10 rounded-full bg-blue-950 border border-amber-400 flex flex-col items-center justify-center text-white text-[6px] font-bold">WPS</div>
                     <div class="flex justify-between items-center border-b pb-3">
                         <div>
                             <h3 class="font-bold text-lg">${s.name}</h3>
@@ -567,17 +627,14 @@
                 }
             });
 
-            const b4 = studentsData.filter(s => s.class === 'Basic 4').length;
-            const b5 = studentsData.filter(s => s.class === 'Basic 5').length;
-            const b6 = studentsData.filter(s => s.class === 'Basic 6').length;
-            const jhs1 = studentsData.filter(s => s.class === 'JHS 1').length;
+            const classCounts = classesData.map(c => studentsData.filter(s => s.class === c).length);
 
             const ctxClass = document.getElementById('classChart').getContext('2d');
             new Chart(ctxClass, {
                 type: 'bar',
                 data: {
-                    labels: ['Basic 4', 'Basic 5', 'Basic 6', 'JHS 1'],
-                    datasets: [{ label: 'Students', data: [b4, b5, b6, jhs1], backgroundColor: '#1e3a8a' }]
+                    labels: classesData,
+                    datasets: [{ label: 'Students', data: classCounts, backgroundColor: '#1e3a8a' }]
                 }
             });
         }
