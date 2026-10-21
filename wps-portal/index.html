@@ -465,6 +465,12 @@
             });
             const active = document.getElementById(`tab-${tabId}`);
             if(active) active.classList.remove('hidden');
+
+            // Render grading table automatically when switching to assessment tab
+            if(tabId === 'assessment') {
+                renderClassesDropdown();
+                renderGradingTable();
+            }
         }
 
         function renderAll() {
@@ -479,12 +485,16 @@
         function renderClassesDropdown() {
             const selectEnroll = document.getElementById('s-class');
             if(selectEnroll) {
+                const currentVal = selectEnroll.value;
                 selectEnroll.innerHTML = classesData.map(c => `<option value="${c}">${c}</option>`).join('');
+                if(currentVal) selectEnroll.value = currentVal;
             }
 
             const selectGrading = document.getElementById('grading-class-filter');
             if(selectGrading) {
+                const currentGradVal = selectGrading.value;
                 selectGrading.innerHTML = classesData.map(c => `<option value="${c}">${c}</option>`).join('');
+                if(currentGradVal) selectGrading.value = currentGradVal;
             }
         }
 
@@ -525,7 +535,7 @@
             }
         }
 
-        // Student Enrollment Form Submission (Syncs to Teacher Portal)
+        // Student Enrollment Form Submission (Syncs immediately)
         document.getElementById('student-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const name = document.getElementById('s-name').value;
@@ -544,7 +554,7 @@
             renderAll();
         });
 
-        // Teacher Registration Form Submission (With Password)
+        // Teacher Registration Form Submission
         document.getElementById('teacher-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const name = document.getElementById('t-name').value;
