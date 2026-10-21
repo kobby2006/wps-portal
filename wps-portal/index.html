@@ -11,12 +11,13 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root {
-            --primary: #064e3b; /* Badge Green */
-            --secondary: #d97706; /* Badge Gold/Accent */
+            --primary: #1e3a8a; /* Badge Navy Blue */
+            --accent: #991b1b;  /* Badge Red */
+            --cream: #fdfbf7;   /* Badge Cream */
         }
-        .theme-badge { background-color: var(--primary); }
-        .theme-badge-text { color: var(--primary); }
-        .theme-accent { background-color: var(--secondary); }
+        .theme-primary { background-color: var(--primary); }
+        .theme-text { color: var(--primary); }
+        .badge-border { border: 2px solid var(--primary); }
         @media print {
             .no-print { display: none !important; }
             body { background: white; color: black; }
@@ -27,32 +28,40 @@
 
     <!-- AUTH & LOGIN SCREEN -->
     <div id="auth-screen" class="fixed inset-0 bg-slate-900/90 z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 border-t-4 border-emerald-800">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 border-t-4 border-blue-900">
             <div class="text-center mb-6">
-                <div class="inline-block p-3 rounded-full bg-emerald-100 text-emerald-800 mb-2 font-bold text-xl">WPS</div>
+                <!-- OFFICIAL WESLEY PREP CIRCULAR BADGE -->
+                <div class="w-24 h-24 mx-auto mb-3 rounded-full bg-slate-900 border-4 border-amber-500 shadow-lg flex flex-col items-center justify-center text-white p-1 text-center relative overflow-hidden">
+                    <div class="absolute inset-0 bg-blue-950 opacity-90"></div>
+                    <div class="relative z-10 flex flex-col items-center">
+                        <div class="text-[9px] font-bold tracking-tighter uppercase text-amber-300">Wesley Prep. Sch.</div>
+                        <div class="w-8 h-8 my-0.5 rounded-full border border-red-600 bg-amber-50 flex items-center justify-center text-[8px] font-extrabold text-blue-900">WPS</div>
+                        <div class="text-[7px] font-semibold tracking-tighter text-amber-200">Assorko-Essaman</div>
+                    </div>
+                </div>
                 <h1 class="text-2xl font-bold text-slate-900">Wesley Preparatory School</h1>
-                <p class="text-sm text-slate-500">Assorko-Essaman Portal</p>
+                <p class="text-xs text-slate-500 font-semibold uppercase tracking-wider mt-1">Knowledge and Integrity</p>
             </div>
             <form id="login-form" class="space-y-4">
                 <div>
                     <label class="block text-xs font-semibold uppercase text-slate-600 mb-1">Select Role</label>
-                    <select id="login-role" class="w-full p-3 border rounded-xl bg-slate-50 font-medium focus:ring-2 focus:ring-emerald-600">
+                    <select id="login-role" class="w-full p-3 border rounded-xl bg-slate-50 font-medium focus:ring-2 focus:ring-blue-900">
                         <option value="admin">Headmaster / Admin</option>
                         <option value="teacher">Teacher</option>
                     </select>
                 </div>
                 <div>
                     <label class="block text-xs font-semibold uppercase text-slate-600 mb-1">Email or Username</label>
-                    <input type="text" id="login-user" required class="w-full p-3 border rounded-xl bg-slate-50 focus:ring-2 focus:ring-emerald-600" placeholder="e.g. head@wps.com">
+                    <input type="text" id="login-user" required class="w-full p-3 border rounded-xl bg-slate-50 focus:ring-2 focus:ring-blue-900" placeholder="e.g. head@wps.com">
                 </div>
                 <div>
                     <label class="block text-xs font-semibold uppercase text-slate-600 mb-1">Access PIN / Password</label>
-                    <input type="password" id="login-pass" required class="w-full p-3 border rounded-xl bg-slate-50 focus:ring-2 focus:ring-emerald-600" placeholder="••••">
+                    <input type="password" id="login-pass" required class="w-full p-3 border rounded-xl bg-slate-50 focus:ring-2 focus:ring-blue-900" placeholder="••••">
                 </div>
-                <button type="submit" class="w-full py-3 bg-emerald-900 text-white font-semibold rounded-xl hover:bg-emerald-800 transition shadow-lg">Secure Login</button>
+                <button type="submit" class="w-full py-3 bg-blue-900 text-white font-semibold rounded-xl hover:bg-blue-800 transition shadow-lg">Secure Login</button>
             </form>
             <div class="mt-4 text-center">
-                <button onclick="alert('Password reset instructions sent to registered recovery email.')" class="text-xs text-emerald-700 hover:underline">Forgot Password / Recover Credentials?</button>
+                <button onclick="alert('Password reset instructions sent to registered recovery email.')" class="text-xs text-blue-800 hover:underline">Forgot Password / Recover Credentials?</button>
             </div>
         </div>
     </div>
@@ -61,14 +70,14 @@
     <div id="announcement-modal" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full p-6 border-t-4 border-amber-500 space-y-4">
             <div class="flex justify-between items-center">
-                <h3 class="font-bold text-lg text-emerald-900">📢 New School Announcement</h3>
+                <h3 class="font-bold text-lg text-blue-900">📢 New School Announcement</h3>
                 <span class="text-xs bg-amber-100 text-amber-800 px-2.5 py-1 rounded-full font-bold">Priority Notice</span>
             </div>
             <div id="modal-announcement-text" class="text-slate-700 bg-slate-50 p-4 rounded-xl border text-sm leading-relaxed">
-                Welcome to a new week at Wesley Preparatory School. Please ensure all SBA records are updated before Friday.
+                Welcome to Wesley Preparatory School Portal.
             </div>
             <div class="flex justify-end">
-                <button onclick="closeAnnouncementModal()" class="px-5 py-2 bg-emerald-900 text-white font-semibold rounded-xl text-sm">Understood & Close</button>
+                <button onclick="closeAnnouncementModal()" class="px-5 py-2 bg-blue-900 text-white font-semibold rounded-xl text-sm">Understood & Close</button>
             </div>
         </div>
     </div>
@@ -76,17 +85,21 @@
     <!-- MAIN APP SHELL -->
     <div id="app-shell" class="hidden flex-1 flex flex-col">
         <!-- TOP NAVBAR -->
-        <header class="bg-emerald-900 text-white shadow-md px-6 py-4 flex justify-between items-center no-print">
+        <header class="bg-blue-950 text-white shadow-md px-6 py-3 flex justify-between items-center no-print border-b-2 border-amber-500">
             <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 rounded-full bg-amber-500 flex items-center justify-center font-bold text-white shadow">WP</div>
+                <!-- NAVBAR BADGE -->
+                <div class="w-10 h-10 rounded-full bg-slate-900 border-2 border-amber-400 flex flex-col items-center justify-center text-white overflow-hidden shadow">
+                    <div class="text-[7px] font-bold text-amber-300">WPS</div>
+                    <div class="text-[5px] text-slate-200">ASSORKO</div>
+                </div>
                 <div>
-                    <h2 class="font-bold text-lg leading-tight">Wesley Prep Portal</h2>
-                    <p class="text-xs text-emerald-200">Assorko-Essaman • Standard School Fees: GH₵ 300</p>
+                    <h2 class="font-bold text-base leading-tight">Wesley Preparatory School</h2>
+                    <p class="text-[11px] text-amber-200 font-medium">Assorko-Essaman • Standard Fee: GH₵ 300</p>
                 </div>
             </div>
             <div class="flex items-center space-x-4">
-                <span id="user-badge" class="px-3 py-1 bg-emerald-800 text-xs rounded-full font-medium uppercase tracking-wider border border-emerald-700">Admin</span>
-                <button onclick="logout()" class="text-xs bg-red-600 hover:bg-red-700 px-3 py-2 rounded-lg font-semibold transition">Logout</button>
+                <span id="user-badge" class="px-3 py-1 bg-blue-900 text-xs rounded-full font-medium uppercase tracking-wider border border-blue-700">Admin</span>
+                <button onclick="logout()" class="text-xs bg-red-700 hover:bg-red-800 px-3 py-2 rounded-lg font-semibold transition">Logout</button>
             </div>
         </header>
 
@@ -94,28 +107,28 @@
         <div class="flex-1 flex flex-col md:flex-row">
             <!-- SIDEBAR NAVIGATION -->
             <aside class="w-full md:w-64 bg-white border-r border-slate-200 p-4 space-y-2 no-print">
-                <button onclick="switchTab('dashboard')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-emerald-50 hover:text-emerald-900 transition flex items-center space-x-3">📊 <span>Dashboard & Charts</span></button>
-                <button onclick="switchTab('assessment')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-emerald-50 hover:text-emerald-900 transition flex items-center space-x-3">📝 <span>SBA & Exam Grading</span></button>
-                <button onclick="switchTab('history')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-emerald-50 hover:text-emerald-900 transition flex items-center space-x-3">📁 <span>Student History & Reports</span></button>
-                <button onclick="switchTab('attendance')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-emerald-50 hover:text-emerald-900 transition flex items-center space-x-3">📅 <span>Attendance Tracking</span></button>
-                <button onclick="switchTab('timetable')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-emerald-50 hover:text-emerald-900 transition flex items-center space-x-3">⏰ <span>Timetable Management</span></button>
-                <button onclick="switchTab('fees')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-emerald-50 hover:text-emerald-900 transition flex items-center space-x-3">💰 <span>Fee Management (₵300)</span></button>
+                <button onclick="switchTab('dashboard')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📊 <span>Dashboard & Charts</span></button>
+                <button onclick="switchTab('assessment')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📝 <span>SBA & Exam Grading</span></button>
+                <button onclick="switchTab('history')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📁 <span>Student History & Reports</span></button>
+                <button onclick="switchTab('attendance')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📅 <span>Attendance Tracking</span></button>
+                <button onclick="switchTab('timetable')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">⏰ <span>Timetable Management</span></button>
+                <button onclick="switchTab('fees')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">💰 <span>Fee Management (₵300)</span></button>
                 
                 <!-- Admin Only Nav Items -->
                 <div id="admin-nav-section" class="pt-4 border-t border-slate-200 space-y-2">
                     <p class="px-4 text-xs font-bold uppercase tracking-wider text-slate-400">Administration</p>
-                    <button onclick="switchTab('students')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-emerald-50 hover:text-emerald-900 transition flex items-center space-x-3">🎓 <span>Student Enrollment</span></button>
-                    <button onclick="switchTab('teachers')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-emerald-50 hover:text-emerald-900 transition flex items-center space-x-3">👨‍🏫 <span>Teacher Accounts</span></button>
-                    <button onclick="switchTab('announcements')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-emerald-50 hover:text-emerald-900 transition flex items-center space-x-3">📢 <span>Post Announcements</span></button>
-                    <button onclick="switchTab('gallery')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-emerald-50 hover:text-emerald-900 transition flex items-center space-x-3">🖼️ <span>Photos & Class Activities</span></button>
-                    <button onclick="switchTab('config')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-emerald-50 hover:text-emerald-900 transition flex items-center space-x-3">⚙️ <span>School Settings & Themes</span></button>
+                    <button onclick="switchTab('students')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🎓 <span>Student Enrollment</span></button>
+                    <button onclick="switchTab('teachers')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">👨‍🏫 <span>Teacher Accounts</span></button>
+                    <button onclick="switchTab('announcements')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📢 <span>Post Announcements</span></button>
+                    <button onclick="switchTab('gallery')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🖼️ <span>Photos & Class Activities</span></button>
+                    <button onclick="switchTab('config')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">⚙️ <span>School Settings & Themes</span></button>
                 </div>
 
-                <!-- Teacher Gallery Nav (Visible only to Teachers) -->
+                <!-- Teacher Nav (Visible only to Teachers) -->
                 <div id="teacher-nav-section" class="hidden pt-4 border-t border-slate-200 space-y-2">
                     <p class="px-4 text-xs font-bold uppercase tracking-wider text-slate-400">Staff Portal</p>
-                    <button onclick="switchTab('teacher-gallery')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-emerald-50 hover:text-emerald-900 transition flex items-center space-x-3">🖼️ <span>School Photo Gallery</span></button>
-                    <button onclick="switchTab('teacher-announcements')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-emerald-50 hover:text-emerald-900 transition flex items-center space-x-3">📢 <span>View Announcements</span></button>
+                    <button onclick="switchTab('teacher-gallery')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🖼️ <span>School Photo Gallery</span></button>
+                    <button onclick="switchTab('teacher-announcements')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📢 <span>View Announcements</span></button>
                 </div>
             </aside>
 
@@ -124,13 +137,13 @@
 
                 <!-- TAB: DASHBOARD & CHARTS -->
                 <section id="tab-dashboard" class="space-y-6">
-                    <div class="bg-gradient-to-r from-emerald-900 to-emerald-800 text-white p-6 rounded-2xl shadow-lg flex justify-between items-center">
+                    <div class="bg-gradient-to-r from-blue-950 to-blue-900 text-white p-6 rounded-2xl shadow-lg flex justify-between items-center border-l-4 border-amber-500">
                         <div>
                             <h2 class="text-2xl font-bold">Welcome Back, <span id="welcome-name">User</span>!</h2>
-                            <p class="text-emerald-200 text-sm mt-1">Wesley Preparatory School - Term 2, 2026 Academic Session.</p>
+                            <p class="text-blue-200 text-sm mt-1">Wesley Preparatory School, Assorko-Essaman — Knowledge and Integrity.</p>
                         </div>
                         <div class="hidden md:block text-right">
-                            <span class="px-3 py-1 bg-amber-500 text-white text-xs font-bold rounded-full">Standard Fee: GH₵ 300</span>
+                            <span class="px-3 py-1 bg-amber-500 text-slate-950 text-xs font-bold rounded-full">Standard Fee: GH₵ 300</span>
                         </div>
                     </div>
 
@@ -155,10 +168,10 @@
                 <section id="tab-assessment" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 flex justify-between items-center">
                         <div>
-                            <h2 class="text-xl font-bold text-slate-900">Automated Assessment Grading</h2>
-                            <p class="text-xs text-slate-500">50% Classwork/SBA + 50% Exams Calculation Engine</p>
+                            <h2 class="text-xl font-bold text-slate-900">Automated Assessment Grading & SBA</h2>
+                            <p class="text-xs text-slate-500">50% Classwork/SBA + 50% Exams Calculation Engine with Ordinal Rankings</p>
                         </div>
-                        <button onclick="calculateGrades()" class="px-5 py-2.5 bg-emerald-800 text-white font-semibold rounded-xl hover:bg-emerald-700 transition shadow">Compute Totals & Positions</button>
+                        <button onclick="calculateGrades()" class="px-5 py-2.5 bg-blue-900 text-white font-semibold rounded-xl hover:bg-blue-800 transition shadow">Compute Totals & Positions</button>
                     </div>
                     <div class="bg-white rounded-2xl shadow overflow-hidden border border-slate-100">
                         <div class="overflow-x-auto">
@@ -173,7 +186,9 @@
                                         <th class="p-4">Position</th>
                                     </tr>
                                 </thead>
-                                <tbody id="grading-table-body" class="divide-y divide-slate-100 text-sm"></tbody>
+                                <tbody id="grading-table-body" class="divide-y divide-slate-100 text-sm">
+                                    <tr><td colspan="6" class="p-6 text-center text-slate-400 italic">No students registered yet. Use the Student Enrollment tab to add students.</td></tr>
+                                </tbody>
                             </table>
                         </div>
                     </div>
@@ -187,7 +202,7 @@
                     <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 flex justify-between items-center">
                         <div>
                             <h2 class="text-xl font-bold text-slate-900">Student History & Official Report Cards</h2>
-                            <p class="text-xs text-slate-500">Archived reports, fee arrears, and next-term reopening requirements.</p>
+                            <p class="text-xs text-slate-500">Archived reports with official badge branding, fee arrears, and next-term requirements.</p>
                         </div>
                         <button onclick="window.print()" class="px-4 py-2 bg-slate-800 text-white text-xs font-semibold rounded-lg hover:bg-slate-700 no-print">Print / Export All</button>
                     </div>
@@ -201,7 +216,9 @@
                     <div class="bg-white p-6 rounded-2xl shadow border border-slate-100">
                         <h2 class="text-xl font-bold text-slate-900">Daily Student & Staff Attendance</h2>
                         <p class="text-xs text-slate-500 mb-4">Monitor daily presence and absence flags.</p>
-                        <div id="attendance-list" class="space-y-3"></div>
+                        <div id="attendance-list" class="space-y-3">
+                            <p class="text-slate-400 italic">No students available for attendance tracking yet.</p>
+                        </div>
                     </div>
                 </section>
 
@@ -210,7 +227,7 @@
                     <div class="bg-white p-6 rounded-2xl shadow border border-slate-100">
                         <h2 class="text-xl font-bold text-slate-900">School Timetable</h2>
                         <p class="text-xs text-slate-500 mb-4">Class and subject schedules for Basic 4 to JHS.</p>
-                        <div class="p-4 bg-emerald-50 rounded-xl border border-emerald-100 text-sm text-emerald-900 font-medium">
+                        <div class="p-4 bg-blue-50 rounded-xl border border-blue-100 text-sm text-blue-900 font-medium">
                             📅 Current Schedule: Morning Devotion (07:30 - 08:00) | Core Subjects & Practical Sessions (08:00 - 14:00).
                         </div>
                     </div>
@@ -232,7 +249,9 @@
                                         <th class="p-3 no-print">Action</th>
                                     </tr>
                                 </thead>
-                                <tbody id="fees-table-body" class="divide-y divide-slate-100 text-sm"></tbody>
+                                <tbody id="fees-table-body" class="divide-y divide-slate-100 text-sm">
+                                    <tr><td colspan="5" class="p-6 text-center text-slate-400 italic">No fee records found.</td></tr>
+                                </tbody>
                             </table>
                         </div>
                     </div>
@@ -256,7 +275,7 @@
                                 <option value="Male">Male</option>
                                 <option value="Female">Female</option>
                             </select>
-                            <button type="submit" class="md:col-span-3 py-3 bg-emerald-900 text-white font-bold rounded-xl hover:bg-emerald-800 transition">Save Student to Database</button>
+                            <button type="submit" class="md:col-span-3 py-3 bg-blue-900 text-white font-bold rounded-xl hover:bg-blue-800 transition">Save Student to Database</button>
                         </form>
                     </div>
                 </section>
@@ -269,7 +288,7 @@
                             <input type="text" id="t-name" placeholder="Full Name *" required class="p-3 border rounded-xl">
                             <input type="text" id="t-phone" placeholder="Phone Number" class="p-3 border rounded-xl">
                             <input type="email" id="t-email" placeholder="Email Address *" required class="p-3 border rounded-xl">
-                            <button type="submit" class="md:col-span-3 py-3 bg-emerald-900 text-white font-bold rounded-xl hover:bg-emerald-800 transition">Create Teacher Login</button>
+                            <button type="submit" class="md:col-span-3 py-3 bg-blue-900 text-white font-bold rounded-xl hover:bg-blue-800 transition">Create Teacher Login</button>
                         </form>
                     </div>
                 </section>
@@ -280,7 +299,7 @@
                         <h2 class="text-xl font-bold text-slate-900">Publish Global School Announcement</h2>
                         <p class="text-xs text-slate-500 mb-4">When posted, this will immediately pop up for teachers upon login and stay in their portal.</p>
                         <textarea id="announcement-text" rows="4" class="w-full p-3 border rounded-xl" placeholder="Type announcement for all staff and teachers..."></textarea>
-                        <button onclick="postAnnouncement()" class="mt-4 px-6 py-2.5 bg-emerald-900 text-white font-bold rounded-xl">Publish Announcement</button>
+                        <button onclick="postAnnouncement()" class="mt-4 px-6 py-2.5 bg-blue-900 text-white font-bold rounded-xl">Publish Announcement</button>
                     </div>
                 </section>
 
@@ -289,8 +308,8 @@
                     <div class="bg-white p-6 rounded-2xl shadow border border-slate-100">
                         <h2 class="text-xl font-bold text-slate-900">School Photos & Class Activities Lab</h2>
                         <p class="text-xs text-slate-500 mb-4">Upload event photos, class activities, and sports pictures for teachers to download.</p>
-                        <input type="file" id="photo-file" accept="image/*" class="mb-4 block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100">
-                        <button onclick="uploadPhoto()" class="px-6 py-2.5 bg-emerald-900 text-white font-bold rounded-xl">Upload Photo / Activity</button>
+                        <input type="file" id="photo-file" accept="image/*" class="mb-4 block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                        <button onclick="uploadPhoto()" class="px-6 py-2.5 bg-blue-900 text-white font-bold rounded-xl">Upload Photo / Activity</button>
                         <div id="gallery-grid" class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6"></div>
                     </div>
                 </section>
@@ -301,10 +320,7 @@
                         <h2 class="text-xl font-bold text-slate-900">School Photo Gallery & Class Activities</h2>
                         <p class="text-xs text-slate-500 mb-4">View and download school event photos uploaded by administration directly to your phone or device.</p>
                         <div id="teacher-gallery-grid" class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
-                            <div class="bg-slate-100 rounded-xl p-3 text-center border">
-                                <div class="h-32 bg-emerald-900 rounded-lg flex items-center justify-center text-white font-bold text-xs mb-2">Sports Day 2026</div>
-                                <a href="#" download class="text-xs text-emerald-800 font-bold hover:underline">Download Photo ⬇️</a>
-                            </div>
+                            <p class="text-slate-400 italic text-sm">No photos uploaded by administration yet.</p>
                         </div>
                     </div>
                 </section>
@@ -314,7 +330,7 @@
                     <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-4">
                         <h2 class="text-xl font-bold text-slate-900">Official School Announcements</h2>
                         <div id="teacher-announcement-display" class="p-4 bg-amber-50 rounded-xl border border-amber-200 text-sm text-slate-800">
-                            Welcome to a new week at Wesley Preparatory School. Please ensure all SBA records are updated before Friday.
+                            Welcome to Wesley Preparatory School Portal.
                         </div>
                     </div>
                 </section>
@@ -326,8 +342,8 @@
                         <div>
                             <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Select Custom Theme / Badge Color</label>
                             <select id="theme-selector" onchange="applyTheme(this.value)" class="p-3 border rounded-xl w-full">
-                                <option value="badge-green">Wesley Badge Green (#064e3b)</option>
-                                <option value="royal-blue">Royal Blue</option>
+                                <option value="badge-navy">Wesley Badge Navy & Gold (#1e3a8a)</option>
+                                <option value="emerald-green">Emerald Green</option>
                                 <option value="slate-dark">Slate Professional</option>
                             </select>
                         </div>
@@ -351,13 +367,9 @@
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         let currentUser = null;
-        let globalAnnouncementText = "Welcome to a new week at Wesley Preparatory School. Please ensure all SBA records are updated before Friday.";
-        let studentsData = [
-            { id: 1, name: 'Kofi Mensah', class: 'Basic 4', gender: 'Male', sba: 42, exam: 45, feeBilled: 300, feePaid: 300 },
-            { id: 2, name: 'Abena Serwaa', class: 'Basic 4', gender: 'Female', sba: 48, exam: 47, feeBilled: 300, feePaid: 200 },
-            { id: 3, name: 'Kwaku Appiah', class: 'Basic 5', gender: 'Male', sba: 35, exam: 40, feeBilled: 300, feePaid: 300 },
-            { id: 4, name: 'Akosua Pomaa', class: 'Basic 6', gender: 'Female', sba: 46, exam: 48, feeBilled: 300, feePaid: 150 }
-        ];
+        let globalAnnouncementText = "Welcome to Wesley Preparatory School. Please ensure all student records and SBA scores are updated promptly.";
+        let studentsData = []; // Clean start, admin manages everything
+        let galleryPhotos = [];
 
         // Login Handler
         document.getElementById('login-form').addEventListener('submit', (e) => {
@@ -375,7 +387,6 @@
                 document.getElementById('admin-nav-section').classList.add('hidden');
                 document.getElementById('teacher-nav-section').classList.remove('hidden');
                 switchTab('teacher-gallery');
-                // Trigger announcement popup immediately upon teacher login
                 document.getElementById('modal-announcement-text').innerText = globalAnnouncementText;
                 document.getElementById('announcement-modal').classList.remove('hidden');
             } else {
@@ -408,16 +419,58 @@
             renderCharts();
         }
 
+        // Student Enrollment Form Submission
+        document.getElementById('student-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('s-name').value;
+            const className = document.getElementById('s-class').value;
+            const gender = document.getElementById('s-gender').value;
+
+            const newStudent = { id: Date.now(), name, class: className, gender, sba: 0, exam: 0, feeBilled: 300, feePaid: 0 };
+            studentsData.push(newStudent);
+
+            // Save to Supabase table
+            try {
+                const { error } = await supabaseClient.from('students').insert([{ student_name: name, class_name: className, gender }]);
+                if(error) console.log('Supabase notice:', error.message);
+            } catch(err) { console.log(err); }
+
+            alert(`Student ${name} successfully enrolled to ${className}!`);
+            document.getElementById('s-name').value = '';
+            renderAll();
+        });
+
+        // Teacher Registration Form Submission
+        document.getElementById('teacher-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('t-name').value;
+            const phone = document.getElementById('t-phone').value;
+            const email = document.getElementById('t-email').value;
+
+            try {
+                await supabaseClient.from('teachers').insert([{ full_name: name, phone_number: phone, email }]);
+            } catch(err) { console.log(err); }
+
+            alert(`Teacher account created successfully for ${name}!`);
+            document.getElementById('t-name').value = '';
+            document.getElementById('t-phone').value = '';
+            document.getElementById('t-email').value = '';
+        });
+
         function renderGradingTable() {
             const tbody = document.getElementById('grading-table-body');
+            if(studentsData.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="p-6 text-center text-slate-400 italic">No students registered yet. Use the Student Enrollment tab to add students.</td></tr>`;
+                return;
+            }
             tbody.innerHTML = studentsData.map((s, idx) => `
                 <tr>
                     <td class="p-4 font-medium">${s.name}</td>
                     <td class="p-4">${s.class}</td>
-                    <td class="p-4"><input type="number" value="${s.sba || 0}" onchange="updateScore(${idx}, 'sba', this.value)" class="w-20 p-1 border rounded"></td>
-                    <td class="p-4"><input type="number" value="${s.exam || 0}" onchange="updateScore(${idx}, 'exam', this.value)" class="w-20 p-1 border rounded"></td>
+                    <td class="p-4"><input type="number" value="${s.sba}" onchange="updateScore(${idx}, 'sba', this.value)" class="w-20 p-1 border rounded"></td>
+                    <td class="p-4"><input type="number" value="${s.exam}" onchange="updateScore(${idx}, 'exam', this.value)" class="w-20 p-1 border rounded"></td>
                     <td class="p-4 font-bold">${(s.sba || 0) + (s.exam || 0)}</td>
-                    <td class="p-4"><span class="px-2 py-1 bg-emerald-100 text-emerald-800 rounded font-semibold text-xs">${s.position || 'Pending'}</span></td>
+                    <td class="p-4"><span class="px-2 py-1 bg-blue-100 text-blue-900 rounded font-semibold text-xs">${s.position || 'Pending'}</span></td>
                 </tr>
             `).join('');
         }
@@ -427,6 +480,7 @@
         }
 
         function calculateGrades() {
+            if(studentsData.length === 0) { alert('No students to grade.'); return; }
             studentsData.forEach(s => s.total = (s.sba || 0) + (s.exam || 0));
             studentsData.sort((a,b) => b.total - a.total);
             studentsData.forEach((s, idx) => s.position = `${idx + 1}${getOrdinal(idx + 1)}`);
@@ -440,25 +494,25 @@
         }
 
         function finalizeReports() {
+            if(studentsData.length === 0) { alert('No student reports to finalize.'); return; }
             const history = document.getElementById('history-container');
             history.innerHTML = studentsData.map(s => `
-                <div class="bg-white p-6 rounded-2xl shadow border border-slate-200 space-y-3">
+                <div class="bg-white p-6 rounded-2xl shadow border border-slate-200 space-y-3 relative overflow-hidden">
+                    <div class="absolute top-2 right-2 w-10 h-10 rounded-full bg-slate-900 border border-amber-400 flex flex-col items-center justify-center text-white text-[7px] font-bold">WPS</div>
                     <div class="flex justify-between items-center border-b pb-3">
-                        <div class="flex items-center space-x-3">
-                            <div class="w-8 h-8 rounded-full bg-emerald-900 text-white flex items-center justify-center font-bold text-xs">WP</div>
-                            <div>
-                                <h3 class="font-bold text-lg">${s.name}</h3>
-                                <p class="text-xs text-slate-500">Wesley Preparatory School • ${s.class}</p>
-                            </div>
+                        <div>
+                            <h3 class="font-bold text-lg">${s.name}</h3>
+                            <p class="text-xs text-slate-500">Wesley Preparatory School • Assorko-Essaman • ${s.class}</p>
                         </div>
-                        <span class="px-3 py-1 bg-emerald-100 text-emerald-800 rounded-full font-bold text-xs">Position: ${s.position || '1st'}</span>
+                        <span class="px-3 py-1 bg-blue-100 text-blue-900 rounded-full font-bold text-xs">Position: ${s.position || '1st'}</span>
                     </div>
                     <div class="text-sm space-y-1">
-                        <p><strong>Total Score:</strong> ${s.total || 85} / 100</p>
+                        <p><strong>Total Score:</strong> ${s.total || 0} / 100</p>
                         <p><strong>Fee Status:</strong> GH₵ ${s.feePaid} paid / <span class="text-red-600 font-semibold">GH₵ ${s.feeBilled - s.feePaid} arrears</span></p>
                         <p><strong>Items to Bring Next Term:</strong> 2 brooms, 1 box of chalk, 1 set of mathematical instruments.</p>
+                        <p class="text-xs font-semibold text-blue-900 mt-2">Motto: Knowledge and Integrity</p>
                     </div>
-                    <button onclick="window.print()" class="mt-2 px-4 py-2 bg-emerald-900 text-white text-xs font-semibold rounded-lg no-print">Print Official Report Card</button>
+                    <button onclick="window.print()" class="mt-2 px-4 py-2 bg-blue-900 text-white text-xs font-semibold rounded-lg no-print">Print Official Report Card</button>
                 </div>
             `).join('');
             switchTab('history');
@@ -467,6 +521,10 @@
 
         function renderFeesTable() {
             const tbody = document.getElementById('fees-table-body');
+            if(studentsData.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-slate-400 italic">No fee records found.</td></tr>`;
+                return;
+            }
             tbody.innerHTML = studentsData.map(s => `
                 <tr>
                     <td class="p-3 font-medium">${s.name}</td>
@@ -480,6 +538,10 @@
 
         function renderAttendance() {
             const list = document.getElementById('attendance-list');
+            if(studentsData.length === 0) {
+                list.innerHTML = `<p class="text-slate-400 italic">No students available for attendance tracking yet.</p>`;
+                return;
+            }
             list.innerHTML = studentsData.map(s => `
                 <div class="flex items-center justify-between p-3 bg-slate-50 rounded-xl border">
                     <span class="font-medium text-sm">${s.name} (${s.class})</span>
@@ -493,23 +555,29 @@
         }
 
         function renderCharts() {
-            // Gender Chart
+            const maleCount = studentsData.filter(s => s.gender === 'Male').length;
+            const femaleCount = studentsData.filter(s => s.gender === 'Female').length;
+
             const ctxGender = document.getElementById('genderChart').getContext('2d');
             new Chart(ctxGender, {
                 type: 'doughnut',
                 data: {
                     labels: ['Male', 'Female'],
-                    datasets: [{ data: [2, 2], backgroundColor: ['#064e3b', '#d97706'] }]
+                    datasets: [{ data: [maleCount || 0, femaleCount || 0], backgroundColor: ['#1e3a8a', '#d97706'] }]
                 }
             });
 
-            // Class Enrollment Chart
+            const b4 = studentsData.filter(s => s.class === 'Basic 4').length;
+            const b5 = studentsData.filter(s => s.class === 'Basic 5').length;
+            const b6 = studentsData.filter(s => s.class === 'Basic 6').length;
+            const jhs1 = studentsData.filter(s => s.class === 'JHS 1').length;
+
             const ctxClass = document.getElementById('classChart').getContext('2d');
             new Chart(ctxClass, {
                 type: 'bar',
                 data: {
                     labels: ['Basic 4', 'Basic 5', 'Basic 6', 'JHS 1'],
-                    datasets: [{ label: 'Students', data: [2, 1, 1, 0], backgroundColor: '#064e3b' }]
+                    datasets: [{ label: 'Students', data: [b4, b5, b6, jhs1], backgroundColor: '#1e3a8a' }]
                 }
             });
         }
@@ -518,7 +586,7 @@
             alert('Photo / Class activity uploaded successfully!');
             const grid = document.getElementById('gallery-grid');
             const tGrid = document.getElementById('teacher-gallery-grid');
-            const card = `<div class="bg-slate-100 rounded-xl p-3 text-center border"><div class="h-32 bg-emerald-900 rounded-lg flex items-center justify-center text-white font-bold text-xs mb-2">Class Activity</div><a href="#" download class="text-xs text-emerald-800 font-bold hover:underline">Download Photo ⬇️</a></div>`;
+            const card = `<div class="bg-slate-100 rounded-xl p-3 text-center border"><div class="h-32 bg-blue-900 rounded-lg flex items-center justify-center text-white font-bold text-xs mb-2">School Activity</div><a href="#" download class="text-xs text-blue-900 font-bold hover:underline">Download Photo ⬇️</a></div>`;
             grid.innerHTML += card;
             tGrid.innerHTML += card;
         }
@@ -533,7 +601,7 @@
         }
 
         function applyTheme(theme) {
-            document.documentElement.style.setProperty('--primary', theme === 'royal-blue' ? '#1e3a8a' : '#064e3b');
+            document.documentElement.style.setProperty('--primary', theme === 'emerald-green' ? '#064e3b' : '#1e3a8a');
             alert('Theme applied successfully!');
         }
     </script>
