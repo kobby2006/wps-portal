@@ -414,9 +414,9 @@
 
     <!-- JAVASCRIPT APPLICATION CORE -->
     <script>
-        // Supabase Initialization
+        // Supabase Initialization with Your Exact Key
         const SUPABASE_URL = 'https://lhqacoxyfyklxjhabzfe.supabase.co';
-        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxocWFjb3h5ZnlrbHhqaGFiemZlIiwicm9sZSI6ImFub24iLCJpYXQiOjE5MDUzMTg2MDl9...'; // Replace with your actual full key if needed
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxocWFjb3h5ZnlrbHhqaGFiemZlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI1MTA2NTksImV4cCI6MjEwODA4NjY1OX0.w7eqLoS5uKKCGpTxGunl2iD3oDEzRxPaUQ2EbhsGSDA';
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         let currentUser = null;
@@ -453,7 +453,7 @@
             renderAll();
         });
 
-        // Fetch students from Supabase database (supports column name 'class')
+        // Fetch students from Supabase database
         async function fetchStudentsFromSupabase() {
             try {
                 const { data, error } = await supabaseClient.from('students').select('*');
@@ -563,7 +563,7 @@
             }
         }
 
-        // Student Enrollment Form Submission (Saves using 'class' column)
+        // Student Enrollment Form Submission
         document.getElementById('student-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const name = document.getElementById('s-name').value;
@@ -774,7 +774,7 @@
 
             const ctxClass = document.getElementById('classChart');
             if(ctxClass) {
-                newChart(ctxClass.getContext('2d'), {
+                new Chart(ctxClass.getContext('2d'), {
                     type: 'bar',
                     data: {
                         labels: classesData,
