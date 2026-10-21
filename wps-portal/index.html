@@ -56,9 +56,6 @@
                 </div>
                 <button type="submit" class="w-full py-3 bg-blue-900 text-white font-semibold rounded-xl hover:bg-blue-800 transition shadow-lg">Secure Login</button>
             </form>
-            <div class="mt-4 text-center">
-                <button onclick="alert('Password reset instructions sent to registered recovery email.')" class="text-xs text-blue-800 hover:underline">Forgot Password / Recover Credentials?</button>
-            </div>
         </div>
     </div>
 
@@ -81,9 +78,7 @@
     <!-- RECEIPT MODAL POPUP -->
     <div id="receipt-modal" class="hidden fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 border-t-4 border-blue-900 space-y-4 relative">
-            <div id="receipt-content" class="space-y-4 text-slate-800">
-                <!-- Populated dynamically -->
-            </div>
+            <div id="receipt-content" class="space-y-4 text-slate-800"></div>
             <div class="flex justify-end space-x-3 no-print pt-2 border-t">
                 <button onclick="window.print()" class="px-4 py-2 bg-slate-800 text-white text-xs font-semibold rounded-lg">Print Receipt</button>
                 <button onclick="closeReceiptModal()" class="px-4 py-2 bg-blue-900 text-white text-xs font-semibold rounded-lg">Close</button>
@@ -192,9 +187,7 @@
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2 border-t">
                             <div>
                                 <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Select Class</label>
-                                <select id="grading-class-filter" onchange="renderGradingTable()" class="p-2.5 border rounded-xl w-full text-sm bg-slate-50 font-medium">
-                                    <!-- Dynamic classes -->
-                                </select>
+                                <select id="grading-class-filter" onchange="renderGradingTable()" class="p-2.5 border rounded-xl w-full text-sm bg-slate-50 font-medium"></select>
                             </div>
                             <div>
                                 <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Select Term</label>
@@ -210,8 +203,8 @@
                                     <option value="Mathematics">Mathematics</option>
                                     <option value="English Language">English Language</option>
                                     <option value="Integrated Science">Integrated Science</option>
-                                    <option value="Social Studies">Social Studies</option>
-                                    <option value="ICT">ICT</option>
+                                    <option value="History">History</option>
+                                    <option value="Computing">Computing</option>
                                     <option value="Creative Arts">Creative Arts</option>
                                     <option value="Ghanaian Language">Ghanaian Language</option>
                                     <option value="RME">RME</option>
@@ -333,9 +326,7 @@
                         <p class="text-xs text-slate-500 mb-4">Enrolled students immediately sync and appear in teacher portals.</p>
                         <form id="student-form" class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-2">
                             <input type="text" id="s-name" placeholder="Full Name *" required class="p-3 border rounded-xl">
-                            <select id="s-class" class="p-3 border rounded-xl font-medium">
-                                <!-- Dynamic classes -->
-                            </select>
+                            <select id="s-class" class="p-3 border rounded-xl font-medium"></select>
                             <select id="s-gender" class="p-3 border rounded-xl font-medium">
                                 <option value="Male">Male</option>
                                 <option value="Female">Female</option>
@@ -414,11 +405,6 @@
                                 <option value="slate-dark">Slate Professional</option>
                             </select>
                         </div>
-                        <div>
-                            <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Import Netlify Theme CSS URL</label>
-                            <input type="text" id="theme-url" placeholder="https://..." class="p-3 border rounded-xl w-full mb-2">
-                            <button onclick="alert('Netlify theme package successfully applied!')" class="px-5 py-2 bg-slate-800 text-white text-xs font-semibold rounded-lg">Import Theme</button>
-                        </div>
                     </div>
                 </section>
 
@@ -441,7 +427,7 @@
         let timetableText = "📅 Current Schedule: Morning Devotion (07:30 - 08:00) | Core Subjects & Practical Sessions (08:00 - 14:00).";
 
         // Login Handler
-        document.getElementById('login-form').addEventListener('submit', (e) => {
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const role = document.getElementById('login-role').value;
             const user = document.getElementById('login-user').value;
@@ -463,8 +449,30 @@
                 document.getElementById('teacher-nav-section').classList.add('hidden');
                 switchTab('dashboard');
             }
+            await fetchStudentsFromSupabase();
             renderAll();
         });
+
+        // Fetch students from Supabase database
+        async function fetchStudentsFromSupabase() {
+            try {
+                const { data, error } = await supabaseClient.from('students').select('*');
+                if(data && !error) {
+                    studentsData = data.map(s => ({
+                        id: s.id || Date.now(),
+                        name: s.student_name,
+                        class: s.class_name,
+                        gender: s.gender || 'Male',
+                        sba: s.sba || 0,
+                        exam: s.exam || 0,
+                        feeBilled: s.fee_billed || 300,
+                        feePaid: s.fee_paid || 0
+                    }));
+                }
+            } catch(err) {
+                console.log('Supabase fetch error:', err);
+            }
+        }
 
         function closeAnnouncementModal() {
             document.getElementById('announcement-modal').classList.add('hidden');
@@ -555,22 +563,26 @@
             }
         }
 
-        // Student Enrollment Form Submission
+        // Student Enrollment Form Submission (Saves to Supabase)
         document.getElementById('student-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const name = document.getElementById('s-name').value;
             const className = document.getElementById('s-class').value;
             const gender = document.getElementById('s-gender').value;
 
-            const newStudent = { id: Date.now(), name, class: className, gender, sba: 0, exam: 0, feeBilled: 300, feePaid: 0 };
-            studentsData.push(newStudent);
-
             try {
-                await supabaseClient.from('students').insert([{ student_name: name, class_name: className, gender }]);
-            } catch(err) { console.log(err); }
+                const { data, error } = await supabaseClient.from('students').insert([{ student_name: name, class_name: className, gender, fee_billed: 300, fee_paid: 0 }]);
+                if(error) {
+                    alert('Error saving to Supabase: ' + error.message);
+                    return;
+                }
+            } catch(err) {
+                console.log(err);
+            }
 
-            alert(`Student ${name} successfully enrolled to ${className} and synced to teacher portal!`);
+            alert(`Student ${name} successfully enrolled to ${className} and saved to Supabase!`);
             document.getElementById('s-name').value = '';
+            await fetchStudentsFromSupabase();
             renderAll();
         });
 
@@ -581,8 +593,6 @@
             const phone = document.getElementById('t-phone').value;
             const email = document.getElementById('t-email').value;
             const pass = document.getElementById('t-pass').value;
-
-            teachersData.push({ name, email, phone, pass });
 
             try {
                 await supabaseClient.from('teachers').insert([{ full_name: name, phone_number: phone, email }]);
