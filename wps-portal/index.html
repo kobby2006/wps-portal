@@ -28,13 +28,9 @@
     <div id="auth-screen" class="fixed inset-0 bg-slate-900/90 z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 border-t-4 border-blue-900">
             <div class="text-center mb-6 flex flex-col items-center">
-                <div class="w-24 h-24 mb-3 rounded-full bg-amber-50 border-4 border-blue-900 shadow-lg flex flex-col items-center justify-center relative overflow-hidden p-1">
-                    <div class="absolute inset-0 bg-gradient-to-b from-blue-950 to-blue-900 opacity-95"></div>
-                    <div class="relative z-10 flex flex-col items-center text-center">
-                        <span class="text-[8px] font-bold tracking-tighter uppercase text-amber-300">WESLEY PREP. SCH.</span>
-                        <div class="w-7 h-7 my-0.5 rounded-full border border-red-600 bg-amber-100 flex items-center justify-center text-[7px] font-black text-blue-950 shadow">WPS</div>
-                        <span class="text-[7px] font-bold tracking-tight text-amber-200">ASSORKO - ESSAMAN</span>
-                    </div>
+                <!-- OFFICIAL SCHOOL BADGE IMAGE EMBEDDED -->
+                <div class="w-24 h-24 mb-3 rounded-full bg-white border-4 border-blue-900 shadow-lg flex items-center justify-center relative overflow-hidden">
+                    <img src="248549.jpg" alt="Wesley Prep School Badge" class="w-full h-full object-cover">
                 </div>
                 <h1 id="login-school-title" class="text-2xl font-bold text-slate-900">Wesley Preparatory School</h1>
                 <p id="login-school-motto" class="text-xs text-slate-500 font-semibold uppercase tracking-wider mt-1">Knowledge and Integrity</p>
@@ -125,12 +121,8 @@
         <!-- TOP NAVBAR -->
         <header class="bg-blue-950 text-white shadow-md px-6 py-3 flex justify-between items-center no-print border-b-2 border-amber-500">
             <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 rounded-full bg-amber-50 border border-amber-400 flex flex-col items-center justify-center overflow-hidden shadow relative">
-                    <div class="absolute inset-0 bg-blue-950"></div>
-                    <div class="relative z-10 flex flex-col items-center">
-                        <span class="text-[6px] font-bold text-amber-300">WPS</span>
-                        <span class="text-[5px] text-slate-200">ASSORKO</span>
-                    </div>
+                <div class="w-10 h-10 rounded-full bg-white border border-amber-400 flex items-center justify-center overflow-hidden shadow relative">
+                    <img src="248549.jpg" alt="Badge" class="w-full h-full object-cover">
                 </div>
                 <div>
                     <h2 id="nav-school-name" class="font-bold text-base leading-tight">Wesley Preparatory School</h2>
@@ -703,7 +695,7 @@
             'O. W. O. P.'
         ];
 
-        // Fetch cloud settings and photos from Supabase on startup
+        // Fetch cloud settings and photos from Supabase & localStorage backup on startup
         window.addEventListener('DOMContentLoaded', async () => {
             await fetchCloudSettings();
         });
@@ -721,13 +713,23 @@
             } catch(err) {
                 console.log('Error fetching cloud settings:', err);
             }
+            
+            // Fallback/sync with localStorage for instant multi-device redundancy
+            if(galleryPhotos.length === 0) {
+                galleryPhotos = JSON.parse(localStorage.getItem('wps_gallery_photos')) || [];
+            }
+            
             updateLockStatusUI();
             renderGalleryGrids();
         }
 
         async function saveCloudSettings() {
             try {
-                // Upsert settings row to Supabase
+                localStorage.setItem('wps_gallery_photos', JSON.stringify(galleryPhotos));
+                localStorage.setItem('wps_portal_locked', JSON.stringify(portalLocked));
+                localStorage.setItem('wps_announcement_text', globalAnnouncementText);
+                localStorage.setItem('wps_announcement_img', globalAnnouncementImgUrl);
+
                 await supabaseClient.from('school_settings').upsert({
                     id: 1,
                     portal_locked: portalLocked,
@@ -736,7 +738,7 @@
                     gallery_photos: galleryPhotos
                 });
             } catch(err) {
-                console.log('Error saving to cloud:', err);
+                console.log('Error saving settings:', err);
             }
         }
 
@@ -745,7 +747,7 @@
             const role = document.getElementById('login-role').value;
             const user = document.getElementById('login-user').value;
 
-            await fetchCloudSettings(); // Ensure latest lock status from cloud
+            await fetchCloudSettings(); 
 
             if(role === 'teacher' && portalLocked) {
                 alert('🔒 Portal is currently locked by Administration for maintenance, edits, or grading updates. Teachers cannot log in at this moment. Please check back later.');
@@ -821,9 +823,9 @@
             await saveCloudSettings();
             updateLockStatusUI();
             if(portalLocked) {
-                alert('🔒 Portal is now LOCKED in the cloud. Teachers are successfully restricted from logging in.');
+                alert('🔒 Portal is now LOCKED. Teachers are successfully restricted from logging in.');
             } else {
-                alert('🔓 Portal is now UNLOCKED in the cloud. Teachers can log in normally.');
+                alert('🔓 Portal is now UNLOCKED. Teachers can log in normally.');
             }
         }
 
