@@ -453,14 +453,14 @@
             renderAll();
         });
 
-        // Fetch students from Supabase database
+        // Fetch students from Supabase database safely
         async function fetchStudentsFromSupabase() {
             try {
                 const { data, error } = await supabaseClient.from('students').select('*');
                 if(data && !error) {
                     studentsData = data.map(s => ({
                         id: s.id || Date.now(),
-                        name: s.student_name || s.name,
+                        name: s.student_name || s.name || 'Unknown Student',
                         class: s.class || s.class_name || 'Basic 4',
                         gender: s.gender || 'Male',
                         sba: s.sba || 0,
@@ -563,7 +563,7 @@
             }
         }
 
-        // Student Enrollment Form Submission
+        // Student Enrollment Form Submission (Matches exact Supabase columns)
         document.getElementById('student-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const name = document.getElementById('s-name').value;
@@ -571,7 +571,7 @@
             const gender = document.getElementById('s-gender').value;
 
             try {
-                const { data, error } = await supabaseClient.from('students').insert([{ student_name: name, class: className, gender, fee_billed: 300, fee_paid: 0 }]);
+                const { data, error } = await supabaseClient.from('students').insert([{ student_name: name, class: className, gender }]);
                 if(error) {
                     alert('Error saving to Supabase: ' + error.message);
                     return;
