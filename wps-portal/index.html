@@ -78,6 +78,19 @@
         </div>
     </div>
 
+    <!-- RECEIPT MODAL POPUP -->
+    <div id="receipt-modal" class="hidden fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 border-t-4 border-blue-900 space-y-4 relative">
+            <div id="receipt-content" class="space-y-4 text-slate-800">
+                <!-- Populated dynamically -->
+            </div>
+            <div class="flex justify-end space-x-3 no-print pt-2 border-t">
+                <button onclick="window.print()" class="px-4 py-2 bg-slate-800 text-white text-xs font-semibold rounded-lg">Print Receipt</button>
+                <button onclick="closeReceiptModal()" class="px-4 py-2 bg-blue-900 text-white text-xs font-semibold rounded-lg">Close</button>
+            </div>
+        </div>
+    </div>
+
     <!-- MAIN APP SHELL -->
     <div id="app-shell" class="hidden flex-1 flex flex-col">
         <!-- TOP NAVBAR -->
@@ -275,21 +288,22 @@
                 <!-- TAB: FEE MANAGEMENT -->
                 <section id="tab-fees" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl shadow border border-slate-100">
-                        <h2 class="text-xl font-bold text-slate-900">Fee Management (Standard: GH₵ 300)</h2>
-                        <p class="text-xs text-slate-500 mb-4">Track billings, payment receipts, and outstanding balances.</p>
+                        <h2 class="text-xl font-bold text-slate-900">Fee Management & Receipts (Standard: GH₵ 300)</h2>
+                        <p class="text-xs text-slate-500 mb-4">Edit student fees, track payments, print official receipts, and monitor balances.</p>
                         <div class="overflow-x-auto">
                             <table class="w-full text-left border-collapse">
                                 <thead class="bg-slate-100 text-xs uppercase font-bold text-slate-600">
                                     <tr>
                                         <th class="p-3">Student Name</th>
+                                        <th class="p-3">Class</th>
                                         <th class="p-3">Billed (GH₵)</th>
                                         <th class="p-3">Paid (GH₵)</th>
                                         <th class="p-3">Balance (GH₵)</th>
-                                        <th class="p-3 no-print">Action</th>
+                                        <th class="p-3 no-print">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody id="fees-table-body" class="divide-y divide-slate-100 text-sm">
-                                    <tr><td colspan="5" class="p-6 text-center text-slate-400 italic">No fee records found.</td></tr>
+                                    <tr><td colspan="6" class="p-6 text-center text-slate-400 italic">No fee records found.</td></tr>
                                 </tbody>
                             </table>
                         </div>
@@ -456,6 +470,10 @@
             document.getElementById('announcement-modal').classList.add('hidden');
         }
 
+        function closeReceiptModal() {
+            document.getElementById('receipt-modal').classList.add('hidden');
+        }
+
         function logout() { location.reload(); }
 
         function switchTab(tabId) {
@@ -466,10 +484,12 @@
             const active = document.getElementById(`tab-${tabId}`);
             if(active) active.classList.remove('hidden');
 
-            // Render grading table automatically when switching to assessment tab
             if(tabId === 'assessment') {
                 renderClassesDropdown();
                 renderGradingTable();
+            }
+            if(tabId === 'fees') {
+                renderFeesTable();
             }
         }
 
@@ -535,7 +555,7 @@
             }
         }
 
-        // Student Enrollment Form Submission (Syncs immediately)
+        // Student Enrollment Form Submission
         document.getElementById('student-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const name = document.getElementById('s-name').value;
@@ -651,22 +671,59 @@
             alert('All student reports successfully finalized and pushed to Student History!');
         }
 
+        // FEE MANAGEMENT & RECEIPT GENERATION FUNCTIONS
         function renderFeesTable() {
             const tbody = document.getElementById('fees-table-body');
             if(!tbody) return;
             if(studentsData.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-slate-400 italic">No fee records found.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="6" class="p-6 text-center text-slate-400 italic">No fee records found. Use the Student Enrollment tab to add students.</td></tr>`;
                 return;
             }
-            tbody.innerHTML = studentsData.map(s => `
+            tbody.innerHTML = studentsData.map((s, idx) => `
                 <tr>
                     <td class="p-3 font-medium">${s.name}</td>
-                    <td class="p-3">GH₵ ${s.feeBilled}</td>
-                    <td class="p-3 text-emerald-700 font-semibold">GH₵ ${s.feePaid}</td>
+                    <td class="p-3">${s.class}</td>
+                    <td class="p-3">GH₵ <input type="number" value="${s.feeBilled}" onchange="updateFeeVal(${idx}, 'feeBilled', this.value)" class="w-20 p-1 border rounded font-semibold"></td>
+                    <td class="p-3 text-emerald-700 font-semibold">GH₵ <input type="number" value="${s.feePaid}" onchange="updateFeeVal(${idx}, 'feePaid', this.value)" class="w-20 p-1 border rounded font-semibold"></td>
                     <td class="p-3 text-red-600 font-bold">GH₵ ${s.feeBilled - s.feePaid}</td>
-                    <td class="p-3 no-print"><button onclick="alert('Receipt generated for ${s.name}')" class="px-3 py-1 bg-slate-800 text-white text-xs rounded">Receipt</button></td>
+                    <td class="p-3 no-print space-x-2">
+                        <button onclick="viewReceipt(${idx})" class="px-3 py-1.5 bg-blue-900 text-white text-xs rounded font-semibold hover:bg-blue-800">Receipt 🖨️</button>
+                    </td>
                 </tr>
             `).join('');
+        }
+
+        function updateFeeVal(index, field, val) {
+            studentsData[index][field] = parseFloat(val) || 0;
+            renderFeesTable();
+        }
+
+        function viewReceipt(index) {
+            const s = studentsData[index];
+            const balance = s.feeBilled - s.feePaid;
+            const content = document.getElementById('receipt-content');
+
+            content.innerHTML = `
+                <div class="text-center space-y-1 border-b pb-4">
+                    <div class="w-12 h-12 mx-auto rounded-full bg-blue-950 border-2 border-amber-400 flex flex-col items-center justify-center text-white text-[7px] font-bold shadow">WPS</div>
+                    <h3 class="font-bold text-lg text-blue-950">Wesley Preparatory School</h3>
+                    <p class="text-[11px] text-slate-500 font-medium">Assorko-Essaman • Official Fee Receipt</p>
+                    <p class="text-[10px] text-amber-800 font-bold uppercase tracking-wider">Motto: Knowledge and Integrity</p>
+                </div>
+                <div class="text-sm space-y-2 pt-2">
+                    <p><strong>Student Name:</strong> ${s.name}</p>
+                    <p><strong>Class:</strong> ${s.class}</p>
+                    <p><strong>Date Issued:</strong> ${new Date().toLocaleDateString()}</p>
+                    <hr class="my-2">
+                    <div class="flex justify-between"><span>Total Billed Fee:</span> <strong>GH₵ ${s.feeBilled}</strong></div>
+                    <div class="flex justify-between text-emerald-700"><span>Amount Paid:</span> <strong>GH₵ ${s.feePaid}</strong></div>
+                    <div class="flex justify-between text-red-600 border-t pt-1 font-bold"><span>Outstanding Arrears:</span> <strong>GH₵ ${balance}</strong></div>
+                </div>
+                <div class="text-center pt-2 text-[11px] text-slate-400 italic">
+                    Thank you for your prompt payment!
+                </div>
+            `;
+            document.getElementById('receipt-modal').classList.remove('hidden');
         }
 
         function renderAttendance() {
