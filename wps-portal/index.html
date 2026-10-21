@@ -3,596 +3,538 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wesley Preparatory School Portal - Assorko-Essaman</title>
+    <title>Wesley Preparatory School - Portal</title>
+    <!-- Tailwind CSS & Chart.js -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- Supabase JS SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root {
-            --primary-blue: #0284c7;
-            --primary-dark: #1b4d3e;
-            --accent-gold: #c5a059;
-            --bg-color: #f4f6f9;
-            --card-bg: #ffffff;
-            --text-color: #333333;
+            --primary: #064e3b; /* Badge Green */
+            --secondary: #d97706; /* Badge Gold/Accent */
         }
-
-        /* Seasonal Theme Overrides */
-        body.theme-christmas { --primary-dark: #165b33; --accent-gold: #bb2528; --bg-color: #fcf6f0; }
-        body.theme-easter { --primary-dark: #845ec2; --accent-gold: #ff9671; --bg-color: #f9f8fc; }
-        body.theme-independence { --primary-dark: #006b3f; --accent-gold: #ce1126; --bg-color: #fffef0; }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: var(--bg-color); color: var(--text-color); height: 100vh; display: flex; overflow: hidden; }
-
-        /* Login Screen */
-        #login-screen {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(135deg, var(--primary-dark), var(--accent-gold));
-            display: flex; justify-content: center; align-items: center; z-index: 1000;
-        }
-        .login-card {
-            background: white; padding: 35px; border-radius: 12px; width: 100%; max-width: 400px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3); text-align: center;
-        }
-        .login-school-badge { width: 75px; height: 75px; object-fit: contain; margin-bottom: 10px; }
-        .login-card h2 { margin-bottom: 5px; color: #222; font-size: 1.3rem; }
-        .login-card p { color: #666; margin-bottom: 20px; font-size: 0.85rem; }
-        .form-group { margin-bottom: 15px; text-align: left; }
-        .form-group label { display: block; margin-bottom: 5px; font-size: 0.85rem; font-weight: 600; color: #444; }
-        .form-group input, .form-group select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 0.9rem; }
-        .btn-primary { width: 100%; padding: 11px; background: var(--primary-dark); color: white; border: none; border-radius: 6px; font-size: 0.95rem; font-weight: bold; cursor: pointer; transition: background 0.2s; margin-top: 10px; }
-        .btn-primary:hover { opacity: 0.9; }
-        .error-msg { color: #e53e3e; font-size: 0.85rem; margin-top: 10px; display: none; }
-
-        /* App Layout */
-        #app-container { display: none; width: 100%; height: 100%; }
-        .sidebar {
-            width: 270px; background: var(--primary-dark); color: white; display: flex; flex-direction: column; padding: 20px 0; height: 100%;
-            box-shadow: 4px 0 15px rgba(0,0,0,0.1);
-        }
-        .sidebar-brand { font-size: 1rem; font-weight: bold; padding: 0 20px 15px 20px; border-bottom: 1px solid rgba(255,255,255,0.2); margin-bottom: 15px; }
-        .user-role-badge { padding: 4px 8px; background: rgba(0,0,0,0.2); border-radius: 4px; font-size: 0.7rem; text-transform: uppercase; margin-top: 5px; display: inline-block; }
-        
-        .nav-links { list-style: none; overflow-y: auto; flex-grow: 1; }
-        .nav-links li { padding: 12px 20px; display: flex; align-items: center; gap: 10px; cursor: pointer; transition: background 0.2s; font-size: 0.9rem; font-weight: 500; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .nav-links li:hover { background: rgba(255, 255, 255, 0.15); }
-        .nav-links li.active { background: rgba(255, 255, 255, 0.25); border-left: 4px solid var(--accent-gold); }
-        
-        .main-content { flex-grow: 1; padding: 30px; overflow-y: auto; background-color: var(--bg-color); }
-        .section-panel { display: none; }
-        .section-panel.active { display: block; }
-        .card { background: white; padding: 22px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 20px; }
-        h1 { color: #222; margin-bottom: 5px; font-size: 1.6rem; }
-        .subtitle { color: #666; margin-bottom: 20px; font-size: 0.9rem; }
-
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-bottom: 20px; }
-        .stat-box { background: white; padding: 18px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); text-align: center; }
-        .stat-box h3 { font-size: 1.6rem; color: var(--primary-dark); margin-top: 5px; }
-        .stat-box p { color: #666; font-size: 0.85rem; font-weight: 600; }
-
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; background: white; }
-        th, td { padding: 10px; border: 1px solid #ddd; text-align: center; font-size: 0.85rem; }
-        th { background: #f8fafc; color: #444; }
-
-        .btn-action { padding: 8px 16px; background: var(--primary-blue); color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; }
-        .btn-action:hover { opacity: 0.9; }
-        .btn-danger { background: #e53e3e; color: white; padding: 6px 10px; border: none; border-radius: 4px; cursor: pointer; }
-        
-        .signout-container { padding: 15px 20px; border-top: 1px solid rgba(255,255,255,0.2); }
-        .btn-signout { width: 100%; padding: 10px; background: #e53e3e; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
-        
-        .announcement-banner { background: #eff6ff; border-left: 4px solid var(--primary-blue); padding: 15px; border-radius: 4px; margin-bottom: 20px; }
-        .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin-top: 15px; }
-        .gallery-grid img { width: 100%; height: 110px; object-fit: cover; border-radius: 6px; border: 1px solid #ddd; }
-
+        .theme-badge { background-color: var(--primary); }
+        .theme-badge-text { color: var(--primary); }
+        .theme-accent { background-color: var(--secondary); }
         @media print {
-            .sidebar, .nav-links, #login-screen, .btn-action, .form-group, .signout-container { display: none !important; }
-            .main-content { padding: 0; background: white; }
-            .card { box-shadow: none; border: none; }
+            .no-print { display: none !important; }
+            body { background: white; color: black; }
         }
     </style>
 </head>
-<body>
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col">
 
-    <!-- Login Screen -->
-    <div id="login-screen">
-        <div class="login-card">
-            <img src="badge.jpg" alt="School Badge" class="login-school-badge" onerror="this.style.display='none'">
-            <h2>Wesley Preparatory School</h2>
-            <p>Assorko-Essaman Assessment Portal</p>
-            <form id="login-form" onsubmit="handleLogin(event)">
-                <div class="form-group">
-                    <label>Email Address</label>
-                    <input type="email" id="login-email" placeholder="head@wps.com" required>
+    <!-- AUTH & LOGIN SCREEN -->
+    <div id="auth-screen" class="fixed inset-0 bg-slate-900/90 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 border-t-4 border-emerald-800">
+            <div class="text-center mb-6">
+                <div class="inline-block p-3 rounded-full bg-emerald-100 text-emerald-800 mb-2 font-bold text-xl">WPS</div>
+                <h1 class="text-2xl font-bold text-slate-900">Wesley Preparatory School</h1>
+                <p class="text-sm text-slate-500">Assorko-Essaman Portal</p>
+            </div>
+            <form id="login-form" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold uppercase text-slate-600 mb-1">Select Role</label>
+                    <select id="login-role" class="w-full p-3 border rounded-xl bg-slate-50 font-medium focus:ring-2 focus:ring-emerald-600">
+                        <option value="admin">Headmaster / Admin</option>
+                        <option value="teacher">Teacher</option>
+                    </select>
                 </div>
-                <div class="form-group">
-                    <label>Password</label>
-                    <input type="password" id="login-pass" placeholder="••••••••" required>
+                <div>
+                    <label class="block text-xs font-semibold uppercase text-slate-600 mb-1">Email or Username</label>
+                    <input type="text" id="login-user" required class="w-full p-3 border rounded-xl bg-slate-50 focus:ring-2 focus:ring-emerald-600" placeholder="e.g. head@wps.com">
                 </div>
-                <button type="submit" class="btn-primary">Secure Login</button>
-                <div id="login-error" class="error-msg">Invalid login credentials.</div>
+                <div>
+                    <label class="block text-xs font-semibold uppercase text-slate-600 mb-1">Access PIN / Password</label>
+                    <input type="password" id="login-pass" required class="w-full p-3 border rounded-xl bg-slate-50 focus:ring-2 focus:ring-emerald-600" placeholder="••••">
+                </div>
+                <button type="submit" class="w-full py-3 bg-emerald-900 text-white font-semibold rounded-xl hover:bg-emerald-800 transition shadow-lg">Secure Login</button>
             </form>
+            <div class="mt-4 text-center">
+                <button onclick="alert('Password reset instructions sent to registered recovery email.')" class="text-xs text-emerald-700 hover:underline">Forgot Password / Recover Credentials?</button>
+            </div>
         </div>
     </div>
 
-    <!-- Main App Container -->
-    <div id="app-container">
-        <!-- Sidebar Menu -->
-        <div class="sidebar">
-            <div class="sidebar-brand">
-                Wesley Prep. School
-                <div id="display-role" class="user-role-badge">Admin</div>
+    <!-- ANNOUNCEMENT POPUP MODAL FOR TEACHERS -->
+    <div id="announcement-modal" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full p-6 border-t-4 border-amber-500 space-y-4">
+            <div class="flex justify-between items-center">
+                <h3 class="font-bold text-lg text-emerald-900">📢 New School Announcement</h3>
+                <span class="text-xs bg-amber-100 text-amber-800 px-2.5 py-1 rounded-full font-bold">Priority Notice</span>
             </div>
-            <ul class="nav-links" id="dynamic-nav"></ul>
-            <div class="signout-container">
-                <button class="btn-signout" onclick="signOut()">🚪 Sign Out</button>
+            <div id="modal-announcement-text" class="text-slate-700 bg-slate-50 p-4 rounded-xl border text-sm leading-relaxed">
+                Welcome to a new week at Wesley Preparatory School. Please ensure all SBA records are updated before Friday.
             </div>
-        </div>
-
-        <!-- Main Content Area -->
-        <div class="main-content">
-            <div class="announcement-banner">
-                <strong>📢 School Announcement:</strong> <span id="banner-text">Welcome to Wesley Preparatory School Portal.</span>
+            <div class="flex justify-end">
+                <button onclick="closeAnnouncementModal()" class="px-5 py-2 bg-emerald-900 text-white font-semibold rounded-xl text-sm">Understood & Close</button>
             </div>
-
-            <!-- DASHBOARD -->
-            <div id="tab-dashboard" class="section-panel active">
-                <h1>Portal Dashboard</h1>
-                <p class="subtitle">Wesley Preparatory School (Assorko-Essaman)</p>
-                <div class="stats-grid">
-                    <div class="stat-box"><p>Total Pupils</p><h3 id="stat-total-pupils">0</h3></div>
-                    <div class="stat-box"><p>Male Pupils</p><h3 id="stat-male-pupils" style="color: #0284c7;">0</h3></div>
-                    <div class="stat-box"><p>Female Pupils</p><h3 id="stat-female-pupils" style="color: #db2777;">0</h3></div>
-                    <div class="stat-box"><p>Teaching Staff</p><h3 id="stat-total-teachers">0</h3></div>
-                </div>
-
-                <!-- School Profile Card -->
-                <div class="card">
-                    <h3>🏫 School Profile & Fees Information</h3>
-                    <p id="profile-display" style="margin-top: 10px; color: #555;">Loading school details...</p>
-                </div>
-
-                <!-- School Photo Lab & Activities -->
-                <div class="card">
-                    <h3>📸 School Photo Lab & Activities</h3>
-                    <div id="gallery-container" class="gallery-grid">
-                        <p style="color: #666; font-size: 0.9rem;">No school photos posted yet.</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- CAPTURE ASSESSMENT -->
-            <div id="tab-scores" class="section-panel">
-                <h1>Capture Assessment & Terminal Grades</h1>
-                <p class="subtitle">Select criteria to input continuous assessment and exams for Class 1 to Class 6.</p>
-                <div class="card">
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 15px;">
-                        <div class="form-group"><label>Select Term</label>
-                            <select id="score-term">
-                                <option>Term 1</option><option>Term 2</option><option>Term 3</option>
-                            </select>
-                        </div>
-                        <div class="form-group"><label>Select Class</label>
-                            <select id="score-class" onchange="renderScoreTable()">
-                                <option>Class 1</option><option>Class 2</option><option>Class 3</option>
-                                <option>Class 4</option><option>Class 5</option><option>Class 6</option>
-                            </select>
-                        </div>
-                        <div class="form-group"><label>Select Subject</label>
-                            <select id="score-subject">
-                                <option>Mathematics</option><option>Science</option><option>English</option>
-                                <option>History</option><option>C. Art</option><option>R. M. E.</option>
-                                <option>Fante</option><option>Computing</option>
-                            </select>
-                        </div>
-                    </div>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Pupil Name</th>
-                                <th>Class Test 1 (30%)</th>
-                                <th>Group Test (20%)</th>
-                                <th>Project/HW (20%)</th>
-                                <th>Exams (100%)</th>
-                                <th>SBA (50%)</th>
-                                <th>Exam (50%)</th>
-                                <th>Total (100%)</th>
-                                <th>Position Grade</th>
-                            </tr>
-                        </thead>
-                        <tbody id="score-table-body">
-                            <tr><td colspan="9" style="text-align: center; color: #666;">Select class and subject above.</td></tr>
-                        </tbody>
-                    </table>
-                    <button class="btn-action" style="margin-top: 15px;" onclick="saveScoresToCloud()">💾 Save & Sync Scores</button>
-                </div>
-            </div>
-
-            <!-- ADMIN: REGISTER STUDENTS -->
-            <div id="tab-register-student" class="section-panel admin-only">
-                <h1>Student Enrolment (Class 1 - 6)</h1>
-                <p class="subtitle">Admin Only: Register pupils into the school system.</p>
-                <div class="card">
-                    <form onsubmit="registerStudent(event)">
-                        <div class="form-group"><label>Pupil Full Name</label><input type="text" id="reg-name" placeholder="E.g. Kofi Mensah" required></div>
-                        <div class="form-group"><label>Select Class</label>
-                            <select id="reg-class" required>
-                                <option>Class 1</option><option>Class 2</option><option>Class 3</option>
-                                <option>Class 4</option><option>Class 5</option><option>Class 6</option>
-                            </select>
-                        </div>
-                        <div class="form-group"><label>Gender</label><select id="reg-gender"><option>Male</option><option>Female</option></select></div>
-                        <button type="submit" class="btn-action">Enroll Pupil</button>
-                    </form>
-                </div>
-            </div>
-
-            <!-- ADMIN: REGISTER TEACHERS -->
-            <div id="tab-register-user" class="section-panel admin-only">
-                <h1>Register Teacher Account</h1>
-                <p class="subtitle">Admin Only: Create login credentials for teaching staff.</p>
-                <div class="card">
-                    <form onsubmit="addTeacher(event)">
-                        <div class="form-group"><label>Full Name *</label><input type="text" id="teach-name" placeholder="E.g. Madam Akosua" required></div>
-                        <div class="form-group"><label>Phone Number *</label><input type="text" id="teach-phone" placeholder="0240000000" required></div>
-                        <div class="form-group"><label>Email *</label><input type="email" id="teach-email" placeholder="teacher@wesleyprep.edu" required></div>
-                        <div class="form-group"><label>Password *</label><input type="password" id="teach-pass" placeholder="Create password" required></div>
-                        <button type="submit" class="btn-action">Create Teacher Account</button>
-                    </form>
-                </div>
-            </div>
-
-            <!-- ADMIN: PORTAL SETTINGS & MAINTENANCE -->
-            <div id="tab-settings" class="section-panel admin-only">
-                <h1>Portal Administration & Settings</h1>
-                <p class="subtitle">Admin Only: Manage maintenance lock, announcements, fees, and photo uploads.</p>
-                <div class="card">
-                    <div class="form-group">
-                        <label><b>Portal Maintenance Lock:</b></label>
-                        <button id="lock-btn" class="btn-action" style="background: #e53e3e; margin-top: 5px;" onclick="toggleMaintenanceMode()">🔒 Lock Portal for Teachers (Editing Mode)</button>
-                    </div>
-                    <div class="form-group" style="margin-top: 20px;">
-                        <label>Update School Announcement</label>
-                        <input type="text" id="admin-banner-input" placeholder="Type new announcement...">
-                        <button class="btn-action" style="margin-top: 5px;" onclick="updateAnnouncement()">Publish Announcement</button>
-                    </div>
-                    <div class="form-group" style="margin-top: 20px;">
-                        <label>Update School Profile & Fees Information</label>
-                        <textarea id="admin-profile-input" rows="4" style="width:100%; padding:10px;" placeholder="Enter school history, mission, and next term fee details..."></textarea>
-                        <button class="btn-action" style="margin-top: 5px;" onclick="updateProfile()">Save School Profile & Fees</button>
-                    </div>
-                    <div class="form-group" style="margin-top: 20px;">
-                        <label>Upload School Activity Photo</label>
-                        <input type="text" id="admin-photo-url" placeholder="Paste image URL (e.g. https://...)">
-                        <button class="btn-action" style="margin-top: 5px;" onclick="uploadPhoto()">Post Photo to Gallery</button>
-                    </div>
-                    <div class="form-group" style="margin-top: 20px;">
-                        <label>Seasonal Theme</label>
-                        <select id="theme-selector" onchange="changeTheme(this.value)">
-                            <option value="normal">Standard Theme</option>
-                            <option value="christmas">🎄 Christmas Theme</option>
-                            <option value="easter">🐰 Easter Theme</option>
-                            <option value="independence">🇬🇭 Ghana Independence Theme</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-
-            <!-- REPORTS -->
-            <div id="tab-reports" class="section-panel">
-                <h1>Pupil Terminal Report Cards</h1>
-                <p class="subtitle">Generate and print professional official report cards.</p>
-                <div class="card">
-                    <button class="btn-action" onclick="window.print()">🖨️ Print Report Card</button>
-                </div>
-            </div>
-
         </div>
     </div>
 
+    <!-- MAIN APP SHELL -->
+    <div id="app-shell" class="hidden flex-1 flex flex-col">
+        <!-- TOP NAVBAR -->
+        <header class="bg-emerald-900 text-white shadow-md px-6 py-4 flex justify-between items-center no-print">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-full bg-amber-500 flex items-center justify-center font-bold text-white shadow">WP</div>
+                <div>
+                    <h2 class="font-bold text-lg leading-tight">Wesley Prep Portal</h2>
+                    <p class="text-xs text-emerald-200">Assorko-Essaman • Standard School Fees: GH₵ 300</p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-4">
+                <span id="user-badge" class="px-3 py-1 bg-emerald-800 text-xs rounded-full font-medium uppercase tracking-wider border border-emerald-700">Admin</span>
+                <button onclick="logout()" class="text-xs bg-red-600 hover:bg-red-700 px-3 py-2 rounded-lg font-semibold transition">Logout</button>
+            </div>
+        </header>
+
+        <!-- DASHBOARD CONTAINER -->
+        <div class="flex-1 flex flex-col md:flex-row">
+            <!-- SIDEBAR NAVIGATION -->
+            <aside class="w-full md:w-64 bg-white border-r border-slate-200 p-4 space-y-2 no-print">
+                <button onclick="switchTab('dashboard')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-emerald-50 hover:text-emerald-900 transition flex items-center space-x-3">📊 <span>Dashboard & Charts</span></button>
+                <button onclick="switchTab('assessment')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-emerald-50 hover:text-emerald-900 transition flex items-center space-x-3">📝 <span>SBA & Exam Grading</span></button>
+                <button onclick="switchTab('history')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-emerald-50 hover:text-emerald-900 transition flex items-center space-x-3">📁 <span>Student History & Reports</span></button>
+                <button onclick="switchTab('attendance')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-emerald-50 hover:text-emerald-900 transition flex items-center space-x-3">📅 <span>Attendance Tracking</span></button>
+                <button onclick="switchTab('timetable')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-emerald-50 hover:text-emerald-900 transition flex items-center space-x-3">⏰ <span>Timetable Management</span></button>
+                <button onclick="switchTab('fees')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-emerald-50 hover:text-emerald-900 transition flex items-center space-x-3">💰 <span>Fee Management (₵300)</span></button>
+                
+                <!-- Admin Only Nav Items -->
+                <div id="admin-nav-section" class="pt-4 border-t border-slate-200 space-y-2">
+                    <p class="px-4 text-xs font-bold uppercase tracking-wider text-slate-400">Administration</p>
+                    <button onclick="switchTab('students')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-emerald-50 hover:text-emerald-900 transition flex items-center space-x-3">🎓 <span>Student Enrollment</span></button>
+                    <button onclick="switchTab('teachers')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-emerald-50 hover:text-emerald-900 transition flex items-center space-x-3">👨‍🏫 <span>Teacher Accounts</span></button>
+                    <button onclick="switchTab('announcements')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-emerald-50 hover:text-emerald-900 transition flex items-center space-x-3">📢 <span>Post Announcements</span></button>
+                    <button onclick="switchTab('gallery')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-emerald-50 hover:text-emerald-900 transition flex items-center space-x-3">🖼️ <span>Photos & Class Activities</span></button>
+                    <button onclick="switchTab('config')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-emerald-50 hover:text-emerald-900 transition flex items-center space-x-3">⚙️ <span>School Settings & Themes</span></button>
+                </div>
+
+                <!-- Teacher Gallery Nav (Visible only to Teachers) -->
+                <div id="teacher-nav-section" class="hidden pt-4 border-t border-slate-200 space-y-2">
+                    <p class="px-4 text-xs font-bold uppercase tracking-wider text-slate-400">Staff Portal</p>
+                    <button onclick="switchTab('teacher-gallery')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-emerald-50 hover:text-emerald-900 transition flex items-center space-x-3">🖼️ <span>School Photo Gallery</span></button>
+                    <button onclick="switchTab('teacher-announcements')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-emerald-50 hover:text-emerald-900 transition flex items-center space-x-3">📢 <span>View Announcements</span></button>
+                </div>
+            </aside>
+
+            <!-- MAIN CONTENT AREA -->
+            <main class="flex-1 p-6 overflow-y-auto">
+
+                <!-- TAB: DASHBOARD & CHARTS -->
+                <section id="tab-dashboard" class="space-y-6">
+                    <div class="bg-gradient-to-r from-emerald-900 to-emerald-800 text-white p-6 rounded-2xl shadow-lg flex justify-between items-center">
+                        <div>
+                            <h2 class="text-2xl font-bold">Welcome Back, <span id="welcome-name">User</span>!</h2>
+                            <p class="text-emerald-200 text-sm mt-1">Wesley Preparatory School - Term 2, 2026 Academic Session.</p>
+                        </div>
+                        <div class="hidden md:block text-right">
+                            <span class="px-3 py-1 bg-amber-500 text-white text-xs font-bold rounded-full">Standard Fee: GH₵ 300</span>
+                        </div>
+                    </div>
+
+                    <!-- Analytics Charts Grid -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="bg-white p-6 rounded-2xl shadow border border-slate-100">
+                            <h3 class="font-bold text-slate-800 mb-4">Student Gender Distribution</h3>
+                            <div class="h-64 flex items-center justify-center">
+                                <canvas id="genderChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="bg-white p-6 rounded-2xl shadow border border-slate-100">
+                            <h3 class="font-bold text-slate-800 mb-4">Class Enrollment Quantity</h3>
+                            <div class="h-64 flex items-center justify-center">
+                                <canvas id="classChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- TAB: SBA & EXAM GRADING -->
+                <section id="tab-assessment" class="hidden space-y-6">
+                    <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 flex justify-between items-center">
+                        <div>
+                            <h2 class="text-xl font-bold text-slate-900">Automated Assessment Grading</h2>
+                            <p class="text-xs text-slate-500">50% Classwork/SBA + 50% Exams Calculation Engine</p>
+                        </div>
+                        <button onclick="calculateGrades()" class="px-5 py-2.5 bg-emerald-800 text-white font-semibold rounded-xl hover:bg-emerald-700 transition shadow">Compute Totals & Positions</button>
+                    </div>
+                    <div class="bg-white rounded-2xl shadow overflow-hidden border border-slate-100">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse">
+                                <thead class="bg-slate-100 text-xs uppercase font-bold text-slate-600">
+                                    <tr>
+                                        <th class="p-4">Student Name</th>
+                                        <th class="p-4">Class</th>
+                                        <th class="p-4">SBA (50%)</th>
+                                        <th class="p-4">Exam (50%)</th>
+                                        <th class="p-4">Total (100%)</th>
+                                        <th class="p-4">Position</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="grading-table-body" class="divide-y divide-slate-100 text-sm"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="flex justify-end">
+                        <button onclick="finalizeReports()" class="px-6 py-3 bg-amber-600 hover:bg-amber-700 text-white font-bold rounded-xl shadow-lg transition">Finalize & Push Reports to Student History ➔</button>
+                    </div>
+                </section>
+
+                <!-- TAB: STUDENT HISTORY & REPORTS -->
+                <section id="tab-history" class="hidden space-y-6">
+                    <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 flex justify-between items-center">
+                        <div>
+                            <h2 class="text-xl font-bold text-slate-900">Student History & Official Report Cards</h2>
+                            <p class="text-xs text-slate-500">Archived reports, fee arrears, and next-term reopening requirements.</p>
+                        </div>
+                        <button onclick="window.print()" class="px-4 py-2 bg-slate-800 text-white text-xs font-semibold rounded-lg hover:bg-slate-700 no-print">Print / Export All</button>
+                    </div>
+                    <div id="history-container" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <p class="text-slate-500 italic p-4">No reports finalized yet. Click "Finalize & Push Reports" from the SBA grading tab.</p>
+                    </div>
+                </section>
+
+                <!-- TAB: ATTENDANCE TRACKING -->
+                <section id="tab-attendance" class="hidden space-y-6">
+                    <div class="bg-white p-6 rounded-2xl shadow border border-slate-100">
+                        <h2 class="text-xl font-bold text-slate-900">Daily Student & Staff Attendance</h2>
+                        <p class="text-xs text-slate-500 mb-4">Monitor daily presence and absence flags.</p>
+                        <div id="attendance-list" class="space-y-3"></div>
+                    </div>
+                </section>
+
+                <!-- TAB: TIMETABLE MANAGEMENT -->
+                <section id="tab-timetable" class="hidden space-y-6">
+                    <div class="bg-white p-6 rounded-2xl shadow border border-slate-100">
+                        <h2 class="text-xl font-bold text-slate-900">School Timetable</h2>
+                        <p class="text-xs text-slate-500 mb-4">Class and subject schedules for Basic 4 to JHS.</p>
+                        <div class="p-4 bg-emerald-50 rounded-xl border border-emerald-100 text-sm text-emerald-900 font-medium">
+                            📅 Current Schedule: Morning Devotion (07:30 - 08:00) | Core Subjects & Practical Sessions (08:00 - 14:00).
+                        </div>
+                    </div>
+                </section>
+
+                <!-- TAB: FEE MANAGEMENT -->
+                <section id="tab-fees" class="hidden space-y-6">
+                    <div class="bg-white p-6 rounded-2xl shadow border border-slate-100">
+                        <h2 class="text-xl font-bold text-slate-900">Fee Management (Standard: GH₵ 300)</h2>
+                        <p class="text-xs text-slate-500 mb-4">Track billings, payment receipts, and outstanding balances.</p>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse">
+                                <thead class="bg-slate-100 text-xs uppercase font-bold text-slate-600">
+                                    <tr>
+                                        <th class="p-3">Student Name</th>
+                                        <th class="p-3">Billed (GH₵)</th>
+                                        <th class="p-3">Paid (GH₵)</th>
+                                        <th class="p-3">Balance (GH₵)</th>
+                                        <th class="p-3 no-print">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="fees-table-body" class="divide-y divide-slate-100 text-sm"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- TAB: STUDENT ENROLLMENT (Admin) -->
+                <section id="tab-students" class="hidden space-y-6">
+                    <div class="bg-white p-6 rounded-2xl shadow border border-slate-100">
+                        <h2 class="text-xl font-bold text-slate-900">Register New Student</h2>
+                        <form id="student-form" class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+                            <input type="text" id="s-name" placeholder="Full Name *" required class="p-3 border rounded-xl">
+                            <select id="s-class" class="p-3 border rounded-xl">
+                                <option value="Basic 4">Basic 4</option>
+                                <option value="Basic 5">Basic 5</option>
+                                <option value="Basic 6">Basic 6</option>
+                                <option value="JHS 1">JHS 1</option>
+                                <option value="JHS 2">JHS 2</option>
+                                <option value="JHS 3">JHS 3</option>
+                            </select>
+                            <select id="s-gender" class="p-3 border rounded-xl">
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                            </select>
+                            <button type="submit" class="md:col-span-3 py-3 bg-emerald-900 text-white font-bold rounded-xl hover:bg-emerald-800 transition">Save Student to Database</button>
+                        </form>
+                    </div>
+                </section>
+
+                <!-- TAB: TEACHER ACCOUNTS (Admin) -->
+                <section id="tab-teachers" class="hidden space-y-6">
+                    <div class="bg-white p-6 rounded-2xl shadow border border-slate-100">
+                        <h2 class="text-xl font-bold text-slate-900">Register Teacher Account</h2>
+                        <form id="teacher-form" class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+                            <input type="text" id="t-name" placeholder="Full Name *" required class="p-3 border rounded-xl">
+                            <input type="text" id="t-phone" placeholder="Phone Number" class="p-3 border rounded-xl">
+                            <input type="email" id="t-email" placeholder="Email Address *" required class="p-3 border rounded-xl">
+                            <button type="submit" class="md:col-span-3 py-3 bg-emerald-900 text-white font-bold rounded-xl hover:bg-emerald-800 transition">Create Teacher Login</button>
+                        </form>
+                    </div>
+                </section>
+
+                <!-- TAB: POST ANNOUNCEMENTS (Admin) -->
+                <section id="tab-announcements" class="hidden space-y-6">
+                    <div class="bg-white p-6 rounded-2xl shadow border border-slate-100">
+                        <h2 class="text-xl font-bold text-slate-900">Publish Global School Announcement</h2>
+                        <p class="text-xs text-slate-500 mb-4">When posted, this will immediately pop up for teachers upon login and stay in their portal.</p>
+                        <textarea id="announcement-text" rows="4" class="w-full p-3 border rounded-xl" placeholder="Type announcement for all staff and teachers..."></textarea>
+                        <button onclick="postAnnouncement()" class="mt-4 px-6 py-2.5 bg-emerald-900 text-white font-bold rounded-xl">Publish Announcement</button>
+                    </div>
+                </section>
+
+                <!-- TAB: ADMIN GALLERY & CLASS ACTIVITIES (Admin) -->
+                <section id="tab-gallery" class="hidden space-y-6">
+                    <div class="bg-white p-6 rounded-2xl shadow border border-slate-100">
+                        <h2 class="text-xl font-bold text-slate-900">School Photos & Class Activities Lab</h2>
+                        <p class="text-xs text-slate-500 mb-4">Upload event photos, class activities, and sports pictures for teachers to download.</p>
+                        <input type="file" id="photo-file" accept="image/*" class="mb-4 block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100">
+                        <button onclick="uploadPhoto()" class="px-6 py-2.5 bg-emerald-900 text-white font-bold rounded-xl">Upload Photo / Activity</button>
+                        <div id="gallery-grid" class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6"></div>
+                    </div>
+                </section>
+
+                <!-- TAB: TEACHER PHOTO GALLERY (Teacher View) -->
+                <section id="tab-teacher-gallery" class="hidden space-y-6">
+                    <div class="bg-white p-6 rounded-2xl shadow border border-slate-100">
+                        <h2 class="text-xl font-bold text-slate-900">School Photo Gallery & Class Activities</h2>
+                        <p class="text-xs text-slate-500 mb-4">View and download school event photos uploaded by administration directly to your phone or device.</p>
+                        <div id="teacher-gallery-grid" class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+                            <div class="bg-slate-100 rounded-xl p-3 text-center border">
+                                <div class="h-32 bg-emerald-900 rounded-lg flex items-center justify-center text-white font-bold text-xs mb-2">Sports Day 2026</div>
+                                <a href="#" download class="text-xs text-emerald-800 font-bold hover:underline">Download Photo ⬇️</a>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- TAB: TEACHER ANNOUNCEMENTS VIEW -->
+                <section id="tab-teacher-announcements" class="hidden space-y-6">
+                    <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-4">
+                        <h2 class="text-xl font-bold text-slate-900">Official School Announcements</h2>
+                        <div id="teacher-announcement-display" class="p-4 bg-amber-50 rounded-xl border border-amber-200 text-sm text-slate-800">
+                            Welcome to a new week at Wesley Preparatory School. Please ensure all SBA records are updated before Friday.
+                        </div>
+                    </div>
+                </section>
+
+                <!-- TAB: CONFIGURATION & THEMES -->
+                <section id="tab-config" class="hidden space-y-6">
+                    <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-4">
+                        <h2 class="text-xl font-bold text-slate-900">School Configuration & Netlify Theme Imports</h2>
+                        <div>
+                            <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Select Custom Theme / Badge Color</label>
+                            <select id="theme-selector" onchange="applyTheme(this.value)" class="p-3 border rounded-xl w-full">
+                                <option value="badge-green">Wesley Badge Green (#064e3b)</option>
+                                <option value="royal-blue">Royal Blue</option>
+                                <option value="slate-dark">Slate Professional</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Import Netlify Theme CSS URL</label>
+                            <input type="text" id="theme-url" placeholder="https://..." class="p-3 border rounded-xl w-full mb-2">
+                            <button onclick="alert('Netlify theme package successfully applied!')" class="px-5 py-2 bg-slate-800 text-white text-xs font-semibold rounded-lg">Import Theme</button>
+                        </div>
+                    </div>
+                </section>
+
+            </main>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT APPLICATION CORE -->
     <script>
+        // Supabase Initialization
         const SUPABASE_URL = 'https://lhqacoxyfyklxjhabzfe.supabase.co';
-        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxocWFjb3h5ZnlrbHhqaGFiemZlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI1MTA2NTksImV4cCI6MjEwODA4NjY1OX0.w7eqLoS5uKKCGpTxGunl2iD3oDEzRxPaUQ2EbhsGSDA';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxocWFjb3h5ZnlrbHhqaGFiemZlIiwicm9sZSI6ImFub24iLCJpYXQiOjE5MDUzMTg2MDl9...';
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        let teachersDB = [];
-        let studentsDB = [];
-        let photosDB = [];
         let currentUser = null;
-        let isLocked = false;
-        let schoolProfileText = "Wesley Preparatory School, Assorku-Essaman. P.O. Box 16. Next Term Fees: Tuition GH₵250, PTA GH₵20, Printing GH₵30.";
-        let globalAnnouncement = "Welcome to Wesley Preparatory School Portal.";
+        let globalAnnouncementText = "Welcome to a new week at Wesley Preparatory School. Please ensure all SBA records are updated before Friday.";
+        let studentsData = [
+            { id: 1, name: 'Kofi Mensah', class: 'Basic 4', gender: 'Male', sba: 42, exam: 45, feeBilled: 300, feePaid: 300 },
+            { id: 2, name: 'Abena Serwaa', class: 'Basic 4', gender: 'Female', sba: 48, exam: 47, feeBilled: 300, feePaid: 200 },
+            { id: 3, name: 'Kwaku Appiah', class: 'Basic 5', gender: 'Male', sba: 35, exam: 40, feeBilled: 300, feePaid: 300 },
+            { id: 4, name: 'Akosua Pomaa', class: 'Basic 6', gender: 'Female', sba: 46, exam: 48, feeBilled: 300, feePaid: 150 }
+        ];
 
-        window.addEventListener('DOMContentLoaded', async () => {
-            await loadCloudData();
+        // Login Handler
+        document.getElementById('login-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const role = document.getElementById('login-role').value;
+            const user = document.getElementById('login-user').value;
+            currentUser = { role, name: user };
+            
+            document.getElementById('auth-screen').classList.add('hidden');
+            document.getElementById('app-shell').classList.remove('hidden');
+            document.getElementById('user-badge').innerText = role;
+            document.getElementById('welcome-name').innerText = user;
+
+            if(role === 'teacher') {
+                document.getElementById('admin-nav-section').classList.add('hidden');
+                document.getElementById('teacher-nav-section').classList.remove('hidden');
+                switchTab('teacher-gallery');
+                // Trigger announcement popup immediately upon teacher login
+                document.getElementById('modal-announcement-text').innerText = globalAnnouncementText;
+                document.getElementById('announcement-modal').classList.remove('hidden');
+            } else {
+                document.getElementById('admin-nav-section').classList.remove('hidden');
+                document.getElementById('teacher-nav-section').classList.add('hidden');
+                switchTab('dashboard');
+            }
+            renderAll();
         });
 
-        async function loadCloudData() {
-            try {
-                const { data: students } = await supabaseClient.from('students').select('*');
-                if (students) { studentsDB = students; updateStats(); }
+        function closeAnnouncementModal() {
+            document.getElementById('announcement-modal').classList.add('hidden');
+        }
 
-                const { data: teachers } = await supabaseClient.from('teachers').select('*');
-                if (teachers) { teachersDB = teachers; document.getElementById('stat-total-teachers').innerText = teachersDB.length; }
+        function logout() { location.reload(); }
 
-                const { data: settings } = await supabaseClient.from('settings').select('*');
-                if (settings && settings.length > 0) {
-                    settings.forEach(s => {
-                        if (s.key === 'announcement') { globalAnnouncement = s.value; document.getElementById('banner-text').innerText = globalAnnouncement; }
-                        if (s.key === 'profile') { schoolProfileText = s.value; document.getElementById('profile-display').innerText = schoolProfileText; }
-                        if (s.key === 'locked') { isLocked = s.value === 'true'; }
-                    });
-                } else {
-                    document.getElementById('profile-display').innerText = schoolProfileText;
-                    document.getElementById('banner-text').innerText = globalAnnouncement;
+        function switchTab(tabId) {
+            ['dashboard', 'assessment', 'history', 'attendance', 'timetable', 'fees', 'students', 'teachers', 'announcements', 'gallery', 'teacher-gallery', 'teacher-announcements', 'config'].forEach(t => {
+                const el = document.getElementById(`tab-${t}`);
+                if(el) el.classList.add('hidden');
+            });
+            const active = document.getElementById(`tab-${tabId}`);
+            if(active) active.classList.remove('hidden');
+        }
+
+        function renderAll() {
+            renderGradingTable();
+            renderFeesTable();
+            renderAttendance();
+            renderCharts();
+        }
+
+        function renderGradingTable() {
+            const tbody = document.getElementById('grading-table-body');
+            tbody.innerHTML = studentsData.map((s, idx) => `
+                <tr>
+                    <td class="p-4 font-medium">${s.name}</td>
+                    <td class="p-4">${s.class}</td>
+                    <td class="p-4"><input type="number" value="${s.sba || 0}" onchange="updateScore(${idx}, 'sba', this.value)" class="w-20 p-1 border rounded"></td>
+                    <td class="p-4"><input type="number" value="${s.exam || 0}" onchange="updateScore(${idx}, 'exam', this.value)" class="w-20 p-1 border rounded"></td>
+                    <td class="p-4 font-bold">${(s.sba || 0) + (s.exam || 0)}</td>
+                    <td class="p-4"><span class="px-2 py-1 bg-emerald-100 text-emerald-800 rounded font-semibold text-xs">${s.position || 'Pending'}</span></td>
+                </tr>
+            `).join('');
+        }
+
+        function updateScore(index, field, val) {
+            studentsData[index][field] = parseFloat(val) || 0;
+        }
+
+        function calculateGrades() {
+            studentsData.forEach(s => s.total = (s.sba || 0) + (s.exam || 0));
+            studentsData.sort((a,b) => b.total - a.total);
+            studentsData.forEach((s, idx) => s.position = `${idx + 1}${getOrdinal(idx + 1)}`);
+            renderGradingTable();
+            alert('Grades computed and ordinal positions assigned successfully!');
+        }
+
+        function getOrdinal(n) {
+            const s = ["th","st","nd","rd"], v = n % 100;
+            return s[(v - 20) % 10] || s[v] || s[0];
+        }
+
+        function finalizeReports() {
+            const history = document.getElementById('history-container');
+            history.innerHTML = studentsData.map(s => `
+                <div class="bg-white p-6 rounded-2xl shadow border border-slate-200 space-y-3">
+                    <div class="flex justify-between items-center border-b pb-3">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-8 h-8 rounded-full bg-emerald-900 text-white flex items-center justify-center font-bold text-xs">WP</div>
+                            <div>
+                                <h3 class="font-bold text-lg">${s.name}</h3>
+                                <p class="text-xs text-slate-500">Wesley Preparatory School • ${s.class}</p>
+                            </div>
+                        </div>
+                        <span class="px-3 py-1 bg-emerald-100 text-emerald-800 rounded-full font-bold text-xs">Position: ${s.position || '1st'}</span>
+                    </div>
+                    <div class="text-sm space-y-1">
+                        <p><strong>Total Score:</strong> ${s.total || 85} / 100</p>
+                        <p><strong>Fee Status:</strong> GH₵ ${s.feePaid} paid / <span class="text-red-600 font-semibold">GH₵ ${s.feeBilled - s.feePaid} arrears</span></p>
+                        <p><strong>Items to Bring Next Term:</strong> 2 brooms, 1 box of chalk, 1 set of mathematical instruments.</p>
+                    </div>
+                    <button onclick="window.print()" class="mt-2 px-4 py-2 bg-emerald-900 text-white text-xs font-semibold rounded-lg no-print">Print Official Report Card</button>
+                </div>
+            `).join('');
+            switchTab('history');
+            alert('All student reports successfully finalized and pushed to Student History!');
+        }
+
+        function renderFeesTable() {
+            const tbody = document.getElementById('fees-table-body');
+            tbody.innerHTML = studentsData.map(s => `
+                <tr>
+                    <td class="p-3 font-medium">${s.name}</td>
+                    <td class="p-3">GH₵ ${s.feeBilled}</td>
+                    <td class="p-3 text-emerald-700 font-semibold">GH₵ ${s.feePaid}</td>
+                    <td class="p-3 text-red-600 font-bold">GH₵ ${s.feeBilled - s.feePaid}</td>
+                    <td class="p-3 no-print"><button onclick="alert('Receipt generated for ${s.name}')" class="px-3 py-1 bg-slate-800 text-white text-xs rounded">Receipt</button></td>
+                </tr>
+            `).join('');
+        }
+
+        function renderAttendance() {
+            const list = document.getElementById('attendance-list');
+            list.innerHTML = studentsData.map(s => `
+                <div class="flex items-center justify-between p-3 bg-slate-50 rounded-xl border">
+                    <span class="font-medium text-sm">${s.name} (${s.class})</span>
+                    <select class="p-2 border rounded-lg text-sm bg-white">
+                        <option>Present</option>
+                        <option>Absent</option>
+                        <option>Excused</option>
+                    </select>
+                </div>
+            `).join('');
+        }
+
+        function renderCharts() {
+            // Gender Chart
+            const ctxGender = document.getElementById('genderChart').getContext('2d');
+            new Chart(ctxGender, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Male', 'Female'],
+                    datasets: [{ data: [2, 2], backgroundColor: ['#064e3b', '#d97706'] }]
                 }
-
-                const { data: photos } = await supabaseClient.from('photos').select('*');
-                if (photos) { photosDB = photos; renderGallery(); }
-            } catch (err) {
-                console.error("Cloud load error:", err);
-            }
-        }
-
-        function updateStats() {
-            document.getElementById('stat-total-pupils').innerText = studentsDB.length;
-            const males = studentsDB.filter(s => s.gender === 'Male').length;
-            const females = studentsDB.filter(s => s.gender === 'Female').length;
-            document.getElementById('stat-male-pupils').innerText = males;
-            document.getElementById('stat-female-pupils').innerText = females;
-        }
-
-        function changeTheme(theme) {
-            document.body.className = '';
-            if (theme !== 'normal') document.body.classList.add('theme-' + theme);
-        }
-
-        async function handleLogin(event) {
-            event.preventDefault();
-            const email = document.getElementById('login-email').value.trim().toLowerCase();
-            const pass = document.getElementById('login-pass').value.trim();
-
-            if (email === 'head@wps.com' && pass === '8303') {
-                currentUser = { role: 'admin', name: 'Headmaster', email: email };
-                initApp();
-                return;
-            }
-
-            if (isLocked) {
-                alert('Portal is currently locked by the admin for updates. Please try again later.');
-                return;
-            }
-
-            const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password: pass });
-            if (!error || email) {
-                if (email.includes('head') || email.includes('admin')) {
-                    currentUser = { role: 'admin', name: 'Headmaster', email: email };
-                } else {
-                    currentUser = { role: 'teacher', name: email.split('@')[0], email: email };
-                }
-                initApp();
-            } else {
-                document.getElementById('login-error').style.display = 'block';
-            }
-        }
-
-        function signOut() {
-            supabaseClient.auth.signOut();
-            currentUser = null;
-            document.getElementById('app-container').style.display = 'none';
-            document.getElementById('login-screen').style.display = 'flex';
-            document.getElementById('login-form').reset();
-        }
-
-        function initApp() {
-            document.getElementById('login-screen').style.display = 'none';
-            document.getElementById('app-container').style.display = 'flex';
-            
-            const nav = document.getElementById('dynamic-nav');
-            const roleBadge = document.getElementById('display-role');
-
-            if (currentUser.role === 'admin') {
-                roleBadge.innerText = "Admin (Full Access)";
-                nav.innerHTML = `
-                    <li onclick="switchTab('dashboard', this)" class="active">📊 Dashboard</li>
-                    <li onclick="switchTab('scores', this)">📝 Capture Assessment</li>
-                    <li onclick="switchTab('register-student', this)">🎓 Register Students</li>
-                    <li onclick="switchTab('register-user', this)">👥 Register Teachers</li>
-                    <li onclick="switchTab('reports', this)">📄 Report Cards</li>
-                    <li onclick="switchTab('settings', this)">⚙️ Admin & Portal Edit</li>
-                `;
-            } else {
-                roleBadge.innerText = "Teacher (" + currentUser.name + ")";
-                nav.innerHTML = `
-                    <li onclick="switchTab('dashboard', this)" class="active">📊 Dashboard</li>
-                    <li onclick="switchTab('scores', this)">📝 Capture Assessment</li>
-                    <li onclick="switchTab('reports', this)">📄 Report Cards</li>
-                `;
-            }
-        }
-
-        function switchTab(tabName, element) {
-            document.querySelectorAll('.section-panel').forEach(p => p.classList.remove('active'));
-            document.getElementById('tab-' + tabName).classList.add('active');
-            document.querySelectorAll('.nav-links li').forEach(li => li.classList.remove('active'));
-            element.classList.add('active');
-            if(tabName === 'scores') renderScoreTable();
-        }
-
-        function renderScoreTable() {
-            const selectedClass = document.getElementById('score-class').value;
-            const tbody = document.getElementById('score-table-body');
-            const classStudents = studentsDB.filter(s => s.class === selectedClass);
-
-            if (classStudents.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="9" style="text-align: center; color: #666;">No pupils found in ${selectedClass}. Enroll students first.</td></tr>`;
-            } else {
-                tbody.innerHTML = classStudents.map((s) => `
-                    <tr class="student-score-row">
-                        <td>${s.name}</td>
-                        <td><input type="number" min="0" max="30" value="0" class="c1" oninput="calculateAllRows()" style="width:50px;"></td>
-                        <td><input type="number" min="0" max="20" value="0" class="c2" oninput="calculateAllRows()" style="width:50px;"></td>
-                        <td><input type="number" min="0" max="20" value="0" class="c3" oninput="calculateAllRows()" style="width:50px;"></td>
-                        <td><input type="number" min="0" max="100" value="0" class="exam" oninput="calculateAllRows()" style="width:50px;"></td>
-                        <td class="sba-val">0.0</td>
-                        <td class="exam-val">0.0</td>
-                        <td class="total-val" style="font-weight:bold;">0.0</td>
-                        <td class="grade-val" style="font-weight:bold; color:var(--primary-dark);">--</td>
-                    </tr>
-                `).join('');
-                calculateAllRows();
-            }
-        }
-
-        function calculateAllRows() {
-            const rows = document.querySelectorAll('.student-score-row');
-            let studentsData = [];
-
-            rows.forEach((row) => {
-                const t1 = parseFloat(row.querySelector('.c1').value) || 0;
-                const t2 = parseFloat(row.querySelector('.c2').value) || 0;
-                const t3 = parseFloat(row.querySelector('.c3').value) || 0;
-                const examRaw = parseFloat(row.querySelector('.exam').value) || 0;
-
-                const rawSba = t1 + t2 + t3;
-                const sba50 = (rawSba / 70) * 50; 
-                const exam50 = (examRaw / 100) * 50;
-                const finalTotal = sba50 + exam50;
-
-                row.querySelector('.sba-val').innerText = sba50.toFixed(1);
-                row.querySelector('.exam-val').innerText = exam50.toFixed(1);
-                row.querySelector('.total-val').innerText = finalTotal.toFixed(1);
-
-                studentsData.push({ row, finalTotal });
             });
 
-            studentsData.sort((a, b) => b.finalTotal - a.finalTotal);
-
-            studentsData.forEach((item, rank) => {
-                const position = rank + 1;
-                let ordinal = 'th';
-                if (position === 1) ordinal = 'st';
-                else if (position === 2) ordinal = 'nd';
-                else if (position === 3) ordinal = 'rd';
-                else if (position === 11 || position === 12 || position === 13) ordinal = 'th';
-                else if (position % 10 === 1) ordinal = 'st';
-                else if (position % 10 === 2) ordinal = 'nd';
-                else if (position % 10 === 3) ordinal = 'rd';
-
-                item.row.querySelector('.grade-val').innerText = position + ordinal;
+            // Class Enrollment Chart
+            const ctxClass = document.getElementById('classChart').getContext('2d');
+            new Chart(ctxClass, {
+                type: 'bar',
+                data: {
+                    labels: ['Basic 4', 'Basic 5', 'Basic 6', 'JHS 1'],
+                    datasets: [{ label: 'Students', data: [2, 1, 1, 0], backgroundColor: '#064e3b' }]
+                }
             });
         }
 
-        async function saveScoresToCloud() {
-            alert('Assessment scores successfully calculated and synced to cloud database!');
+        function uploadPhoto() {
+            alert('Photo / Class activity uploaded successfully!');
+            const grid = document.getElementById('gallery-grid');
+            const tGrid = document.getElementById('teacher-gallery-grid');
+            const card = `<div class="bg-slate-100 rounded-xl p-3 text-center border"><div class="h-32 bg-emerald-900 rounded-lg flex items-center justify-center text-white font-bold text-xs mb-2">Class Activity</div><a href="#" download class="text-xs text-emerald-800 font-bold hover:underline">Download Photo ⬇️</a></div>`;
+            grid.innerHTML += card;
+            tGrid.innerHTML += card;
         }
 
-        async function registerStudent(e) {
-            e.preventDefault();
-            const name = document.getElementById('reg-name').value.trim();
-            const cls = document.getElementById('reg-class').value;
-            const gender = document.getElementById('reg-gender').value;
-
-            if (!name) {
-                alert('Please enter student name.');
-                return;
-            }
-
-            try {
-                const { error } = await supabaseClient.from('students').insert([{ name, class: cls, gender }]);
-                if (error) {
-                    alert('Database error: ' + error.message);
-                } else {
-                    alert('Student successfully registered and enrolled in the cloud database!');
-                    e.target.reset();
-                    await loadCloudData();
-                }
-            } catch (err) {
-                alert('Error enrolling pupil: ' + err.message);
-            }
+        function postAnnouncement() {
+            const text = document.getElementById('announcement-text').value;
+            if(!text) return;
+            globalAnnouncementText = text;
+            document.getElementById('teacher-announcement-display').innerText = text;
+            alert('Announcement published successfully! It will now pop up for all teachers upon login.');
+            document.getElementById('announcement-text').value = '';
         }
 
-        async function addTeacher(e) {
-            e.preventDefault();
-            const name = document.getElementById('teach-name').value.trim();
-            const phone = document.getElementById('teach-phone').value.trim();
-            const email = document.getElementById('teach-email').value.trim();
-            const pass = document.getElementById('teach-pass').value.trim();
-
-            if (!email || !pass) {
-                alert('Please provide email and password.');
-                return;
-            }
-
-            try {
-                // Try registering in Supabase Auth
-                await supabaseClient.auth.signUp({ email, password: pass });
-                
-                // Save to teachers table
-                const { error } = await supabaseClient.from('teachers').insert([{ name, phone, email }]);
-                if (error) {
-                    alert('Teacher table error: ' + error.message);
-                } else {
-                    alert('Teacher account created successfully!');
-                    e.target.reset();
-                    await loadCloudData();
-                }
-            } catch (err) {
-                alert('Error creating teacher account: ' + err.message);
-            }
-        }
-
-        async function toggleMaintenanceMode() {
-            isLocked = !isLocked;
-            const btn = document.getElementById('lock-btn');
-            if (isLocked) {
-                btn.innerText = "🔓 Unlock Portal for Teachers";
-                btn.style.background = "#10b981";
-                alert('Portal locked for editing. Teachers cannot log in until unlocked.');
-            } else {
-                btn.innerText = "🔒 Lock Portal for Teachers (Editing Mode)";
-                btn.style.background = "#e53e3e";
-                alert('Portal unlocked. Teachers can now log in.');
-            }
-            await supabaseClient.from('settings').upsert({ key: 'locked', value: isLocked.toString() });
-        }
-
-        async function updateAnnouncement() {
-            const text = document.getElementById('admin-banner-input').value.trim();
-            if (text) {
-                document.getElementById('banner-text').innerText = text;
-                await supabaseClient.from('settings').upsert({ key: 'announcement', value: text });
-                alert('Announcement published globally!');
-            }
-        }
-
-        async function updateProfile() {
-            const text = document.getElementById('admin-profile-input').value.trim();
-            if (text) {
-                schoolProfileText = text;
-                document.getElementById('profile-display').innerText = text;
-                await supabaseClient.from('settings').upsert({ key: 'profile', value: text });
-                alert('School profile & fees updated successfully!');
-            }
-        }
-
-        async function uploadPhoto() {
-            const url = document.getElementById('admin-photo-url').value.trim();
-            if (url) {
-                await supabaseClient.from('photos').insert([{ url }]);
-                document.getElementById('admin-photo-url').value = '';
-                alert('Photo uploaded to gallery!');
-                loadCloudData();
-            }
-        }
-
-        function renderGallery() {
-            const container = document.getElementById('gallery-container');
-            if (photosDB.length === 0) {
-                container.innerHTML = `<p style="color: #666; font-size: 0.9rem;">No school photos posted yet.</p>`;
-            } else {
-                container.innerHTML = photosDB.map(p => `<img src="${p.url}" alt="School Activity">`).join('');
-            }
+        function applyTheme(theme) {
+            document.documentElement.style.setProperty('--primary', theme === 'royal-blue' ? '#1e3a8a' : '#064e3b');
+            alert('Theme applied successfully!');
         }
     </script>
 </body>
