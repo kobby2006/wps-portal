@@ -131,9 +131,9 @@
                     <button onclick="switchTab('students')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🎓 <span>Student Enrollment & Discard</span></button>
                     <button onclick="switchTab('teachers')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">👨‍🏫 <span>Teacher Accounts</span></button>
                     <button onclick="switchTab('classes')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🏫 <span>Manage Classes (1-6 & JHS)</span></button>
-                    <button onclick="switchTab('announcements')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📢 <span>Announcements & Birthdays</span></button>
+                    <button onclick="switchTab('announcements')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📢 <span>Announcements & Portal Lock</span></button>
                     <button onclick="switchTab('gallery')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🖼️ <span>Photo Gallery & JPG Uploads</span></button>
-                    <button onclick="switchTab('profile')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">⚙️ <span>School Profile & Locking</span></button>
+                    <button onclick="switchTab('profile')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">⚙️ <span>School Profile & Branding</span></button>
                 </div>
 
                 <!-- Teacher Nav -->
@@ -531,20 +531,36 @@
                     </div>
                 </section>
 
-                <!-- TAB: ANNOUNCEMENTS & BIRTHDAYS (Admin) -->
+                <!-- TAB: ANNOUNCEMENTS & PORTAL LOCK (Admin) -->
                 <section id="tab-announcements" class="hidden space-y-6">
-                    <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-4">
-                        <h2 class="text-xl font-bold text-slate-900">Publish Priority Announcement & Birthday Celebration</h2>
-                        <p class="text-xs text-slate-500">Upload announcement details and celebration photos to pop up when teachers and users log in, and automatically send photos to the school gallery.</p>
+                    <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-6">
                         <div>
-                            <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Upload Notice / Birthday Photo</label>
-                            <input type="file" id="announcement-photo-input" accept="image/*" class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                            <h2 class="text-xl font-bold text-slate-900">Publish Priority Announcement & Birthday Celebration</h2>
+                            <p class="text-xs text-slate-500 mb-4">Upload announcement details and celebration photos to pop up when teachers and users log in, and automatically send photos to the school gallery.</p>
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Upload Notice / Birthday Photo</label>
+                                    <input type="file" id="announcement-photo-input" accept="image/*" class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Announcement / Birthday Message</label>
+                                    <textarea id="announcement-text" rows="4" class="w-full p-3 border rounded-xl" placeholder="Type announcement or birthday shoutout for staff and teachers..."></textarea>
+                                </div>
+                                <button onclick="postAnnouncement()" class="px-6 py-2.5 bg-blue-900 text-white font-bold rounded-xl">Publish Announcement & Photo</button>
+                            </div>
                         </div>
-                        <div>
-                            <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Announcement / Birthday Message</label>
-                            <textarea id="announcement-text" rows="4" class="w-full p-3 border rounded-xl" placeholder="Type announcement or birthday shoutout for staff and teachers..."></textarea>
+
+                        <!-- PORTAL LOCK CONTROL PANEL (Placed Right Here in Announcements Area) -->
+                        <div class="pt-6 border-t space-y-3">
+                            <h3 class="text-lg font-bold text-slate-900">🔒 Teacher Portal Access Restriction</h3>
+                            <p class="text-xs text-slate-500">Lock the portal to restrict teachers from logging in while you perform system edits, grade updates, or maintenance.</p>
+                            <div class="p-4 bg-amber-50 border border-amber-300 rounded-xl flex items-center justify-between">
+                                <div>
+                                    <h4 class="font-bold text-xs text-amber-950 uppercase">Current Status: <span id="portal-lock-status-label" class="text-emerald-700">Unlocked (Teachers can log in)</span></h4>
+                                </div>
+                                <button id="portal-lock-btn" onclick="togglePortalLock()" class="px-5 py-2.5 bg-red-700 text-white font-bold text-xs rounded-xl shadow hover:bg-red-800 transition">Lock Portal for Teachers</button>
+                            </div>
                         </div>
-                        <button onclick="postAnnouncement()" class="px-6 py-2.5 bg-blue-900 text-white font-bold rounded-xl">Publish Announcement & Photo</button>
                     </div>
                 </section>
 
@@ -589,20 +605,12 @@
                     </div>
                 </section>
 
-                <!-- TAB: SCHOOL PROFILE & PORTAL LOCK CONTROL -->
+                <!-- TAB: SCHOOL PROFILE & BRANDING SETTINGS -->
                 <section id="tab-profile" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-4">
-                        <h2 class="text-xl font-bold text-slate-900">School Profile, Motto & Teacher Access Control</h2>
-                        <p class="text-xs text-slate-500">Customize school branding and restrict or allow teacher logins while making portal edits.</p>
-                        
-                        <!-- ADMIN PORTAL LOCK CONTROL PANEL -->
-                        <div class="p-4 bg-amber-50 border border-amber-300 rounded-xl space-y-3">
-                            <h3 class="font-bold text-sm text-amber-950">🔒 Teacher Portal Access Control (Admin Lock)</h3>
-                            <p class="text-xs text-slate-600">Lock the portal to restrict teachers from logging in while you perform system edits, grade updates, or maintenance.</p>
-                            <button id="portal-lock-btn" onclick="togglePortalLock()" class="px-5 py-2.5 bg-red-700 text-white font-bold text-xs rounded-xl shadow hover:bg-red-800 transition">Lock Portal for Teachers</button>
-                        </div>
-
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+                        <h2 class="text-xl font-bold text-slate-900">School Profile, Motto & Branding Settings</h2>
+                        <p class="text-xs text-slate-500">Customize the school's official name, badge subtitle, motto, and contact information across the portal.</p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
                                 <label class="block text-xs font-bold uppercase text-slate-600 mb-1">School Name</label>
                                 <input type="text" id="profile-school-name" value="Wesley Preparatory School" class="p-3 border rounded-xl w-full font-medium">
@@ -718,13 +726,18 @@
         function togglePortalLock() {
             portalLocked = !portalLocked;
             const btn = document.getElementById('portal-lock-btn');
+            const lbl = document.getElementById('portal-lock-status-label');
             if(portalLocked) {
                 btn.innerText = "Unlock Portal for Teachers 🔓";
                 btn.className = "px-5 py-2.5 bg-emerald-700 text-white font-bold text-xs rounded-xl shadow hover:bg-emerald-800 transition";
+                lbl.innerText = "Locked (Teachers are restricted from logging in)";
+                lbl.className = "text-red-700 font-bold";
                 alert('🔒 Portal is now LOCKED. Teachers are successfully restricted from logging in.');
             } else {
                 btn.innerText = "Lock Portal for Teachers 🔒";
                 btn.className = "px-5 py-2.5 bg-red-700 text-white font-bold text-xs rounded-xl shadow hover:bg-red-800 transition";
+                lbl.innerText = "Unlocked (Teachers can log in)";
+                lbl.className = "text-emerald-700 font-bold";
                 alert('🔓 Portal is now UNLOCKED. Teachers can log in normally.');
             }
         }
@@ -811,6 +824,9 @@
             if(tabId === 'lms') {
                 renderLMSResources();
             }
+            if(tabId === 'gallery' || tabId === 'teacher-gallery') {
+                renderGalleryGrids();
+            }
         }
 
         function renderAll() {
@@ -825,6 +841,7 @@
             renderAttendanceRegister();
             renderHistoryView();
             renderLMSResources();
+            renderGalleryGrids();
             renderCharts();
         }
 
@@ -1522,7 +1539,12 @@
             const grid = document.getElementById('gallery-grid');
             const tGrid = document.getElementById('teacher-gallery-grid');
 
-            if(galleryPhotos.length === 0) return;
+            if(galleryPhotos.length === 0) {
+                const emptyMsg = `<p class="text-slate-400 italic text-sm">No photos uploaded yet.</p>`;
+                if(grid) grid.innerHTML = emptyMsg;
+                if(tGrid) tGrid.innerHTML = emptyMsg;
+                return;
+            }
 
             const html = galleryPhotos.map((p) => `
                 <div class="bg-slate-50 rounded-xl p-3 text-center border space-y-2">
