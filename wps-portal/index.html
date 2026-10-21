@@ -17,6 +17,7 @@
         @media print {
             .no-print { display: none !important; }
             body { background: white; color: black; }
+            .assessment-print-page { page-break-after: always; border: 2px solid black !important; padding: 20px !important; margin: 0 !important; }
             .report-card-page { page-break-after: always; border: 2px solid black !important; padding: 15px !important; margin: 0 !important; }
         }
     </style>
@@ -179,8 +180,8 @@
                     <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-4">
                         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                             <div>
-                                <h2 class="text-xl font-bold text-slate-900">Assessment Capture & Grading</h2>
-                                <p class="text-xs text-slate-500">Input full SBA (100%) and Exam (50%); system automatically computes converted 50% SBA, Total (100%), and Grade.</p>
+                                <h2 class="text-xl font-bold text-slate-900">Termly SBA & Exam Assessment Capture</h2>
+                                <p class="text-xs text-slate-500">Inputs: Ind. Test 1 (30), Group Test (20), Ind. Test 2 (30), Project/Homework (20) = Total SBA (100) → 50% SBA + 50% Exams = Overall Total.</p>
                             </div>
                             <button onclick="calculateGrades()" class="px-5 py-2.5 bg-blue-900 text-white font-semibold rounded-xl hover:bg-blue-800 transition shadow">Compute Totals & Grades</button>
                         </div>
@@ -216,21 +217,25 @@
 
                     <div class="bg-white rounded-2xl shadow overflow-hidden border border-slate-100">
                         <div class="overflow-x-auto">
-                            <table class="w-full text-left border-collapse">
-                                <thead class="bg-slate-100 text-xs uppercase font-bold text-slate-600">
+                            <table class="w-full text-left border-collapse text-xs">
+                                <thead class="bg-slate-100 uppercase font-bold text-slate-600 text-center">
                                     <tr>
-                                        <th class="p-3">Student Name</th>
-                                        <th class="p-3">Class</th>
-                                        <th class="p-3">Full SBA (100%)</th>
-                                        <th class="p-3">SBA (50%)</th>
-                                        <th class="p-3">Exam (50%)</th>
-                                        <th class="p-3">Total (100%)</th>
-                                        <th class="p-3">Grade</th>
-                                        <th class="p-3">Position</th>
+                                        <th class="p-2.5 text-left">Student Name</th>
+                                        <th class="p-2.5">Ind. Test 1 (30)</th>
+                                        <th class="p-2.5">Group Test (20)</th>
+                                        <th class="p-2.5">Ind. Test 2 (30)</th>
+                                        <th class="p-2.5">Homework (20)</th>
+                                        <th class="p-2.5 bg-blue-50">Total SBA (100)</th>
+                                        <th class="p-2.5 bg-blue-100">50% SBA</th>
+                                        <th class="p-2.5">Exam (100)</th>
+                                        <th class="p-2.5 bg-blue-100">50% Exam</th>
+                                        <th class="p-2.5 bg-amber-50">Overall Total</th>
+                                        <th class="p-2.5">Grade</th>
+                                        <th class="p-2.5">Position</th>
                                     </tr>
                                 </thead>
-                                <tbody id="grading-table-body" class="divide-y divide-slate-100 text-sm">
-                                    <tr><td colspan="8" class="p-6 text-center text-slate-400 italic">No students found for this class.</td></tr>
+                                <tbody id="grading-table-body" class="divide-y divide-slate-100">
+                                    <tr><td colspan="12" class="p-6 text-center text-slate-400 italic">No students found for this class.</td></tr>
                                 </tbody>
                             </table>
                         </div>
@@ -247,21 +252,40 @@
                             <button onclick="exportAssessmentSheet('pdf')" class="px-4 py-2 bg-slate-800 text-white text-xs font-semibold rounded-lg hover:bg-slate-700">Download Assessment PDF 📄</button>
                             <button onclick="exportAssessmentSheet('doc')" class="px-4 py-2 bg-blue-800 text-white text-xs font-semibold rounded-lg hover:bg-blue-700">Download Assessment Word 📝</button>
                         </div>
-                        <button onclick="finalizeReports()" class="px-6 py-3 bg-amber-600 hover:bg-amber-700 text-white font-bold rounded-xl shadow-lg transition">Finalize & Save Assessment to Site ➔</button>
+                        <button onclick="finalizeReports()" class="px-6 py-3 bg-amber-600 hover:bg-amber-700 text-white font-bold rounded-xl shadow-lg transition">Finalize & Save Assessment Sheet to Site ➔</button>
                     </div>
                 </section>
 
-                <!-- TAB: STUDENT HISTORY & OFFICIAL REPORT CARDS -->
+                <!-- TAB: STUDENT HISTORY & SUBMITTED ASSESSMENT SHEETS -->
                 <section id="tab-history" class="hidden space-y-6">
-                    <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 flex justify-between items-center">
-                        <div>
-                            <h2 class="text-xl font-bold text-slate-900">Student History & Official Printed Report Cards</h2>
-                            <p class="text-xs text-slate-500">Official report cards formatted exactly like your printed school sheet, including automatic fee breakdowns.</p>
+                    <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-4">
+                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                            <div>
+                                <h2 class="text-xl font-bold text-slate-900">Student History & Submitted Assessment Sheets</h2>
+                                <p class="text-xs text-slate-500">Select class and term below to view finalized and submitted assessment sheets and official printed report cards.</p>
+                            </div>
+                            <button onclick="window.print()" class="px-4 py-2 bg-slate-800 text-white text-xs font-semibold rounded-lg hover:bg-slate-700 no-print">Print All Files</button>
                         </div>
-                        <button onclick="window.print()" class="px-4 py-2 bg-slate-800 text-white text-xs font-semibold rounded-lg hover:bg-slate-700 no-print">Print All Report Cards</button>
+
+                        <!-- Class & Term Selector for History -->
+                        <div class="flex flex-wrap gap-4 pt-2 border-t items-center">
+                            <div>
+                                <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Choose Class</label>
+                                <select id="history-class-filter" onchange="renderHistoryView()" class="p-2 border rounded-xl text-sm bg-slate-50 font-medium w-48"></select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Choose Term</label>
+                                <select id="history-term-filter" onchange="renderHistoryView()" class="p-2 border rounded-xl text-sm bg-slate-50 font-medium w-40">
+                                    <option value="Term 1" selected>Term 1</option>
+                                    <option value="Term 2">Term 2</option>
+                                    <option value="Term 3">Term 3</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
+
                     <div id="history-container" class="space-y-8">
-                        <p class="text-slate-500 italic p-4">No reports finalized yet. Click "Finalize & Save Assessment" from the SBA grading tab.</p>
+                        <p class="text-slate-500 italic p-4">No finalized assessment sheets or reports found. Click "Finalize & Save Assessment Sheet" from the SBA grading tab.</p>
                     </div>
                 </section>
 
@@ -519,6 +543,7 @@
         let globalAnnouncementImgUrl = "";
         let classesData = ['Basic 1', 'Basic 2', 'Basic 3', 'Basic 4', 'Basic 5', 'Basic 6', 'JHS 1', 'JHS 2', 'JHS 3'];
         let studentsData = [];
+        let teachersList = []; // Stores registered teachers
         let galleryPhotos = [];
         let schoolProfile = {
             name: "Wesley Preparatory School",
@@ -575,6 +600,7 @@
                 switchTab('dashboard');
             }
             await fetchStudentsFromSupabase();
+            await fetchTeachersFromSupabase();
             renderAll();
         });
 
@@ -588,7 +614,7 @@
                         class: s.class || s.class_name || 'Basic 4',
                         gender: s.gender || 'Male',
                         subjectsData: s.subjectsData || {},
-                        tuitionFee: s.tuitionFee ?? 250.00, // Default tuition set to 250
+                        tuitionFee: s.tuitionFee ?? 250.00,
                         printingFee: s.printingFee ?? 25.00,
                         ptaFee: s.ptaFee ?? 5.00,
                         otherFee: s.otherFee ?? 20.00,
@@ -606,6 +632,17 @@
                 }
             } catch(err) {
                 console.log('Supabase fetch error:', err);
+            }
+        }
+
+        async function fetchTeachersFromSupabase() {
+            try {
+                const { data, error } = await supabaseClient.from('teachers').select('*');
+                if(data && !error) {
+                    teachersList = data.map(t => t.full_name || t.name);
+                }
+            } catch(err) {
+                console.log('Supabase teachers fetch error:', err);
             }
         }
 
@@ -642,17 +679,23 @@
             if(tabId === 'students') {
                 renderDiscardDropdown();
             }
+            if(tabId === 'history') {
+                renderHistoryClassDropdown();
+                renderHistoryView();
+            }
         }
 
         function renderAll() {
             renderClassesDropdown();
             renderFeeClassDropdown();
             renderAttendanceClassDropdown();
+            renderHistoryClassDropdown();
             renderClassesList();
             renderDiscardDropdown();
             renderGradingTable();
             renderFeesTable();
             renderAttendanceRegister();
+            renderHistoryView();
             renderCharts();
         }
 
@@ -691,6 +734,15 @@
             const dateInput = document.getElementById('attendance-date');
             if(dateInput && !dateInput.value) {
                 dateInput.valueAsDate = new Date();
+            }
+        }
+
+        function renderHistoryClassDropdown() {
+            const histFilter = document.getElementById('history-class-filter');
+            if(histFilter) {
+                const currentHistVal = histFilter.value;
+                histFilter.innerHTML = classesData.map(c => `<option value="${c}">${c}</option>`).join('');
+                if(currentHistVal) histFilter.value = currentHistVal;
             }
         }
 
@@ -776,6 +828,7 @@
 
             try {
                 await supabaseClient.from('teachers').insert([{ full_name: name, phone_number: phone, email }]);
+                teachersList.push(name);
             } catch(err) { console.log(err); }
 
             alert(`Teacher account created successfully for ${name}!`);
@@ -783,6 +836,7 @@
             document.getElementById('t-phone').value = '';
             document.getElementById('t-email').value = '';
             document.getElementById('t-pass').value = '';
+            await fetchTeachersFromSupabase();
         });
 
         function renderGradingTable() {
@@ -797,40 +851,51 @@
             if(!tbody) return;
 
             if(filteredStudents.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="8" class="p-6 text-center text-slate-400 italic">No students registered in ${selectedClass || 'this class'} yet.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="12" class="p-6 text-center text-slate-400 italic">No students registered in ${selectedClass || 'this class'} yet.</td></tr>`;
                 return;
             }
 
             tbody.innerHTML = filteredStudents.map((s) => {
                 const globalIdx = studentsData.findIndex(item => item.id === s.id);
                 if(!s.subjectsData[term]) s.subjectsData[term] = {};
-                if(!s.subjectsData[term][subject]) s.subjectsData[term][subject] = { fullSba: 0, exam: 0 };
+                if(!s.subjectsData[term][subject]) s.subjectsData[term][subject] = { indTest1: 0, groupTest: 0, indTest2: 0, homework: 0, exam: 0 };
 
                 const sub = s.subjectsData[term][subject];
-                const convertedSba = (sub.fullSba * 0.5).toFixed(1);
-                const total = (parseFloat(convertedSba) + parseFloat(sub.exam)).toFixed(1);
-                const grade = computeGrade(total);
+                const totalSba100 = (sub.indTest1 || 0) + (sub.groupTest || 0) + (sub.indTest2 || 0) + (sub.homework || 0);
+                const sba50 = (totalSba100 * 0.5).toFixed(1);
+                const exam50 = ((sub.exam || 0) * 0.5).toFixed(1);
+                const overallTotal = (parseFloat(sba50) + parseFloat(exam50)).toFixed(1);
+                const grade = computeGrade(overallTotal);
 
                 return `
                     <tr>
-                        <td class="p-3 font-medium">${s.name}</td>
-                        <td class="p-3">${s.class}</td>
-                        <td class="p-3"><input type="number" value="${sub.fullSba}" onchange="updateSubScore(${globalIdx}, '${term}', '${subject}', 'fullSba', this.value)" class="w-20 p-1 border rounded font-semibold" placeholder="100"></td>
-                        <td class="p-3 text-blue-900 font-semibold">${convertedSba}</td>
-                        <td class="p-3"><input type="number" value="${sub.exam}" onchange="updateSubScore(${globalIdx}, '${term}', '${subject}', 'exam', this.value)" class="w-20 p-1 border rounded font-semibold" placeholder="50"></td>
-                        <td class="p-3 font-bold">${total}</td>
-                        <td class="p-3"><span class="px-2 py-1 bg-amber-100 text-amber-900 rounded font-bold text-xs">${grade}</span></td>
-                        <td class="p-3"><span class="px-2 py-1 bg-blue-100 text-blue-900 rounded font-semibold text-xs">${s.position || 'Pending'}</span></td>
+                        <td class="p-2.5 font-medium">${s.name}</td>
+                        <td class="p-2.5 text-center"><input type="number" value="${sub.indTest1}" onchange="updateAssessmentScore(${globalIdx}, '${term}', '${subject}', 'indTest1', this.value, 30)" class="w-16 p-1 border rounded text-center font-semibold" placeholder="30"></td>
+                        <td class="p-2.5 text-center"><input type="number" value="${sub.groupTest}" onchange="updateAssessmentScore(${globalIdx}, '${term}', '${subject}', 'groupTest', this.value, 20)" class="w-16 p-1 border rounded text-center font-semibold" placeholder="20"></td>
+                        <td class="p-2.5 text-center"><input type="number" value="${sub.indTest2}" onchange="updateAssessmentScore(${globalIdx}, '${term}', '${subject}', 'indTest2', this.value, 30)" class="w-16 p-1 border rounded text-center font-semibold" placeholder="30"></td>
+                        <td class="p-2.5 text-center"><input type="number" value="${sub.homework}" onchange="updateAssessmentScore(${globalIdx}, '${term}', '${subject}', 'homework', this.value, 20)" class="w-16 p-1 border rounded text-center font-semibold" placeholder="20"></td>
+                        <td class="p-2.5 text-center font-bold bg-blue-50">${totalSba100}</td>
+                        <td class="p-2.5 text-center font-semibold bg-blue-100 text-blue-900">${sba50}</td>
+                        <td class="p-2.5 text-center"><input type="number" value="${sub.exam}" onchange="updateAssessmentScore(${globalIdx}, '${term}', '${subject}', 'exam', this.value, 100)" class="w-16 p-1 border rounded text-center font-semibold" placeholder="100"></td>
+                        <td class="p-2.5 text-center font-semibold bg-blue-100 text-blue-900">${exam50}</td>
+                        <td class="p-2.5 text-center font-black bg-amber-50 text-amber-950">${overallTotal}</td>
+                        <td class="p-2.5 text-center"><span class="px-2 py-0.5 bg-amber-100 text-amber-900 rounded font-bold text-xs">${grade}</span></td>
+                        <td class="p-2.5 text-center"><span class="px-2 py-0.5 bg-blue-100 text-blue-900 rounded font-semibold text-xs">${s.position || 'Pending'}</span></td>
                     </tr>
                 `;
             }).join('');
         }
 
-        function updateSubScore(index, term, subject, field, val) {
+        function updateAssessmentScore(index, term, subject, field, val, maxLimit) {
+            let num = parseFloat(val) || 0;
+            if(num > maxLimit) {
+                alert(`Maximum allowed score for this assessment is ${maxLimit}`);
+                num = maxLimit;
+            }
             if(!studentsData[index].subjectsData[term]) studentsData[index].subjectsData[term] = {};
-            if(!studentsData[index].subjectsData[term][subject]) studentsData[index].subjectsData[term][subject] = { fullSba: 0, exam: 0 };
+            if(!studentsData[index].subjectsData[term][subject]) studentsData[index].subjectsData[term][subject] = { indTest1: 0, groupTest: 0, indTest2: 0, homework: 0, exam: 0 };
             
-            studentsData[index].subjectsData[term][subject][field] = parseFloat(val) || 0;
+            studentsData[index].subjectsData[term][subject][field] = num;
             renderGradingTable();
         }
 
@@ -858,8 +923,10 @@
                 if(s.subjectsData[term]) {
                     Object.keys(s.subjectsData[term]).forEach(subName => {
                         const sub = s.subjectsData[term][subName];
-                        const sba50 = (sub.fullSba || 0) * 0.5;
-                        studentOverallTotal += (sba50 + (sub.exam || 0));
+                        const totalSba100 = (sub.indTest1 || 0) + (sub.groupTest || 0) + (sub.indTest2 || 0) + (sub.homework || 0);
+                        const sba50 = totalSba100 * 0.5;
+                        const exam50 = (sub.exam || 0) * 0.5;
+                        studentOverallTotal += (sba50 + exam50);
                     });
                 }
                 s.overallTotal = studentOverallTotal;
@@ -868,7 +935,7 @@
             studentsData.sort((a,b) => (b.overallTotal || 0) - (a.overallTotal || 0));
             studentsData.forEach((s, idx) => s.position = `${idx + 1}${getOrdinal(idx + 1)}`);
             renderGradingTable();
-            alert('Grades and class positions successfully computed!');
+            alert('Grades, totals, and ordinal positions successfully computed!');
         }
 
         function getOrdinal(n) {
@@ -880,45 +947,64 @@
             const subject = document.getElementById('grading-subject-filter').value;
             const term = document.getElementById('grading-term-filter').value;
             const className = document.getElementById('grading-class-filter').value;
+            const registeredTeacherName = teachersList.length > 0 ? teachersList[0] : (currentUser ? currentUser.name : 'Assigned Teacher');
             
-            let content = `${schoolProfile.name.toUpperCase()}\nASSESSMENT GRADING SHEET\nClass: ${className} | Subject: ${subject} | Term: ${term}\n\n`;
-            content += "Student Name\tFull SBA\t50% SBA\tExam (50%)\tTotal\tGrade\tPosition\n";
-            content += "------------------------------------------------------------------------\n";
+            let content = `${schoolProfile.name.toUpperCase()}\nSCHOOL BASED ASSESSMENT AT BASIC EDUCATIONAL LEVEL\nTERMELY SBA RECORDINGS FOR PRIMARY AND JUNIOR HIGH SCHOOLS\nClass: ${className} | Subject: ${subject} | Term: ${term} | Teacher: ${registeredTeacherName}\n\n`;
+            content += "No.\tNAME\tInd.Test 1(30)\tGroup Test(20)\tInd.Test 2(30)\tHomework(20)\tTotal SBA(100)\t50% SBA\tExams(100)\t50% Exam\tOverall Total\tGrade\n";
+            content += "----------------------------------------------------------------------------------------------------------------------------------\n";
             
-            studentsData.filter(s => s.class === className).forEach(s => {
-                const sub = (s.subjectsData[term] && s.subjectsData[term][subject]) ? s.subjectsData[term][subject] : { fullSba: 0, exam: 0 };
-                const sba50 = (sub.fullSba || 0) * 0.5;
-                const tot = sba50 + sub.exam;
-                content += `${s.name}\t${sub.fullSba}\t${sba50}\t${sub.exam}\t${tot}\t${computeGrade(tot)}\t${s.position || 'Pending'}\n`;
+            studentsData.filter(s => s.class === className).forEach((s, idx) => {
+                const sub = (s.subjectsData[term] && s.subjectsData[term][subject]) ? s.subjectsData[term][subject] : { indTest1: 0, groupTest: 0, indTest2: 0, homework: 0, exam: 0 };
+                const totalSba = (sub.indTest1 || 0) + (sub.groupTest || 0) + (sub.indTest2 || 0) + (sub.homework || 0);
+                const sba50 = totalSba * 0.5;
+                const exam50 = (sub.exam || 0) * 0.5;
+                const total = sba50 + exam50;
+                content += `${idx + 1}\t${s.name}\t${sub.indTest1}\t${sub.groupTest}\t${sub.indTest2}\t${sub.homework}\t${totalSba}\t${sba50}\t${sub.exam}\t${exam50}\t${total}\t${computeGrade(total)}\n`;
             });
 
             const blob = new Blob([content], { type: format === 'pdf' ? 'application/pdf' : 'application/msword' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `${className}_${subject}_${term}_Assessment.${format === 'pdf' ? 'pdf' : 'doc'}`;
+            a.download = `${className}_${subject}_${term}_Assessment_Sheet.${format === 'pdf' ? 'pdf' : 'doc'}`;
             a.click();
             alert(`Assessment sheet downloaded as ${format.toUpperCase()}!`);
         }
 
         function finalizeReports() {
             if(studentsData.length === 0) { alert('No student reports to finalize.'); return; }
-            const term = document.getElementById('grading-term-filter').value;
+            alert('Assessment sheets and report cards successfully finalized and saved to student history!');
+            switchTab('history');
+            renderHistoryView();
+        }
 
-            const history = document.getElementById('history-container');
-            history.innerHTML = studentsData.map((s, idx) => {
+        function renderHistoryView() {
+            const histClass = document.getElementById('history-class-filter').value || classesData[0];
+            const histTerm = document.getElementById('history-term-filter').value || 'Term 1';
+            const container = document.getElementById('history-container');
+            const registeredTeacherName = teachersList.length > 0 ? teachersList[0] : (currentUser ? currentUser.name : 'Assigned Teacher');
+
+            const filtered = studentsData.filter(s => s.class === histClass);
+            if(filtered.length === 0) {
+                container.innerHTML = `<p class="text-slate-500 italic p-4">No student records found for ${histClass} (${histTerm}).</p>`;
+                return;
+            }
+
+            container.innerHTML = filtered.map((s, idx) => {
                 const totalFee = (parseFloat(s.tuitionFee) || 0) + (parseFloat(s.printingFee) || 0) + (parseFloat(s.ptaFee) || 0) + (parseFloat(s.otherFee) || 0) + (parseFloat(s.arrearsFee) || 0);
 
                 let subjectsHtml = standardSubjects.map(subName => {
-                    const sub = (s.subjectsData[term] && s.subjectsData[term][subName]) ? s.subjectsData[term][subName] : { fullSba: 0, exam: 0 };
-                    const sba50 = (sub.fullSba || 0) * 0.5;
-                    const total100 = sba50 + sub.exam;
+                    const sub = (s.subjectsData[histTerm] && s.subjectsData[histTerm][subName]) ? s.subjectsData[histTerm][subName] : { indTest1: 0, groupTest: 0, indTest2: 0, homework: 0, exam: 0 };
+                    const totalSba = (sub.indTest1 || 0) + (sub.groupTest || 0) + (sub.indTest2 || 0) + (sub.homework || 0);
+                    const sba50 = totalSba * 0.5;
+                    const exam50 = (sub.exam || 0) * 0.5;
+                    const total100 = sba50 + exam50;
                     const grade = computeGrade(total100);
                     return `
                         <tr>
                             <td class="border border-black p-1 pl-2 font-medium">${subName}</td>
                             <td class="border border-black p-1 text-center">${sba50}</td>
-                            <td class="border border-black p-1 text-center">${sub.exam}</td>
+                            <td class="border border-black p-1 text-center">${sub.exam || 0}</td>
                             <td class="border border-black p-1 text-center font-bold">${total100}</td>
                             <td class="border border-black p-1 text-center">${s.position || '1st'}</td>
                             <td class="border border-black p-1 text-center">${grade}</td>
@@ -927,115 +1013,183 @@
                     `;
                 }).join('');
 
+                let assessmentRowsHtml = standardSubjects.map((subName) => {
+                    const sub = (s.subjectsData[histTerm] && s.subjectsData[histTerm][subName]) ? s.subjectsData[histTerm][subName] : { indTest1: 0, groupTest: 0, indTest2: 0, homework: 0, exam: 0 };
+                    const totalSba = (sub.indTest1 || 0) + (sub.groupTest || 0) + (sub.indTest2 || 0) + (sub.homework || 0);
+                    const sba50 = totalSba * 0.5;
+                    const exam50 = (sub.exam || 0) * 0.5;
+                    const total100 = sba50 + exam50;
+                    return `
+                        <tr>
+                            <td class="border border-black p-1 pl-2 font-medium">${subName}</td>
+                            <td class="border border-black p-1 text-center">${sub.indTest1 || 0}</td>
+                            <td class="border border-black p-1 text-center">${sub.groupTest || 0}</td>
+                            <td class="border border-black p-1 text-center">${sub.indTest2 || 0}</td>
+                            <td class="border border-black p-1 text-center">${sub.homework || 0}</td>
+                            <td class="border border-black p-1 text-center font-bold">${totalSba}</td>
+                            <td class="border border-black p-1 text-center">${sba50}</td>
+                            <td class="border border-black p-1 text-center">${sub.exam || 0}</td>
+                            <td class="border border-black p-1 text-center">${exam50}</td>
+                            <td class="border border-black p-1 text-center font-black">${total100}</td>
+                            <td class="border border-black p-1 text-center">${computeGrade(total100)}</td>
+                        </tr>
+                    `;
+                }).join('');
+
                 return `
-                    <div class="report-card-page bg-white p-8 rounded-xl shadow-lg border-2 border-slate-300 max-w-3xl mx-auto space-y-4 text-slate-900 font-sans">
-                        <div class="text-center space-y-1 border-b-2 border-black pb-3">
-                            <h2 class="font-black text-xl tracking-wide">${schoolProfile.name.toUpperCase()}</h2>
-                            <p class="text-xs font-bold text-slate-700">P. O. BOX 18 16, SHAMA</p>
-                            <p class="text-xs font-bold text-slate-700">ASSORKO - ESSAMAN</p>
-                            <h3 class="font-extrabold text-sm tracking-widest pt-1 uppercase underline">END OF TERM REPORT CARD</h3>
+                    <div class="space-y-6">
+                        <!-- OFFICIAL ASSESSMENT SHEET WITH REGISTERED TEACHER NAME -->
+                        <div class="assessment-print-page bg-white p-8 rounded-xl shadow-lg border-2 border-slate-300 max-w-4xl mx-auto space-y-4 text-slate-900 font-sans">
+                            <div class="text-center space-y-1 border-b-2 border-black pb-3">
+                                <h2 class="font-black text-xl tracking-wide">${schoolProfile.name.toUpperCase()}</h2>
+                                <p class="text-xs font-bold text-slate-700">SCHOOL BASED ASSESSMENT AT BASIC EDUCATIONAL LEVEL</p>
+                                <p class="text-xs font-bold text-slate-700 uppercase">TERMELY SBA RECORDINGS FOR PRIMARY AND JUNIOR HIGH SCHOOLS</p>
+                            </div>
+                            <div class="text-xs space-y-1 font-bold flex justify-between">
+                                <div>
+                                    <p>CLASS: <span class="underline uppercase">${s.class}</span></p>
+                                    <p>TERM: <span class="underline uppercase">${histTerm}</span></p>
+                                </div>
+                                <div>
+                                    <p>YEAR: <span class="underline">2026</span></p>
+                                    <p>NAME OF TEACHER: <span class="underline uppercase">${registeredTeacherName}</span></p>
+                                </div>
+                                <div>
+                                    <p>STUDENT: <span class="underline uppercase">${s.name}</span></p>
+                                    <p>NO. ON ROLL: <span class="underline">${filtered.length}</span></p>
+                                </div>
+                            </div>
+
+                            <table class="w-full text-xs border-collapse border border-black mt-2">
+                                <thead>
+                                    <tr class="bg-slate-100 text-center font-bold text-[10px]">
+                                        <th class="border border-black p-1.5 text-left pl-2">SUBJECT</th>
+                                        <th class="border border-black p-1.5">IND. TEST 1 (30)</th>
+                                        <th class="border border-black p-1.5">GROUP TEST (20)</th>
+                                        <th class="border border-black p-1.5">IND. TEST 2 (30)</th>
+                                        <th class="border border-black p-1.5">PROJECT / HW (20)</th>
+                                        <th class="border border-black p-1.5">TOTAL SBA (100)</th>
+                                        <th class="border border-black p-1.5">50%</th>
+                                        <th class="border border-black p-1.5">EXAMS (100)</th>
+                                        <th class="border border-black p-1.5">50%</th>
+                                        <th class="border border-black p-1.5">OVERALL TOTAL</th>
+                                        <th class="border border-black p-1.5">GRADE</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${assessmentRowsHtml}
+                                </tbody>
+                            </table>
                         </div>
 
-                        <div class="text-xs space-y-1.5 font-bold">
-                            <div class="flex border-b border-black pb-1">
-                                <span class="w-32">NAME OF PUPIL:</span>
-                                <span class="flex-1 underline uppercase">${s.name}</span>
+                        <!-- OFFICIAL REPORT CARD PAGE -->
+                        <div class="report-card-page bg-white p-8 rounded-xl shadow-lg border-2 border-slate-300 max-w-3xl mx-auto space-y-4 text-slate-900 font-sans">
+                            <div class="text-center space-y-1 border-b-2 border-black pb-3">
+                                <h2 class="font-black text-xl tracking-wide">${schoolProfile.name.toUpperCase()}</h2>
+                                <p class="text-xs font-bold text-slate-700">P. O. BOX 18 16, SHAMA</p>
+                                <p class="text-xs font-bold text-slate-700">ASSORKO - ESSAMAN</p>
+                                <h3 class="font-extrabold text-sm tracking-widest pt-1 uppercase underline">END OF TERM REPORT CARD</h3>
                             </div>
-                            <div class="flex justify-between border-b border-black pb-1">
-                                <div class="flex flex-1"><span class="w-16">CLASS:</span><span class="underline uppercase">${s.class}</span></div>
-                                <div class="flex flex-1"><span class="w-28">NO. ON ROLL:</span><span class="underline">${studentsData.filter(st => st.class === s.class).length}</span></div>
-                            </div>
-                            <div class="flex justify-between border-b border-black pb-1">
-                                <div class="flex flex-1"><span class="w-16">YEAR:</span><span class="underline">2026</span></div>
-                                <div class="flex flex-1"><span class="w-28">TERM:</span><span class="underline uppercase">${term}</span></div>
-                            </div>
-                            <div class="flex justify-between border-b border-black pb-1">
-                                <div class="flex flex-1"><span class="w-32">POSITION IN CLASS:</span><span class="underline">${s.position || '1st'}</span></div>
-                                <div class="flex flex-1"><span class="w-32">RE-OPENING DATE:</span><span class="underline"><input type="text" value="${s.reopeningDate}" onchange="updateStudentProp(${idx}, 'reopeningDate', this.value)" class="border-none w-32 bg-transparent text-xs font-bold"></span></div>
-                            </div>
-                        </div>
 
-                        <table class="w-full text-xs border-collapse border border-black mt-2">
-                            <thead>
-                                <tr class="bg-slate-100 text-center font-bold">
-                                    <th class="border border-black p-1.5 w-40 text-left pl-2">SUBJECT</th>
-                                    <th class="border border-black p-1.5">CLASS SCORE 50%</th>
-                                    <th class="border border-black p-1.5">EXAMS SCORE 50%</th>
-                                    <th class="border border-black p-1.5">TOTAL SCORE 100%</th>
-                                    <th class="border border-black p-1.5">POSITION</th>
-                                    <th class="border border-black p-1.5">GRADE</th>
-                                    <th class="border border-black p-1.5">REMARKS</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                ${subjectsHtml}
-                            </tbody>
-                        </table>
+                            <div class="text-xs space-y-1.5 font-bold">
+                                <div class="flex border-b border-black pb-1">
+                                    <span class="w-32">NAME OF PUPIL:</span>
+                                    <span class="flex-1 underline uppercase">${s.name}</span>
+                                </div>
+                                <div class="flex justify-between border-b border-black pb-1">
+                                    <div class="flex flex-1"><span class="w-16">CLASS:</span><span class="underline uppercase">${s.class}</span></div>
+                                    <div class="flex flex-1"><span class="w-28">NO. ON ROLL:</span><span class="underline">${filtered.length}</span></div>
+                                </div>
+                                <div class="flex justify-between border-b border-black pb-1">
+                                    <div class="flex flex-1"><span class="w-16">YEAR:</span><span class="underline">2026</span></div>
+                                    <div class="flex flex-1"><span class="w-28">TERM:</span><span class="underline uppercase">${histTerm}</span></div>
+                                </div>
+                                <div class="flex justify-between border-b border-black pb-1">
+                                    <div class="flex flex-1"><span class="w-32">POSITION IN CLASS:</span><span class="underline">${s.position || '1st'}</span></div>
+                                    <div class="flex flex-1"><span class="w-32">RE-OPENING DATE:</span><span class="underline"><input type="text" value="${s.reopeningDate}" onchange="updateStudentProp(${idx}, 'reopeningDate', this.value)" class="border-none w-32 bg-transparent text-xs font-bold"></span></div>
+                                </div>
+                            </div>
 
-                        <div class="text-xs space-y-1.5 pt-1 font-semibold">
-                            <div class="flex border-b border-black pb-1">
-                                <span class="w-36">ATTENDANCE MADE:</span>
-                                <input type="text" value="${s.attendanceMade}" onchange="updateStudentProp(${idx}, 'attendanceMade', this.value)" class="w-12 border-b border-black text-center bg-transparent">
-                                <span class="mx-4">OUT OF TOTAL OF:</span>
-                                <input type="text" value="${s.attendanceTotal}" onchange="updateStudentProp(${idx}, 'attendanceTotal', this.value)" class="w-12 border-b border-black text-center bg-transparent">
-                                <span class="mx-4">PROMOTED TO:</span>
-                                <input type="text" value="${s.promotedTo}" onchange="updateStudentProp(${idx}, 'promotedTo', this.value)" class="flex-1 border-b border-black bg-transparent">
-                            </div>
-                            <div class="flex border-b border-black pb-1">
-                                <span class="w-24">CONDUCT:</span>
-                                <input type="text" value="${s.conduct}" onchange="updateStudentProp(${idx}, 'conduct', this.value)" class="flex-1 border-b border-black bg-transparent">
-                            </div>
-                            <div class="flex border-b border-black pb-1">
-                                <span class="w-24">INTEREST:</span>
-                                <input type="text" value="${s.interest}" onchange="updateStudentProp(${idx}, 'interest', this.value)" class="flex-1 border-b border-black bg-transparent">
-                            </div>
-                            <div class="flex border-b border-black pb-1">
-                                <span class="w-48">CLASS TEACHER'S REMARKS:</span>
-                                <input type="text" value="${s.teacherRemarks}" onchange="updateStudentProp(${idx}, 'teacherRemarks', this.value)" class="flex-1 border-b border-black bg-transparent">
-                            </div>
-                            <div class="flex border-b border-black pb-1">
-                                <span class="w-48">HEAD TEACHER'S REMARKS:</span>
-                                <input type="text" value="${s.headRemarks}" onchange="updateStudentProp(${idx}, 'headRemarks', this.value)" class="flex-1 border-b border-black bg-transparent">
-                            </div>
-                        </div>
+                            <table class="w-full text-xs border-collapse border border-black mt-2">
+                                <thead>
+                                    <tr class="bg-slate-100 text-center font-bold">
+                                        <th class="border border-black p-1.5 w-40 text-left pl-2">SUBJECT</th>
+                                        <th class="border border-black p-1.5">CLASS SCORE 50%</th>
+                                        <th class="border border-black p-1.5">EXAMS SCORE 50%</th>
+                                        <th class="border border-black p-1.5">TOTAL SCORE 100%</th>
+                                        <th class="border border-black p-1.5">POSITION</th>
+                                        <th class="border border-black p-1.5">GRADE</th>
+                                        <th class="border border-black p-1.5">REMARKS</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${subjectsHtml}
+                                </tbody>
+                            </table>
 
-                        <table class="w-full text-xs border-collapse border border-black mt-3">
-                            <tbody>
-                                <tr>
-                                    <td class="border border-black p-1.5 pl-2 font-bold">TUITION FEE FOR NEXT TERM:</td>
-                                    <td class="border border-black p-1.5 text-right pr-3 font-semibold">${parseFloat(s.tuitionFee).toFixed(2)}</td>
-                                </tr>
-                                <tr>
-                                    <td class="border border-black p-1.5 pl-2 font-bold">PRINTING FEE FOR NEXT TERM:</td>
-                                    <td class="border border-black p-1.5 text-right pr-3 font-semibold">${parseFloat(s.printingFee).toFixed(2)}</td>
-                                </tr>
-                                <tr>
-                                    <td class="border border-black p-1.5 pl-2 font-bold">P.T.A. DUES FOR NEXT TERM:</td>
-                                    <td class="border border-black p-1.5 text-right pr-3 font-semibold">${parseFloat(s.ptaFee).toFixed(2)}</td>
-                                </tr>
-                                <tr>
-                                    <td class="border border-black p-1.5 pl-2 font-bold">OTHER FEES FOR NEXT TERM:</td>
-                                    <td class="border border-black p-1.5 text-right pr-3 font-semibold">${parseFloat(s.otherFee).toFixed(2)}</td>
-                                </tr>
-                                <tr>
-                                    <td class="border border-black p-1.5 pl-2 font-bold">ARREARS FOR LAST TERM:</td>
-                                    <td class="border border-black p-1.5 text-right pr-3 font-semibold">${parseFloat(s.arrearsFee).toFixed(2)}</td>
-                                </tr>
-                                <tr class="bg-slate-100 font-black">
-                                    <td class="border border-black p-1.5 pl-2">TOTAL FOR NEXT TERM:</td>
-                                    <td class="border border-black p-1.5 text-right pr-3">GH₵ ${totalFee.toFixed(2)}</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                            <div class="text-xs space-y-1.5 pt-1 font-semibold">
+                                <div class="flex border-b border-black pb-1">
+                                    <span class="w-36">ATTENDANCE MADE:</span>
+                                    <input type="text" value="${s.attendanceMade}" onchange="updateStudentProp(${idx}, 'attendanceMade', this.value)" class="w-12 border-b border-black text-center bg-transparent">
+                                    <span class="mx-4">OUT OF TOTAL OF:</span>
+                                    <input type="text" value="${s.attendanceTotal}" onchange="updateStudentProp(${idx}, 'attendanceTotal', this.value)" class="w-12 border-b border-black text-center bg-transparent">
+                                    <span class="mx-4">PROMOTED TO:</span>
+                                    <input type="text" value="${s.promotedTo}" onchange="updateStudentProp(${idx}, 'promotedTo', this.value)" class="flex-1 border-b border-black bg-transparent">
+                                </div>
+                                <div class="flex border-b border-black pb-1">
+                                    <span class="w-24">CONDUCT:</span>
+                                    <input type="text" value="${s.conduct}" onchange="updateStudentProp(${idx}, 'conduct', this.value)" class="flex-1 border-b border-black bg-transparent">
+                                </div>
+                                <div class="flex border-b border-black pb-1">
+                                    <span class="w-24">INTEREST:</span>
+                                    <input type="text" value="${s.interest}" onchange="updateStudentProp(${idx}, 'interest', this.value)" class="flex-1 border-b border-black bg-transparent">
+                                </div>
+                                <div class="flex border-b border-black pb-1">
+                                    <span class="w-48">CLASS TEACHER'S REMARKS:</span>
+                                    <input type="text" value="${s.teacherRemarks}" onchange="updateStudentProp(${idx}, 'teacherRemarks', this.value)" class="flex-1 border-b border-black bg-transparent">
+                                </div>
+                                <div class="flex border-b border-black pb-1">
+                                    <span class="w-48">HEAD TEACHER'S REMARKS:</span>
+                                    <input type="text" value="${s.headRemarks}" onchange="updateStudentProp(${idx}, 'headRemarks', this.value)" class="flex-1 border-b border-black bg-transparent">
+                                </div>
+                            </div>
 
-                        <div class="flex justify-end space-x-3 no-print pt-2">
-                            <button onclick="window.print()" class="px-4 py-2 bg-blue-900 text-white text-xs font-semibold rounded-lg">Print Report Card 🖨️</button>
+                            <table class="w-full text-xs border-collapse border border-black mt-3">
+                                <tbody>
+                                    <tr>
+                                        <td class="border border-black p-1.5 pl-2 font-bold">TUITION FEE FOR NEXT TERM:</td>
+                                        <td class="border border-black p-1.5 text-right pr-3 font-semibold">${parseFloat(s.tuitionFee).toFixed(2)}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="border border-black p-1.5 pl-2 font-bold">PRINTING FEE FOR NEXT TERM:</td>
+                                        <td class="border border-black p-1.5 text-right pr-3 font-semibold">${parseFloat(s.printingFee).toFixed(2)}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="border border-black p-1.5 pl-2 font-bold">P.T.A. DUES FOR NEXT TERM:</td>
+                                        <td class="border border-black p-1.5 text-right pr-3 font-semibold">${parseFloat(s.ptaFee).toFixed(2)}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="border border-black p-1.5 pl-2 font-bold">OTHER FEES FOR NEXT TERM:</td>
+                                        <td class="border border-black p-1.5 text-right pr-3 font-semibold">${parseFloat(s.otherFee).toFixed(2)}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="border border-black p-1.5 pl-2 font-bold">ARREARS FOR LAST TERM:</td>
+                                        <td class="border border-black p-1.5 text-right pr-3 font-semibold">${parseFloat(s.arrearsFee).toFixed(2)}</td>
+                                    </tr>
+                                    <tr class="bg-slate-100 font-black">
+                                        <td class="border border-black p-1.5 pl-2">TOTAL FOR NEXT TERM:</td>
+                                        <td class="border border-black p-1.5 text-right pr-3">GH₵ ${totalFee.toFixed(2)}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <div class="flex justify-end space-x-3 no-print pt-2">
+                                <button onclick="window.print()" class="px-4 py-2 bg-blue-900 text-white text-xs font-semibold rounded-lg">Print Report Card 🖨️</button>
+                            </div>
                         </div>
                     </div>
                 `;
             }).join('');
-            switchTab('history');
-            alert('All report cards successfully generated with official school formatting and automatic fee breakdowns!');
         }
 
         function updateStudentProp(index, field, val) {
