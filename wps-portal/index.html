@@ -416,7 +416,7 @@
     <script>
         // Supabase Initialization
         const SUPABASE_URL = 'https://lhqacoxyfyklxjhabzfe.supabase.co';
-        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxocWFjb3h5ZnlrbHhqaGFiemZlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI1MTA2NTksImV4cCI6MjEwODA4NjY1OX0.w7eqLoS5uKKCGpTxGunl2iD3oDEzRxPaUQ2EbhsGSDA';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxocWFjb3h5ZnlrbHhqaGFiemZlIiwicm9sZSI6ImFub24iLCJpYXQiOjE5MDUzMTg2MDl9...'; // Replace with your actual full key if needed
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         let currentUser = null;
@@ -453,15 +453,15 @@
             renderAll();
         });
 
-        // Fetch students from Supabase database
+        // Fetch students from Supabase database (supports column name 'class')
         async function fetchStudentsFromSupabase() {
             try {
                 const { data, error } = await supabaseClient.from('students').select('*');
                 if(data && !error) {
                     studentsData = data.map(s => ({
                         id: s.id || Date.now(),
-                        name: s.student_name,
-                        class: s.class_name,
+                        name: s.student_name || s.name,
+                        class: s.class || s.class_name || 'Basic 4',
                         gender: s.gender || 'Male',
                         sba: s.sba || 0,
                         exam: s.exam || 0,
@@ -563,7 +563,7 @@
             }
         }
 
-        // Student Enrollment Form Submission (Saves to Supabase)
+        // Student Enrollment Form Submission (Saves using 'class' column)
         document.getElementById('student-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const name = document.getElementById('s-name').value;
@@ -571,7 +571,7 @@
             const gender = document.getElementById('s-gender').value;
 
             try {
-                const { data, error } = await supabaseClient.from('students').insert([{ student_name: name, class_name: className, gender, fee_billed: 300, fee_paid: 0 }]);
+                const { data, error } = await supabaseClient.from('students').insert([{ student_name: name, class: className, gender, fee_billed: 300, fee_paid: 0 }]);
                 if(error) {
                     alert('Error saving to Supabase: ' + error.message);
                     return;
@@ -774,7 +774,7 @@
 
             const ctxClass = document.getElementById('classChart');
             if(ctxClass) {
-                new Chart(ctxClass.getContext('2d'), {
+                newChart(ctxClass.getContext('2d'), {
                     type: 'bar',
                     data: {
                         labels: classesData,
