@@ -1522,16 +1522,22 @@
                 return;
             }
 
+            let loadedCount = 0;
+            const totalFiles = fileInput.files.length;
+
             Array.from(fileInput.files).forEach(file => {
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     galleryPhotos.push({ url: e.target.result, name: file.name });
-                    renderGalleryGrids();
+                    loadedCount++;
+                    if(loadedCount === totalFiles) {
+                        renderGalleryGrids();
+                        alert(`${totalFiles} photo(s) uploaded successfully and synced to all galleries!`);
+                    }
                 }
                 reader.readAsDataURL(file);
             });
 
-            alert(`${fileInput.files.length} photo(s) uploaded successfully to the School Gallery!`);
             fileInput.value = '';
         }
 
