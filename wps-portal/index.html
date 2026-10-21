@@ -11,8 +11,8 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root {
-            --primary: #1e3a8a; /* Badge Navy Blue */
-            --accent: #991b1b;  /* Badge Red */
+            --primary: #1e3a8a;
+            --accent: #991b1b;
         }
         @media print {
             .no-print { display: none !important; }
@@ -62,11 +62,11 @@
     <div id="announcement-modal" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full p-6 border-t-4 border-amber-500 space-y-4">
             <div class="flex justify-between items-center">
-                <h3 class="font-bold text-lg text-blue-900" id="modal-title-header">📢 Priority School Notice & Birthdays</h3>
+                <h3 class="font-bold text-lg text-blue-900">📢 Priority Notice & Staff Birthdays</h3>
                 <span class="text-xs bg-amber-100 text-amber-800 px-2.5 py-1 rounded-full font-bold">Important</span>
             </div>
             <div id="modal-announcement-image-container" class="hidden text-center">
-                <img id="modal-announcement-img" src="" alt="Announcement or Birthday" class="max-h-56 mx-auto rounded-xl shadow-md object-cover border">
+                <img id="modal-announcement-img" src="" alt="Announcement" class="max-h-56 mx-auto rounded-xl shadow-md object-cover border">
             </div>
             <div id="modal-announcement-text" class="text-slate-700 bg-slate-50 p-4 rounded-xl border text-sm leading-relaxed">
                 Welcome to Wesley Preparatory School Portal.
@@ -237,7 +237,7 @@
                     <div class="flex flex-wrap justify-between items-center gap-3">
                         <div class="flex gap-2">
                             <button onclick="exportAssessmentSheet('pdf')" class="px-4 py-2 bg-slate-800 text-white text-xs font-semibold rounded-lg hover:bg-slate-700">Download Assessment PDF 📄</button>
-                            <button onclick="exportAssessmentSheet('doc')" class="px-4 py-2 bg-blue-800 text-white text-xs font-semibold rounded-lg hover:bg-blue-700">Download Assessment Word (.doc) 📝</button>
+                            <button onclick="exportAssessmentSheet('doc')" class="px-4 py-2 bg-blue-800 text-white text-xs font-semibold rounded-lg hover:bg-blue-700">Download Assessment Word 📝</button>
                         </div>
                         <button onclick="finalizeReports()" class="px-6 py-3 bg-amber-600 hover:bg-amber-700 text-white font-bold rounded-xl shadow-lg transition">Finalize & Push Reports to Student History ➔</button>
                     </div>
@@ -294,9 +294,7 @@
                             </div>
                             <div>
                                 <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Filter by Class</label>
-                                <select id="fee-class-filter" onchange="renderFeesTable()" class="p-2 border rounded-xl text-sm bg-slate-50 font-medium w-48">
-                                    <!-- Dynamic classes -->
-                                </select>
+                                <select id="fee-class-filter" onchange="renderFeesTable()" class="p-2 border rounded-xl text-sm bg-slate-50 font-medium w-48"></select>
                             </div>
                         </div>
                         <div class="overflow-x-auto pt-2">
@@ -464,7 +462,6 @@
         let globalAnnouncementImgUrl = "";
         let classesData = ['Basic 1', 'Basic 2', 'Basic 3', 'Basic 4', 'Basic 5', 'Basic 6', 'JHS 1', 'JHS 2', 'JHS 3'];
         let studentsData = [];
-        let teachersData = [];
         let galleryPhotos = [];
         let schoolProfile = {
             name: "Wesley Preparatory School",
@@ -490,7 +487,6 @@
                 document.getElementById('teacher-nav-section').classList.remove('hidden');
                 switchTab('timetable');
                 
-                // Show announcement & birthday popup
                 document.getElementById('modal-announcement-text').innerText = globalAnnouncementText;
                 if(globalAnnouncementImgUrl) {
                     document.getElementById('modal-announcement-img').src = globalAnnouncementImgUrl;
@@ -933,7 +929,7 @@
 
             if(galleryPhotos.length === 0) return;
 
-            const html = galleryPhotos.map((p, idx) => `
+            const html = galleryPhotos.map((p) => `
                 <div class="bg-slate-50 rounded-xl p-3 text-center border space-y-2">
                     <img src="${p.url}" alt="School Activity" class="h-32 w-full object-cover rounded-lg shadow">
                     <a href="${p.url}" download="${p.name || 'school_photo.jpg'}" class="block text-xs bg-blue-900 text-white py-1.5 px-3 rounded-lg font-bold hover:bg-blue-800">Download JPG ⬇️</a>
