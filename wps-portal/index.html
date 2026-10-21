@@ -120,6 +120,7 @@
                 <button onclick="switchTab('dashboard')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📊 <span>Dashboard & Charts</span></button>
                 <button onclick="switchTab('assessment')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📝 <span>SBA & Exam Grading</span></button>
                 <button onclick="switchTab('history')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📁 <span>Student History & Reports</span></button>
+                <button onclick="switchTab('lms')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📚 <span>LMS & Teacher Training Hub</span></button>
                 <button onclick="switchTab('attendance')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📅 <span>Attendance Register</span></button>
                 <button onclick="switchTab('timetable')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">⏰ <span>Timetable & Time Mgmt</span></button>
                 
@@ -132,12 +133,13 @@
                     <button onclick="switchTab('classes')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🏫 <span>Manage Classes (1-6 & JHS)</span></button>
                     <button onclick="switchTab('announcements')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📢 <span>Announcements & Birthdays</span></button>
                     <button onclick="switchTab('gallery')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🖼️ <span>Photo Gallery & JPG Uploads</span></button>
-                    <button onclick="switchTab('profile')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">⚙️ <span>School Profile & Branding</span></button>
+                    <button onclick="switchTab('profile')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">⚙️ <span>School Profile & Locking</span></button>
                 </div>
 
                 <!-- Teacher Nav -->
                 <div id="teacher-nav-section" class="hidden pt-4 border-t border-slate-200 space-y-2">
                     <p class="px-4 text-xs font-bold uppercase tracking-wider text-slate-400">Staff Portal</p>
+                    <button onclick="switchTab('lms')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📚 <span>Teaching Hub & Resources</span></button>
                     <button onclick="switchTab('timetable')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">⏰ <span>Manage Timetable</span></button>
                     <button onclick="switchTab('teacher-gallery')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🖼️ <span>School Photo Gallery</span></button>
                     <button onclick="switchTab('teacher-announcements')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📢 <span>View Announcements</span></button>
@@ -181,7 +183,7 @@
                         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                             <div>
                                 <h2 class="text-xl font-bold text-slate-900">Termly SBA & Exam Assessment Capture</h2>
-                                <p class="text-xs text-slate-500">Inputs: Ind. Test 1 (30), Group Test (20), Ind. Test 2 (30), Project/Homework (20) = Total SBA (100) → 50% SBA + 50% Exams = Overall Total.</p>
+                                <p class="text-xs text-slate-500">Formula: Ind. Test 1 (30) + Group Test (20) + Ind. Test 2 (30) + Project/Homework (20) = Total SBA (100) → 50% SBA + 50% Exams = Overall Total.</p>
                             </div>
                             <button onclick="calculateGrades()" class="px-5 py-2.5 bg-blue-900 text-white font-semibold rounded-xl hover:bg-blue-800 transition shadow">Compute Totals & Grades</button>
                         </div>
@@ -224,10 +226,10 @@
                                         <th class="p-2.5">Ind. Test 1 (30)</th>
                                         <th class="p-2.5">Group Test (20)</th>
                                         <th class="p-2.5">Ind. Test 2 (30)</th>
-                                        <th class="p-2.5">Homework (20)</th>
+                                        <th class="p-2.5">Project / HW (20)</th>
                                         <th class="p-2.5 bg-blue-50">Total SBA (100)</th>
                                         <th class="p-2.5 bg-blue-100">50% SBA</th>
-                                        <th class="p-2.5">Exam (100)</th>
+                                        <th class="p-2.5">Exams (100)</th>
                                         <th class="p-2.5 bg-blue-100">50% Exam</th>
                                         <th class="p-2.5 bg-amber-50">Overall Total</th>
                                         <th class="p-2.5">Grade</th>
@@ -286,6 +288,88 @@
 
                     <div id="history-container" class="space-y-8">
                         <p class="text-slate-500 italic p-4">No finalized assessment sheets or reports found. Click "Finalize & Save Assessment Sheet" from the SBA grading tab.</p>
+                    </div>
+                </section>
+
+                <!-- TAB: LMS & TEACHER TRAINING HUB -->
+                <section id="tab-lms" class="hidden space-y-6">
+                    <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-6">
+                        <div class="border-b pb-4 flex justify-between items-center">
+                            <div>
+                                <h2 class="text-xl font-bold text-slate-900">📚 LMS & Professional Teacher Training Hub</h2>
+                                <p class="text-xs text-slate-500 mt-1">Curriculum resources, classroom control methodologies, student behavioral analysis, and problem-solving strategies.</p>
+                            </div>
+                            <span id="lms-role-badge" class="px-3 py-1 bg-amber-100 text-amber-900 text-xs font-bold rounded-full">Admin Edit Mode Active</span>
+                        </div>
+
+                        <!-- ADMIN ONLY: ADD NEW RESOURCE OR TRAINING GUIDE -->
+                        <div id="admin-lms-upload-section" class="bg-blue-50/60 p-4 rounded-xl border border-blue-200 space-y-3">
+                            <h3 class="font-bold text-sm text-blue-950">➕ Upload Teaching Resource / Embed Video / Update Training Guide (Admin Only)</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                <input type="text" id="lms-title" placeholder="Resource Title (e.g. Basic 4 Mathematics Handout)" class="p-2.5 border rounded-xl text-xs bg-white font-medium">
+                                <input type="text" id="lms-embed-url" placeholder="Embed YouTube Link (e.g. https://www.youtube.com/embed/...)" class="p-2.5 border rounded-xl text-xs bg-white font-medium">
+                            </div>
+                            <textarea id="lms-content-desc" rows="3" placeholder="Enter lesson description, teaching strategy, or classroom management tips..." class="w-full p-3 border rounded-xl text-xs bg-white"></textarea>
+                            <div class="flex justify-end">
+                                <button onclick="saveLMSResource()" class="px-5 py-2 bg-blue-900 text-white font-bold rounded-xl text-xs">Publish LMS Resource</button>
+                            </div>
+                        </div>
+
+                        <!-- LMS CONTENT TABS / SECTIONS -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2">
+                            <!-- Section 1: How to Control a Class -->
+                            <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-3 shadow-sm">
+                                <div class="flex items-center space-x-2 text-blue-900 font-bold text-sm">
+                                    <span>🛡️</span> <h4>Classroom Control & Discipline</h4>
+                                </div>
+                                <ul class="text-xs text-slate-700 space-y-2 list-disc pl-4">
+                                    <li><strong>Proactive Engagement:</strong> Keep lessons fast-paced with interactive questioning to prevent downtime.</li>
+                                    <li><strong>Non-Verbal Cues:</strong> Use eye contact, proximity, and hand gestures rather than shouting to regain attention.</li>
+                                    <li><strong>Clear Routine:</strong> Establish entry, seating, and transition procedures from Day 1.</li>
+                                    <li><strong>Positive Reinforcement:</strong> Praise focused students publicly to encourage compliance across the room.</li>
+                                </ul>
+                            </div>
+
+                            <!-- Section 2: Types of Students & Identification -->
+                            <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-3 shadow-sm">
+                                <div class="flex items-center space-x-2 text-blue-900 font-bold text-sm">
+                                    <span>🧠</span> <h4>Types of Students & Profiles</h4>
+                                </div>
+                                <ul class="text-xs text-slate-700 space-y-2 list-disc pl-4">
+                                    <li><strong>The Visual Learner:</strong> Learns best through diagrams, charts, and colored notes. Needs visual aids on the board.</li>
+                                    <li><strong>The Auditory Learner:</strong> Thrives on verbal instructions, read-alouds, discussions, and mnemonic chants.</li>
+                                    <li><strong>The Kinesthetic Learner:</strong> Needs physical movement, hands-on practice, and manipulative objects to grasp concepts.</li>
+                                    <li><strong>The Withdrawn / Quiet Student:</strong> Shy or anxious; requires gentle 1-on-1 encouragement and low-pressure participation.</li>
+                                </ul>
+                            </div>
+
+                            <!-- Section 3: Solving Student Problems -->
+                            <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-3 shadow-sm">
+                                <div class="flex items-center space-x-2 text-blue-900 font-bold text-sm">
+                                    <span>💡</span> <h4>Problem-Solving Strategies</h4>
+                                </div>
+                                <ul class="text-xs text-slate-700 space-y-2 list-disc pl-4">
+                                    <li><strong>Root-Cause Analysis:</strong> Is poor performance due to comprehension gaps, hunger, home stress, or distraction? Speak privately.</li>
+                                    <li><strong>Differentiated Tasks:</strong> Break complex problems into smaller, scaffolded steps for struggling learners.</li>
+                                    <li><strong>Peer Tutoring:</strong> Pair high-performing pupils with peers needing reinforcement to build community and mastery.</li>
+                                    <li><strong>Parental Collaboration:</strong> Maintain transparent communication logs with guardians regarding behavioral or academic shifts.</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- DYNAMIC LMS RESOURCES & EMBEDDED VIDEOS CONTAINER -->
+                        <div class="pt-4 border-t space-y-4">
+                            <h3 class="font-bold text-sm text-slate-900">📂 Uploaded Teaching Materials & Embedded Media</h3>
+                            <div id="lms-resources-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="bg-slate-50 p-4 rounded-xl border space-y-2">
+                                    <h4 class="font-bold text-xs text-blue-950">Sample Curriculum Guide: Basic Mathematics & Literacy</h4>
+                                    <p class="text-xs text-slate-600">Official syllabus breakdown for Term 1 core topics.</p>
+                                    <div class="aspect-w-16 aspect-h-9 pt-2">
+                                        <iframe class="w-full h-40 rounded-lg shadow border" src="https://www.youtube.com/embed/dQw4w9WgXcQ" allowfullscreen></iframe>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </section>
 
@@ -505,12 +589,20 @@
                     </div>
                 </section>
 
-                <!-- TAB: SCHOOL PROFILE & BRANDING SETTINGS -->
+                <!-- TAB: SCHOOL PROFILE & PORTAL LOCK CONTROL -->
                 <section id="tab-profile" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-4">
-                        <h2 class="text-xl font-bold text-slate-900">School Profile, Motto & Branding Settings</h2>
-                        <p class="text-xs text-slate-500">Customize the school's official name, badge subtitle, motto, and contact information across the portal.</p>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <h2 class="text-xl font-bold text-slate-900">School Profile, Motto & Teacher Access Control</h2>
+                        <p class="text-xs text-slate-500">Customize school branding and restrict or allow teacher logins while making portal edits.</p>
+                        
+                        <!-- ADMIN PORTAL LOCK CONTROL PANEL -->
+                        <div class="p-4 bg-amber-50 border border-amber-300 rounded-xl space-y-3">
+                            <h3 class="font-bold text-sm text-amber-950">🔒 Teacher Portal Access Control (Admin Lock)</h3>
+                            <p class="text-xs text-slate-600">Lock the portal to restrict teachers from logging in while you perform system edits, grade updates, or maintenance.</p>
+                            <button id="portal-lock-btn" onclick="togglePortalLock()" class="px-5 py-2.5 bg-red-700 text-white font-bold text-xs rounded-xl shadow hover:bg-red-800 transition">Lock Portal for Teachers</button>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
                             <div>
                                 <label class="block text-xs font-bold uppercase text-slate-600 mb-1">School Name</label>
                                 <input type="text" id="profile-school-name" value="Wesley Preparatory School" class="p-3 border rounded-xl w-full font-medium">
@@ -539,12 +631,20 @@
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         let currentUser = null;
+        let portalLocked = false; // Admin control toggle for teacher access
         let globalAnnouncementText = "Welcome to Wesley Preparatory School. Please ensure all student records and SBA scores are updated promptly.";
         let globalAnnouncementImgUrl = "";
         let classesData = ['Basic 1', 'Basic 2', 'Basic 3', 'Basic 4', 'Basic 5', 'Basic 6', 'JHS 1', 'JHS 2', 'JHS 3'];
         let studentsData = [];
-        let teachersList = []; // Stores registered teachers
+        let teachersList = [];
         let galleryPhotos = [];
+        let lmsResources = [
+            {
+                title: "Curriculum Teaching Guide & Instructional Framework",
+                url: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+                description: "Official teaching manual for managing primary and junior high core subjects effectively."
+            }
+        ];
         let schoolProfile = {
             name: "Wesley Preparatory School",
             location: "Assorko-Essaman",
@@ -568,6 +668,13 @@
             e.preventDefault();
             const role = document.getElementById('login-role').value;
             const user = document.getElementById('login-user').value;
+
+            // Check if Admin has locked the portal for teachers
+            if(role === 'teacher' && portalLocked) {
+                alert('🔒 Portal is currently locked by Administration for maintenance, edits, or grading updates. Teachers cannot log in at this moment. Please check back later.');
+                return;
+            }
+
             currentUser = { role, name: user };
             
             document.getElementById('auth-screen').classList.add('hidden');
@@ -578,7 +685,9 @@
             if(role === 'teacher') {
                 document.getElementById('admin-nav-section').classList.add('hidden');
                 document.getElementById('teacher-nav-section').classList.remove('hidden');
-                switchTab('timetable');
+                document.getElementById('admin-lms-upload-section').classList.add('hidden'); // Teachers cannot edit LMS
+                document.getElementById('lms-role-badge').innerText = "Teacher View (Read Only)";
+                switchTab('lms');
                 
                 document.getElementById('modal-announcement-text').innerText = globalAnnouncementText;
                 if(globalAnnouncementImgUrl) {
@@ -597,12 +706,28 @@
             } else {
                 document.getElementById('admin-nav-section').classList.remove('hidden');
                 document.getElementById('teacher-nav-section').classList.add('hidden');
+                document.getElementById('admin-lms-upload-section').classList.remove('hidden'); // Admin can edit LMS
+                document.getElementById('lms-role-badge').innerText = "Admin Edit Mode Active";
                 switchTab('dashboard');
             }
             await fetchStudentsFromSupabase();
             await fetchTeachersFromSupabase();
             renderAll();
         });
+
+        function togglePortalLock() {
+            portalLocked = !portalLocked;
+            const btn = document.getElementById('portal-lock-btn');
+            if(portalLocked) {
+                btn.innerText = "Unlock Portal for Teachers 🔓";
+                btn.className = "px-5 py-2.5 bg-emerald-700 text-white font-bold text-xs rounded-xl shadow hover:bg-emerald-800 transition";
+                alert('🔒 Portal is now LOCKED. Teachers are successfully restricted from logging in.');
+            } else {
+                btn.innerText = "Lock Portal for Teachers 🔒";
+                btn.className = "px-5 py-2.5 bg-red-700 text-white font-bold text-xs rounded-xl shadow hover:bg-red-800 transition";
+                alert('🔓 Portal is now UNLOCKED. Teachers can log in normally.');
+            }
+        }
 
         async function fetchStudentsFromSupabase() {
             try {
@@ -657,7 +782,7 @@
         function logout() { location.reload(); }
 
         function switchTab(tabId) {
-            ['dashboard', 'assessment', 'history', 'attendance', 'timetable', 'fees', 'classes', 'students', 'teachers', 'announcements', 'gallery', 'teacher-gallery', 'teacher-announcements', 'profile'].forEach(t => {
+            ['dashboard', 'assessment', 'history', 'lms', 'attendance', 'timetable', 'fees', 'classes', 'students', 'teachers', 'announcements', 'gallery', 'teacher-gallery', 'teacher-announcements', 'profile'].forEach(t => {
                 const el = document.getElementById(`tab-${t}`);
                 if(el) el.classList.add('hidden');
             });
@@ -683,6 +808,9 @@
                 renderHistoryClassDropdown();
                 renderHistoryView();
             }
+            if(tabId === 'lms') {
+                renderLMSResources();
+            }
         }
 
         function renderAll() {
@@ -696,6 +824,7 @@
             renderFeesTable();
             renderAttendanceRegister();
             renderHistoryView();
+            renderLMSResources();
             renderCharts();
         }
 
@@ -801,6 +930,39 @@
                 document.getElementById('timetable-display').innerText = updated;
                 alert('Timetable updated successfully!');
             }
+        }
+
+        function saveLMSResource() {
+            const title = document.getElementById('lms-title').value.trim();
+            const url = document.getElementById('lms-embed-url').value.trim();
+            const desc = document.getElementById('lms-content-desc').value.trim();
+
+            if(!title) { alert('Please enter a resource title.'); return; }
+            lmsResources.push({ title, url: url || 'https://www.youtube.com/embed/dQw4w9WgXcQ', description: desc || 'No description provided.' });
+            
+            document.getElementById('lms-title').value = '';
+            document.getElementById('lms-embed-url').value = '';
+            document.getElementById('lms-content-desc').value = '';
+            renderLMSResources();
+            alert('LMS teaching resource published successfully!');
+        }
+
+        function renderLMSResources() {
+            const grid = document.getElementById('lms-resources-grid');
+            if(!grid) return;
+            if(lmsResources.length === 0) {
+                grid.innerHTML = `<p class="text-slate-400 italic text-sm">No teaching materials uploaded yet.</p>`;
+                return;
+            }
+            grid.innerHTML = lmsResources.map(r => `
+                <div class="bg-slate-50 p-4 rounded-xl border space-y-2 shadow-sm">
+                    <h4 class="font-bold text-xs text-blue-950">${r.title}</h4>
+                    <p class="text-xs text-slate-600">${r.description}</p>
+                    <div class="pt-1">
+                        <iframe class="w-full h-40 rounded-lg shadow border" src="${r.url}" allowfullscreen></iframe>
+                    </div>
+                </div>
+            `).join('');
         }
 
         document.getElementById('student-form').addEventListener('submit', async (e) => {
