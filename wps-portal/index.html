@@ -39,6 +39,7 @@
                 <h1 id="login-school-title" class="text-2xl font-bold text-slate-900">Wesley Preparatory School</h1>
                 <p id="login-school-motto" class="text-xs text-slate-500 font-semibold uppercase tracking-wider mt-1">Knowledge and Integrity</p>
             </div>
+            
             <form id="login-form" class="space-y-4">
                 <div>
                     <label class="block text-xs font-semibold uppercase text-slate-600 mb-1">Select Role</label>
@@ -58,10 +59,9 @@
                 <button type="submit" class="w-full py-3 bg-blue-900 text-white font-semibold rounded-xl hover:bg-blue-800 transition shadow-lg">Secure Login</button>
             </form>
 
-            <!-- Password Reset & Account Recovery Options -->
-            <div class="mt-4 pt-4 border-t text-center flex justify-between items-center text-xs">
-                <button type="button" onclick="openPasswordResetModal()" class="text-blue-900 hover:underline font-semibold">Forgot Password / Reset PIN?</button>
-                <button type="button" onclick="openAccountRecoveryModal()" class="text-slate-600 hover:underline font-semibold">Account Recovery</button>
+            <div class="mt-5 pt-4 border-t border-slate-200 flex justify-between items-center text-xs">
+                <button type="button" onclick="openPasswordResetModal()" class="text-blue-900 hover:text-blue-700 font-bold underline">Forgot Password / Reset PIN?</button>
+                <button type="button" onclick="openAccountRecoveryModal()" class="text-slate-600 hover:text-slate-900 font-bold underline">Account Recovery</button>
             </div>
         </div>
     </div>
@@ -71,7 +71,7 @@
         <div class="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-6 border-t-4 border-blue-900 space-y-4">
             <h3 class="font-bold text-lg text-blue-950">Reset Portal Password / PIN</h3>
             <p class="text-xs text-slate-500">Enter your registered email or username to request a secure password or PIN reset from the Headmaster/Admin.</p>
-            <input type="text" id="reset-email-input" placeholder="Enter Email or Username" class="w-full p-3 border rounded-xl text-xs">
+            <input type="text" id="reset-email-input" placeholder="Enter Email or Username" class="w-full p-3 border rounded-xl text-xs bg-slate-50">
             <div class="flex justify-end space-x-2 pt-2">
                 <button onclick="submitPasswordResetRequest()" class="px-4 py-2 bg-blue-900 text-white rounded-xl text-xs font-semibold">Send Request</button>
                 <button onclick="closePasswordResetModal()" class="px-4 py-2 bg-slate-200 text-slate-800 rounded-xl text-xs font-semibold">Cancel</button>
@@ -580,7 +580,7 @@
                             </div>
                         </div>
 
-                        <!-- PORTAL LOCK CONTROL PANEL (Placed Right Here in Announcements Area) -->
+                        <!-- PORTAL LOCK CONTROL PANEL -->
                         <div class="pt-6 border-t space-y-3">
                             <h3 class="text-lg font-bold text-slate-900">🔒 Teacher Portal Access Restriction</h3>
                             <p class="text-xs text-slate-500">Lock the portal to restrict teachers from logging in while you perform system edits, grade updates, or maintenance.</p>
@@ -669,13 +669,14 @@
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         let currentUser = null;
-        let portalLocked = false; // Admin control toggle for teacher access
+        let portalLocked = false;
         let globalAnnouncementText = "Welcome to Wesley Preparatory School. Please ensure all student records and SBA scores are updated promptly.";
         let globalAnnouncementImgUrl = "";
         let classesData = ['Basic 1', 'Basic 2', 'Basic 3', 'Basic 4', 'Basic 5', 'Basic 6', 'JHS 1', 'JHS 2', 'JHS 3'];
         let studentsData = [];
         let teachersList = [];
         let galleryPhotos = [];
+        
         let lmsResources = [
             {
                 title: "Curriculum Teaching Guide & Instructional Framework",
@@ -702,12 +703,50 @@
             'O. W. O. P.'
         ];
 
+        // Fetch cloud settings and photos from Supabase on startup
+        window.addEventListener('DOMContentLoaded', async () => {
+            await fetchCloudSettings();
+        });
+
+        async function fetchCloudSettings() {
+            try {
+                const { data, error } = await supabaseClient.from('school_settings').select('*');
+                if(data && !error && data.length > 0) {
+                    const settings = data[0];
+                    portalLocked = settings.portal_locked || false;
+                    globalAnnouncementText = settings.announcement_text || globalAnnouncementText;
+                    globalAnnouncementImgUrl = settings.announcement_img || "";
+                    galleryPhotos = settings.gallery_photos || [];
+                }
+            } catch(err) {
+                console.log('Error fetching cloud settings:', err);
+            }
+            updateLockStatusUI();
+            renderGalleryGrids();
+        }
+
+        async function saveCloudSettings() {
+            try {
+                // Upsert settings row to Supabase
+                await supabaseClient.from('school_settings').upsert({
+                    id: 1,
+                    portal_locked: portalLocked,
+                    announcement_text: globalAnnouncementText,
+                    announcement_img: globalAnnouncementImgUrl,
+                    gallery_photos: galleryPhotos
+                });
+            } catch(err) {
+                console.log('Error saving to cloud:', err);
+            }
+        }
+
         document.getElementById('login-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const role = document.getElementById('login-role').value;
             const user = document.getElementById('login-user').value;
 
-            // Check if Admin has locked the portal for teachers
+            await fetchCloudSettings(); // Ensure latest lock status from cloud
+
             if(role === 'teacher' && portalLocked) {
                 alert('🔒 Portal is currently locked by Administration for maintenance, edits, or grading updates. Teachers cannot log in at this moment. Please check back later.');
                 return;
@@ -723,7 +762,7 @@
             if(role === 'teacher') {
                 document.getElementById('admin-nav-section').classList.add('hidden');
                 document.getElementById('teacher-nav-section').classList.remove('hidden');
-                document.getElementById('admin-lms-upload-section').classList.add('hidden'); // Teachers cannot edit LMS
+                document.getElementById('admin-lms-upload-section').classList.add('hidden');
                 document.getElementById('lms-role-badge').innerText = "Teacher View (Read Only)";
                 switchTab('lms');
                 
@@ -744,7 +783,7 @@
             } else {
                 document.getElementById('admin-nav-section').classList.remove('hidden');
                 document.getElementById('teacher-nav-section').classList.add('hidden');
-                document.getElementById('admin-lms-upload-section').classList.remove('hidden'); // Admin can edit LMS
+                document.getElementById('admin-lms-upload-section').classList.remove('hidden');
                 document.getElementById('lms-role-badge').innerText = "Admin Edit Mode Active";
                 switchTab('dashboard');
             }
@@ -777,22 +816,32 @@
             document.getElementById('account-recovery-modal').classList.add('hidden');
         }
 
-        function togglePortalLock() {
+        async function togglePortalLock() {
             portalLocked = !portalLocked;
+            await saveCloudSettings();
+            updateLockStatusUI();
+            if(portalLocked) {
+                alert('🔒 Portal is now LOCKED in the cloud. Teachers are successfully restricted from logging in.');
+            } else {
+                alert('🔓 Portal is now UNLOCKED in the cloud. Teachers can log in normally.');
+            }
+        }
+
+        function updateLockStatusUI() {
             const btn = document.getElementById('portal-lock-btn');
             const lbl = document.getElementById('portal-lock-status-label');
+            if(!btn || !lbl) return;
+
             if(portalLocked) {
                 btn.innerText = "Unlock Portal for Teachers 🔓";
                 btn.className = "px-5 py-2.5 bg-emerald-700 text-white font-bold text-xs rounded-xl shadow hover:bg-emerald-800 transition";
                 lbl.innerText = "Locked (Teachers are restricted from logging in)";
                 lbl.className = "text-red-700 font-bold";
-                alert('🔒 Portal is now LOCKED. Teachers are successfully restricted from logging in.');
             } else {
                 btn.innerText = "Lock Portal for Teachers 🔒";
                 btn.className = "px-5 py-2.5 bg-red-700 text-white font-bold text-xs rounded-xl shadow hover:bg-red-800 transition";
                 lbl.innerText = "Unlocked (Teachers can log in)";
                 lbl.className = "text-emerald-700 font-bold";
-                alert('🔓 Portal is now UNLOCKED. Teachers can log in normally.');
             }
         }
 
@@ -1182,7 +1231,7 @@
             const className = document.getElementById('grading-class-filter').value;
             const registeredTeacherName = teachersList.length > 0 ? teachersList[0] : (currentUser ? currentUser.name : 'Assigned Teacher');
             
-            let content = `${schoolProfile.name.toUpperCase()}\nSCHOOL BASED ASSESSMENT AT BASIC EDUCATIONAL LEVEL\nTERMELY SBA RECORDINGS FOR PRIMARY AND JUNIOR HIGH SCHOOLS\nClass: ${className} | Subject: ${subject} | Term: ${term} | Teacher: ${registeredTeacherName}\n\n`;
+            let content = `${schoolProfile.name.toUpperCase()}\nSCHOOL BASED ASSESSMENT AT BASIC EDUCATIONAL LEVEL\nTERMELY SCORING FOR PRIMARY AND JUNIOR HIGH SCHOOLS\nClass: ${className} | Subject: ${subject} | Term: ${term} | Teacher: ${registeredTeacherName}\n\n`;
             content += "No.\tNAME\tInd.Test 1(30)\tGroup Test(20)\tInd.Test 2(30)\tHomework(20)\tTotal SBA(100)\t50% SBA\tExams(100)\t50% Exam\tOverall Total\tGrade\n";
             content += "----------------------------------------------------------------------------------------------------------------------------------\n";
             
@@ -1569,7 +1618,7 @@
             }
         }
 
-        function uploadMultiplePhotos() {
+        async function uploadMultiplePhotos() {
             const fileInput = document.getElementById('multi-photo-file');
             if(!fileInput.files || fileInput.files.length === 0) {
                 alert('Please select at least one photo!');
@@ -1581,12 +1630,13 @@
 
             Array.from(fileInput.files).forEach(file => {
                 const reader = new FileReader();
-                reader.onload = function(e) {
+                reader.onload = async function(e) {
                     galleryPhotos.push({ url: e.target.result, name: file.name });
                     loadedCount++;
                     if(loadedCount === totalFiles) {
+                        await saveCloudSettings();
                         renderGalleryGrids();
-                        alert(`${totalFiles} photo(s) uploaded successfully and synced to all galleries!`);
+                        alert(`${totalFiles} photo(s) uploaded and securely synced to Supabase for all teachers!`);
                     }
                 }
                 reader.readAsDataURL(file);
@@ -1617,7 +1667,7 @@
             if(tGrid) tGrid.innerHTML = html;
         }
 
-        function postAnnouncement() {
+        async function postAnnouncement() {
             const text = document.getElementById('announcement-text').value;
             const photoInput = document.getElementById('announcement-photo-input');
             
@@ -1626,23 +1676,28 @@
                 return;
             }
 
-            globalAnnouncementText = text || "Priority Notice / Birthday Celebration!";
+            if(text) {
+                globalAnnouncementText = text;
+            }
             
             if(photoInput.files && photoInput.files[0]) {
                 const reader = new FileReader();
-                reader.onload = function(e) {
+                reader.onload = async function(e) {
                     globalAnnouncementImgUrl = e.target.result;
                     galleryPhotos.push({ url: globalAnnouncementImgUrl, name: photoInput.files[0].name || 'announcement_photo.jpg' });
+                    await saveCloudSettings();
                     renderGalleryGrids();
 
                     document.getElementById('teacher-announcement-img-preview').src = globalAnnouncementImgUrl;
                     document.getElementById('teacher-announcement-image-display').classList.remove('hidden');
                 }
                 reader.readAsDataURL(photoInput.files[0]);
+            } else {
+                await saveCloudSettings();
             }
 
             document.getElementById('teacher-announcement-display').innerText = globalAnnouncementText;
-            alert('Announcement and birthday photo published successfully!');
+            alert('Announcement and photos published and saved to Supabase cloud!');
             document.getElementById('announcement-text').value = '';
             photoInput.value = '';
         }
