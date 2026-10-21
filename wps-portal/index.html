@@ -164,7 +164,7 @@
                     </div>
                 </section>
 
-                <!-- TAB: SBA & EXAM GRADING (With Class, Term & Subject Selectors) -->
+                <!-- TAB: SBA & EXAM GRADING -->
                 <section id="tab-assessment" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-4">
                         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
@@ -179,13 +179,13 @@
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2 border-t">
                             <div>
                                 <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Select Class</label>
-                                <select id=" grading-class-filter" onchange="renderGradingTable()" class="p-2.5 border rounded-xl w-full text-sm bg-slate-50">
+                                <select id="grading-class-filter" onchange="renderGradingTable()" class="p-2.5 border rounded-xl w-full text-sm bg-slate-50 font-medium">
                                     <!-- Dynamic classes -->
                                 </select>
                             </div>
                             <div>
                                 <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Select Term</label>
-                                <select id="grading-term-filter" class="p-2.5 border rounded-xl w-full text-sm bg-slate-50">
+                                <select id="grading-term-filter" class="p-2.5 border rounded-xl w-full text-sm bg-slate-50 font-medium">
                                     <option value="Term 1">Term 1, 2026</option>
                                     <option value="Term 2" selected>Term 2, 2026</option>
                                     <option value="Term 3">Term 3, 2026</option>
@@ -193,7 +193,7 @@
                             </div>
                             <div>
                                 <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Select Subject</label>
-                                <select id="grading-subject-filter" class="p-2.5 border rounded-xl w-full text-sm bg-slate-50">
+                                <select id="grading-subject-filter" class="p-2.5 border rounded-xl w-full text-sm bg-slate-50 font-medium">
                                     <option value="Mathematics">Mathematics</option>
                                     <option value="English Language">English Language</option>
                                     <option value="Integrated Science">Integrated Science</option>
@@ -256,7 +256,7 @@
                     </div>
                 </section>
 
-                <!-- TAB: TIMETABLE & TIME MANAGEMENT (Editable by Admin and Teachers) -->
+                <!-- TAB: TIMETABLE & TIME MANAGEMENT -->
                 <section id="tab-timetable" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-4">
                         <div class="flex justify-between items-center">
@@ -319,10 +319,10 @@
                         <p class="text-xs text-slate-500 mb-4">Enrolled students immediately sync and appear in teacher portals.</p>
                         <form id="student-form" class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-2">
                             <input type="text" id="s-name" placeholder="Full Name *" required class="p-3 border rounded-xl">
-                            <select id="s-class" class="p-3 border rounded-xl">
+                            <select id="s-class" class="p-3 border rounded-xl font-medium">
                                 <!-- Dynamic classes -->
                             </select>
-                            <select id="s-gender" class="p-3 border rounded-xl">
+                            <select id="s-gender" class="p-3 border rounded-xl font-medium">
                                 <option value="Male">Male</option>
                                 <option value="Female">Female</option>
                             </select>
@@ -331,7 +331,7 @@
                     </div>
                 </section>
 
-                <!-- TAB: TEACHER ACCOUNTS (Admin - With Password Field) -->
+                <!-- TAB: TEACHER ACCOUNTS (Admin) -->
                 <section id="tab-teachers" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl shadow border border-slate-100">
                         <h2 class="text-xl font-bold text-slate-900">Register Teacher Account</h2>
@@ -468,17 +468,19 @@
         }
 
         function renderAll() {
+            renderClassesDropdown();
+            renderClassesList();
             renderGradingTable();
             renderFeesTable();
             renderAttendance();
-            renderClassesDropdown();
-            renderClassesList();
             renderCharts();
         }
 
         function renderClassesDropdown() {
             const selectEnroll = document.getElementById('s-class');
-            selectEnroll.innerHTML = classesData.map(c => `<option value="${c}">${c}</option>`).join('');
+            if(selectEnroll) {
+                selectEnroll.innerHTML = classesData.map(c => `<option value="${c}">${c}</option>`).join('');
+            }
 
             const selectGrading = document.getElementById('grading-class-filter');
             if(selectGrading) {
@@ -488,12 +490,14 @@
 
         function renderClassesList() {
             const container = document.getElementById('classes-list-container');
-            container.innerHTML = classesData.map(c => `
-                <span class="px-3 py-1.5 bg-blue-50 text-blue-900 border border-blue-200 rounded-xl text-sm font-semibold flex items-center gap-2">
-                    ${c}
-                    <button onclick="removeClass('${c}')" class="text-red-600 hover:text-red-800 font-bold text-xs">×</button>
-                </span>
-            `).join('');
+            if(container) {
+                container.innerHTML = classesData.map(c => `
+                    <span class="px-3 py-1.5 bg-blue-50 text-blue-900 border border-blue-200 rounded-xl text-sm font-semibold flex items-center gap-2">
+                        ${c}
+                        <button onclick="removeClass('${c}')" class="text-red-600 hover:text-red-800 font-bold text-xs">×</button>
+                    </span>
+                `).join('');
+            }
         }
 
         function addClass() {
@@ -562,12 +566,15 @@
         });
 
         function renderGradingTable() {
-            const selectedClass = document.getElementById('grading-class-filter')?.value || classesData[0];
+            const selectGrading = document.getElementById('grading-class-filter');
+            const selectedClass = selectGrading ? selectGrading.value : classesData[0];
             const filteredStudents = studentsData.filter(s => s.class === selectedClass);
             const tbody = document.getElementById('grading-table-body');
 
+            if(!tbody) return;
+
             if(filteredStudents.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" class="p-6 text-center text-slate-400 italic">No students registered in ${selectedClass} yet.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="6" class="p-6 text-center text-slate-400 italic">No students registered in ${selectedClass || 'this class'} yet. Use the Student Enrollment tab to add students.</td></tr>`;
                 return;
             }
 
@@ -636,6 +643,7 @@
 
         function renderFeesTable() {
             const tbody = document.getElementById('fees-table-body');
+            if(!tbody) return;
             if(studentsData.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-slate-400 italic">No fee records found.</td></tr>`;
                 return;
@@ -653,6 +661,7 @@
 
         function renderAttendance() {
             const list = document.getElementById('attendance-list');
+            if(!list) return;
             if(studentsData.length === 0) {
                 list.innerHTML = `<p class="text-slate-400 italic">No students available for attendance tracking yet.</p>`;
                 return;
@@ -673,25 +682,29 @@
             const maleCount = studentsData.filter(s => s.gender === 'Male').length;
             const femaleCount = studentsData.filter(s => s.gender === 'Female').length;
 
-            const ctxGender = document.getElementById('genderChart').getContext('2d');
-            new Chart(ctxGender, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Male', 'Female'],
-                    datasets: [{ data: [maleCount || 0, femaleCount || 0], backgroundColor: ['#1e3a8a', '#d97706'] }]
-                }
-            });
+            const ctxGender = document.getElementById('genderChart');
+            if(ctxGender) {
+                new Chart(ctxGender.getContext('2d'), {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Male', 'Female'],
+                        datasets: [{ data: [maleCount || 0, femaleCount || 0], backgroundColor: ['#1e3a8a', '#d97706'] }]
+                    }
+                });
+            }
 
             const classCounts = classesData.map(c => studentsData.filter(s => s.class === c).length);
 
-            const ctxClass = document.getElementById('classChart').getContext('2d');
-            new Chart(ctxClass, {
-                type: 'bar',
-                data: {
-                    labels: classesData,
-                    datasets: [{ label: 'Students', data: classCounts, backgroundColor: '#1e3a8a' }]
-                }
-            });
+            const ctxClass = document.getElementById('classChart');
+            if(ctxClass) {
+                new Chart(ctxClass.getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: classesData,
+                        datasets: [{ label: 'Students', data: classCounts, backgroundColor: '#1e3a8a' }]
+                    }
+                });
+            }
         }
 
         function uploadPhoto() {
