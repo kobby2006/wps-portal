@@ -103,7 +103,7 @@
                 </div>
                 <div>
                     <h2 id="nav-school-name" class="font-bold text-base leading-tight">Wesley Preparatory School</h2>
-                    <p id="nav-school-info" class="text-[11px] text-amber-200 font-medium">Assorko-Essaman • Standard Fee: GH₵ 300</p>
+                    <p id="nav-school-info" class="text-[11px] text-amber-200 font-medium">Assorko-Essaman • Default Tuition: GH₵ 250</p>
                 </div>
             </div>
             <div class="flex items-center space-x-4">
@@ -121,11 +121,11 @@
                 <button onclick="switchTab('history')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📁 <span>Student History & Reports</span></button>
                 <button onclick="switchTab('attendance')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📅 <span>Attendance Register</span></button>
                 <button onclick="switchTab('timetable')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">⏰ <span>Timetable & Time Mgmt</span></button>
-                <button onclick="switchTab('fees')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">💰 <span>Fee Management (₵300)</span></button>
                 
                 <!-- Admin Only Nav Items -->
                 <div id="admin-nav-section" class="pt-4 border-t border-slate-200 space-y-2">
                     <p class="px-4 text-xs font-bold uppercase tracking-wider text-slate-400">Administration</p>
+                    <button onclick="switchTab('fees')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">💰 <span>Fee Management & Breakdown</span></button>
                     <button onclick="switchTab('students')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🎓 <span>Student Enrollment & Discard</span></button>
                     <button onclick="switchTab('teachers')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">👨‍🏫 <span>Teacher Accounts</span></button>
                     <button onclick="switchTab('classes')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🏫 <span>Manage Classes (1-6 & JHS)</span></button>
@@ -154,11 +154,10 @@
                             <p id="dashboard-motto-display" class="text-blue-200 text-sm mt-1">Wesley Preparatory School, Assorko-Essaman — Knowledge and Integrity.</p>
                         </div>
                         <div class="hidden md:block text-right">
-                            <span class="px-3 py-1 bg-amber-500 text-slate-950 text-xs font-bold rounded-full">Standard Fee: GH₵ 300</span>
+                            <span class="px-3 py-1 bg-amber-500 text-slate-950 text-xs font-bold rounded-full">Default Tuition: GH₵ 250</span>
                         </div>
                     </div>
 
-                    <!-- Analytics Charts Grid -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="bg-white p-6 rounded-2xl shadow border border-slate-100">
                             <h3 class="font-bold text-slate-800 mb-4">Student Gender Distribution (Active Registry)</h3>
@@ -186,7 +185,6 @@
                             <button onclick="calculateGrades()" class="px-5 py-2.5 bg-blue-900 text-white font-semibold rounded-xl hover:bg-blue-800 transition shadow">Compute Totals & Grades</button>
                         </div>
                         
-                        <!-- Class, Term & Subject Filters -->
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2 border-t">
                             <div>
                                 <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Select Class</label>
@@ -238,7 +236,6 @@
                         </div>
                     </div>
 
-                    <!-- REFRESH / EDIT SCORES BUTTON BELOW TABLE -->
                     <div class="flex justify-start">
                         <button onclick="refreshSubmittedScores()" class="px-5 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold rounded-xl text-xs transition flex items-center gap-2 shadow">
                             🔄 Refresh / Edit Submitted Scores for this Class & Term
@@ -332,12 +329,12 @@
                     </div>
                 </section>
 
-                <!-- TAB: FEE MANAGEMENT -->
+                <!-- TAB: FEE MANAGEMENT (Admin Only) -->
                 <section id="tab-fees" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-4">
                         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                             <div>
-                                <h2 class="text-xl font-bold text-slate-900">Fee Management & Next-Term Breakdown</h2>
+                                <h2 class="text-xl font-bold text-slate-900">Fee Management & Next-Term Breakdown (Admin Only)</h2>
                                 <p class="text-xs text-slate-500">Set tuition, printing, PTA dues, and other fees. These automatically populate each student's official printed report card.</p>
                             </div>
                             <div>
@@ -430,7 +427,7 @@
                 <section id="tab-announcements" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-4">
                         <h2 class="text-xl font-bold text-slate-900">Publish Priority Announcement & Birthday Celebration</h2>
-                        <p class="text-xs text-slate-500">Upload announcement details and celebration photos to pop up when teachers and users log in.</p>
+                        <p class="text-xs text-slate-500">Upload announcement details and celebration photos to pop up when teachers and users log in, and automatically send photos to the school gallery.</p>
                         <div>
                             <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Upload Notice / Birthday Photo</label>
                             <input type="file" id="announcement-photo-input" accept="image/*" class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
@@ -522,7 +519,6 @@
         let globalAnnouncementImgUrl = "";
         let classesData = ['Basic 1', 'Basic 2', 'Basic 3', 'Basic 4', 'Basic 5', 'Basic 6', 'JHS 1', 'JHS 2', 'JHS 3'];
         let studentsData = [];
-        let savedAssessments = {}; 
         let galleryPhotos = [];
         let schoolProfile = {
             name: "Wesley Preparatory School",
@@ -567,6 +563,12 @@
                     document.getElementById('modal-announcement-image-container').classList.add('hidden');
                 }
                 document.getElementById('announcement-modal').classList.remove('hidden');
+
+                document.getElementById('teacher-announcement-display').innerText = globalAnnouncementText;
+                if(globalAnnouncementImgUrl) {
+                    document.getElementById('teacher-announcement-img-preview').src = globalAnnouncementImgUrl;
+                    document.getElementById('teacher-announcement-image-display').classList.remove('hidden');
+                }
             } else {
                 document.getElementById('admin-nav-section').classList.remove('hidden');
                 document.getElementById('teacher-nav-section').classList.add('hidden');
@@ -585,8 +587,8 @@
                         name: s.name || s.student_name || 'Unknown Student',
                         class: s.class || s.class_name || 'Basic 4',
                         gender: s.gender || 'Male',
-                        subjectsData: s.subjectsData || {}, // Stores scores per subject
-                        tuitionFee: s.tuitionFee ?? 200.00,
+                        subjectsData: s.subjectsData || {},
+                        tuitionFee: s.tuitionFee ?? 250.00, // Default tuition set to 250
                         printingFee: s.printingFee ?? 25.00,
                         ptaFee: s.ptaFee ?? 5.00,
                         otherFee: s.otherFee ?? 20.00,
@@ -927,7 +929,6 @@
 
                 return `
                     <div class="report-card-page bg-white p-8 rounded-xl shadow-lg border-2 border-slate-300 max-w-3xl mx-auto space-y-4 text-slate-900 font-sans">
-                        <!-- HEADER MATCHING EXACT PRINTED SHEET -->
                         <div class="text-center space-y-1 border-b-2 border-black pb-3">
                             <h2 class="font-black text-xl tracking-wide">${schoolProfile.name.toUpperCase()}</h2>
                             <p class="text-xs font-bold text-slate-700">P. O. BOX 18 16, SHAMA</p>
@@ -935,7 +936,6 @@
                             <h3 class="font-extrabold text-sm tracking-widest pt-1 uppercase underline">END OF TERM REPORT CARD</h3>
                         </div>
 
-                        <!-- STUDENT DETAILS -->
                         <div class="text-xs space-y-1.5 font-bold">
                             <div class="flex border-b border-black pb-1">
                                 <span class="w-32">NAME OF PUPIL:</span>
@@ -955,7 +955,6 @@
                             </div>
                         </div>
 
-                        <!-- SUBJECTS TABLE -->
                         <table class="w-full text-xs border-collapse border border-black mt-2">
                             <thead>
                                 <tr class="bg-slate-100 text-center font-bold">
@@ -973,7 +972,6 @@
                             </tbody>
                         </table>
 
-                        <!-- ATTENDANCE & REMARKS -->
                         <div class="text-xs space-y-1.5 pt-1 font-semibold">
                             <div class="flex border-b border-black pb-1">
                                 <span class="w-36">ATTENDANCE MADE:</span>
@@ -1001,7 +999,6 @@
                             </div>
                         </div>
 
-                        <!-- AUTOMATIC FEE TABLE -->
                         <table class="w-full text-xs border-collapse border border-black mt-3">
                             <tbody>
                                 <tr>
@@ -1045,7 +1042,6 @@
             studentsData[index][field] = val;
         }
 
-        // FEE MANAGEMENT TABLE WITH AUTOMATIC POPULATION
         function renderFeesTable() {
             const feeFilter = document.getElementById('fee-class-filter');
             const selectedClass = feeFilter ? feeFilter.value : classesData[0];
@@ -1202,7 +1198,7 @@
                 reader.readAsDataURL(file);
             });
 
-            alert(`${fileInput.files.length} photo(s) uploaded successfully!`);
+            alert(`${fileInput.files.length} photo(s) uploaded successfully to the School Gallery!`);
             fileInput.value = '';
         }
 
@@ -1238,6 +1234,9 @@
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     globalAnnouncementImgUrl = e.target.result;
+                    galleryPhotos.push({ url: globalAnnouncementImgUrl, name: photoInput.files[0].name || 'announcement_photo.jpg' });
+                    renderGalleryGrids();
+
                     document.getElementById('teacher-announcement-img-preview').src = globalAnnouncementImgUrl;
                     document.getElementById('teacher-announcement-image-display').classList.remove('hidden');
                 }
@@ -1258,7 +1257,7 @@
             document.getElementById('login-school-title').innerText = schoolProfile.name;
             document.getElementById('login-school-motto').innerText = schoolProfile.motto;
             document.getElementById('nav-school-name').innerText = schoolProfile.name;
-            document.getElementById('nav-school-info').innerText = `${schoolProfile.location} • Standard Fee: GH₵ 300`;
+            document.getElementById('nav-school-info').innerText = `${schoolProfile.location} • Default Tuition: GH₵ 250`;
             document.getElementById('dashboard-motto-display').innerText = `${schoolProfile.name}, ${schoolProfile.location} — ${schoolProfile.motto}.`;
 
             alert('School profile and branding updated successfully!');
