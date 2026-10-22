@@ -146,7 +146,7 @@
                 <!-- Admin Only Nav Items -->
                 <div id="admin-nav-section" class="pt-4 border-t border-slate-200 space-y-2">
                     <p class="px-4 text-xs font-bold uppercase tracking-wider text-slate-400">Administration</p>
-                    <button onclick="switchTab('fees')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">💰 <span>Fee Management & Breakdown</span></button>
+                    <button onclick="switchTab('fees')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">💰 <span>Billing Account & Fees</span></button>
                     <button onclick="switchTab('students')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🎓 <span>Student Enrollment & Discard</span></button>
                     <button onclick="switchTab('teachers')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">👨‍🏫 <span>Teacher Accounts</span></button>
                     <button onclick="switchTab('classes')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🏫 <span>Manage Classes (1-6 & JHS)</span></button>
@@ -197,7 +197,7 @@
                         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                             <div>
                                 <h2 class="text-xl font-bold text-slate-900">Termly SBA & Exam Assessment Capture</h2>
-                                <p class="text-xs text-slate-500">Formula: Ind. Test 1 (30) + Group Test (20) + Ind. Test 2 (30) + Project/Homework (20) = Total SBA (100) → 50% SBA + 50% Exams = Overall Total.</p>
+                                <p id="assessment-mode-description" class="text-xs text-slate-500">Basic 1-3: One Class Teacher Mode. Basic 4-JHS: Subject Teaching Mode.</p>
                             </div>
                             <button onclick="calculateGrades()" class="px-5 py-2.5 bg-blue-900 text-white font-semibold rounded-xl hover:bg-blue-800 transition shadow">Compute Totals & Grades</button>
                         </div>
@@ -205,7 +205,7 @@
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2 border-t">
                             <div>
                                 <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Select Class</label>
-                                <select id="grading-class-filter" onchange="renderGradingTable()" class="p-2.5 border rounded-xl w-full text-sm bg-slate-50 font-medium"></select>
+                                <select id="grading-class-filter" onchange="onGradingClassChange()" class="p-2.5 border rounded-xl w-full text-sm bg-slate-50 font-medium"></select>
                             </div>
                             <div>
                                 <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Select Term</label>
@@ -273,10 +273,10 @@
                     <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-4">
                         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                             <div>
-                                <h2 class="text-xl font-bold text-slate-900">Student History & Submitted Assessment Sheets</h2>
-                                <p class="text-xs text-slate-500">Select class and term below to view finalized and submitted assessment sheets and official printed report cards.</p>
+                                <h2 class="text-xl font-bold text-slate-900">Student History & Full Class Assessment Sheets</h2>
+                                <p class="text-xs text-slate-500">View official master class assessment sheets (listing all students together like the official school form) and individual end-of-term report cards.</p>
                             </div>
-                            <button onclick="window.print()" class="px-4 py-2 bg-slate-800 text-white text-xs font-semibold rounded-lg hover:bg-slate-700 no-print">Print All Files</button>
+                            <button onclick="window.print()" class="px-4 py-2 bg-slate-800 text-white text-xs font-semibold rounded-lg hover:bg-slate-700 no-print">Print All Records</button>
                         </div>
                         <!-- Class & Term Selector for History -->
                         <div class="flex flex-wrap gap-4 pt-2 border-t items-center">
@@ -435,13 +435,13 @@
                         </div>
                     </div>
                 </section>
-                <!-- TAB: FEE MANAGEMENT (Admin Only) -->
+                <!-- TAB: FEE MANAGEMENT / PROFESSIONAL BILLING ACCOUNT (Admin Only) -->
                 <section id="tab-fees" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-4">
                         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                             <div>
-                                <h2 class="text-xl font-bold text-slate-900">Fee Management & Next-Term Breakdown (Admin Only)</h2>
-                                <p class="text-xs text-slate-500">Set tuition, printing, PTA dues, and other fees. These automatically populate each student's official printed report card.</p>
+                                <h2 class="text-xl font-bold text-slate-900">Professional Billing Account & Fee Management</h2>
+                                <p class="text-xs text-slate-500">Track student billing ledgers including Arrears (Old Unpaid Balance), Tuition, Printing, PTA Dues, and Other Fees. These automatically sync into each student's official report card.</p>
                             </div>
                             <div>
                                 <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Filter by Class</label>
@@ -453,12 +453,12 @@
                                 <thead class="bg-slate-100 text-xs uppercase font-bold text-slate-600">
                                     <tr>
                                         <th class="p-3">Student Name</th>
+                                        <th class="p-3">Arrears / Old (₵)</th>
                                         <th class="p-3">Tuition (₵)</th>
                                         <th class="p-3">Printing (₵)</th>
                                         <th class="p-3">PTA Dues (₵)</th>
                                         <th class="p-3">Other (₵)</th>
-                                        <th class="p-3">Arrears (₵)</th>
-                                        <th class="p-3">Total (₵)</th>
+                                        <th class="p-3 bg-blue-50">Total Bill (₵)</th>
                                         <th class="p-3 no-print">Receipt</th>
                                     </tr>
                                 </thead>
@@ -657,13 +657,25 @@
             'O. W. O. P.'
         ];
         
-        // Fetch settings from Supabase with localStorage instant fallback on startup
+        // Load settings from localStorage instantly on startup, then try cloud
         window.addEventListener('DOMContentLoaded', async () => {
             const localPhotos = localStorage.getItem('wps_gallery_photos');
             if(localPhotos) {
                 try { galleryPhotos = JSON.parse(localPhotos); } catch(e){}
             }
+            const localText = localStorage.getItem('wps_announcement_text');
+            if(localText) globalAnnouncementText = localText;
+            const localImg = localStorage.getItem('wps_announcement_img');
+            if(localImg) globalAnnouncementImgUrl = localImg;
+            const localLock = localStorage.getItem('wps_portal_locked');
+            if(localLock !== null) portalLocked = JSON.parse(localLock);
+
             renderGalleryGrids();
+            updateLockStatusUI();
+            
+            const announcementTextarea = document.getElementById('announcement-text');
+            if(announcementTextarea) announcementTextarea.value = globalAnnouncementText;
+            
             await fetchCloudSettings();
         });
 
@@ -671,29 +683,28 @@
             try {
                 const { data, error } = await supabaseClient.from('school_settings').select('*').eq('id', 1).single();
                 if(data && !error) {
-                    portalLocked = data.portal_locked || false;
-                    globalAnnouncementText = data.announcement_text || globalAnnouncementText;
-                    globalAnnouncementImgUrl = data.announcement_img || "";
+                    portalLocked = data.portal_locked || portalLocked;
+                    if(data.announcement_text) {
+                        globalAnnouncementText = data.announcement_text;
+                        localStorage.setItem('wps_announcement_text', globalAnnouncementText);
+                    }
+                    if(data.announcement_img) {
+                        globalAnnouncementImgUrl = data.announcement_img;
+                        localStorage.setItem('wps_announcement_img', globalAnnouncementImgUrl);
+                    }
                     if(data.gallery_photos && data.gallery_photos.length > 0) {
                         galleryPhotos = data.gallery_photos;
                         localStorage.setItem('wps_gallery_photos', JSON.stringify(galleryPhotos));
                     }
                 }
             } catch(err) {
-                console.log('Using local cached settings due to network:', err);
+                console.log('Using local cached settings:', err);
             }
             updateLockStatusUI();
             renderGalleryGrids();
             
-            // Sync announcement textarea if present
             const announcementTextarea = document.getElementById('announcement-text');
-            if(announcementTextarea) {
-                announcementTextarea.value = globalAnnouncementText;
-            }
-            const teacherDisplay = document.getElementById('teacher-announcement-display');
-            if(teacherDisplay) {
-                teacherDisplay.innerText = globalAnnouncementText;
-            }
+            if(announcementTextarea) announcementTextarea.value = globalAnnouncementText;
         }
 
         async function saveCloudSettings() {
@@ -718,7 +729,7 @@
             e.preventDefault();
             const role = document.getElementById('login-role').value;
             const user = document.getElementById('login-user').value;
-            await fetchCloudSettings(); 
+            
             if(role === 'teacher' && portalLocked) {
                 alert('🔒 Portal is currently locked by Administration for maintenance, edits, or grading updates. Teachers cannot log in at this moment. Please check back later.');
                 return;
@@ -729,6 +740,7 @@
             document.getElementById('app-shell').classList.remove('hidden');
             document.getElementById('user-badge').innerText = role;
             document.getElementById('welcome-name').innerText = user;
+
             if(role === 'teacher') {
                 document.getElementById('admin-nav-section').classList.add('hidden');
                 document.getElementById('teacher-nav-section').classList.remove('hidden');
@@ -736,6 +748,7 @@
                 document.getElementById('lms-role-badge').innerText = "Teacher View (Read Only)";
                 switchTab('lms');
                 
+                // POPULATE & SHOW ANNOUNCEMENT MODAL FOR TEACHERS
                 document.getElementById('modal-announcement-text').innerText = globalAnnouncementText;
                 if(globalAnnouncementImgUrl) {
                     document.getElementById('modal-announcement-img').src = globalAnnouncementImgUrl;
@@ -744,10 +757,14 @@
                     document.getElementById('modal-announcement-image-container').classList.add('hidden');
                 }
                 document.getElementById('announcement-modal').classList.remove('hidden');
-                document.getElementById('teacher-announcement-display').innerText = globalAnnouncementText;
+
+                const teacherDisplay = document.getElementById('teacher-announcement-display');
+                if(teacherDisplay) teacherDisplay.innerText = globalAnnouncementText;
                 if(globalAnnouncementImgUrl) {
-                    document.getElementById('teacher-announcement-img-preview').src = globalAnnouncementImgUrl;
-                    document.getElementById('teacher-announcement-image-display').classList.remove('hidden');
+                    const imgPrev = document.getElementById('teacher-announcement-img-preview');
+                    if(imgPrev) imgPrev.src = globalAnnouncementImgUrl;
+                    const imgDisp = document.getElementById('teacher-announcement-image-display');
+                    if(imgDisp) imgDisp.classList.remove('hidden');
                 }
             } else {
                 document.getElementById('admin-nav-section').classList.remove('hidden');
@@ -761,12 +778,8 @@
             renderAll();
         });
 
-        function openPasswordResetModal() {
-            document.getElementById('password-reset-modal').classList.remove('hidden');
-        }
-        function closePasswordResetModal() {
-            document.getElementById('password-reset-modal').classList.add('hidden');
-        }
+        function openPasswordResetModal() { document.getElementById('password-reset-modal').classList.remove('hidden'); }
+        function closePasswordResetModal() { document.getElementById('password-reset-modal').classList.add('hidden'); }
         function submitPasswordResetRequest() {
             const val = document.getElementById('reset-email-input').value.trim();
             if(!val) { alert('Please enter your email or username.'); return; }
@@ -774,12 +787,8 @@
             document.getElementById('reset-email-input').value = '';
             closePasswordResetModal();
         }
-        function openAccountRecoveryModal() {
-            document.getElementById('account-recovery-modal').classList.remove('hidden');
-        }
-        function closeAccountRecoveryModal() {
-            document.getElementById('account-recovery-modal').classList.add('hidden');
-        }
+        function openAccountRecoveryModal() { document.getElementById('account-recovery-modal').classList.remove('hidden'); }
+        function closeAccountRecoveryModal() { document.getElementById('account-recovery-modal').classList.add('hidden'); }
         async function togglePortalLock() {
             portalLocked = !portalLocked;
             await saveCloudSettings();
@@ -816,11 +825,11 @@
                         class: s.class || s.class_name || 'Basic 4',
                         gender: s.gender || 'Male',
                         subjectsData: s.subjectsData || {},
+                        arrearsFee: s.arrearsFee ?? 0.00,
                         tuitionFee: s.tuitionFee ?? 250.00,
                         printingFee: s.printingFee ?? 25.00,
                         ptaFee: s.ptaFee ?? 5.00,
                         otherFee: s.otherFee ?? 20.00,
-                        arrearsFee: s.arrearsFee ?? 0.00,
                         attendanceMade: s.attendanceMade || 65,
                         attendanceTotal: s.attendanceTotal || 70,
                         promotedTo: s.promotedTo || 'Next Class',
@@ -828,12 +837,11 @@
                         interest: s.interest || 'Sports and Music',
                         teacherRemarks: s.teacherRemarks || 'A brilliant student with great potential.',
                         headRemarks: s.headRemarks || 'Promoted. Keep up the good work!',
-                        reopeningDate: s.reopeningDate || '04/05/2026',
-                        nextTermRequirements: s.nextTermRequirements || '2 brooms, 1 box of chalk, 1 set of mathematical instruments.'
+                        reopeningDate: s.reopeningDate || '04/05/2026'
                     }));
                 }
             } catch(err) {
-                console.log('Supabase fetch error:', err);
+                console.log('Supabase students fetch error:', err);
             }
         }
         async function fetchTeachersFromSupabase() {
@@ -846,12 +854,8 @@
                 console.log('Supabase teachers fetch error:', err);
             }
         }
-        function closeAnnouncementModal() {
-            document.getElementById('announcement-modal').classList.add('hidden');
-        }
-        function closeReceiptModal() {
-            document.getElementById('receipt-modal').classList.add('hidden');
-        }
+        function closeAnnouncementModal() { document.getElementById('announcement-modal').classList.add('hidden'); }
+        function closeReceiptModal() { document.getElementById('receipt-modal').classList.add('hidden'); }
         function logout() { location.reload(); }
 
         function switchTab(tabId) {
@@ -868,6 +872,7 @@
             }
             if(tabId === 'assessment') {
                 renderClassesDropdown();
+                onGradingClassChange();
                 renderGradingTable();
             }
             if(tabId === 'fees') {
@@ -910,6 +915,7 @@
             renderHistoryClassDropdown();
             renderClassesList();
             renderDiscardDropdown();
+            onGradingClassChange();
             renderGradingTable();
             renderFeesTable();
             renderAttendanceRegister();
@@ -1074,6 +1080,21 @@
             await fetchTeachersFromSupabase();
         });
 
+        function onGradingClassChange() {
+            const selectGrading = document.getElementById('grading-class-filter');
+            const selectedClass = selectGrading ? selectGrading.value : 'Basic 4';
+            const modeDesc = document.getElementById('assessment-mode-description');
+            const subFilter = document.getElementById('grading-subject-filter');
+            
+            // Check if class is Basic 1, Basic 2, or Basic 3 (Lower Primary: One Class Teacher mode)
+            if(selectedClass === 'Basic 1' || selectedClass === 'Basic 2' || selectedClass === 'Basic 3') {
+                if(modeDesc) modeDesc.innerText = `Mode: ${selectedClass} — One Class Teacher (Class Teacher handles all subjects for this class).`;
+            } else {
+                if(modeDesc) modeDesc.innerText = `Mode: ${selectedClass} — Subject Teaching (Specialized Subject Teacher grading).`;
+            }
+            renderGradingTable();
+        }
+
         function renderGradingTable() {
             const selectGrading = document.getElementById('grading-class-filter');
             const selectedClass = selectGrading ? selectGrading.value : classesData[0];
@@ -1086,7 +1107,7 @@
                 tbody.innerHTML = `<tr><td colspan="12" class="p-6 text-center text-slate-400 italic">No students registered in ${selectedClass || 'this class'} yet.</td></tr>`;
                 return;
             }
-            tbody.innerHTML = filteredStudents.map((s) => {
+            tbody.innerHTML = filteredStudents.map((s, idx) => {
                 const globalIdx = studentsData.findIndex(item => item.id === s.id);
                 if(!s.subjectsData[term]) s.subjectsData[term] = {};
                 if(!s.subjectsData[term][subject]) s.subjectsData[term][subject] = { indTest1: 0, groupTest: 0, indTest2: 0, homework: 0, exam: 0 };
@@ -1098,7 +1119,7 @@
                 const grade = computeGrade(overallTotal);
                 return `
                     <tr>
-                        <td class="p-2.5 font-medium">${s.name}</td>
+                        <td class="p-2.5 font-medium">${idx + 1}. ${s.name}</td>
                         <td class="p-2.5 text-center"><input type="number" value="${sub.indTest1}" onchange="updateAssessmentScore(${globalIdx}, '${term}', '${subject}', 'indTest1', this.value, 30)" class="w-16 p-1 border rounded text-center font-semibold" placeholder="30"></td>
                         <td class="p-2.5 text-center"><input type="number" value="${sub.groupTest}" onchange="updateAssessmentScore(${globalIdx}, '${term}', '${subject}', 'groupTest', this.value, 20)" class="w-16 p-1 border rounded text-center font-semibold" placeholder="20"></td>
                         <td class="p-2.5 text-center"><input type="number" value="${sub.indTest2}" onchange="updateAssessmentScore(${globalIdx}, '${term}', '${subject}', 'indTest2', this.value, 30)" class="w-16 p-1 border rounded text-center font-semibold" placeholder="30"></td>
@@ -1199,7 +1220,7 @@
 
         function finalizeReports() {
             if(studentsData.length === 0) { alert('No student reports to finalize.'); return; }
-            alert('Assessment sheets and report cards successfully finalized and saved to student history!');
+            alert('Full class assessment sheets and individual report cards successfully finalized and saved to student history!');
             switchTab('history');
             renderHistoryView();
         }
@@ -1210,12 +1231,93 @@
             const container = document.getElementById('history-container');
             const registeredTeacherName = teachersList.length > 0 ? teachersList[0] : (currentUser ? currentUser.name : 'Assigned Teacher');
             const filtered = studentsData.filter(s => s.class === histClass);
+            
             if(filtered.length === 0) {
                 container.innerHTML = `<p class="text-slate-500 italic p-4">No student records found for ${histClass} (${histTerm}).</p>`;
                 return;
             }
-            container.innerHTML = filtered.map((s, idx) => {
-                const totalFee = (parseFloat(s.tuitionFee) || 0) + (parseFloat(s.printingFee) || 0) + (parseFloat(s.ptaFee) || 0) + (parseFloat(s.otherFee) || 0) + (parseFloat(s.arrearsFee) || 0);
+
+            // 1. GENERATE FULL CLASS ASSESSMENT SHEETS FOR EACH SUBJECT (MATCHING THE OFFICIAL PAPER FORM)
+            let masterAssessmentSheetsHtml = standardSubjects.map(subject => {
+                let rowsHtml = filtered.map((s, idx) => {
+                    const sub = (s.subjectsData[histTerm] && s.subjectsData[histTerm][subject]) ? s.subjectsData[histTerm][subject] : { indTest1: 0, groupTest: 0, indTest2: 0, homework: 0, exam: 0 };
+                    const totalSba = (sub.indTest1 || 0) + (sub.groupTest || 0) + (sub.indTest2 || 0) + (sub.homework || 0);
+                    const sba50 = totalSba * 0.5;
+                    const exam50 = (sub.exam || 0) * 0.5;
+                    const total100 = sba50 + exam50;
+                    return `
+                        <tr>
+                            <td class="border border-black p-1 text-center font-bold">${idx + 1}</td>
+                            <td class="border border-black p-1 pl-2 font-medium">${s.name}</td>
+                            <td class="border border-black p-1 text-center">${sub.indTest1 || 0}</td>
+                            <td class="border border-black p-1 text-center">${sub.groupTest || 0}</td>
+                            <td class="border border-black p-1 text-center">${sub.indTest2 || 0}</td>
+                            <td class="border border-black p-1 text-center">${sub.homework || 0}</td>
+                            <td class="border border-black p-1 text-center font-bold bg-slate-50">${totalSba}</td>
+                            <td class="border border-black p-1 text-center font-semibold bg-blue-50">${sba50}</td>
+                            <td class="border border-black p-1 text-center">${sub.exam || 0}</td>
+                            <td class="border border-black p-1 text-center font-semibold bg-blue-50">${exam50}</td>
+                            <td class="border border-black p-1 text-center font-black bg-amber-50">${total100}</td>
+                            <td class="border border-black p-1 text-center font-bold">${computeGrade(total100)}</td>
+                        </tr>
+                    `;
+                }).join('');
+
+                return `
+                    <div class="assessment-print-page bg-white p-8 rounded-xl shadow-lg border-2 border-slate-300 max-w-4xl mx-auto space-y-4 text-slate-900 font-sans">
+                        <div class="text-center space-y-1 border-b-2 border-black pb-3">
+                            <h2 class="font-black text-xl tracking-wide">${schoolProfile.name.toUpperCase()}</h2>
+                            <p class="text-xs font-bold text-slate-700">SCHOOL BASED ASSESSMENT AT BASIC EDUCATIONAL LEVEL</p>
+                            <p class="text-xs font-bold text-slate-700 uppercase">TERMELY RECORDINGS FOR PRIMARY AND JUNIOR HIGH SCHOOLS</p>
+                        </div>
+                        <div class="text-xs space-y-1 font-bold flex justify-between">
+                            <div>
+                                <p>CLASS: <span class="underline uppercase">${histClass}</span></p>
+                                <p>TERM: <span class="underline uppercase">${histTerm}</span></p>
+                            </div>
+                            <div>
+                                <p>YEAR: <span class="underline">2026</span></p>
+                                <p>SUBJECT: <span class="underline uppercase text-blue-900">${subject}</span></p>
+                            </div>
+                            <div>
+                                <p>NO. ON ROLL: <span class="underline">${filtered.length}</span></p>
+                                <p>NAME OF TEACHER: <span class="underline uppercase">${registeredTeacherName}</span></p>
+                            </div>
+                        </div>
+                        <table class="w-full text-xs border-collapse border border-black mt-2">
+                            <thead>
+                                <tr class="bg-slate-100 text-center font-bold text-[10px]">
+                                    <th class="border border-black p-1.5 w-10">NO.</th>
+                                    <th class="border border-black p-1.5 text-left pl-2">NAME</th>
+                                    <th class="border border-black p-1.5">IND. TEST 1 (30)</th>
+                                    <th class="border border-black p-1.5">GROUP TEST (20)</th>
+                                    <th class="border border-black p-1.5">IND. TEST 2 (30)</th>
+                                    <th class="border border-black p-1.5">PROJECT / HW (20)</th>
+                                    <th class="border border-black p-1.5">TOTAL SBA (100)</th>
+                                    <th class="border border-black p-1.5">50%</th>
+                                    <th class="border border-black p-1.5">EXAMS (100)</th>
+                                    <th class="border border-black p-1.5">50%</th>
+                                    <th class="border border-black p-1.5">OVERALL TOTAL</th>
+                                    <th class="border border-black p-1.5">GRADE</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${rowsHtml}
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+            }).join('');
+
+            // 2. GENERATE INDIVIDUAL REPORT CARDS FOR EACH STUDENT
+            let individualReportCardsHtml = filtered.map((s, idx) => {
+                const arrears = parseFloat(s.arrearsFee) || 0;
+                const tuition = parseFloat(s.tuitionFee) || 250;
+                const printing = parseFloat(s.printingFee) || 25;
+                const pta = parseFloat(s.ptaFee) || 5;
+                const other = parseFloat(s.otherFee) || 20;
+                const totalFee = arrears + tuition + printing + pta + other;
+
                 let subjectsHtml = standardSubjects.map(subName => {
                     const sub = (s.subjectsData[histTerm] && s.subjectsData[histTerm][subName]) ? s.subjectsData[histTerm][subName] : { indTest1: 0, groupTest: 0, indTest2: 0, homework: 0, exam: 0 };
                     const totalSba = (sub.indTest1 || 0) + (sub.groupTest || 0) + (sub.indTest2 || 0) + (sub.homework || 0);
@@ -1235,175 +1337,118 @@
                         </tr>
                     `;
                 }).join('');
-                let assessmentRowsHtml = standardSubjects.map((subName) => {
-                    const sub = (s.subjectsData[histTerm] && s.subjectsData[histTerm][subName]) ? s.subjectsData[histTerm][subName] : { indTest1: 0, groupTest: 0, indTest2: 0, homework: 0, exam: 0 };
-                    const totalSba = (sub.indTest1 || 0) + (sub.groupTest || 0) + (sub.indTest2 || 0) + (sub.homework || 0);
-                    const sba50 = totalSba * 0.5;
-                    const exam50 = (sub.exam || 0) * 0.5;
-                    const total100 = sba50 + exam50;
-                    return `
-                        <tr>
-                            <td class="border border-black p-1 pl-2 font-medium">${subName}</td>
-                            <td class="border border-black p-1 text-center">${sub.indTest1 || 0}</td>
-                            <td class="border border-black p-1 text-center">${sub.groupTest || 0}</td>
-                            <td class="border border-black p-1 text-center">${sub.indTest2 || 0}</td>
-                            <td class="border border-black p-1 text-center">${sub.homework || 0}</td>
-                            <td class="border border-black p-1 text-center font-bold">${totalSba}</td>
-                            <td class="border border-black p-1 text-center">${sba50}</td>
-                            <td class="border border-black p-1 text-center">${sub.exam || 0}</td>
-                            <td class="border border-black p-1 text-center">${exam50}</td>
-                            <td class="border border-black p-1 text-center font-black">${total100}</td>
-                            <td class="border border-black p-1 text-center">${computeGrade(total100)}</td>
-                        </tr>
-                    `;
-                }).join('');
+
                 return `
-                    <div class="space-y-6">
-                        <!-- OFFICIAL ASSESSMENT SHEET WITH REGISTERED TEACHER NAME -->
-                        <div class="assessment-print-page bg-white p-8 rounded-xl shadow-lg border-2 border-slate-300 max-w-4xl mx-auto space-y-4 text-slate-900 font-sans">
-                            <div class="text-center space-y-1 border-b-2 border-black pb-3">
-                                <h2 class="font-black text-xl tracking-wide">${schoolProfile.name.toUpperCase()}</h2>
-                                <p class="text-xs font-bold text-slate-700">SCHOOL BASED ASSESSMENT AT BASIC EDUCATIONAL LEVEL</p>
-                                <p class="text-xs font-bold text-slate-700 uppercase">TERMELY SBA RECORDINGS FOR PRIMARY AND JUNIOR HIGH SCHOOLS</p>
-                            </div>
-                            <div class="text-xs space-y-1 font-bold flex justify-between">
-                                <div>
-                                    <p>CLASS: <span class="underline uppercase">${s.class}</span></p>
-                                    <p>TERM: <span class="underline uppercase">${histTerm}</span></p>
-                                </div>
-                                <div>
-                                    <p>YEAR: <span class="underline">2026</span></p>
-                                    <p>NAME OF TEACHER: <span class="underline uppercase">${registeredTeacherName}</span></p>
-                                </div>
-                                <div>
-                                    <p>STUDENT: <span class="underline uppercase">${s.name}</span></p>
-                                    <p>NO. ON ROLL: <span class="underline">${filtered.length}</span></p>
-                                </div>
-                            </div>
-                            <table class="w-full text-xs border-collapse border border-black mt-2">
-                                <thead>
-                                    <tr class="bg-slate-100 text-center font-bold text-[10px]">
-                                        <th class="border border-black p-1.5 text-left pl-2">SUBJECT</th>
-                                        <th class="border border-black p-1.5">IND. TEST 1 (30)</th>
-                                        <th class="border border-black p-1.5">GROUP TEST (20)</th>
-                                        <th class="border border-black p-1.5">IND. TEST 2 (30)</th>
-                                        <th class="border border-black p-1.5">PROJECT / HW (20)</th>
-                                        <th class="border border-black p-1.5">TOTAL SBA (100)</th>
-                                        <th class="border border-black p-1.5">50%</th>
-                                        <th class="border border-black p-1.5">EXAMS (100)</th>
-                                        <th class="border border-black p-1.5">50%</th>
-                                        <th class="border border-black p-1.5">OVERALL TOTAL</th>
-                                        <th class="border border-black p-1.5">GRADE</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    ${assessmentRowsHtml}
-                                </tbody>
-                            </table>
+                    <div class="report-card-page bg-white p-8 rounded-xl shadow-lg border-2 border-slate-300 max-w-3xl mx-auto space-y-4 text-slate-900 font-sans">
+                        <div class="text-center space-y-1 border-b-2 border-black pb-3">
+                            <h2 class="font-black text-xl tracking-wide">${schoolProfile.name.toUpperCase()}</h2>
+                            <p class="text-xs font-bold text-slate-700">P. O. BOX 18 16, SHAMA</p>
+                            <p class="text-xs font-bold text-slate-700">ASSORKO - ESSAMAN</p>
+                            <h3 class="font-extrabold text-sm tracking-widest pt-1 uppercase underline">END OF TERM REPORT CARD</h3>
                         </div>
-                        <!-- OFFICIAL REPORT CARD PAGE -->
-                        <div class="report-card-page bg-white p-8 rounded-xl shadow-lg border-2 border-slate-300 max-w-3xl mx-auto space-y-4 text-slate-900 font-sans">
-                            <div class="text-center space-y-1 border-b-2 border-black pb-3">
-                                <h2 class="font-black text-xl tracking-wide">${schoolProfile.name.toUpperCase()}</h2>
-                                <p class="text-xs font-bold text-slate-700">P. O. BOX 18 16, SHAMA</p>
-                                <p class="text-xs font-bold text-slate-700">ASSORKO - ESSAMAN</p>
-                                <h3 class="font-extrabold text-sm tracking-widest pt-1 uppercase underline">END OF TERM REPORT CARD</h3>
+                        <div class="text-xs space-y-1.5 font-bold">
+                            <div class="flex border-b border-black pb-1">
+                                <span class="w-32">NAME OF PUPIL:</span>
+                                <span class="flex-1 underline uppercase">${s.name}</span>
                             </div>
-                            <div class="text-xs space-y-1.5 font-bold">
-                                <div class="flex border-b border-black pb-1">
-                                    <span class="w-32">NAME OF PUPIL:</span>
-                                    <span class="flex-1 underline uppercase">${s.name}</span>
-                                </div>
-                                <div class="flex justify-between border-b border-black pb-1">
-                                    <div class="flex flex-1"><span class="w-16">CLASS:</span><span class="underline uppercase">${s.class}</span></div>
-                                    <div class="flex flex-1"><span class="w-28">NO. ON ROLL:</span><span class="underline">${filtered.length}</span></div>
-                                </div>
-                                <div class="flex justify-between border-b border-black pb-1">
-                                    <div class="flex flex-1"><span class="w-16">YEAR:</span><span class="underline">2026</span></div>
-                                    <div class="flex flex-1"><span class="w-28">TERM:</span><span class="underline uppercase">${histTerm}</span></div>
-                                </div>
-                                <div class="flex justify-between border-b border-black pb-1">
-                                    <div class="flex flex-1"><span class="w-32">POSITION IN CLASS:</span><span class="underline">${s.position || '1st'}</span></div>
-                                    <div class="flex flex-1"><span class="w-32">RE-OPENING DATE:</span><span class="underline"><input type="text" value="${s.reopeningDate}" onchange="updateStudentProp(${idx}, 'reopeningDate', this.value)" class="border-none w-32 bg-transparent text-xs font-bold"></span></div>
-                                </div>
+                            <div class="flex justify-between border-b border-black pb-1">
+                                <div class="flex flex-1"><span class="w-16">CLASS:</span><span class="underline uppercase">${s.class}</span></div>
+                                <div class="flex flex-1"><span class="w-28">NO. ON ROLL:</span><span class="underline">${filtered.length}</span></div>
                             </div>
-                            <table class="w-full text-xs border-collapse border border-black mt-2">
-                                <thead>
-                                    <tr class="bg-slate-100 text-center font-bold">
-                                        <th class="border border-black p-1.5 w-40 text-left pl-2">SUBJECT</th>
-                                        <th class="border border-black p-1.5">CLASS SCORE 50%</th>
-                                        <th class="border border-black p-1.5">EXAMS SCORE 50%</th>
-                                        <th class="border border-black p-1.5">TOTAL SCORE 100%</th>
-                                        <th class="border border-black p-1.5">POSITION</th>
-                                        <th class="border border-black p-1.5">GRADE</th>
-                                        <th class="border border-black p-1.5">REMARKS</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    ${subjectsHtml}
-                                </tbody>
-                            </table>
-                            <div class="text-xs space-y-1.5 pt-1 font-semibold">
-                                <div class="flex border-b border-black pb-1">
-                                    <span class="w-36">ATTENDANCE MADE:</span>
-                                    <input type="text" value="${s.attendanceMade}" onchange="updateStudentProp(${idx}, 'attendanceMade', this.value)" class="w-12 border-b border-black text-center bg-transparent">
-                                    <span class="mx-4">OUT OF TOTAL OF:</span>
-                                    <input type="text" value="${s.attendanceTotal}" onchange="updateStudentProp(${idx}, 'attendanceTotal', this.value)" class="w-12 border-b border-black text-center bg-transparent">
-                                    <span class="mx-4">PROMOTED TO:</span>
-                                    <input type="text" value="${s.promotedTo}" onchange="updateStudentProp(${idx}, 'promotedTo', this.value)" class="flex-1 border-b border-black bg-transparent">
-                                </div>
-                                <div class="flex border-b border-black pb-1">
-                                    <span class="w-24">CONDUCT:</span>
-                                    <input type="text" value="${s.conduct}" onchange="updateStudentProp(${idx}, 'conduct', this.value)" class="flex-1 border-b border-black bg-transparent">
-                                </div>
-                                <div class="flex border-b border-black pb-1">
-                                    <span class="w-24">INTEREST:</span>
-                                    <input type="text" value="${s.interest}" onchange="updateStudentProp(${idx}, 'interest', this.value)" class="flex-1 border-b border-black bg-transparent">
-                                </div>
-                                <div class="flex border-b border-black pb-1">
-                                    <span class="w-48">CLASS TEACHER'S REMARKS:</span>
-                                    <input type="text" value="${s.teacherRemarks}" onchange="updateStudentProp(${idx}, 'teacherRemarks', this.value)" class="flex-1 border-b border-black bg-transparent">
-                                </div>
-                                <div class="flex border-b border-black pb-1">
-                                    <span class="w-48">HEAD TEACHER'S REMARKS:</span>
-                                    <input type="text" value="${s.headRemarks}" onchange="updateStudentProp(${idx}, 'headRemarks', this.value)" class="flex-1 border-b border-black bg-transparent">
-                                </div>
+                            <div class="flex justify-between border-b border-black pb-1">
+                                <div class="flex flex-1"><span class="w-16">YEAR:</span><span class="underline">2026</span></div>
+                                <div class="flex flex-1"><span class="w-28">TERM:</span><span class="underline uppercase">${histTerm}</span></div>
                             </div>
-                            <table class="w-full text-xs border-collapse border border-black mt-3">
-                                <tbody>
-                                    <tr>
-                                        <td class="border border-black p-1.5 pl-2 font-bold">TUITION FEE FOR NEXT TERM:</td>
-                                        <td class="border border-black p-1.5 text-right pr-3 font-semibold">${parseFloat(s.tuitionFee).toFixed(2)}</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="border border-black p-1.5 pl-2 font-bold">PRINTING FEE FOR NEXT TERM:</td>
-                                        <td class="border border-black p-1.5 text-right pr-3 font-semibold">${parseFloat(s.printingFee).toFixed(2)}</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="border border-black p-1.5 pl-2 font-bold">P.T.A. DUES FOR NEXT TERM:</td>
-                                        <td class="border border-black p-1.5 text-right pr-3 font-semibold">${parseFloat(s.ptaFee).toFixed(2)}</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="border border-black p-1.5 pl-2 font-bold">OTHER FEES FOR NEXT TERM:</td>
-                                        <td class="border border-black p-1.5 text-right pr-3 font-semibold">${parseFloat(s.otherFee).toFixed(2)}</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="border border-black p-1.5 pl-2 font-bold">ARREARS FOR LAST TERM:</td>
-                                        <td class="border border-black p-1.5 text-right pr-3 font-semibold">${parseFloat(s.arrearsFee).toFixed(2)}</td>
-                                    </tr>
-                                    <tr class="bg-slate-100 font-black">
-                                        <td class="border border-black p-1.5 pl-2">TOTAL FOR NEXT TERM:</td>
-                                        <td class="border border-black p-1.5 text-right pr-3">GH₵ ${totalFee.toFixed(2)}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <div class="flex justify-end space-x-3 no-print pt-2">
-                                <button onclick="window.print()" class="px-4 py-2 bg-blue-900 text-white text-xs font-semibold rounded-lg">Print Report Card 🖨️</button>
+                            <div class="flex justify-between border-b border-black pb-1">
+                                <div class="flex flex-1"><span class="w-32">POSITION IN CLASS:</span><span class="underline">${s.position || '1st'}</span></div>
+                                <div class="flex flex-1"><span class="w-32">RE-OPENING DATE:</span><span class="underline"><input type="text" value="${s.reopeningDate}" onchange="updateStudentProp(${studentsData.findIndex(item => item.id === s.id)}, 'reopeningDate', this.value)" class="border-none w-32 bg-transparent text-xs font-bold"></span></div>
                             </div>
+                        </div>
+                        <table class="w-full text-xs border-collapse border border-black mt-2">
+                            <thead>
+                                <tr class="bg-slate-100 text-center font-bold">
+                                    <th class="border border-black p-1.5 w-40 text-left pl-2">SUBJECT</th>
+                                    <th class="border border-black p-1.5">CLASS SCORE 50%</th>
+                                    <th class="border border-black p-1.5">EXAMS SCORE 50%</th>
+                                    <th class="border border-black p-1.5">TOTAL SCORE 100%</th>
+                                    <th class="border border-black p-1.5">POSITION</th>
+                                    <th class="border border-black p-1.5">GRADE</th>
+                                    <th class="border border-black p-1.5">REMARKS</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${subjectsHtml}
+                            </tbody>
+                        </table>
+                        <div class="text-xs space-y-1.5 pt-1 font-semibold">
+                            <div class="flex border-b border-black pb-1">
+                                <span class="w-36">ATTENDANCE MADE:</span>
+                                <input type="text" value="${s.attendanceMade}" onchange="updateStudentProp(${studentsData.findIndex(item => item.id === s.id)}, 'attendanceMade', this.value)" class="w-12 border-b border-black text-center bg-transparent">
+                                <span class="mx-4">OUT OF TOTAL OF:</span>
+                                <input type="text" value="${s.attendanceTotal}" onchange="updateStudentProp(${studentsData.findIndex(item => item.id === s.id)}, 'attendanceTotal', this.value)" class="w-12 border-b border-black text-center bg-transparent">
+                                <span class="mx-4">PROMOTED TO:</span>
+                                <input type="text" value="${s.promotedTo}" onchange="updateStudentProp(${studentsData.findIndex(item => item.id === s.id)}, 'promotedTo', this.value)" class="flex-1 border-b border-black bg-transparent">
+                            </div>
+                            <div class="flex border-b border-black pb-1">
+                                <span class="w-24">CONDUCT:</span>
+                                <input type="text" value="${s.conduct}" onchange="updateStudentProp(${studentsData.findIndex(item => item.id === s.id)}, 'conduct', this.value)" class="flex-1 border-b border-black bg-transparent">
+                            </div>
+                            <div class="flex border-b border-black pb-1">
+                                <span class="w-24">INTEREST:</span>
+                                <input type="text" value="${s.interest}" onchange="updateStudentProp(${studentsData.findIndex(item => item.id === s.id)}, 'interest', this.value)" class="flex-1 border-b border-black bg-transparent">
+                            </div>
+                            <div class="flex border-b border-black pb-1">
+                                <span class="w-48">CLASS TEACHER'S REMARKS:</span>
+                                <input type="text" value="${s.teacherRemarks}" onchange="updateStudentProp(${studentsData.findIndex(item => item.id === s.id)}, 'teacherRemarks', this.value)" class="flex-1 border-b border-black bg-transparent">
+                            </div>
+                            <div class="flex border-b border-black pb-1">
+                                <span class="w-48">HEAD TEACHER'S REMARKS:</span>
+                                <input type="text" value="${s.headRemarks}" onchange="updateStudentProp(${studentsData.findIndex(item => item.id === s.id)}, 'headRemarks', this.value)" class="flex-1 border-b border-black bg-transparent">
+                            </div>
+                        </div>
+                        <!-- PROFESSIONAL BILLING ACCOUNT SUMMARY TABLE -->
+                        <table class="w-full text-xs border-collapse border border-black mt-3">
+                            <thead>
+                                <tr class="bg-blue-50 font-bold">
+                                    <th class="border border-black p-1.5 text-left pl-2">PROFESSIONAL BILLING ACCOUNT LEDGER</th>
+                                    <th class="border border-black p-1.5 text-right pr-3">AMOUNT (GH₵)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="border border-black p-1.5 pl-2 font-bold text-red-700">ARREARS (OLD UNPAID BALANCE):</td>
+                                    <td class="border border-black p-1.5 text-right pr-3 font-semibold text-red-700">${arrears.toFixed(2)}</td>
+                                </tr>
+                                <tr>
+                                    <td class="border border-black p-1.5 pl-2 font-bold">TUITION FEE FOR NEXT TERM:</td>
+                                    <td class="border border-black p-1.5 text-right pr-3 font-semibold">${tuition.toFixed(2)}</td>
+                                </tr>
+                                <tr>
+                                    <td class="border border-black p-1.5 pl-2 font-bold">PRINTING FEE FOR NEXT TERM:</td>
+                                    <td class="border border-black p-1.5 text-right pr-3 font-semibold">${printing.toFixed(2)}</td>
+                                </tr>
+                                <tr>
+                                    <td class="border border-black p-1.5 pl-2 font-bold">P.T.A. DUES FOR NEXT TERM:</td>
+                                    <td class="border border-black p-1.5 text-right pr-3 font-semibold">${pta.toFixed(2)}</td>
+                                </tr>
+                                <tr>
+                                    <td class="border border-black p-1.5 pl-2 font-bold">OTHER FEES FOR NEXT TERM:</td>
+                                    <td class="border border-black p-1.5 text-right pr-3 font-semibold">${other.toFixed(2)}</td>
+                                </tr>
+                                <tr class="bg-slate-100 font-black">
+                                    <td class="border border-black p-1.5 pl-2 uppercase">TOTAL BILL BALANCE DUE:</td>
+                                    <td class="border border-black p-1.5 text-right pr-3 text-blue-900">GH₵ ${totalFee.toFixed(2)}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="flex justify-end space-x-3 no-print pt-2">
+                            <button onclick="window.print()" class="px-4 py-2 bg-blue-900 text-white text-xs font-semibold rounded-lg">Print Report Card & Bill 🖨️</button>
                         </div>
                     </div>
                 `;
             }).join('');
+
+            container.innerHTML = `<div class="mb-8"><h3 class="font-bold text-lg text-blue-950 mb-3 border-b pb-2">📋 Master Class Assessment Sheets (${histClass} - ${histTerm})</h3>${masterAssessmentSheetsHtml}</div><div><h3 class="font-bold text-lg text-blue-950 mb-3 border-b pb-2">🎓 Individual Report Cards & Billing Accounts</h3>${individualReportCardsHtml}</div>`;
         }
 
         function updateStudentProp(index, field, val) {
@@ -1422,16 +1467,21 @@
             }
             tbody.innerHTML = filteredStudents.map((s) => {
                 const globalIdx = studentsData.findIndex(item => item.id === s.id);
-                const total = (parseFloat(s.tuitionFee) || 0) + (parseFloat(s.printingFee) || 0) + (parseFloat(s.ptaFee) || 0) + (parseFloat(s.otherFee) || 0) + (parseFloat(s.arrearsFee) || 0);
+                const arrears = parseFloat(s.arrearsFee) || 0;
+                const tuition = parseFloat(s.tuitionFee) || 250;
+                const printing = parseFloat(s.printingFee) || 25;
+                const pta = parseFloat(s.ptaFee) || 5;
+                const other = parseFloat(s.otherFee) || 20;
+                const total = arrears + tuition + printing + pta + other;
                 return `
                     <tr>
                         <td class="p-3 font-medium">${s.name}</td>
+                        <td class="p-3"><input type="number" value="${s.arrearsFee || 0}" onchange="updateFeeProp(${globalIdx}, 'arrearsFee', this.value)" class="w-16 p-1 border rounded text-red-700 font-bold"></td>
                         <td class="p-3"><input type="number" value="${s.tuitionFee}" onchange="updateFeeProp(${globalIdx}, 'tuitionFee', this.value)" class="w-16 p-1 border rounded"></td>
                         <td class="p-3"><input type="number" value="${s.printingFee}" onchange="updateFeeProp(${globalIdx}, 'printingFee', this.value)" class="w-16 p-1 border rounded"></td>
                         <td class="p-3"><input type="number" value="${s.ptaFee}" onchange="updateFeeProp(${globalIdx}, 'ptaFee', this.value)" class="w-16 p-1 border rounded"></td>
                         <td class="p-3"><input type="number" value="${s.otherFee}" onchange="updateFeeProp(${globalIdx}, 'otherFee', this.value)" class="w-16 p-1 border rounded"></td>
-                        <td class="p-3"><input type="number" value="${s.arrearsFee}" onchange="updateFeeProp(${globalIdx}, 'arrearsFee', this.value)" class="w-16 p-1 border rounded"></td>
-                        <td class="p-3 font-bold text-blue-900">₵ ${total.toFixed(2)}</td>
+                        <td class="p-3 font-black text-blue-900 bg-blue-50">₵ ${total.toFixed(2)}</td>
                         <td class="p-3 no-print">
                             <button onclick="viewReceipt(${globalIdx})" class="px-2 py-1 bg-blue-900 text-white text-xs rounded font-semibold">Receipt</button>
                         </td>
@@ -1447,23 +1497,29 @@
 
         function viewReceipt(index) {
             const s = studentsData[index];
-            const totalFee = (parseFloat(s.tuitionFee) || 0) + (parseFloat(s.printingFee) || 0) + (parseFloat(s.ptaFee) || 0) + (parseFloat(s.otherFee) || 0) + (parseFloat(s.arrearsFee) || 0);
+            const arrears = parseFloat(s.arrearsFee) || 0;
+            const tuition = parseFloat(s.tuitionFee) || 250;
+            const printing = parseFloat(s.printingFee) || 25;
+            const pta = parseFloat(s.ptaFee) || 5;
+            const other = parseFloat(s.otherFee) || 20;
+            const totalFee = arrears + tuition + printing + pta + other;
+            
             const content = document.getElementById('receipt-content');
             content.innerHTML = `
                 <div class="text-center space-y-1 border-b pb-4">
                     <h3 class="font-bold text-lg text-blue-950">${schoolProfile.name}</h3>
-                    <p class="text-[11px] text-slate-500 font-medium">${schoolProfile.location} • Official Fee Statement</p>
+                    <p class="text-[11px] text-slate-500 font-medium">${schoolProfile.location} • Professional Billing Account Statement</p>
                 </div>
                 <div class="text-sm space-y-2 pt-2">
                     <p><strong>Student Name:</strong> ${s.name}</p>
                     <p><strong>Class:</strong> ${s.class}</p>
                     <hr class="my-2">
-                    <div class="flex justify-between"><span>Tuition Fee:</span> <strong>₵ ${s.tuitionFee}</strong></div>
-                    <div class="flex justify-between"><span>Printing Fee:</span> <strong>₵ ${s.printingFee}</strong></div>
-                    <div class="flex justify-between"><span>P.T.A Dues:</span> <strong>₵ ${s.ptaFee}</strong></div>
-                    <div class="flex justify-between"><span>Other Fees:</span> <strong>₵ ${s.otherFee}</strong></div>
-                    <div class="flex justify-between"><span>Arrears:</span> <strong>₵ ${s.arrearsFee}</strong></div>
-                    <div class="flex justify-between text-blue-900 border-t pt-1 font-black"><span>Total Next Term:</span> <strong>₵ ${totalFee.toFixed(2)}</strong></div>
+                    <div class="flex justify-between text-red-700 font-bold"><span>Arrears (Old Balance):</span> <strong>₵ ${arrears.toFixed(2)}</strong></div>
+                    <div class="flex justify-between"><span>Tuition Fee:</span> <strong>₵ ${tuition.toFixed(2)}</strong></div>
+                    <div class="flex justify-between"><span>Printing Fee:</span> <strong>₵ ${printing.toFixed(2)}</strong></div>
+                    <div class="flex justify-between"><span>P.T.A Dues:</span> <strong>₵ ${pta.toFixed(2)}</strong></div>
+                    <div class="flex justify-between"><span>Other Fees:</span> <strong>₵ ${other.toFixed(2)}</strong></div>
+                    <div class="flex justify-between text-blue-900 border-t pt-2 font-black text-base"><span>Total Bill Balance Due:</span> <strong>₵ ${totalFee.toFixed(2)}</strong></div>
                 </div>
             `;
             document.getElementById('receipt-modal').classList.remove('hidden');
@@ -1612,12 +1668,12 @@
                     const imgDisp = document.getElementById('teacher-announcement-image-display');
                     if(imgDisp) imgDisp.classList.remove('hidden');
 
-                    alert('Announcement and photo published successfully to Supabase cloud!');
+                    alert('Announcement and photo published successfully!');
                 }
                 reader.readAsDataURL(photoInput.files[0]);
             } else {
                 await saveCloudSettings();
-                alert('Announcement updated successfully to Supabase cloud!');
+                alert('Announcement updated successfully!');
             }
             
             const teacherDisplay = document.getElementById('teacher-announcement-display');
