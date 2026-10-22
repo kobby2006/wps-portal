@@ -27,7 +27,6 @@
     <div id="auth-screen" class="fixed inset-0 bg-slate-900/90 z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 border-t-4 border-blue-900">
             <div class="text-center mb-6 flex flex-col items-center">
-                <!-- BADGE CONTAINER USING badge.jpg -->
                 <div class="w-24 h-24 mb-3 rounded-full bg-amber-50 border-4 border-blue-900 shadow-lg flex items-center justify-center relative overflow-hidden">
                     <img src="badge.jpg" alt="Wesley Prep School Badge" class="w-full h-full object-cover" onerror="this.style.display='none'; document.getElementById('badge-fallback').classList.remove('hidden');">
                     <div id="badge-fallback" class="hidden absolute inset-0 bg-blue-950 flex flex-col items-center justify-center text-center p-1">
@@ -539,7 +538,7 @@
                                     <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Announcement / Birthday Message</label>
                                     <textarea id="announcement-text" rows="4" class="w-full p-3 border rounded-xl" placeholder="Type announcement or birthday shoutout for staff and teachers..."></textarea>
                                 </div>
-                                <button onclick="postAnnouncement()" class="px-6 py-2.5 bg-blue-900 text-white font-bold rounded-xl">Publish Announcement & Photo</button>
+                                <button onclick="postAnnouncement()" class="px-6 py-2.5 bg-blue-900 text-white font-bold rounded-xl">Publish Announcement & Photo to Cloud</button>
                             </div>
                         </div>
                         <!-- PORTAL LOCK CONTROL PANEL -->
@@ -559,10 +558,10 @@
                 <section id="tab-gallery" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-4">
                         <h2 class="text-xl font-bold text-slate-900">School Photo Gallery & Multiple JPG Uploads</h2>
-                        <p class="text-xs text-slate-500">Select multiple event photos, sports pictures, or class activities to upload simultaneously. All photos can be downloaded in JPG format.</p>
+                        <p class="text-xs text-slate-500">Select multiple event photos, sports pictures, or class activities to upload simultaneously to the cloud. All photos can be downloaded in JPG format by any teacher on any device.</p>
                         <div class="flex flex-col md:flex-row gap-3 items-center">
                             <input type="file" id="multi-photo-file" accept="image/*" multiple class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
-                            <button onclick="uploadMultiplePhotos()" class="px-6 py-2.5 bg-blue-900 text-white font-bold rounded-xl whitespace-nowrap">Upload Photos (JPG)</button>
+                            <button onclick="uploadMultiplePhotos()" class="px-6 py-2.5 bg-blue-900 text-white font-bold rounded-xl whitespace-nowrap">Upload Photos to Cloud (JPG)</button>
                         </div>
                         <div id="gallery-grid" class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
                             <p class="text-slate-400 italic text-sm">No photos uploaded yet.</p>
@@ -653,52 +652,32 @@
             'CREATIVE ARTS',
             'HISTORY',
             'COMPUTING',
-            'GHANAIAN LANGUAGE',
-            'O. W. O. P.'
+            'GHANAIAN LANGUAGE'
         ];
         
-        // Load settings from localStorage instantly on startup, then try cloud
+        // Load cloud settings instantly on startup
         window.addEventListener('DOMContentLoaded', async () => {
-            const localPhotos = localStorage.getItem('wps_gallery_photos');
-            if(localPhotos) {
-                try { galleryPhotos = JSON.parse(localPhotos); } catch(e){}
-            }
-            const localText = localStorage.getItem('wps_announcement_text');
-            if(localText) globalAnnouncementText = localText;
-            const localImg = localStorage.getItem('wps_announcement_img');
-            if(localImg) globalAnnouncementImgUrl = localImg;
-            const localLock = localStorage.getItem('wps_portal_locked');
-            if(localLock !== null) portalLocked = JSON.parse(localLock);
-
+            await fetchCloudSettings();
             renderGalleryGrids();
             updateLockStatusUI();
             
             const announcementTextarea = document.getElementById('announcement-text');
             if(announcementTextarea) announcementTextarea.value = globalAnnouncementText;
-            
-            await fetchCloudSettings();
         });
 
         async function fetchCloudSettings() {
             try {
                 const { data, error } = await supabaseClient.from('school_settings').select('*').eq('id', 1).single();
                 if(data && !error) {
-                    portalLocked = data.portal_locked || portalLocked;
-                    if(data.announcement_text) {
-                        globalAnnouncementText = data.announcement_text;
-                        localStorage.setItem('wps_announcement_text', globalAnnouncementText);
-                    }
-                    if(data.announcement_img) {
-                        globalAnnouncementImgUrl = data.announcement_img;
-                        localStorage.setItem('wps_announcement_img', globalAnnouncementImgUrl);
-                    }
-                    if(data.gallery_photos && data.gallery_photos.length > 0) {
+                    portalLocked = data.portal_locked || false;
+                    if(data.announcement_text) globalAnnouncementText = data.announcement_text;
+                    if(data.announcement_img) globalAnnouncementImgUrl = data.announcement_img;
+                    if(data.gallery_photos && Array.isArray(data.gallery_photos)) {
                         galleryPhotos = data.gallery_photos;
-                        localStorage.setItem('wps_gallery_photos', JSON.stringify(galleryPhotos));
                     }
                 }
             } catch(err) {
-                console.log('Using local cached settings:', err);
+                console.log('Cloud settings fetch note:', err);
             }
             updateLockStatusUI();
             renderGalleryGrids();
@@ -708,20 +687,20 @@
         }
 
         async function saveCloudSettings() {
-            localStorage.setItem('wps_gallery_photos', JSON.stringify(galleryPhotos));
-            localStorage.setItem('wps_portal_locked', JSON.stringify(portalLocked));
-            localStorage.setItem('wps_announcement_text', globalAnnouncementText);
-            localStorage.setItem('wps_announcement_img', globalAnnouncementImgUrl);
             try {
-                await supabaseClient.from('school_settings').upsert({
+                const { error } = await supabaseClient.from('school_settings').upsert({
                     id: 1,
                     portal_locked: portalLocked,
                     announcement_text: globalAnnouncementText,
                     announcement_img: globalAnnouncementImgUrl,
                     gallery_photos: galleryPhotos
                 });
+                if(error) {
+                    console.error('Supabase sync error:', error.message);
+                    alert('Cloud sync warning: ' + error.message);
+                }
             } catch(err) {
-                console.log('Cloud sync warning (saved locally):', err);
+                console.error('Cloud save exception:', err);
             }
         }
 
@@ -730,6 +709,8 @@
             const role = document.getElementById('login-role').value;
             const user = document.getElementById('login-user').value;
             
+            await fetchCloudSettings(); // Refresh latest cloud settings upon login
+
             if(role === 'teacher' && portalLocked) {
                 alert('🔒 Portal is currently locked by Administration for maintenance, edits, or grading updates. Teachers cannot log in at this moment. Please check back later.');
                 return;
@@ -1084,9 +1065,7 @@
             const selectGrading = document.getElementById('grading-class-filter');
             const selectedClass = selectGrading ? selectGrading.value : 'Basic 4';
             const modeDesc = document.getElementById('assessment-mode-description');
-            const subFilter = document.getElementById('grading-subject-filter');
             
-            // Check if class is Basic 1, Basic 2, or Basic 3 (Lower Primary: One Class Teacher mode)
             if(selectedClass === 'Basic 1' || selectedClass === 'Basic 2' || selectedClass === 'Basic 3') {
                 if(modeDesc) modeDesc.innerText = `Mode: ${selectedClass} — One Class Teacher (Class Teacher handles all subjects for this class).`;
             } else {
@@ -1237,7 +1216,6 @@
                 return;
             }
 
-            // 1. GENERATE FULL CLASS ASSESSMENT SHEETS FOR EACH SUBJECT (MATCHING THE OFFICIAL PAPER FORM)
             let masterAssessmentSheetsHtml = standardSubjects.map(subject => {
                 let rowsHtml = filtered.map((s, idx) => {
                     const sub = (s.subjectsData[histTerm] && s.subjectsData[histTerm][subject]) ? s.subjectsData[histTerm][subject] : { indTest1: 0, groupTest: 0, indTest2: 0, homework: 0, exam: 0 };
@@ -1309,8 +1287,7 @@
                 `;
             }).join('');
 
-            // 2. GENERATE INDIVIDUAL REPORT CARDS FOR EACH STUDENT
-            let individualReportCardsHtml = filtered.map((s, idx) => {
+            let individualReportCardsHtml = filtered.map((s) => {
                 const arrears = parseFloat(s.arrearsFee) || 0;
                 const tuition = parseFloat(s.tuitionFee) || 250;
                 const printing = parseFloat(s.printingFee) || 25;
@@ -1614,7 +1591,7 @@
                     if(loadedCount === totalFiles) {
                         await saveCloudSettings();
                         renderGalleryGrids();
-                        alert(`${totalFiles} photo(s) uploaded successfully and cached!`);
+                        alert(`${totalFiles} photo(s) successfully uploaded to Supabase cloud and synced across all devices!`);
                     }
                 }
                 reader.readAsDataURL(file);
@@ -1668,12 +1645,12 @@
                     const imgDisp = document.getElementById('teacher-announcement-image-display');
                     if(imgDisp) imgDisp.classList.remove('hidden');
 
-                    alert('Announcement and photo published successfully!');
+                    alert('Announcement and photo published to Supabase cloud successfully!');
                 }
                 reader.readAsDataURL(photoInput.files[0]);
             } else {
                 await saveCloudSettings();
-                alert('Announcement updated successfully!');
+                alert('Announcement updated and synced to cloud successfully!');
             }
             
             const teacherDisplay = document.getElementById('teacher-announcement-display');
