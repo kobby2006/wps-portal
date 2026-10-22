@@ -23,7 +23,6 @@
     </style>
 </head>
 <body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col">
-
     <!-- AUTH & LOGIN SCREEN -->
     <div id="auth-screen" class="fixed inset-0 bg-slate-900/90 z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 border-t-4 border-blue-900">
@@ -59,14 +58,12 @@
                 </div>
                 <button type="submit" class="w-full py-3 bg-blue-900 text-white font-semibold rounded-xl hover:bg-blue-800 transition shadow-lg">Secure Login</button>
             </form>
-
             <div class="mt-5 pt-4 border-t border-slate-200 flex justify-between items-center text-xs">
                 <button type="button" onclick="openPasswordResetModal()" class="text-blue-900 hover:text-blue-700 font-bold underline">Forgot Password / Reset PIN?</button>
                 <button type="button" onclick="openAccountRecoveryModal()" class="text-slate-600 hover:text-slate-900 font-bold underline">Account Recovery</button>
             </div>
         </div>
     </div>
-
     <!-- PASSWORD RESET MODAL -->
     <div id="password-reset-modal" class="hidden fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-6 border-t-4 border-blue-900 space-y-4">
@@ -79,7 +76,6 @@
             </div>
         </div>
     </div>
-
     <!-- ACCOUNT RECOVERY MODAL -->
     <div id="account-recovery-modal" class="hidden fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-6 border-t-4 border-amber-500 space-y-4">
@@ -90,7 +86,6 @@
             </div>
         </div>
     </div>
-
     <!-- ANNOUNCEMENT & BIRTHDAY POPUP MODAL -->
     <div id="announcement-modal" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full p-6 border-t-4 border-amber-500 space-y-4">
@@ -109,7 +104,6 @@
             </div>
         </div>
     </div>
-
     <!-- RECEIPT MODAL POPUP -->
     <div id="receipt-modal" class="hidden fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 border-t-4 border-blue-900 space-y-4 relative">
@@ -120,7 +114,6 @@
             </div>
         </div>
     </div>
-
     <!-- MAIN APP SHELL -->
     <div id="app-shell" class="hidden flex-1 flex flex-col">
         <!-- TOP NAVBAR -->
@@ -139,7 +132,6 @@
                 <button onclick="logout()" class="text-xs bg-red-700 hover:bg-red-800 px-3 py-2 rounded-lg font-semibold transition">Logout</button>
             </div>
         </header>
-
         <!-- DASHBOARD CONTAINER -->
         <div class="flex-1 flex flex-col md:flex-row">
             <!-- SIDEBAR NAVIGATION -->
@@ -162,7 +154,6 @@
                     <button onclick="switchTab('gallery')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🖼️ <span>Photo Gallery & JPG Uploads</span></button>
                     <button onclick="switchTab('profile')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">⚙️ <span>School Profile & Branding</span></button>
                 </div>
-
                 <!-- Teacher Nav -->
                 <div id="teacher-nav-section" class="hidden pt-4 border-t border-slate-200 space-y-2">
                     <p class="px-4 text-xs font-bold uppercase tracking-wider text-slate-400">Staff Portal</p>
@@ -172,10 +163,8 @@
                     <button onclick="switchTab('teacher-announcements')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📢 <span>View Announcements</span></button>
                 </div>
             </aside>
-
             <!-- MAIN CONTENT AREA -->
             <main class="flex-1 p-6 overflow-y-auto">
-
                 <!-- TAB: DASHBOARD & CHARTS -->
                 <section id="tab-dashboard" class="space-y-6">
                     <div class="bg-gradient-to-r from-blue-950 to-blue-900 text-white p-6 rounded-2xl shadow-lg flex justify-between items-center border-l-4 border-amber-500">
@@ -187,7 +176,6 @@
                             <span class="px-3 py-1 bg-amber-500 text-slate-950 text-xs font-bold rounded-full">Default Tuition: GH₵ 250</span>
                         </div>
                     </div>
-
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="bg-white p-6 rounded-2xl shadow border border-slate-100">
                             <h3 class="font-bold text-slate-800 mb-4">Student Gender Distribution (Active Registry)</h3>
@@ -203,7 +191,6 @@
                         </div>
                     </div>
                 </section>
-
                 <!-- TAB: SBA & EXAM GRADING -->
                 <section id="tab-assessment" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-4">
@@ -243,7 +230,6 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="bg-white rounded-2xl shadow overflow-hidden border border-slate-100">
                         <div class="overflow-x-auto">
                             <table class="w-full text-left border-collapse text-xs">
@@ -269,13 +255,11 @@
                             </table>
                         </div>
                     </div>
-
                     <div class="flex justify-start">
                         <button onclick="refreshSubmittedScores()" class="px-5 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold rounded-xl text-xs transition flex items-center gap-2 shadow">
                             🔄 Refresh / Edit Submitted Scores for this Class & Term
                         </button>
                     </div>
-
                     <div class="flex flex-wrap justify-between items-center gap-3 pt-2">
                         <div class="flex gap-2">
                             <button onclick="exportAssessmentSheet('pdf')" class="px-4 py-2 bg-slate-800 text-white text-xs font-semibold rounded-lg hover:bg-slate-700">Download Assessment PDF 📄</button>
@@ -284,7 +268,6 @@
                         <button onclick="finalizeReports()" class="px-6 py-3 bg-amber-600 hover:bg-amber-700 text-white font-bold rounded-xl shadow-lg transition">Finalize & Save Assessment Sheet to Site ➔</button>
                     </div>
                 </section>
-
                 <!-- TAB: STUDENT HISTORY & SUBMITTED ASSESSMENT SHEETS -->
                 <section id="tab-history" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-4">
@@ -295,7 +278,6 @@
                             </div>
                             <button onclick="window.print()" class="px-4 py-2 bg-slate-800 text-white text-xs font-semibold rounded-lg hover:bg-slate-700 no-print">Print All Files</button>
                         </div>
-
                         <!-- Class & Term Selector for History -->
                         <div class="flex flex-wrap gap-4 pt-2 border-t items-center">
                             <div>
@@ -312,12 +294,10 @@
                             </div>
                         </div>
                     </div>
-
                     <div id="history-container" class="space-y-8">
                         <p class="text-slate-500 italic p-4">No finalized assessment sheets or reports found. Click "Finalize & Save Assessment Sheet" from the SBA grading tab.</p>
                     </div>
                 </section>
-
                 <!-- TAB: LMS & TEACHER TRAINING HUB -->
                 <section id="tab-lms" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-6">
@@ -328,7 +308,6 @@
                             </div>
                             <span id="lms-role-badge" class="px-3 py-1 bg-amber-100 text-amber-900 text-xs font-bold rounded-full">Admin Edit Mode Active</span>
                         </div>
-
                         <!-- ADMIN ONLY: ADD NEW RESOURCE OR TRAINING GUIDE -->
                         <div id="admin-lms-upload-section" class="bg-blue-50/60 p-4 rounded-xl border border-blue-200 space-y-3">
                             <h3 class="font-bold text-sm text-blue-950">➕ Upload Teaching Resource / Embed Video / Update Training Guide (Admin Only)</h3>
@@ -341,7 +320,6 @@
                                 <button onclick="saveLMSResource()" class="px-5 py-2 bg-blue-900 text-white font-bold rounded-xl text-xs">Publish LMS Resource</button>
                             </div>
                         </div>
-
                         <!-- LMS CONTENT TABS / SECTIONS -->
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2">
                             <!-- Section 1: How to Control a Class -->
@@ -356,7 +334,6 @@
                                     <li><strong>Positive Reinforcement:</strong> Praise focused students publicly to encourage compliance across the room.</li>
                                 </ul>
                             </div>
-
                             <!-- Section 2: Types of Students & Identification -->
                             <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-3 shadow-sm">
                                 <div class="flex items-center space-x-2 text-blue-900 font-bold text-sm">
@@ -369,7 +346,6 @@
                                     <li><strong>The Withdrawn / Quiet Student:</strong> Shy or anxious; requires gentle 1-on-1 encouragement and low-pressure participation.</li>
                                 </ul>
                             </div>
-
                             <!-- Section 3: Solving Student Problems -->
                             <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-3 shadow-sm">
                                 <div class="flex items-center space-x-2 text-blue-900 font-bold text-sm">
@@ -383,7 +359,6 @@
                                 </ul>
                             </div>
                         </div>
-
                         <!-- DYNAMIC LMS RESOURCES & EMBEDDED VIDEOS CONTAINER -->
                         <div class="pt-4 border-t space-y-4">
                             <h3 class="font-bold text-sm text-slate-900">📂 Uploaded Teaching Materials & Embedded Media</h3>
@@ -399,7 +374,6 @@
                         </div>
                     </div>
                 </section>
-
                 <!-- TAB: ATTENDANCE REGISTER -->
                 <section id="tab-attendance" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-4">
@@ -419,7 +393,6 @@
                                 </div>
                             </div>
                         </div>
-
                         <div class="overflow-x-auto pt-2">
                             <table class="w-full text-left border-collapse">
                                 <thead class="bg-slate-100 text-xs uppercase font-bold text-slate-600">
@@ -447,7 +420,6 @@
                         </div>
                     </div>
                 </section>
-
                 <!-- TAB: TIMETABLE & TIME MANAGEMENT -->
                 <section id="tab-timetable" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-4">
@@ -463,7 +435,6 @@
                         </div>
                     </div>
                 </section>
-
                 <!-- TAB: FEE MANAGEMENT (Admin Only) -->
                 <section id="tab-fees" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-4">
@@ -498,7 +469,6 @@
                         </div>
                     </div>
                 </section>
-
                 <!-- TAB: MANAGE CLASSES (Admin) -->
                 <section id="tab-classes" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-4">
@@ -514,7 +484,6 @@
                         </div>
                     </div>
                 </section>
-
                 <!-- TAB: STUDENT ENROLLMENT & DISCARD (Admin) -->
                 <section id="tab-students" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-6">
@@ -531,7 +500,6 @@
                                 <button type="submit" class="md:col-span-3 py-3 bg-blue-900 text-white font-bold rounded-xl hover:bg-blue-800 transition">Save Student to Database</button>
                             </form>
                         </div>
-
                         <div class="pt-4 border-t">
                             <h3 class="text-lg font-bold text-slate-900 mb-2">Discard / Remove Withdrawn Student</h3>
                             <p class="text-xs text-slate-500 mb-4">Select a student who has stopped school to discard their enrollment.</p>
@@ -542,7 +510,6 @@
                         </div>
                     </div>
                 </section>
-
                 <!-- TAB: TEACHER ACCOUNTS (Admin) -->
                 <section id="tab-teachers" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl shadow border border-slate-100">
@@ -557,7 +524,6 @@
                         </form>
                     </div>
                 </section>
-
                 <!-- TAB: ANNOUNCEMENTS & PORTAL LOCK (Admin) -->
                 <section id="tab-announcements" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-6">
@@ -576,7 +542,6 @@
                                 <button onclick="postAnnouncement()" class="px-6 py-2.5 bg-blue-900 text-white font-bold rounded-xl">Publish Announcement & Photo</button>
                             </div>
                         </div>
-
                         <!-- PORTAL LOCK CONTROL PANEL -->
                         <div class="pt-6 border-t space-y-3">
                             <h3 class="text-lg font-bold text-slate-900">🔒 Teacher Portal Access Restriction</h3>
@@ -590,7 +555,6 @@
                         </div>
                     </div>
                 </section>
-
                 <!-- TAB: PHOTO GALLERY & MULTIPLE JPG UPLOADS -->
                 <section id="tab-gallery" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-4">
@@ -605,7 +569,6 @@
                         </div>
                     </div>
                 </section>
-
                 <!-- TAB: TEACHER PHOTO GALLERY (Teacher View) -->
                 <section id="tab-teacher-gallery" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl shadow border border-slate-100">
@@ -616,7 +579,6 @@
                         </div>
                     </div>
                 </section>
-
                 <!-- TAB: TEACHER ANNOUNCEMENTS VIEW -->
                 <section id="tab-teacher-announcements" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-4">
@@ -631,7 +593,6 @@
                         </div>
                     </div>
                 </section>
-
                 <!-- TAB: SCHOOL PROFILE & BRANDING SETTINGS -->
                 <section id="tab-profile" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-4">
@@ -654,17 +615,14 @@
                         <button onclick="saveSchoolProfile()" class="px-6 py-3 bg-blue-900 text-white font-bold rounded-xl hover:bg-blue-800">Save School Profile & Branding</button>
                     </div>
                 </section>
-
             </main>
         </div>
     </div>
-
     <!-- JAVASCRIPT APPLICATION CORE -->
     <script>
         const SUPABASE_URL = 'https://lhqacoxyfyklxjhabzfe.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxocWFjb3h5ZnlrbHhqaGFiemZlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI1MTA2NTksImV4cCI6MjEwODA4NjY1OX0.w7eqLoS5uKKCGpTxGunl2iD3oDEzRxPaUQ2EbhsGSDA';
-        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
         let currentUser = null;
         let portalLocked = false;
         let globalAnnouncementText = "Welcome to Wesley Preparatory School. Please ensure all student records and SBA scores are updated promptly.";
@@ -687,7 +645,6 @@
             motto: "Knowledge and Integrity"
         };
         let timetableText = "📅 Current Schedule: Morning Devotion (07:30 - 08:00) | Core Subjects & Practical Sessions (08:00 - 14:00).";
-
         const standardSubjects = [
             'ENGLISH LANGUAGE',
             'MATHEMATICS',
@@ -699,7 +656,7 @@
             'GHANAIAN LANGUAGE',
             'O. W. O. P.'
         ];
-
+        
         // Fetch settings from Supabase with localStorage instant fallback on startup
         window.addEventListener('DOMContentLoaded', async () => {
             const localPhotos = localStorage.getItem('wps_gallery_photos');
@@ -707,20 +664,18 @@
                 try { galleryPhotos = JSON.parse(localPhotos); } catch(e){}
             }
             renderGalleryGrids();
-
             await fetchCloudSettings();
         });
 
         async function fetchCloudSettings() {
             try {
-                const { data, error } = await supabaseClient.from('school_settings').select('*');
-                if(data && !error && data.length > 0) {
-                    const settings = data[0];
-                    portalLocked = settings.portal_locked || false;
-                    globalAnnouncementText = settings.announcement_text || globalAnnouncementText;
-                    globalAnnouncementImgUrl = settings.announcement_img || "";
-                    if(settings.gallery_photos && settings.gallery_photos.length > 0) {
-                        galleryPhotos = settings.gallery_photos;
+                const { data, error } = await supabaseClient.from('school_settings').select('*').eq('id', 1).single();
+                if(data && !error) {
+                    portalLocked = data.portal_locked || false;
+                    globalAnnouncementText = data.announcement_text || globalAnnouncementText;
+                    globalAnnouncementImgUrl = data.announcement_img || "";
+                    if(data.gallery_photos && data.gallery_photos.length > 0) {
+                        galleryPhotos = data.gallery_photos;
                         localStorage.setItem('wps_gallery_photos', JSON.stringify(galleryPhotos));
                     }
                 }
@@ -729,6 +684,16 @@
             }
             updateLockStatusUI();
             renderGalleryGrids();
+            
+            // Sync announcement textarea if present
+            const announcementTextarea = document.getElementById('announcement-text');
+            if(announcementTextarea) {
+                announcementTextarea.value = globalAnnouncementText;
+            }
+            const teacherDisplay = document.getElementById('teacher-announcement-display');
+            if(teacherDisplay) {
+                teacherDisplay.innerText = globalAnnouncementText;
+            }
         }
 
         async function saveCloudSettings() {
@@ -736,7 +701,6 @@
             localStorage.setItem('wps_portal_locked', JSON.stringify(portalLocked));
             localStorage.setItem('wps_announcement_text', globalAnnouncementText);
             localStorage.setItem('wps_announcement_img', globalAnnouncementImgUrl);
-
             try {
                 await supabaseClient.from('school_settings').upsert({
                     id: 1,
@@ -754,21 +718,17 @@
             e.preventDefault();
             const role = document.getElementById('login-role').value;
             const user = document.getElementById('login-user').value;
-
             await fetchCloudSettings(); 
-
             if(role === 'teacher' && portalLocked) {
                 alert('🔒 Portal is currently locked by Administration for maintenance, edits, or grading updates. Teachers cannot log in at this moment. Please check back later.');
                 return;
             }
-
             currentUser = { role, name: user };
             
             document.getElementById('auth-screen').classList.add('hidden');
             document.getElementById('app-shell').classList.remove('hidden');
             document.getElementById('user-badge').innerText = role;
             document.getElementById('welcome-name').innerText = user;
-
             if(role === 'teacher') {
                 document.getElementById('admin-nav-section').classList.add('hidden');
                 document.getElementById('teacher-nav-section').classList.remove('hidden');
@@ -784,7 +744,6 @@
                     document.getElementById('modal-announcement-image-container').classList.add('hidden');
                 }
                 document.getElementById('announcement-modal').classList.remove('hidden');
-
                 document.getElementById('teacher-announcement-display').innerText = globalAnnouncementText;
                 if(globalAnnouncementImgUrl) {
                     document.getElementById('teacher-announcement-img-preview').src = globalAnnouncementImgUrl;
@@ -805,11 +764,9 @@
         function openPasswordResetModal() {
             document.getElementById('password-reset-modal').classList.remove('hidden');
         }
-
         function closePasswordResetModal() {
             document.getElementById('password-reset-modal').classList.add('hidden');
         }
-
         function submitPasswordResetRequest() {
             const val = document.getElementById('reset-email-input').value.trim();
             if(!val) { alert('Please enter your email or username.'); return; }
@@ -817,15 +774,12 @@
             document.getElementById('reset-email-input').value = '';
             closePasswordResetModal();
         }
-
         function openAccountRecoveryModal() {
             document.getElementById('account-recovery-modal').classList.remove('hidden');
         }
-
         function closeAccountRecoveryModal() {
             document.getElementById('account-recovery-modal').classList.add('hidden');
         }
-
         async function togglePortalLock() {
             portalLocked = !portalLocked;
             await saveCloudSettings();
@@ -836,12 +790,10 @@
                 alert('🔓 Portal is now UNLOCKED. Teachers can log in normally.');
             }
         }
-
         function updateLockStatusUI() {
             const btn = document.getElementById('portal-lock-btn');
             const lbl = document.getElementById('portal-lock-status-label');
             if(!btn || !lbl) return;
-
             if(portalLocked) {
                 btn.innerText = "Unlock Portal for Teachers 🔓";
                 btn.className = "px-5 py-2.5 bg-emerald-700 text-white font-bold text-xs rounded-xl shadow hover:bg-emerald-800 transition";
@@ -854,7 +806,6 @@
                 lbl.className = "text-emerald-700 font-bold";
             }
         }
-
         async function fetchStudentsFromSupabase() {
             try {
                 const { data, error } = await supabaseClient.from('students').select('*');
@@ -885,7 +836,6 @@
                 console.log('Supabase fetch error:', err);
             }
         }
-
         async function fetchTeachersFromSupabase() {
             try {
                 const { data, error } = await supabaseClient.from('teachers').select('*');
@@ -896,15 +846,12 @@
                 console.log('Supabase teachers fetch error:', err);
             }
         }
-
         function closeAnnouncementModal() {
             document.getElementById('announcement-modal').classList.add('hidden');
         }
-
         function closeReceiptModal() {
             document.getElementById('receipt-modal').classList.add('hidden');
         }
-
         function logout() { location.reload(); }
 
         function switchTab(tabId) {
@@ -915,6 +862,10 @@
             const active = document.getElementById(`tab-${tabId}`);
             if(active) active.classList.remove('hidden');
 
+            if(tabId === 'announcements') {
+                const ta = document.getElementById('announcement-text');
+                if(ta) ta.value = globalAnnouncementText;
+            }
             if(tabId === 'assessment') {
                 renderClassesDropdown();
                 renderGradingTable();
@@ -939,6 +890,16 @@
             }
             if(tabId === 'gallery' || tabId === 'teacher-gallery') {
                 renderGalleryGrids();
+            }
+            if(tabId === 'teacher-announcements') {
+                const td = document.getElementById('teacher-announcement-display');
+                if(td) td.innerText = globalAnnouncementText;
+                if(globalAnnouncementImgUrl) {
+                    const imgPrev = document.getElementById('teacher-announcement-img-preview');
+                    if(imgPrev) imgPrev.src = globalAnnouncementImgUrl;
+                    const imgDisp = document.getElementById('teacher-announcement-image-display');
+                    if(imgDisp) imgDisp.classList.remove('hidden');
+                }
             }
         }
 
@@ -965,7 +926,6 @@
                 selectEnroll.innerHTML = classesData.map(c => `<option value="${c}">${c}</option>`).join('');
                 if(currentVal) selectEnroll.value = currentVal;
             }
-
             const selectGrading = document.getElementById('grading-class-filter');
             if(selectGrading) {
                 const currentGradVal = selectGrading.value;
@@ -973,7 +933,6 @@
                 if(currentGradVal) selectGrading.value = currentGradVal;
             }
         }
-
         function renderFeeClassDropdown() {
             const feeFilter = document.getElementById('fee-class-filter');
             if(feeFilter) {
@@ -982,7 +941,6 @@
                 if(currentFeeVal) feeFilter.value = currentFeeVal;
             }
         }
-
         function renderAttendanceClassDropdown() {
             const attFilter = document.getElementById('attendance-class-filter');
             if(attFilter) {
@@ -995,7 +953,6 @@
                 dateInput.valueAsDate = new Date();
             }
         }
-
         function renderHistoryClassDropdown() {
             const histFilter = document.getElementById('history-class-filter');
             if(histFilter) {
@@ -1004,14 +961,12 @@
                 if(currentHistVal) histFilter.value = currentHistVal;
             }
         }
-
         function renderDiscardDropdown() {
             const discardSelect = document.getElementById('discard-student-select');
             if(discardSelect) {
                 discardSelect.innerHTML = studentsData.map(s => `<option value="${s.id}">${s.name} (${s.class})</option>`).join('');
             }
         }
-
         function renderClassesList() {
             const container = document.getElementById('classes-list-container');
             if(container) {
@@ -1023,7 +978,6 @@
                 `).join('');
             }
         }
-
         function addClass() {
             const input = document.getElementById('new-class-input');
             const val = input.value.trim();
@@ -1034,25 +988,21 @@
             renderAll();
             alert(`Class "${val}" added successfully!`);
         }
-
         function removeClass(c) {
             classesData = classesData.filter(item => item !== c);
             renderAll();
         }
-
         function discardStudent() {
             const select = document.getElementById('discard-student-select');
             const studentId = parseInt(select.value);
             const student = studentsData.find(s => s.id === studentId);
             if(!student) return;
-
             if(confirm(`Are you sure you want to discard/remove ${student.name} from school records?`)) {
                 studentsData = studentsData.filter(s => s.id !== studentId);
                 renderAll();
                 alert(`Student ${student.name} has been successfully discarded from the school registry.`);
             }
         }
-
         function editTimetable() {
             const updated = prompt("Enter updated school timetable schedule:", timetableText);
             if(updated) {
@@ -1061,12 +1011,10 @@
                 alert('Timetable updated successfully!');
             }
         }
-
         function saveLMSResource() {
             const title = document.getElementById('lms-title').value.trim();
             const url = document.getElementById('lms-embed-url').value.trim();
             const desc = document.getElementById('lms-content-desc').value.trim();
-
             if(!title) { alert('Please enter a resource title.'); return; }
             lmsResources.push({ title, url: url || 'https://www.youtube.com/embed/dQw4w9WgXcQ', description: desc || 'No description provided.' });
             
@@ -1076,7 +1024,6 @@
             renderLMSResources();
             alert('LMS teaching resource published successfully!');
         }
-
         function renderLMSResources() {
             const grid = document.getElementById('lms-resources-grid');
             if(!grid) return;
@@ -1100,11 +1047,9 @@
             const name = document.getElementById('s-name').value;
             const className = document.getElementById('s-class').value;
             const gender = document.getElementById('s-gender').value;
-
             try {
                 await supabaseClient.from('students').insert([{ name: name, class: className, gender: gender }]);
             } catch(err) { console.log(err); }
-
             alert(`Student ${name} successfully enrolled to ${className} and saved to Supabase!`);
             document.getElementById('s-name').value = '';
             await fetchStudentsFromSupabase();
@@ -1117,12 +1062,10 @@
             const phone = document.getElementById('t-phone').value;
             const email = document.getElementById('t-email').value;
             const pass = document.getElementById('t-pass').value;
-
             try {
                 await supabaseClient.from('teachers').insert([{ full_name: name, phone_number: phone, email }]);
                 teachersList.push(name);
             } catch(err) { console.log(err); }
-
             alert(`Teacher account created successfully for ${name}!`);
             document.getElementById('t-name').value = '';
             document.getElementById('t-phone').value = '';
@@ -1136,29 +1079,23 @@
             const selectedClass = selectGrading ? selectGrading.value : classesData[0];
             const term = document.getElementById('grading-term-filter').value;
             const subject = document.getElementById('grading-subject-filter').value;
-
             const filteredStudents = studentsData.filter(s => s.class === selectedClass);
             const tbody = document.getElementById('grading-table-body');
-
             if(!tbody) return;
-
             if(filteredStudents.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="12" class="p-6 text-center text-slate-400 italic">No students registered in ${selectedClass || 'this class'} yet.</td></tr>`;
                 return;
             }
-
             tbody.innerHTML = filteredStudents.map((s) => {
                 const globalIdx = studentsData.findIndex(item => item.id === s.id);
                 if(!s.subjectsData[term]) s.subjectsData[term] = {};
                 if(!s.subjectsData[term][subject]) s.subjectsData[term][subject] = { indTest1: 0, groupTest: 0, indTest2: 0, homework: 0, exam: 0 };
-
                 const sub = s.subjectsData[term][subject];
                 const totalSba100 = (sub.indTest1 || 0) + (sub.groupTest || 0) + (sub.indTest2 || 0) + (sub.homework || 0);
                 const sba50 = (totalSba100 * 0.5).toFixed(1);
                 const exam50 = ((sub.exam || 0) * 0.5).toFixed(1);
                 const overallTotal = (parseFloat(sba50) + parseFloat(exam50)).toFixed(1);
                 const grade = computeGrade(overallTotal);
-
                 return `
                     <tr>
                         <td class="p-2.5 font-medium">${s.name}</td>
@@ -1209,7 +1146,6 @@
         function calculateGrades() {
             if(studentsData.length === 0) { alert('No students to grade.'); return; }
             const term = document.getElementById('grading-term-filter').value;
-
             studentsData.forEach(s => {
                 let studentOverallTotal = 0;
                 if(s.subjectsData[term]) {
@@ -1223,7 +1159,6 @@
                 }
                 s.overallTotal = studentOverallTotal;
             });
-
             studentsData.sort((a,b) => (b.overallTotal || 0) - (a.overallTotal || 0));
             studentsData.forEach((s, idx) => s.position = `${idx + 1}${getOrdinal(idx + 1)}`);
             renderGradingTable();
@@ -1253,7 +1188,6 @@
                 const total = sba50 + exam50;
                 content += `${idx + 1}\t${s.name}\t${sub.indTest1}\t${sub.groupTest}\t${sub.indTest2}\t${sub.homework}\t${totalSba}\t${sba50}\t${sub.exam}\t${exam50}\t${total}\t${computeGrade(total)}\n`;
             });
-
             const blob = new Blob([content], { type: format === 'pdf' ? 'application/pdf' : 'application/msword' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
@@ -1275,16 +1209,13 @@
             const histTerm = document.getElementById('history-term-filter').value || 'Term 1';
             const container = document.getElementById('history-container');
             const registeredTeacherName = teachersList.length > 0 ? teachersList[0] : (currentUser ? currentUser.name : 'Assigned Teacher');
-
             const filtered = studentsData.filter(s => s.class === histClass);
             if(filtered.length === 0) {
                 container.innerHTML = `<p class="text-slate-500 italic p-4">No student records found for ${histClass} (${histTerm}).</p>`;
                 return;
             }
-
             container.innerHTML = filtered.map((s, idx) => {
                 const totalFee = (parseFloat(s.tuitionFee) || 0) + (parseFloat(s.printingFee) || 0) + (parseFloat(s.ptaFee) || 0) + (parseFloat(s.otherFee) || 0) + (parseFloat(s.arrearsFee) || 0);
-
                 let subjectsHtml = standardSubjects.map(subName => {
                     const sub = (s.subjectsData[histTerm] && s.subjectsData[histTerm][subName]) ? s.subjectsData[histTerm][subName] : { indTest1: 0, groupTest: 0, indTest2: 0, homework: 0, exam: 0 };
                     const totalSba = (sub.indTest1 || 0) + (sub.groupTest || 0) + (sub.indTest2 || 0) + (sub.homework || 0);
@@ -1304,7 +1235,6 @@
                         </tr>
                     `;
                 }).join('');
-
                 let assessmentRowsHtml = standardSubjects.map((subName) => {
                     const sub = (s.subjectsData[histTerm] && s.subjectsData[histTerm][subName]) ? s.subjectsData[histTerm][subName] : { indTest1: 0, groupTest: 0, indTest2: 0, homework: 0, exam: 0 };
                     const totalSba = (sub.indTest1 || 0) + (sub.groupTest || 0) + (sub.indTest2 || 0) + (sub.homework || 0);
@@ -1327,7 +1257,6 @@
                         </tr>
                     `;
                 }).join('');
-
                 return `
                     <div class="space-y-6">
                         <!-- OFFICIAL ASSESSMENT SHEET WITH REGISTERED TEACHER NAME -->
@@ -1351,7 +1280,6 @@
                                     <p>NO. ON ROLL: <span class="underline">${filtered.length}</span></p>
                                 </div>
                             </div>
-
                             <table class="w-full text-xs border-collapse border border-black mt-2">
                                 <thead>
                                     <tr class="bg-slate-100 text-center font-bold text-[10px]">
@@ -1373,7 +1301,6 @@
                                 </tbody>
                             </table>
                         </div>
-
                         <!-- OFFICIAL REPORT CARD PAGE -->
                         <div class="report-card-page bg-white p-8 rounded-xl shadow-lg border-2 border-slate-300 max-w-3xl mx-auto space-y-4 text-slate-900 font-sans">
                             <div class="text-center space-y-1 border-b-2 border-black pb-3">
@@ -1382,7 +1309,6 @@
                                 <p class="text-xs font-bold text-slate-700">ASSORKO - ESSAMAN</p>
                                 <h3 class="font-extrabold text-sm tracking-widest pt-1 uppercase underline">END OF TERM REPORT CARD</h3>
                             </div>
-
                             <div class="text-xs space-y-1.5 font-bold">
                                 <div class="flex border-b border-black pb-1">
                                     <span class="w-32">NAME OF PUPIL:</span>
@@ -1401,7 +1327,6 @@
                                     <div class="flex flex-1"><span class="w-32">RE-OPENING DATE:</span><span class="underline"><input type="text" value="${s.reopeningDate}" onchange="updateStudentProp(${idx}, 'reopeningDate', this.value)" class="border-none w-32 bg-transparent text-xs font-bold"></span></div>
                                 </div>
                             </div>
-
                             <table class="w-full text-xs border-collapse border border-black mt-2">
                                 <thead>
                                     <tr class="bg-slate-100 text-center font-bold">
@@ -1418,7 +1343,6 @@
                                     ${subjectsHtml}
                                 </tbody>
                             </table>
-
                             <div class="text-xs space-y-1.5 pt-1 font-semibold">
                                 <div class="flex border-b border-black pb-1">
                                     <span class="w-36">ATTENDANCE MADE:</span>
@@ -1445,7 +1369,6 @@
                                     <input type="text" value="${s.headRemarks}" onchange="updateStudentProp(${idx}, 'headRemarks', this.value)" class="flex-1 border-b border-black bg-transparent">
                                 </div>
                             </div>
-
                             <table class="w-full text-xs border-collapse border border-black mt-3">
                                 <tbody>
                                     <tr>
@@ -1474,7 +1397,6 @@
                                     </tr>
                                 </tbody>
                             </table>
-
                             <div class="flex justify-end space-x-3 no-print pt-2">
                                 <button onclick="window.print()" class="px-4 py-2 bg-blue-900 text-white text-xs font-semibold rounded-lg">Print Report Card 🖨️</button>
                             </div>
@@ -1493,7 +1415,6 @@
             const selectedClass = feeFilter ? feeFilter.value : classesData[0];
             const filteredStudents = studentsData.filter(s => s.class === selectedClass);
             const tbody = document.getElementById('fees-table-body');
-
             if(!tbody) return;
             if(filteredStudents.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="8" class="p-6 text-center text-slate-400 italic">No fee records found for ${selectedClass}.</td></tr>`;
@@ -1502,7 +1423,6 @@
             tbody.innerHTML = filteredStudents.map((s) => {
                 const globalIdx = studentsData.findIndex(item => item.id === s.id);
                 const total = (parseFloat(s.tuitionFee) || 0) + (parseFloat(s.printingFee) || 0) + (parseFloat(s.ptaFee) || 0) + (parseFloat(s.otherFee) || 0) + (parseFloat(s.arrearsFee) || 0);
-
                 return `
                     <tr>
                         <td class="p-3 font-medium">${s.name}</td>
@@ -1529,7 +1449,6 @@
             const s = studentsData[index];
             const totalFee = (parseFloat(s.tuitionFee) || 0) + (parseFloat(s.printingFee) || 0) + (parseFloat(s.ptaFee) || 0) + (parseFloat(s.otherFee) || 0) + (parseFloat(s.arrearsFee) || 0);
             const content = document.getElementById('receipt-content');
-
             content.innerHTML = `
                 <div class="text-center space-y-1 border-b pb-4">
                     <h3 class="font-bold text-lg text-blue-950">${schoolProfile.name}</h3>
@@ -1555,13 +1474,11 @@
             const selectedClass = attFilter ? attFilter.value : classesData[0];
             const filteredStudents = studentsData.filter(s => s.class === selectedClass);
             const tbody = document.getElementById('attendance-table-body');
-
             if(!tbody) return;
             if(filteredStudents.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="7" class="p-6 text-center text-slate-400 italic">No students found in ${selectedClass}.</td></tr>`;
                 return;
             }
-
             tbody.innerHTML = filteredStudents.map((s) => `
                 <tr>
                     <td class="p-3 font-medium">${s.name}</td>
@@ -1600,7 +1517,6 @@
         function renderCharts() {
             const maleCount = studentsData.filter(s => s.gender === 'Male').length;
             const femaleCount = studentsData.filter(s => s.gender === 'Female').length;
-
             const ctxGender = document.getElementById('genderChart');
             if(ctxGender) {
                 if(window.myGenderChart) window.myGenderChart.destroy();
@@ -1612,9 +1528,7 @@
                     }
                 });
             }
-
             const classCounts = classesData.map(c => studentsData.filter(s => s.class === c).length);
-
             const ctxClass = document.getElementById('classChart');
             if(ctxClass) {
                 if(window.myClassChart) window.myClassChart.destroy();
@@ -1634,10 +1548,8 @@
                 alert('Please select at least one photo!');
                 return;
             }
-
             let loadedCount = 0;
             const totalFiles = fileInput.files.length;
-
             Array.from(fileInput.files).forEach(file => {
                 const reader = new FileReader();
                 reader.onload = async function(e) {
@@ -1651,78 +1563,76 @@
                 }
                 reader.readAsDataURL(file);
             });
-
             fileInput.value = '';
         }
 
         function renderGalleryGrids() {
             const grid = document.getElementById('gallery-grid');
             const tGrid = document.getElementById('teacher-gallery-grid');
-
             if(galleryPhotos.length === 0) {
                 const emptyMsg = `<p class="text-slate-400 italic text-sm">No photos uploaded yet.</p>`;
                 if(grid) grid.innerHTML = emptyMsg;
                 if(tGrid) tGrid.innerHTML = emptyMsg;
                 return;
             }
-
             const html = galleryPhotos.map((p) => `
                 <div class="bg-slate-50 rounded-xl p-3 text-center border space-y-2">
                     <img src="${p.url}" alt="School Activity" class="h-32 w-full object-cover rounded-lg shadow">
                     <a href="${p.url}" download="${p.name || 'school_photo.jpg'}" class="block text-xs bg-blue-900 text-white py-1.5 px-3 rounded-lg font-bold hover:bg-blue-800">Download JPG ⬇️</a>
                 </div>
             `).join('');
-
             if(grid) grid.innerHTML = html;
             if(tGrid) tGrid.innerHTML = html;
         }
 
         async function postAnnouncement() {
-            const text = document.getElementById('announcement-text').value;
+            const textInput = document.getElementById('announcement-text');
+            const text = textInput ? textInput.value.trim() : '';
             const photoInput = document.getElementById('announcement-photo-input');
             
             if(!text && (!photoInput.files || photoInput.files.length === 0)) {
                 alert('Please provide announcement text or a photo.');
                 return;
             }
-
+            
             if(text) {
                 globalAnnouncementText = text;
             }
             
-            if(photoInput.files && photoInput.files[0]) {
+            if(photoInput && photoInput.files && photoInput.files[0]) {
                 const reader = new FileReader();
                 reader.onload = async function(e) {
                     globalAnnouncementImgUrl = e.target.result;
                     galleryPhotos.push({ url: globalAnnouncementImgUrl, name: photoInput.files[0].name || 'announcement_photo.jpg' });
                     await saveCloudSettings();
                     renderGalleryGrids();
+                    
+                    const imgPrev = document.getElementById('teacher-announcement-img-preview');
+                    if(imgPrev) imgPrev.src = globalAnnouncementImgUrl;
+                    const imgDisp = document.getElementById('teacher-announcement-image-display');
+                    if(imgDisp) imgDisp.classList.remove('hidden');
 
-                    document.getElementById('teacher-announcement-img-preview').src = globalAnnouncementImgUrl;
-                    document.getElementById('teacher-announcement-image-display').classList.remove('hidden');
+                    alert('Announcement and photo published successfully to Supabase cloud!');
                 }
                 reader.readAsDataURL(photoInput.files[0]);
             } else {
                 await saveCloudSettings();
+                alert('Announcement updated successfully to Supabase cloud!');
             }
-
-            document.getElementById('teacher-announcement-display').innerText = globalAnnouncementText;
-            alert('Announcement and photos published and saved!');
-            document.getElementById('announcement-text').value = '';
-            photoInput.value = '';
+            
+            const teacherDisplay = document.getElementById('teacher-announcement-display');
+            if(teacherDisplay) teacherDisplay.innerText = globalAnnouncementText;
         }
 
         function saveSchoolProfile() {
             schoolProfile.name = document.getElementById('profile-school-name').value;
             schoolProfile.location = document.getElementById('profile-school-location').value;
             schoolProfile.motto = document.getElementById('profile-school-motto').value;
-
             document.getElementById('login-school-title').innerText = schoolProfile.name;
             document.getElementById('login-school-motto').innerText = schoolProfile.motto;
             document.getElementById('nav-school-name').innerText = schoolProfile.name;
             document.getElementById('nav-school-info').innerText = `${schoolProfile.location} • Default Tuition: GH₵ 250`;
             document.getElementById('dashboard-motto-display').innerText = `${schoolProfile.name}, ${schoolProfile.location} — ${schoolProfile.motto}.`;
-
             alert('School profile and branding updated successfully!');
         }
     </script>
