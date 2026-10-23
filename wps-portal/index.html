@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+l<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -274,13 +274,22 @@
                     <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-4">
                         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                             <div>
-                                <h2 class="text-xl font-bold text-slate-900">Student History & Full Class Assessment Sheets</h2>
-                                <p class="text-xs text-slate-500">View official master class assessment sheets (listing all students together like the official school form) and individual end-of-term report cards.</p>
+                                <h2 class="text-xl font-bold text-slate-900">Student History & Full Class Assessment Sheets (Year Till Date Archive)</h2>
+                                <p class="text-xs text-slate-500">View official master class assessment sheets and individual end-of-term report cards archived by year and term.</p>
                             </div>
                             <button onclick="window.print()" class="px-4 py-2 bg-slate-800 text-white text-xs font-semibold rounded-lg hover:bg-slate-700 no-print">Print All Records</button>
                         </div>
-                        <!-- Class & Term Selector for History -->
+                        <!-- Year, Class & Term Selector for History -->
                         <div class="flex flex-wrap gap-4 pt-2 border-t items-center">
+                            <div>
+                                <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Choose Academic Year</label>
+                                <select id="history-year-filter" onchange="renderHistoryView()" class="p-2 border rounded-xl text-sm bg-slate-50 font-medium w-40">
+                                    <option value="2026" selected>2026</option>
+                                    <option value="2025">2025</option>
+                                    <option value="2024">2024</option>
+                                    <option value="2023">2023</option>
+                                </select>
+                            </div>
                             <div>
                                 <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Choose Class</label>
                                 <select id="history-class-filter" onchange="renderHistoryView()" class="p-2 border rounded-xl text-sm bg-slate-50 font-medium w-48"></select>
@@ -389,7 +398,7 @@
                             <label class="block text-xs font-bold uppercase text-slate-600">Quick-Select Common Portal & Teaching Questions:</label>
                             <div class="flex flex-wrap gap-2">
                                 <button onclick="setAiPrompt('How do I enter and compute SBA and exam scores for my class?')" class="px-3 py-1.5 bg-slate-100 hover:bg-blue-50 hover:text-blue-900 border rounded-xl text-xs font-semibold transition">📝 How to Enter SBA & Grades</button>
-                                <button onclick="setAiPrompt('How do I mark and submit the weekly attendance register?')" class="px-3 py-1.5 bg-slate-100 hover:bg-blue-50 hover:text-blue-900 border rounded-xl text-xs font-semibold transition">📅 How to Mark Attendance</button>
+                                <button onclick="setAiPrompt('How do I mark attendance manually using out of total?')" class="px-3 py-1.5 bg-slate-100 hover:bg-blue-50 hover:text-blue-900 border rounded-xl text-xs font-semibold transition">📅 How to Enter Attendance (X out of Y)</button>
                                 <button onclick="setAiPrompt('How do I view school announcements and birthday notices?')" class="px-3 py-1.5 bg-slate-100 hover:bg-blue-50 hover:text-blue-900 border rounded-xl text-xs font-semibold transition">📢 Where to See Announcements</button>
                                 <button onclick="setAiPrompt('How do I help a student who is struggling with mathematics word problems and fractions?')" class="px-3 py-1.5 bg-slate-100 hover:bg-blue-50 hover:text-blue-900 border rounded-xl text-xs font-semibold transition">📐 Student Math Support</button>
                             </div>
@@ -416,17 +425,13 @@
                     <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-4">
                         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                             <div>
-                                <h2 class="text-xl font-bold text-slate-900">Weekly Attendance Register (Mon–Fri)</h2>
-                                <p class="text-xs text-slate-500">Select date and class to mark presence and absence for weekly tracking.</p>
+                                <h2 class="text-xl font-bold text-slate-900">Attendance Register (Direct "X out of Y" Entry)</h2>
+                                <p class="text-xs text-slate-500">Teachers can mark attendance manually on their physical register sheets, then enter each student's attendance as <strong class="text-blue-900">Days Present out of Total Days</strong> below. This updates report cards instantly.</p>
                             </div>
-                            <div class="flex gap-3">
-                                <div>
-                                    <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Select Date</label>
-                                    <input type="date" id="attendance-date" class="p-2 border rounded-xl text-sm bg-slate-50 font-medium">
-                                </div>
+                            <div class="flex gap-3 items-center">
                                 <div>
                                     <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Select Class</label>
-                                    <select id="attendance-class-filter" onchange="renderAttendanceRegister()" class="p-2.5 border rounded-xl text-sm bg-slate-50 font-medium w-40"></select>
+                                    <select id="attendance-class-filter" onchange="renderAttendanceRegister()" class="p-2.5 border rounded-xl text-sm bg-slate-50 font-medium w-48"></select>
                                 </div>
                             </div>
                         </div>
@@ -436,20 +441,18 @@
                                     <tr>
                                         <th class="p-3">Student Name</th>
                                         <th class="p-3">Class</th>
-                                        <th class="p-3">Monday</th>
-                                        <th class="p-3">Tuesday</th>
-                                        <th class="p-3">Wednesday</th>
-                                        <th class="p-3">Thursday</th>
-                                        <th class="p-3">Friday</th>
+                                        <th class="p-3 text-center">Days Present (e.g. 65)</th>
+                                        <th class="p-3 text-center">Out Of Total Days (e.g. 70)</th>
+                                        <th class="p-3 text-center">Preview Attendance Ratio</th>
                                     </tr>
                                 </thead>
                                 <tbody id="attendance-table-body" class="divide-y divide-slate-100 text-sm">
-                                    <tr><td colspan="7" class="p-6 text-center text-slate-400 italic">Select a class to mark attendance.</td></tr>
+                                    <tr><td colspan="5" class="p-6 text-center text-slate-400 italic">Select a class to manage attendance.</td></tr>
                                 </tbody>
                             </table>
                         </div>
-                        <div class="flex flex-wrap justify-between items-center gap-3 pt-2">
-                            <button onclick="submitWeeklyAttendance()" class="px-5 py-2.5 bg-blue-900 text-white font-bold rounded-xl text-xs">Submit Weekly Attendance</button>
+                        <div class="flex flex-wrap justify-between items-center gap-3 pt-4 border-t">
+                            <button onclick="submitAttendanceRecord()" class="px-6 py-3 bg-blue-900 text-white font-bold rounded-xl text-xs hover:bg-blue-800 shadow transition">Save Attendance to Student Records & Reports ➔</button>
                             <div class="flex gap-2">
                                 <button onclick="exportAttendance('pdf')" class="px-4 py-2 bg-slate-800 text-white text-xs font-semibold rounded-lg">Download Attendance PDF 📄</button>
                                 <button onclick="exportAttendance('doc')" class="px-4 py-2 bg-blue-800 text-white text-xs font-semibold rounded-lg">Download Attendance Worksheet 📝</button>
@@ -974,12 +977,13 @@
                         3. Type the test and exam scores.<br>
                         4. Click <strong>"Compute Totals & Grades"</strong> and then <strong>"Finalize & Save Assessment Sheet"</strong>.
                     `;
-                } else if(qLower.includes('attendance') || qLower.includes('register')) {
+                } else if(qLower.includes('attendance') || qLower.includes('register') || qLower.includes('out of')) {
                     answer = `
-                        <strong>📅 Portal Guide: How to Mark Attendance</strong><br>
+                        <strong>📅 Portal Guide: How to Enter Attendance Manually</strong><br>
                         1. Click on <strong>"Attendance Register"</strong>.<br>
-                        2. Choose your class and date.<br>
-                        3. Mark students as Present or Absent, then click <strong>"Submit Weekly Attendance"</strong>.
+                        2. Choose your class.<br>
+                        3. Enter each student's days present and total school days (e.g. 65 out of 70).<br>
+                        4. Click <strong>"Save Attendance to Student Records & Reports"</strong> to sync it onto report cards instantly.
                     `;
                 } else if(qLower.includes('announcement')) {
                     answer = `
@@ -1032,10 +1036,6 @@
                 const currentAttVal = attFilter.value;
                 attFilter.innerHTML = classesData.map(c => `<option value="${c}">${c}</option>`).join('');
                 if(currentAttVal) attFilter.value = currentAttVal;
-            }
-            const dateInput = document.getElementById('attendance-date');
-            if(dateInput && !dateInput.value) {
-                dateInput.valueAsDate = new Date();
             }
         }
         function renderHistoryClassDropdown() {
@@ -1303,6 +1303,7 @@
         }
 
         function renderHistoryView() {
+            const histYear = document.getElementById('history-year-filter').value || '2026';
             const histClass = document.getElementById('history-class-filter').value || classesData[0];
             const histTerm = document.getElementById('history-term-filter').value || 'Term 1';
             const container = document.getElementById('history-container');
@@ -1310,7 +1311,7 @@
             const filtered = studentsData.filter(s => s.class === histClass);
             
             if(filtered.length === 0) {
-                container.innerHTML = `<p class="text-slate-500 italic p-4">No student records found for ${histClass} (${histTerm}).</p>`;
+                container.innerHTML = `<p class="text-slate-500 italic p-4">No student records found for ${histClass} (${histYear} - ${histTerm}).</p>`;
                 return;
             }
 
@@ -1352,7 +1353,7 @@
                                 <p>TERM: <span class="underline uppercase">${histTerm}</span></p>
                             </div>
                             <div>
-                                <p>YEAR: <span class="underline">2026</span></p>
+                                <p>YEAR: <span class="underline">${histYear}</span></p>
                                 <p>SUBJECT: <span class="underline uppercase text-blue-900">${subject}</span></p>
                             </div>
                             <div>
@@ -1419,7 +1420,7 @@
                             <h2 class="font-black text-xl tracking-wide">${schoolProfile.name.toUpperCase()}</h2>
                             <p class="text-xs font-bold text-slate-700">P. O. BOX 18 16, SHAMA</p>
                             <p class="text-xs font-bold text-slate-700">ASSORKO - ESSAMAN</p>
-                            <h3 class="font-extrabold text-sm tracking-widest pt-1 uppercase underline">END OF TERM REPORT CARD</h3>
+                            <h3 class="font-extrabold text-sm tracking-widest pt-1 uppercase underline">END OF TERM REPORT CARD (${histYear})</h3>
                         </div>
                         <div class="text-xs space-y-1.5 font-bold">
                             <div class="flex border-b border-black pb-1">
@@ -1431,7 +1432,7 @@
                                 <div class="flex flex-1"><span class="w-28">NO. ON ROLL:</span><span class="underline">${filtered.length}</span></div>
                             </div>
                             <div class="flex justify-between border-b border-black pb-1">
-                                <div class="flex flex-1"><span class="w-16">YEAR:</span><span class="underline">2026</span></div>
+                                <div class="flex flex-1"><span class="w-16">YEAR:</span><span class="underline">${histYear}</span></div>
                                 <div class="flex flex-1"><span class="w-28">TERM:</span><span class="underline uppercase">${histTerm}</span></div>
                             </div>
                             <div class="flex justify-between border-b border-black pb-1">
@@ -1458,9 +1459,9 @@
                         <div class="text-xs space-y-1.5 pt-1 font-semibold">
                             <div class="flex border-b border-black pb-1">
                                 <span class="w-36">ATTENDANCE MADE:</span>
-                                <input type="text" value="${s.attendanceMade}" onchange="updateStudentProp(${studentsData.findIndex(item => item.id === s.id)}, 'attendanceMade', this.value)" class="w-12 border-b border-black text-center bg-transparent">
+                                <span class="font-bold text-blue-900 underline">${s.attendanceMade || 65}</span>
                                 <span class="mx-4">OUT OF TOTAL OF:</span>
-                                <input type="text" value="${s.attendanceTotal}" onchange="updateStudentProp(${studentsData.findIndex(item => item.id === s.id)}, 'attendanceTotal', this.value)" class="w-12 border-b border-black text-center bg-transparent">
+                                <span class="font-bold text-blue-900 underline">${s.attendanceTotal || 70}</span>
                                 <span class="mx-4">PROMOTED TO:</span>
                                 <input type="text" value="${s.promotedTo}" onchange="updateStudentProp(${studentsData.findIndex(item => item.id === s.id)}, 'promotedTo', this.value)" class="flex-1 border-b border-black bg-transparent">
                             </div>
@@ -1523,7 +1524,7 @@
                 `;
             }).join('');
 
-            container.innerHTML = `<div class="mb-8"><h3 class="font-bold text-lg text-blue-950 mb-3 border-b pb-2">📋 Master Class Assessment Sheets (${histClass} - ${histTerm})</h3>${masterAssessmentSheetsHtml}</div><div><h3 class="font-bold text-lg text-blue-950 mb-3 border-b pb-2">🎓 Individual Report Cards & Billing Accounts</h3>${individualReportCardsHtml}</div>`;
+            container.innerHTML = `<div class="mb-8"><h3 class="font-bold text-lg text-blue-950 mb-3 border-b pb-2">📋 Master Class Assessment Sheets (${histClass} - ${histYear} ${histTerm})</h3>${masterAssessmentSheetsHtml}</div><div><h3 class="font-bold text-lg text-blue-950 mb-3 border-b pb-2">🎓 Individual Report Cards & Billing Accounts</h3>${individualReportCardsHtml}</div>`;
         }
 
         function updateStudentProp(index, field, val) {
@@ -1607,42 +1608,45 @@
             const tbody = document.getElementById('attendance-table-body');
             if(!tbody) return;
             if(filteredStudents.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="7" class="p-6 text-center text-slate-400 italic">No students found in ${selectedClass}.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-slate-400 italic">No students found in ${selectedClass}.</td></tr>`;
                 return;
             }
-            tbody.innerHTML = filteredStudents.map((s) => `
-                <tr>
-                    <td class="p-3 font-medium">${s.name}</td>
-                    <td class="p-3">${s.class}</td>
-                    <td class="p-3"><select class="p-1 border rounded text-xs"><option>Present</option><option>Absent</option></select></td>
-                    <td class="p-3"><select class="p-1 border rounded text-xs"><option>Present</option><option>Absent</option></select></td>
-                    <td class="p-3"><select class="p-1 border rounded text-xs"><option>Present</option><option>Absent</option></select></td>
-                    <td class="p-3"><select class="p-1 border rounded text-xs"><option>Present</option><option>Absent</option></select></td>
-                    <td class="p-3"><select class="p-1 border rounded text-xs"><option>Present</option><option>Absent</option></select></td>
-                </tr>
-            `).join('');
+            tbody.innerHTML = filteredStudents.map((s) => {
+                const globalIdx = studentsData.findIndex(item => item.id === s.id);
+                return `
+                    <tr>
+                        <td class="p-3 font-medium">${s.name}</td>
+                        <td class="p-3">${s.class}</td>
+                        <td class="p-3 text-center"><input type="number" value="${s.attendanceMade || 65}" onchange="updateAttendanceProp(${globalIdx}, 'attendanceMade', this.value)" class="w-20 p-1.5 border rounded text-center font-bold text-blue-900 bg-slate-50"></td>
+                        <td class="p-3 text-center"><input type="number" value="${s.attendanceTotal || 70}" onchange="updateAttendanceProp(${globalIdx}, 'attendanceTotal', this.value)" class="w-20 p-1.5 border rounded text-center font-bold text-slate-800 bg-slate-50"></td>
+                        <td class="p-3 text-center font-bold text-amber-900 bg-amber-50">${s.attendanceMade || 65} out of ${s.attendanceTotal || 70}</td>
+                    </tr>
+                `;
+            }).join('');
         }
 
-        function submitWeeklyAttendance() {
-            const date = document.getElementById('attendance-date').value;
-            const className = document.getElementById('attendance-class-filter').value;
-            alert(`Weekly attendance for ${className} (Week ending ${date}) successfully submitted!`);
+        function updateAttendanceProp(index, field, val) {
+            studentsData[index][field] = parseInt(val) || 0;
+            renderAttendanceRegister();
+        }
+
+        function submitAttendanceRecord() {
+            alert('Attendance records successfully saved and synced to student report cards!');
         }
 
         function exportAttendance(format) {
             const className = document.getElementById('attendance-class-filter').value;
-            const date = document.getElementById('attendance-date').value;
-            let content = `${schoolProfile.name.toUpperCase()}\nWEEKLY ATTENDANCE REGISTER\nClass: ${className} | Week Date: ${date}\n\nStudent Name\tMon\tTue\tWed\tThu\tFri\n`;
+            let content = `${schoolProfile.name.toUpperCase()}\nATTENDANCE REGISTER SUMMARY\nClass: ${className}\n\nStudent Name\tDays Present\tTotal Days\tRatio\n`;
             studentsData.filter(s => s.class === className).forEach(s => {
-                content += `${s.name}\tPresent\tPresent\tPresent\tPresent\tPresent\n`;
+                content += `${s.name}\t${s.attendanceMade || 65}\t${s.attendanceTotal || 70}\t${s.attendanceMade || 65} out of ${s.attendanceTotal || 70}\n`;
             });
             const blob = new Blob([content], { type: format === 'pdf' ? 'application/pdf' : 'application/msword' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `${className}_Attendance_${date}.${format === 'pdf' ? 'pdf' : 'doc'}`;
+            a.download = `${className}_Attendance_Summary.${format === 'pdf' ? 'pdf' : 'doc'}`;
             a.click();
-            alert(`Attendance register downloaded as ${format.toUpperCase()}!`);
+            alert(`Attendance summary downloaded as ${format.toUpperCase()}!`);
         }
 
         function renderCharts() {
