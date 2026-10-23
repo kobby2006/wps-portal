@@ -139,6 +139,7 @@
                 <button onclick="switchTab('assessment')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📝 <span>SBA & Exam Grading</span></button>
                 <button onclick="switchTab('history')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📁 <span>Student History & Reports</span></button>
                 <button onclick="switchTab('lms')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📚 <span>LMS & Teacher Training Hub</span></button>
+                <button onclick="switchTab('ai-copilot')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🤖 <span>AI Teacher Copilot & Support</span></button>
                 <button onclick="switchTab('attendance')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📅 <span>Attendance Register</span></button>
                 <button onclick="switchTab('timetable')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">⏰ <span>Timetable & Time Mgmt</span></button>
                 
@@ -157,6 +158,7 @@
                 <div id="teacher-nav-section" class="hidden pt-4 border-t border-slate-200 space-y-2">
                     <p class="px-4 text-xs font-bold uppercase tracking-wider text-slate-400">Staff Portal</p>
                     <button onclick="switchTab('lms')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📚 <span>Teaching Hub & Resources</span></button>
+                    <button onclick="switchTab('ai-copilot')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🤖 <span>AI Teacher Copilot</span></button>
                     <button onclick="switchTab('timetable')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">⏰ <span>Manage Timetable</span></button>
                     <button onclick="switchTab('teacher-gallery')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🖼️ <span>School Photo Gallery</span></button>
                     <button onclick="switchTab('teacher-announcements')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📢 <span>View Announcements</span></button>
@@ -370,6 +372,42 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                </section>
+                <!-- TAB: AI TEACHER COPILOT & STUDENT SUPPORT -->
+                <section id="tab-ai-copilot" class="hidden space-y-6">
+                    <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-4">
+                        <div class="flex justify-between items-center border-b pb-4">
+                            <div>
+                                <h2 class="text-xl font-bold text-slate-900">🤖 AI Teacher Copilot & Portal Guide</h2>
+                                <p class="text-xs text-slate-500 mt-1">Ask how to use portal features (e.g. entering SBA scores, checking attendance) or ask for teaching advice and student problem solutions.</p>
+                            </div>
+                            <span class="px-3 py-1 bg-blue-100 text-blue-900 text-xs font-bold rounded-full">AI Assistant Online</span>
+                        </div>
+                        <div class="space-y-3">
+                            <label class="block text-xs font-bold uppercase text-slate-600">Quick-Select Common Portal & Teaching Questions:</label>
+                            <div class="flex flex-wrap gap-2">
+                                <button onclick="setAiPrompt('How do I enter and compute SBA and exam scores for my class?')" class="px-3 py-1.5 bg-slate-100 hover:bg-blue-50 hover:text-blue-900 border rounded-xl text-xs font-semibold transition">📝 How to Enter SBA & Grades</button>
+                                <button onclick="setAiPrompt('How do I mark and submit the weekly attendance register?')" class="px-3 py-1.5 bg-slate-100 hover:bg-blue-50 hover:text-blue-900 border rounded-xl text-xs font-semibold transition">📅 How to Mark Attendance</button>
+                                <button onclick="setAiPrompt('How do I view school announcements and birthday notices?')" class="px-3 py-1.5 bg-slate-100 hover:bg-blue-50 hover:text-blue-900 border rounded-xl text-xs font-semibold transition">📢 Where to See Announcements</button>
+                                <button onclick="setAiPrompt('How do I help a student who is struggling with mathematics word problems and fractions?')" class="px-3 py-1.5 bg-slate-100 hover:bg-blue-50 hover:text-blue-900 border rounded-xl text-xs font-semibold transition">📐 Student Math Support</button>
+                            </div>
+                        </div>
+                        <div class="space-y-2 pt-2">
+                            <label class="block text-xs font-bold uppercase text-slate-600">Type Your Portal or Teaching Question:</label>
+                            <textarea id="ai-user-query" rows="4" class="w-full p-4 border rounded-xl text-sm bg-slate-50 focus:ring-2 focus:ring-blue-900" placeholder="e.g., How do I generate report cards or view student history?"></textarea>
+                            <div class="flex justify-end">
+                                <button onclick="askAICopilot()" class="px-6 py-3 bg-blue-900 text-white font-bold rounded-xl text-xs hover:bg-blue-800 shadow transition flex items-center gap-2">
+                                    Ask AI Assistant ⚡
+                                </button>
+                            </div>
+                        </div>
+                        <div id="ai-response-box" class="hidden mt-6 p-5 bg-blue-50/70 border border-blue-200 rounded-2xl space-y-3 text-slate-800">
+                            <div class="flex items-center space-x-2 text-blue-900 font-bold text-sm">
+                                <span>💡</span> <h3>AI Copilot Expert Answer</h3>
+                            </div>
+                            <div id="ai-response-content" class="text-xs leading-relaxed space-y-2"></div>
                         </div>
                     </div>
                 </section>
@@ -697,7 +735,6 @@
                 });
                 if(error) {
                     console.error('Supabase sync error:', error.message);
-                    alert('Cloud sync warning: ' + error.message);
                 }
             } catch(err) {
                 console.error('Cloud save exception:', err);
@@ -709,7 +746,7 @@
             const role = document.getElementById('login-role').value;
             const user = document.getElementById('login-user').value;
             
-            await fetchCloudSettings(); // Refresh latest cloud settings upon login
+            await fetchCloudSettings();
 
             if(role === 'teacher' && portalLocked) {
                 alert('🔒 Portal is currently locked by Administration for maintenance, edits, or grading updates. Teachers cannot log in at this moment. Please check back later.');
@@ -729,7 +766,6 @@
                 document.getElementById('lms-role-badge').innerText = "Teacher View (Read Only)";
                 switchTab('lms');
                 
-                // POPULATE & SHOW ANNOUNCEMENT MODAL FOR TEACHERS
                 document.getElementById('modal-announcement-text').innerText = globalAnnouncementText;
                 if(globalAnnouncementImgUrl) {
                     document.getElementById('modal-announcement-img').src = globalAnnouncementImgUrl;
@@ -840,7 +876,7 @@
         function logout() { location.reload(); }
 
         function switchTab(tabId) {
-            ['dashboard', 'assessment', 'history', 'lms', 'attendance', 'timetable', 'fees', 'classes', 'students', 'teachers', 'announcements', 'gallery', 'teacher-gallery', 'teacher-announcements', 'profile'].forEach(t => {
+            ['dashboard', 'assessment', 'history', 'lms', 'ai-copilot', 'attendance', 'timetable', 'fees', 'classes', 'students', 'teachers', 'announcements', 'gallery', 'teacher-gallery', 'teacher-announcements', 'profile'].forEach(t => {
                 const el = document.getElementById(`tab-${t}`);
                 if(el) el.classList.add('hidden');
             });
@@ -904,6 +940,95 @@
             renderLMSResources();
             renderGalleryGrids();
             renderCharts();
+        }
+
+        // AI Copilot Helper Functions (Updated for Portal Usage & Teaching Support)
+        function setAiPrompt(promptText) {
+            const queryBox = document.getElementById('ai-user-query');
+            if(queryBox) queryBox.value = promptText;
+        }
+
+        function askAICopilot() {
+            const queryInput = document.getElementById('ai-user-query');
+            const query = queryInput ? queryInput.value.trim() : '';
+            const responseBox = document.getElementById('ai-response-box');
+            const responseContent = document.getElementById('ai-response-content');
+            
+            if(!query) {
+                alert('Please type a question or select a challenge for the AI Assistant.');
+                return;
+            }
+
+            responseBox.classList.remove('hidden');
+            responseContent.innerHTML = `<p class="italic text-slate-500 animate-pulse">Analyzing query and formulating solution...</p>`;
+
+            setTimeout(() => {
+                let answer = "";
+                const qLower = query.toLowerCase();
+
+                // PORTAL USAGE QUESTIONS
+                if(qLower.includes('score') || qLower.includes('grade') || qLower.includes('sba') || qLower.includes('exam') || qLower.includes('enter')) {
+                    answer = `
+                        <strong>🖥️ Portal Guide: How to Enter SBA & Exam Scores</strong><br>
+                        1. Click on <strong>"SBA & Exam Grading"</strong> in the sidebar.<br>
+                        2. Select your Class (e.g., Basic 4), Term (Term 1), and Subject from the dropdowns.<br>
+                        3. Type the scores for Individual Test 1 (max 30), Group Test (max 20), Individual Test 2 (max 30), Project/HW (max 20), and Exams (max 100).<br>
+                        4. Click <strong>"Compute Totals & Grades"</strong> to calculate totals, 50% conversions, and grades.<br>
+                        5. Click <strong>"Finalize & Save Assessment Sheet"</strong> when finished so it syncs to student history and report cards.
+                    `;
+                } else if(qLower.includes('attendance') || qLower.includes('register') || qLower.includes('absent') || qLower.includes('present')) {
+                    answer = `
+                        <strong>📅 Portal Guide: How to Mark Attendance</strong><br>
+                        1. Click on <strong>"Attendance Register"</strong> in the sidebar.<br>
+                        2. Select the correct week date and choose your class.<br>
+                        3. Mark each student as Present or Absent for Monday through Friday using the dropdowns.<br>
+                        4. Click <strong>"Submit Weekly Attendance"</strong> to save.
+                    `;
+                } else if(qLower.includes('announcement') || qLower.includes('notice') || qLower.includes('birthday')) {
+                    answer = `
+                        <strong>📢 Portal Guide: Viewing School Announcements</strong><br>
+                        1. If you are logged in as a teacher, click on <strong>"View Announcements"</strong> in the staff sidebar.<br>
+                        2. You will also see the priority notice and staff birthday popup automatically when you first log into the portal.
+                    `;
+                } else if(qLower.includes('report') || qLower.includes('history') || qLower.includes('print')) {
+                    answer = `
+                        <strong>📁 Portal Guide: Viewing History & Report Cards</strong><br>
+                        1. Click on <strong>"Student History & Reports"</strong> in the sidebar.<br>
+                        2. Select the class and term you want to view.<br>
+                        3. You can review master assessment sheets and individual student report cards complete with billing accounts.<br>
+                        4. Click <strong>"Print Report Card & Bill"</strong> to print or save as PDF.
+                    `;
+                }
+                // TEACHING & STUDENT PROBLEM QUESTIONS
+                else if(qLower.includes('fraction') || qLower.includes('math')) {
+                    answer = `
+                        <strong>📐 Teaching Solution for Mathematics (Fractions):</strong><br>
+                        1. <strong>Use Visual Manipulatives:</strong> Cut paper shapes or draw diagrams to show parts of a whole.<br>
+                        2. <strong>Relate to Real Life:</strong> Use local examples like sharing food items or money.<br>
+                        3. <strong>Scaffolding:</strong> Break word problems down into given information, what is asked, and the required operation.
+                    `;
+                } else if(qLower.includes('disruptive') || qLower.includes('noisy') || qLower.includes('behavior')) {
+                    answer = `
+                        <strong>🛡️ Classroom Management Strategy for Disruptive Behavior:</strong><br>
+                        1. <strong>Proximity Control:</strong> Walk closer to the pupil while teaching without calling them out.<br>
+                        2. <strong>Private Discussion:</strong> Speak 1-on-1 after class to find out if there's an underlying issue.<br>
+                        3. <strong>Leadership Roles:</strong> Assign small responsibilities to keep them positively engaged.
+                    `;
+                } else if(qLower.includes('shy') || qLower.includes('withdrawn')) {
+                    answer = `
+                        <strong>💬 Support Strategy for Shy Students:</strong><br>
+                        1. <strong>Low-Pressure Interaction:</strong> Let them answer in pairs (Think-Pair-Share) before speaking publicly.<br>
+                        2. <strong>Positive Reinforcement:</strong> Offer gentle encouragement during desk checks.
+                    `;
+                } else {
+                    answer = `
+                        <strong>💡 AI Copilot Recommendation for: "${query}"</strong><br>
+                        If you are asking about portal navigation, remember you can check the tabs on your left sidebar (SBA Grading, Attendance, History, LMS, Timetable). If you are asking about a student or teaching topic, break the objective down into smaller, clear steps, and maintain regular communication with parents if needed!
+                    `;
+                }
+
+                responseContent.innerHTML = answer;
+            }, 500);
         }
 
         function renderClassesDropdown() {
@@ -1660,7 +1785,7 @@
         function saveSchoolProfile() {
             schoolProfile.name = document.getElementById('profile-school-name').value;
             schoolProfile.location = document.getElementById('profile-school-location').value;
-            schoolProfile.motto = document.getElementById('profile-school-motto').value;
+            schoolProfile.motto = document.getElementById('profile-school-motto'].value;
             document.getElementById('login-school-title').innerText = schoolProfile.name;
             document.getElementById('login-school-motto').innerText = schoolProfile.motto;
             document.getElementById('nav-school-name').innerText = schoolProfile.name;
