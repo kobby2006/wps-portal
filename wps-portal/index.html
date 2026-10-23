@@ -942,7 +942,7 @@
             renderCharts();
         }
 
-        // AI Copilot Helper Functions (Updated for Portal Usage & Teaching Support)
+        // AI Copilot Helper Functions
         function setAiPrompt(promptText) {
             const queryBox = document.getElementById('ai-user-query');
             if(queryBox) queryBox.value = promptText;
@@ -966,64 +966,37 @@
                 let answer = "";
                 const qLower = query.toLowerCase();
 
-                // PORTAL USAGE QUESTIONS
                 if(qLower.includes('score') || qLower.includes('grade') || qLower.includes('sba') || qLower.includes('exam') || qLower.includes('enter')) {
                     answer = `
                         <strong>🖥️ Portal Guide: How to Enter SBA & Exam Scores</strong><br>
                         1. Click on <strong>"SBA & Exam Grading"</strong> in the sidebar.<br>
-                        2. Select your Class (e.g., Basic 4), Term (Term 1), and Subject from the dropdowns.<br>
-                        3. Type the scores for Individual Test 1 (max 30), Group Test (max 20), Individual Test 2 (max 30), Project/HW (max 20), and Exams (max 100).<br>
-                        4. Click <strong>"Compute Totals & Grades"</strong> to calculate totals, 50% conversions, and grades.<br>
-                        5. Click <strong>"Finalize & Save Assessment Sheet"</strong> when finished so it syncs to student history and report cards.
+                        2. Select your Class, Term, and Subject.<br>
+                        3. Type the test and exam scores.<br>
+                        4. Click <strong>"Compute Totals & Grades"</strong> and then <strong>"Finalize & Save Assessment Sheet"</strong>.
                     `;
-                } else if(qLower.includes('attendance') || qLower.includes('register') || qLower.includes('absent') || qLower.includes('present')) {
+                } else if(qLower.includes('attendance') || qLower.includes('register')) {
                     answer = `
                         <strong>📅 Portal Guide: How to Mark Attendance</strong><br>
-                        1. Click on <strong>"Attendance Register"</strong> in the sidebar.<br>
-                        2. Select the correct week date and choose your class.<br>
-                        3. Mark each student as Present or Absent for Monday through Friday using the dropdowns.<br>
-                        4. Click <strong>"Submit Weekly Attendance"</strong> to save.
+                        1. Click on <strong>"Attendance Register"</strong>.<br>
+                        2. Choose your class and date.<br>
+                        3. Mark students as Present or Absent, then click <strong>"Submit Weekly Attendance"</strong>.
                     `;
-                } else if(qLower.includes('announcement') || qLower.includes('notice') || qLower.includes('birthday')) {
+                } else if(qLower.includes('announcement')) {
                     answer = `
-                        <strong>📢 Portal Guide: Viewing School Announcements</strong><br>
-                        1. If you are logged in as a teacher, click on <strong>"View Announcements"</strong> in the staff sidebar.<br>
-                        2. You will also see the priority notice and staff birthday popup automatically when you first log into the portal.
+                        <strong>📢 Portal Guide: Viewing Announcements</strong><br>
+                        Check the <strong>"View Announcements"</strong> tab or review the popup notice when logging in.
                     `;
-                } else if(qLower.includes('report') || qLower.includes('history') || qLower.includes('print')) {
-                    answer = `
-                        <strong>📁 Portal Guide: Viewing History & Report Cards</strong><br>
-                        1. Click on <strong>"Student History & Reports"</strong> in the sidebar.<br>
-                        2. Select the class and term you want to view.<br>
-                        3. You can review master assessment sheets and individual student report cards complete with billing accounts.<br>
-                        4. Click <strong>"Print Report Card & Bill"</strong> to print or save as PDF.
-                    `;
-                }
-                // TEACHING & STUDENT PROBLEM QUESTIONS
-                else if(qLower.includes('fraction') || qLower.includes('math')) {
+                } else if(qLower.includes('fraction') || qLower.includes('math')) {
                     answer = `
                         <strong>📐 Teaching Solution for Mathematics (Fractions):</strong><br>
-                        1. <strong>Use Visual Manipulatives:</strong> Cut paper shapes or draw diagrams to show parts of a whole.<br>
-                        2. <strong>Relate to Real Life:</strong> Use local examples like sharing food items or money.<br>
-                        3. <strong>Scaffolding:</strong> Break word problems down into given information, what is asked, and the required operation.
-                    `;
-                } else if(qLower.includes('disruptive') || qLower.includes('noisy') || qLower.includes('behavior')) {
-                    answer = `
-                        <strong>🛡️ Classroom Management Strategy for Disruptive Behavior:</strong><br>
-                        1. <strong>Proximity Control:</strong> Walk closer to the pupil while teaching without calling them out.<br>
-                        2. <strong>Private Discussion:</strong> Speak 1-on-1 after class to find out if there's an underlying issue.<br>
-                        3. <strong>Leadership Roles:</strong> Assign small responsibilities to keep them positively engaged.
-                    `;
-                } else if(qLower.includes('shy') || qLower.includes('withdrawn')) {
-                    answer = `
-                        <strong>💬 Support Strategy for Shy Students:</strong><br>
-                        1. <strong>Low-Pressure Interaction:</strong> Let them answer in pairs (Think-Pair-Share) before speaking publicly.<br>
-                        2. <strong>Positive Reinforcement:</strong> Offer gentle encouragement during desk checks.
+                        1. <strong>Use Visuals:</strong> Draw diagrams or use physical objects to represent parts of a whole.<br>
+                        2. <strong>Real-World Examples:</strong> Relate problems to local everyday experiences.<br>
+                        3. <strong>Scaffolding:</strong> Break complex word problems into 3 smaller steps.
                     `;
                 } else {
                     answer = `
                         <strong>💡 AI Copilot Recommendation for: "${query}"</strong><br>
-                        If you are asking about portal navigation, remember you can check the tabs on your left sidebar (SBA Grading, Attendance, History, LMS, Timetable). If you are asking about a student or teaching topic, break the objective down into smaller, clear steps, and maintain regular communication with parents if needed!
+                        Review your sidebar menu for specific portal tasks, or break teaching objectives down into clear, structured steps for your pupils.
                     `;
                 }
 
@@ -1785,7 +1758,7 @@
         function saveSchoolProfile() {
             schoolProfile.name = document.getElementById('profile-school-name').value;
             schoolProfile.location = document.getElementById('profile-school-location').value;
-            schoolProfile.motto = document.getElementById('profile-school-motto'].value;
+            schoolProfile.motto = document.getElementById('profile-school-motto').value;
             document.getElementById('login-school-title').innerText = schoolProfile.name;
             document.getElementById('login-school-motto').innerText = schoolProfile.motto;
             document.getElementById('nav-school-name').innerText = schoolProfile.name;
