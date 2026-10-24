@@ -1,6 +1,6 @@
 export default {
   async fetch(request, env, ctx) { 
-const GEMINI_API_KEY = "AQ.Ab8RN6KXhERqwXKXGFh_ADYYhoo9G_hcjiRTZB_3-YG6T66Duw";
+ evn.GEMINI_API_KEY = "AQ.Ab8RN6KXhERqwXKXGFh_ADYYhoo9G_hcjiRTZB_3-YG6T66Duw";
     const html = `<!DOCTYPE html>
 <html lang="en">
 <head>
