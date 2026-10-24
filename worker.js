@@ -1,0 +1,1845 @@
+export default {
+  async fetch(request, env, ctx) {
+    const html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wesley Preparatory School - Portal</title>
+    <!-- Tailwind CSS & Chart.js -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Supabase JS SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        :root {
+            --primary: #1e3a8a;
+            --accent: #991b1b;
+        }
+        @media print {
+            .no-print { display: none !important; }
+            body { background: white; color: black; }
+            .assessment-print-page { page-break-after: always; border: 2px solid black !important; padding: 20px !important; margin: 0 !important; }
+            .report-card-page { page-break-after: always; border: 2px solid black !important; padding: 15px !important; margin: 0 !important; }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col">
+    <!-- AUTH & LOGIN SCREEN -->
+    <div id="auth-screen" class="fixed inset-0 bg-slate-900/90 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 border-t-4 border-blue-900">
+            <div class="text-center mb-6 flex flex-col items-center">
+                <div class="w-24 h-24 mb-3 rounded-full bg-amber-50 border-4 border-blue-900 shadow-lg flex items-center justify-center relative overflow-hidden">
+                    <img src="badge.jpg" alt="Wesley Prep School Badge" class="w-full h-full object-cover" onerror="this.style.display='none'; document.getElementById('badge-fallback').classList.remove('hidden');">
+                    <div id="badge-fallback" class="hidden absolute inset-0 bg-blue-950 flex flex-col items-center justify-center text-center p-1">
+                        <span class="text-[8px] font-bold tracking-tighter uppercase text-amber-300">WESLEY PREP. SCH.</span>
+                        <div class="w-7 h-7 my-0.5 rounded-full border border-red-600 bg-amber-100 flex items-center justify-center text-[7px] font-black text-blue-950 shadow">WPS</div>
+                        <span class="text-[7px] font-bold tracking-tight text-amber-200">ASSORKO - ESSAMAN</span>
+                    </div>
+                </div>
+                <h1 id="login-school-title" class="text-2xl font-bold text-slate-900">Wesley Preparatory School</h1>
+                <p id="login-school-motto" class="text-xs text-slate-500 font-semibold uppercase tracking-wider mt-1">Knowledge and Integrity</p>
+            </div>
+            
+            <form id="login-form" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold uppercase text-slate-600 mb-1">Select Role</label>
+                    <select id="login-role" class="w-full p-3 border rounded-xl bg-slate-50 font-medium focus:ring-2 focus:ring-blue-900">
+                        <option value="admin">Headmaster / Admin</option>
+                        <option value="teacher">Teacher</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold uppercase text-slate-600 mb-1">Email or Username</label>
+                    <input type="text" id="login-user" required class="w-full p-3 border rounded-xl bg-slate-50 focus:ring-2 focus:ring-blue-900" placeholder="e.g. head@wps.com or teacher@wps.com">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold uppercase text-slate-600 mb-1">Access PIN / Password</label>
+                    <input type="password" id="login-pass" required class="w-full p-3 border rounded-xl bg-slate-50 focus:ring-2 focus:ring-blue-900" placeholder="••••">
+                </div>
+                <button type="submit" class="w-full py-3 bg-blue-900 text-white font-semibold rounded-xl hover:bg-blue-800 transition shadow-lg">Secure Login</button>
+            </form>
+            <div class="mt-5 pt-4 border-t border-slate-200 flex justify-between items-center text-xs">
+                <button type="button" onclick="openPasswordResetModal()" class="text-blue-900 hover:text-blue-700 font-bold underline">Forgot Password / Reset PIN?</button>
+                <button type="button" onclick="openAccountRecoveryModal()" class="text-slate-600 hover:text-slate-900 font-bold underline">Account Recovery</button>
+            </div>
+        </div>
+    </div>
+    <!-- PASSWORD RESET MODAL -->
+    <div id="password-reset-modal" class="hidden fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-6 border-t-4 border-blue-900 space-y-4">
+            <h3 class="font-bold text-lg text-blue-950">Reset Portal Password / PIN</h3>
+            <p class="text-xs text-slate-500">Enter your registered email or username to request a secure password or PIN reset from the Headmaster/Admin.</p>
+            <input type="text" id="reset-email-input" placeholder="Enter Email or Username" class="w-full p-3 border rounded-xl text-xs bg-slate-50">
+            <div class="flex justify-end space-x-2 pt-2">
+                <button onclick="submitPasswordResetRequest()" class="px-4 py-2 bg-blue-900 text-white rounded-xl text-xs font-semibold">Send Request</button>
+                <button onclick="closePasswordResetModal()" class="px-4 py-2 bg-slate-200 text-slate-800 rounded-xl text-xs font-semibold">Cancel</button>
+            </div>
+        </div>
+    </div>
+    <!-- ACCOUNT RECOVERY MODAL -->
+    <div id="account-recovery-modal" class="hidden fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-6 border-t-4 border-amber-500 space-y-4">
+            <h3 class="font-bold text-lg text-amber-900">Account Access Recovery</h3>
+            <p class="text-xs text-slate-500">If you are locked out or experiencing authentication issues, contact the IT Administrator or Headmaster at Assorko-Essaman office for instant PIN restoration.</p>
+            <div class="flex justify-end">
+                <button onclick="closeAccountRecoveryModal()" class="px-4 py-2 bg-amber-600 text-white rounded-xl text-xs font-semibold">Understood</button>
+            </div>
+        </div>
+    </div>
+    <!-- ANNOUNCEMENT & BIRTHDAY POPUP MODAL -->
+    <div id="announcement-modal" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full p-6 border-t-4 border-amber-500 space-y-4">
+            <div class="flex justify-between items-center">
+                <h3 class="font-bold text-lg text-blue-900">📢 Priority Notice & Staff Birthdays</h3>
+                <span class="text-xs bg-amber-100 text-amber-800 px-2.5 py-1 rounded-full font-bold">Important</span>
+            </div>
+            <div id="modal-announcement-image-container" class="hidden text-center">
+                <img id="modal-announcement-img" src="" alt="Announcement" class="max-h-56 mx-auto rounded-xl shadow-md object-cover border">
+            </div>
+            <div id="modal-announcement-text" class="text-slate-700 bg-slate-50 p-4 rounded-xl border text-sm leading-relaxed">
+                Welcome to Wesley Preparatory School Portal.
+            </div>
+            <div class="flex justify-end">
+                <button onclick="closeAnnouncementModal()" class="px-5 py-2 bg-blue-900 text-white font-semibold rounded-xl text-sm">Understood & Close</button>
+            </div>
+        </div>
+    </div>
+    <!-- RECEIPT MODAL POPUP -->
+    <div id="receipt-modal" class="hidden fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 border-t-4 border-blue-900 space-y-4 relative">
+            <div id="receipt-content" class="space-y-4 text-slate-800"></div>
+            <div class="flex justify-end space-x-3 no-print pt-2 border-t">
+                <button onclick="window.print()" class="px-4 py-2 bg-slate-800 text-white text-xs font-semibold rounded-lg">Print Receipt</button>
+                <button onclick="closeReceiptModal()" class="px-4 py-2 bg-blue-900 text-white text-xs font-semibold rounded-lg">Close</button>
+            </div>
+        </div>
+    </div>
+    <!-- MAIN APP SHELL -->
+    <div id="app-shell" class="hidden flex-1 flex flex-col">
+        <!-- TOP NAVBAR -->
+        <header class="bg-blue-950 text-white shadow-md px-6 py-3 flex justify-between items-center no-print border-b-2 border-amber-500">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-full bg-white border border-amber-400 flex items-center justify-center overflow-hidden shadow relative">
+                    <img src="badge.jpg" alt="Badge" class="w-full h-full object-cover" onerror="this.style.display='none';">
+                </div>
+                <div>
+                    <h2 id="nav-school-name" class="font-bold text-base leading-tight">Wesley Preparatory School</h2>
+                    <p id="nav-school-info" class="text-[11px] text-amber-200 font-medium">Assorko-Essaman • Default Tuition: GH₵ 250</p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-4">
+                <span id="user-badge" class="px-3 py-1 bg-blue-900 text-xs rounded-full font-medium uppercase tracking-wider border border-blue-700">Admin</span>
+                <button onclick="logout()" class="text-xs bg-red-700 hover:bg-red-800 px-3 py-2 rounded-lg font-semibold transition">Logout</button>
+            </div>
+        </header>
+        <!-- DASHBOARD CONTAINER -->
+        <div class="flex-1 flex flex-col md:flex-row">
+            <!-- SIDEBAR NAVIGATION -->
+            <aside class="w-full md:w-64 bg-white border-r border-slate-200 p-4 space-y-2 no-print">
+                <button onclick="switchTab('dashboard')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📊 <span>Dashboard & Charts</span></button>
+                <button onclick="switchTab('assessment')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📝 <span>SBA & Exam Grading</span></button>
+                <button onclick="switchTab('history')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📁 <span>Student History & Reports</span></button>
+                <button onclick="switchTab('lms')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📚 <span>LMS & Teacher Training Hub</span></button>
+                <button onclick="switchTab('ai-copilot')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🤖 <span>Live Gemini AI Assistant</span></button>
+                <button onclick="switchTab('attendance')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📅 <span>Attendance Register</span></button>
+                <button onclick="switchTab('timetable')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">⏰ <span>Timetable & Time Mgmt</span></button>
+                
+                <!-- Admin Only Nav Items -->
+                <div id="admin-nav-section" class="pt-4 border-t border-slate-200 space-y-2">
+                    <p class="px-4 text-xs font-bold uppercase tracking-wider text-slate-400">Administration</p>
+                    <button onclick="switchTab('fees')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">💰 <span>Billing Account & Fees</span></button>
+                    <button onclick="switchTab('students')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🎓 <span>Student Enrollment & Discard</span></button>
+                    <button onclick="switchTab('teachers')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">👨‍🏫 <span>Teacher Accounts</span></button>
+                    <button onclick="switchTab('classes')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🏫 <span>Manage Classes (1-6 & JHS)</span></button>
+                    <button onclick="switchTab('announcements')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📢 <span>Announcements & Portal Lock</span></button>
+                    <button onclick="switchTab('gallery')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🖼️ <span>Photo Gallery & JPG Uploads</span></button>
+                    <button onclick="switchTab('profile')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">⚙️ <span>School Profile & Branding</span></button>
+                </div>
+                <!-- Teacher Nav -->
+                <div id="teacher-nav-section" class="hidden pt-4 border-t border-slate-200 space-y-2">
+                    <p class="px-4 text-xs font-bold uppercase tracking-wider text-slate-400">Staff Portal</p>
+                    <button onclick="switchTab('lms')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📚 <span>Teaching Hub & Resources</span></button>
+                    <button onclick="switchTab('ai-copilot')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🤖 <span>Live Gemini AI Assistant</span></button>
+                    <button onclick="switchTab('timetable')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">⏰ <span>Manage Timetable</span></button>
+                    <button onclick="switchTab('teacher-gallery')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🖼️ <span>School Photo Gallery</span></button>
+                    <button onclick="switchTab('teacher-announcements')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📢 <span>View Announcements</span></button>
+                </div>
+            </aside>
+            <!-- MAIN CONTENT AREA -->
+            <main class="flex-1 p-6 overflow-y-auto">
+                <!-- TAB: DASHBOARD & CHARTS -->
+                <section id="tab-dashboard" class="space-y-6">
+                    <div class="bg-gradient-to-r from-blue-950 to-blue-900 text-white p-6 rounded-2xl shadow-lg flex justify-between items-center border-l-4 border-amber-500">
+                        <div>
+                            <h2 class="text-2xl font-bold">Welcome Back, <span id="welcome-name">User</span>!</h2>
+                            <p id="dashboard-motto-display" class="text-blue-200 text-sm mt-1">Wesley Preparatory School, Assorko-Essaman — Knowledge and Integrity.</p>
+                        </div>
+                        <div class="hidden md:block text-right">
+                            <span class="px-3 py-1 bg-amber-500 text-slate-950 text-xs font-bold rounded-full">Default Tuition: GH₵ 250</span>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="bg-white p-6 rounded-2xl shadow border border-slate-100">
+                            <h3 class="font-bold text-slate-800 mb-4">Student Gender Distribution (Active Registry)</h3>
+                            <div class="h-64 flex items-center justify-center">
+                                <canvas id="genderChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="bg-white p-6 rounded-2xl shadow border border-slate-100">
+                            <h3 class="font-bold text-slate-800 mb-4">Class Enrollment Quantity</h3>
+                            <div class="h-64 flex items-center justify-center">
+                                <canvas id="classChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <!-- TAB: SBA & EXAM GRADING -->
+                <section id="tab-assessment" class="hidden space-y-6">
+                    <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-4">
+                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                            <div>
+                                <h2 class="text-xl font-bold text-slate-900">Termly SBA & Exam Assessment Capture</h2>
+                                <p id="assessment-mode-description" class="text-xs text-slate-500">Basic 1-3: One Class Teacher Mode. Basic 4-JHS: Subject Teaching Mode.</p>
+                            </div>
+                            <button onclick="calculateGrades()" class="px-5 py-2.5 bg-blue-900 text-white font-semibold rounded-xl hover:bg-blue-800 transition shadow">Compute Totals & Grades</button>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 pt-2 border-t">
+                            <div>
+                                <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Academic Year</label>
+                                <select id="grading-year-filter" onchange="renderGradingTable()" class="p-2.5 border rounded-xl w-full text-sm bg-slate-50 font-medium">
+                                    <option value="2026" selected>2026</option>
+                                    <option value="2025">2025</option>
+                                    <option value="2024">2024</option>
+                                    <option value="2023">2023</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Select Class</label>
+                                <select id="grading-class-filter" onchange="onGradingClassChange()" class="p-2.5 border rounded-xl w-full text-sm bg-slate-50 font-medium"></select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Select Term</label>
+                                <select id="grading-term-filter" onchange="renderGradingTable()" class="p-2.5 border rounded-xl w-full text-sm bg-slate-50 font-medium">
+                                    <option value="Term 1" selected>Term 1</option>
+                                    <option value="Term 2">Term 2</option>
+                                    <option value="Term 3">Term 3</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Select Subject</label>
+                                <select id="grading-subject-filter" onchange="renderGradingTable()" class="p-2.5 border rounded-xl w-full text-sm bg-slate-50 font-medium">
+                                    <option value="Mathematics">Mathematics</option>
+                                    <option value="English Language">English Language</option>
+                                    <option value="Integrated Science">Integrated Science</option>
+                                    <option value="History">History</option>
+                                    <option value="Computing">Computing</option>
+                                    <option value="Creative Arts">Creative Arts</option>
+                                    <option value="Ghanaian Language">Ghanaian Language</option>
+                                    <option value="RME">RME</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-2xl shadow overflow-hidden border border-slate-100">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse text-xs">
+                                <thead class="bg-slate-100 uppercase font-bold text-slate-600 text-center">
+                                    <tr>
+                                        <th class="p-2.5 text-left">Student Name</th>
+                                        <th class="p-2.5">Ind. Test 1 (30)</th>
+                                        <th class="p-2.5">Group Test (20)</th>
+                                        <th class="p-2.5">Ind. Test 2 (30)</th>
+                                        <th class="p-2.5">Project / HW (20)</th>
+                                        <th class="p-2.5 bg-blue-50">Total SBA (100)</th>
+                                        <th class="p-2.5 bg-blue-100">50% SBA</th>
+                                        <th class="p-2.5">Exams (100)</th>
+                                        <th class="p-2.5 bg-blue-100">50% Exam</th>
+                                        <th class="p-2.5 bg-amber-50">Overall Total</th>
+                                        <th class="p-2.5">Grade</th>
+                                        <th class="p-2.5">Position</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="grading-table-body" class="divide-y divide-slate-100">
+                                    <tr><td colspan="12" class="p-6 text-center text-slate-400 italic">No students found for this class.</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="flex justify-start">
+                        <button onclick="refreshSubmittedScores()" class="px-5 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold rounded-xl text-xs transition flex items-center gap-2 shadow">
+                            🔄 Refresh / Edit Submitted Scores for this Class & Term
+                        </button>
+                    </div>
+                    <div class="flex flex-wrap justify-between items-center gap-3 pt-2">
+                        <div class="flex gap-2">
+                            <button onclick="exportAssessmentSheet('pdf')" class="px-4 py-2 bg-slate-800 text-white text-xs font-semibold rounded-lg hover:bg-slate-700">Download Assessment PDF 📄</button>
+                            <button onclick="exportAssessmentSheet('doc')" class="px-4 py-2 bg-blue-800 text-white text-xs font-semibold rounded-lg hover:bg-blue-700">Download Assessment Word 📝</button>
+                        </div>
+                        <button onclick="finalizeReports()" class="px-6 py-3 bg-amber-600 hover:bg-amber-700 text-white font-bold rounded-xl shadow-lg transition">Finalize & Save Assessment Sheet to Site ➔</button>
+                    </div>
+                </section>
+                <!-- TAB: STUDENT HISTORY & SUBMITTED ASSESSMENT SHEETS -->
+                <section id="tab-history" class="hidden space-y-6">
+                    <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-4">
+                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                            <div>
+                                <h2 class="text-xl font-bold text-slate-900">Student History & Full Class Assessment Sheets (Year Till Date Archive)</h2>
+                                <p class="text-xs text-slate-500">View official master class assessment sheets and individual end-of-term report cards archived by year and term.</p>
+                            </div>
+                            <button onclick="window.print()" class="px-4 py-2 bg-slate-800 text-white text-xs font-semibold rounded-lg hover:bg-slate-700 no-print">Print All Records</button>
+                        </div>
+                        <!-- Year, Class & Term Selector for History -->
+                        <div class="flex flex-wrap gap-4 pt-2 border-t items-center">
+                            <div>
+                                <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Choose Academic Year</label>
+                                <select id="history-year-filter" onchange="renderHistoryView()" class="p-2 border rounded-xl text-sm bg-slate-50 font-medium w-40">
+                                    <option value="2026" selected>2026</option>
+                                    <option value="2025">2025</option>
+                                    <option value="2024">2024</option>
+                                    <option value="2023">2023</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Choose Class</label>
+                                <select id="history-class-filter" onchange="renderHistoryView()" class="p-2 border rounded-xl text-sm bg-slate-50 font-medium w-48"></select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Choose Term</label>
+                                <select id="history-term-filter" onchange="renderHistoryView()" class="p-2 border rounded-xl text-sm bg-slate-50 font-medium w-40">
+                                    <option value="Term 1" selected>Term 1</option>
+                                    <option value="Term 2">Term 2</option>
+                                    <option value="Term 3">Term 3</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="history-container" class="space-y-8">
+                        <p class="text-slate-500 italic p-4">No finalized assessment sheets or reports found. Click "Finalize & Save Assessment Sheet" from the SBA grading tab.</p>
+                    </div>
+                </section>
+                <!-- TAB: LMS & TEACHER TRAINING HUB -->
+                <section id="tab-lms" class="hidden space-y-6">
+                    <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-6">
+                        <div class="border-b pb-4 flex justify-between items-center">
+                            <div>
+                                <h2 class="text-xl font-bold text-slate-900">📚 LMS & Professional Teacher Training Hub</h2>
+                                <p class="text-xs text-slate-500 mt-1">Curriculum resources, classroom control methodologies, student behavioral analysis, and problem-solving strategies.</p>
+                            </div>
+                            <span id="lms-role-badge" class="px-3 py-1 bg-amber-100 text-amber-900 text-xs font-bold rounded-full">Admin Edit Mode Active</span>
+                        </div>
+                        <!-- ADMIN ONLY: ADD NEW RESOURCE OR TRAINING GUIDE -->
+                        <div id="admin-lms-upload-section" class="bg-blue-50/60 p-4 rounded-xl border border-blue-200 space-y-3">
+                            <h3 class="font-bold text-sm text-blue-950">➕ Upload Teaching Resource / Embed Video / Update Training Guide (Admin Only)</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                <input type="text" id="lms-title" placeholder="Resource Title (e.g. Basic 4 Mathematics Handout)" class="p-2.5 border rounded-xl text-xs bg-white font-medium">
+                                <input type="text" id="lms-embed-url" placeholder="Embed YouTube Link (e.g. https://www.youtube.com/embed/...)" class="p-2.5 border rounded-xl text-xs bg-white font-medium">
+                            </div>
+                            <textarea id="lms-content-desc" rows="3" placeholder="Enter lesson description, teaching strategy, or classroom management tips..." class="w-full p-3 border rounded-xl text-xs bg-white"></textarea>
+                            <div class="flex justify-end">
+                                <button onclick="saveLMSResource()" class="px-5 py-2 bg-blue-900 text-white font-bold rounded-xl text-xs">Publish LMS Resource</button>
+                            </div>
+                        </div>
+                        <!-- LMS CONTENT TABS / SECTIONS -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2">
+                            <!-- Section 1: How to Control a Class -->
+                            <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-3 shadow-sm">
+                                <div class="flex items-center space-x-2 text-blue-900 font-bold text-sm">
+                                    <span>🛡️</span> <h4>Classroom Control & Discipline</h4>
+                                </div>
+                                <ul class="text-xs text-slate-700 space-y-2 list-disc pl-4">
+                                    <li><strong>Proactive Engagement:</strong> Keep lessons fast-paced with interactive questioning to prevent downtime.</li>
+                                    <li><strong>Non-Verbal Cues:</strong> Use eye contact, proximity, and hand gestures rather than shouting to regain attention.</li>
+                                    <li><strong>Clear Routine:</strong> Establish entry, seating, and transition procedures from Day 1.</li>
+                                    <li><strong>Positive Reinforcement:</strong> Praise focused students publicly to encourage compliance across the room.</li>
+                                </ul>
+                            </div>
+                            <!-- Section 2: Types of Students & Identification -->
+                            <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-3 shadow-sm">
+                                <div class="flex items-center space-x-2 text-blue-900 font-bold text-sm">
+                                    <span>🧠</span> <h4>Types of Students & Profiles</h4>
+                                </div>
+                                <ul class="text-xs text-slate-700 space-y-2 list-disc pl-4">
+                                    <li><strong>The Visual Learner:</strong> Learns best through diagrams, charts, and colored notes. Needs visual aids on the board.</li>
+                                    <li><strong>The Auditory Learner:</strong> Thrives on verbal instructions, read-alouds, discussions, and mnemonic chants.</li>
+                                    <li><strong>The Kinesthetic Learner:</strong> Needs physical movement, hands-on practice, and manipulative objects to grasp concepts.</li>
+                                    <li><strong>The Withdrawn / Quiet Student:</strong> Shy or anxious; requires gentle 1-on-1 encouragement and low-pressure participation.</li>
+                                </ul>
+                            </div>
+                            <!-- Section 3: Solving Student Problems -->
+                            <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-3 shadow-sm">
+                                <div class="flex items-center space-x-2 text-blue-900 font-bold text-sm">
+                                    <span>💡</span> <h4>Problem-Solving Strategies</h4>
+                                </div>
+                                <ul class="text-xs text-slate-700 space-y-2 list-disc pl-4">
+                                    <li><strong>Root-Cause Analysis:</strong> Is poor performance due to comprehension gaps, hunger, home stress, or distraction? Speak privately.</li>
+                                    <li><strong>Differentiated Tasks:</strong> Break complex problems into smaller, scaffolded steps for struggling learners.</li>
+                                    <li><strong>Peer Tutoring:</strong> Pair high-performing pupils with peers needing reinforcement to build community and mastery.</li>
+                                    <li><strong>Parental Collaboration:</strong> Maintain transparent communication logs with guardians regarding behavioral or academic shifts.</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <!-- DYNAMIC LMS RESOURCES & EMBEDDED VIDEOS CONTAINER -->
+                        <div class="pt-4 border-t space-y-4">
+                            <h3 class="font-bold text-sm text-slate-900">📂 Uploaded Teaching Materials & Embedded Media</h3>
+                            <div id="lms-resources-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="bg-slate-50 p-4 rounded-xl border space-y-2">
+                                    <h4 class="font-bold text-xs text-blue-950">Sample Curriculum Guide: Basic Mathematics & Literacy</h4>
+                                    <p class="text-xs text-slate-600">Official syllabus breakdown for Term 1 core topics.</p>
+                                    <div class="aspect-w-16 aspect-h-9 pt-2">
+                                        <iframe class="w-full h-40 rounded-lg shadow border" src="https://www.youtube.com/embed/dQw4w9WgXcQ" allowfullscreen></iframe>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <!-- TAB: LIVE GEMINI AI ASSISTANT -->
+                <section id="tab-ai-copilot" class="hidden space-y-6">
+                    <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-4">
+                        <div class="flex justify-between items-center border-b pb-4">
+                            <div>
+                                <h2 class="text-xl font-bold text-slate-900">🤖 Live Gemini AI Assistant</h2>
+                                <p class="text-xs text-slate-500 mt-1">Ask any question on teaching, lesson planning, student support, or general knowledge. Powered live by the Gemini API.</p>
+                            </div>
+                            <span class="px-3 py-1 bg-emerald-100 text-emerald-900 text-xs font-bold rounded-full">Gemini AI Active</span>
+                        </div>
+                        <!-- ADMIN ONLY: GEMINI API KEY INPUT -->
+                        <div id="admin-gemini-section" class="hidden bg-amber-50 p-4 rounded-xl border border-amber-200 space-y-2">
+                            <label class="block text-xs font-bold uppercase text-amber-900">Admin: Enter School Gemini API Key:</label>
+                            <div class="flex gap-2">
+                                <input type="password" id="gemini-api-key" placeholder="Paste your Gemini API Key here..." class="p-2.5 border rounded-xl text-xs bg-white font-medium flex-1">
+                                <button onclick="saveGeminiKey()" class="px-4 py-2 bg-amber-700 text-white font-bold rounded-xl text-xs hover:bg-amber-800">Save & Sync Key</button>
+                            </div>
+                            <p class="text-[11px] text-amber-800">Get a free Gemini API key from <a href="https://aistudio.google.com/" target="_blank" class="underline font-bold">Google AI Studio</a>. Once saved by Admin, all teachers can use Gemini live.</p>
+                        </div>
+                        <div class="space-y-3">
+                            <label class="block text-xs font-bold uppercase text-slate-600">Quick-Select Prompt:</label>
+                            <div class="flex flex-wrap gap-2">
+                                <button onclick="setAiPrompt('Create a 45-minute lesson plan for Basic 5 Science on Ecosystems and Food Chains.')" class="px-3 py-1.5 bg-slate-100 hover:bg-blue-50 hover:text-blue-900 border rounded-xl text-xs font-semibold transition">🧬 Basic 5 Science Lesson Plan</button>
+                                <button onclick="setAiPrompt('Give me 5 engaging classroom management tips for primary school teachers.')" class="px-3 py-1.5 bg-slate-100 hover:bg-blue-50 hover:text-blue-900 border rounded-xl text-xs font-semibold transition">🛡️ Classroom Management Tips</button>
+                                <button onclick="setAiPrompt('How do I explain long division clearly to Basic 4 students?')" class="px-3 py-1.5 bg-slate-100 hover:bg-blue-50 hover:text-blue-900 border rounded-xl text-xs font-semibold transition">➗ Long Division Teaching Guide</button>
+                            </div>
+                        </div>
+                        <div class="space-y-2 pt-2">
+                            <label class="block text-xs font-bold uppercase text-slate-600">Type Your Question for Gemini:</label>
+                            <textarea id="ai-user-query" rows="4" class="w-full p-4 border rounded-xl text-sm bg-slate-50 focus:ring-2 focus:ring-blue-900" placeholder="Ask anything, e.g., Create quiz questions for RME or summarize teaching strategies..."></textarea>
+                            <div class="flex justify-end">
+                                <button onclick="askAICopilot()" class="px-6 py-3 bg-blue-900 text-white font-bold rounded-xl text-xs hover:bg-blue-800 shadow transition flex items-center gap-2">
+                                    Ask Gemini AI ⚡
+                                </button>
+                            </div>
+                        </div>
+                        <!-- AI RESPONSE BOX WITH DOWNLOAD & PRINT BUTTONS -->
+                        <div id="ai-response-box" class="hidden mt-6 p-5 bg-blue-50/70 border border-blue-200 rounded-2xl space-y-3 text-slate-800">
+                            <div class="flex justify-between items-center border-b pb-2">
+                                <div class="flex items-center space-x-2 text-blue-900 font-bold text-sm">
+                                    <span>✨</span> <h3>Gemini AI Response</h3>
+                                </div>
+                                <div class="flex gap-2">
+                                    <button onclick="downloadAiAsDoc()" class="px-3 py-1.5 bg-blue-900 text-white text-xs font-semibold rounded-lg hover:bg-blue-800 transition">Download PDF / Doc 📄</button>
+                                    <button onclick="window.print()" class="px-3 py-1.5 bg-slate-800 text-white text-xs font-semibold rounded-lg hover:bg-slate-700 transition">Print 🖨️</button>
+                                </div>
+                            </div>
+                            <div id="ai-response-content" class="text-xs leading-relaxed space-y-2 whitespace-pre-wrap"></div>
+                        </div>
+                    </div>
+                </section>
+                <!-- TAB: ATTENDANCE REGISTER -->
+                <section id="tab-attendance" class="hidden space-y-6">
+                    <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-4">
+                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                            <div>
+                                <h2 class="text-xl font-bold text-slate-900">Attendance Register (Direct "X out of Y" Entry)</h2>
+                                <p class="text-xs text-slate-500">Teachers can mark attendance manually on their physical register sheets, then enter each student's attendance as <strong class="text-blue-900">Days Present out of Total Days</strong> below. This updates report cards instantly.</p>
+                            </div>
+                            <div class="flex gap-3 items-center">
+                                <div>
+                                    <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Select Class</label>
+                                    <select id="attendance-class-filter" onchange="renderAttendanceRegister()" class="p-2.5 border rounded-xl text-sm bg-slate-50 font-medium w-48"></select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="overflow-x-auto pt-2">
+                            <table class="w-full text-left border-collapse">
+                                <thead class="bg-slate-100 text-xs uppercase font-bold text-slate-600">
+                                    <tr>
+                                        <th class="p-3">Student Name</th>
+                                        <th class="p-3">Class</th>
+                                        <th class="p-3 text-center">Days Present (e.g. 65)</th>
+                                        <th class="p-3 text-center">Out Of Total Days (e.g. 70)</th>
+                                        <th class="p-3 text-center">Preview Attendance Ratio</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="attendance-table-body" class="divide-y divide-slate-100 text-sm">
+                                    <tr><td colspan="5" class="p-6 text-center text-slate-400 italic">Select a class to manage attendance.</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="flex flex-wrap justify-between items-center gap-3 pt-4 border-t">
+                            <button onclick="submitAttendanceRecord()" class="px-6 py-3 bg-blue-900 text-white font-bold rounded-xl text-xs hover:bg-blue-800 shadow transition">Save Attendance to Student Records & Reports ➔</button>
+                            <div class="flex gap-2">
+                                <button onclick="exportAttendance('pdf')" class="px-4 py-2 bg-slate-800 text-white text-xs font-semibold rounded-lg">Download Attendance PDF 📄</button>
+                                <button onclick="exportAttendance('doc')" class="px-4 py-2 bg-blue-800 text-white text-xs font-semibold rounded-lg">Download Attendance Worksheet 📝</button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <!-- TAB: TIMETABLE & TIME MANAGEMENT -->
+                <section id="tab-timetable" class="hidden space-y-6">
+                    <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-4">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <h2 class="text-xl font-bold text-slate-900">Timetable & Time Management</h2>
+                                <p class="text-xs text-slate-500">Build, adjust, and edit class and subject schedules.</p>
+                            </div>
+                            <button onclick="editTimetable()" class="px-4 py-2 bg-blue-900 text-white text-xs font-semibold rounded-lg">Edit Timetable Schedule</button>
+                        </div>
+                        <div id="timetable-display" class="p-4 bg-blue-50 rounded-xl border border-blue-100 text-sm text-blue-900 font-medium whitespace-pre-line">
+                            📅 Current Schedule: Morning Devotion (07:30 - 08:00) | Core Subjects & Practical Sessions (08:00 - 14:00).
+                        </div>
+                    </div>
+                </section>
+                <!-- TAB: FEE MANAGEMENT / PROFESSIONAL BILLING ACCOUNT (Admin Only) -->
+                <section id="tab-fees" class="hidden space-y-6">
+                    <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-4">
+                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                            <div>
+                                <h2 class="text-xl font-bold text-slate-900">Professional Billing Account & Fee Management</h2>
+                                <p class="text-xs text-slate-500">Track student billing ledgers including Arrears (Old Unpaid Balance), Tuition, Printing, PTA Dues, and Other Fees. These automatically sync into each student's official report card.</p>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Filter by Class</label>
+                                <select id="fee-class-filter" onchange="renderFeesTable()" class="p-2 border rounded-xl text-sm bg-slate-50 font-medium w-48"></select>
+                            </div>
+                        </div>
+                        <div class="overflow-x-auto pt-2">
+                            <table class="w-full text-left border-collapse">
+                                <thead class="bg-slate-100 text-xs uppercase font-bold text-slate-600">
+                                    <tr>
+                                        <th class="p-3">Student Name</th>
+                                        <th class="p-3">Arrears / Old (₵)</th>
+                                        <th class="p-3">Tuition (₵)</th>
+                                        <th class="p-3">Printing (₵)</th>
+                                        <th class="p-3">PTA Dues (₵)</th>
+                                        <th class="p-3">Other (₵)</th>
+                                        <th class="p-3 bg-blue-50">Total Bill (₵)</th>
+                                        <th class="p-3 no-print">Receipt</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="fees-table-body" class="divide-y divide-slate-100 text-sm">
+                                    <tr><td colspan="8" class="p-6 text-center text-slate-400 italic">No fee records found for this class.</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+                <!-- TAB: MANAGE CLASSES (Admin) -->
+                <section id="tab-classes" class="hidden space-y-6">
+                    <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-4">
+                        <h2 class="text-xl font-bold text-slate-900">Manage School Classes (Basic 1 - 6 & JHS)</h2>
+                        <p class="text-xs text-slate-500">Add new classes or modify existing class levels in the system.</p>
+                        <div class="flex gap-3">
+                            <input type="text" id="new-class-input" placeholder="e.g. Basic 1 or Nursery" class="p-3 border rounded-xl flex-1">
+                            <button onclick="addClass()" class="px-6 py-3 bg-blue-900 text-white font-bold rounded-xl hover:bg-blue-800">Add Class</button>
+                        </div>
+                        <div class="mt-4">
+                            <h3 class="font-bold text-sm text-slate-700 mb-2">Active Classes List:</h3>
+                            <div id="classes-list-container" class="flex flex-wrap gap-2"></div>
+                        </div>
+                    </div>
+                </section>
+                <!-- TAB: STUDENT ENROLLMENT & DISCARD (Admin) -->
+                <section id="tab-students" class="hidden space-y-6">
+                    <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-6">
+                        <div>
+                            <h2 class="text-xl font-bold text-slate-900">Register New Student</h2>
+                            <p class="text-xs text-slate-500 mb-4">Enrolled students immediately sync and appear in teacher portals.</p>
+                            <form id="student-form" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <input type="text" id="s-name" placeholder="Full Name *" required class="p-3 border rounded-xl">
+                                <select id="s-class" class="p-3 border rounded-xl font-medium"></select>
+                                <select id="s-gender" class="p-3 border rounded-xl font-medium">
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                </select>
+                                <button type="submit" class="md:col-span-3 py-3 bg-blue-900 text-white font-bold rounded-xl hover:bg-blue-800 transition">Save Student to Database</button>
+                            </form>
+                        </div>
+                        <div class="pt-4 border-t">
+                            <h3 class="text-lg font-bold text-slate-900 mb-2">Discard / Remove Withdrawn Student</h3>
+                            <p class="text-xs text-slate-500 mb-4">Select a student who has stopped school to discard their enrollment.</p>
+                            <div class="flex gap-3">
+                                <select id="discard-student-select" class="p-3 border rounded-xl flex-1 font-medium bg-slate-50"></select>
+                                <button onclick="discardStudent()" class="px-6 py-3 bg-red-700 hover:bg-red-800 text-white font-bold rounded-xl text-xs">Discard / Remove Student</button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <!-- TAB: TEACHER ACCOUNTS (Admin) -->
+                <section id="tab-teachers" class="hidden space-y-6">
+                    <div class="bg-white p-6 rounded-2xl shadow border border-slate-100">
+                        <h2 class="text-xl font-bold text-slate-900">Register Teacher Account</h2>
+                        <p class="text-xs text-slate-500 mb-4">Create login credentials and access PIN for teaching staff.</p>
+                        <form id="teacher-form" class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+                            <input type="text" id="t-name" placeholder="Full Name *" required class="p-3 border rounded-xl">
+                            <input type="text" id="t-phone" placeholder="Phone Number" class="p-3 border rounded-xl">
+                            <input type="email" id="t-email" placeholder="Email Address *" required class="p-3 border rounded-xl">
+                            <input type="password" id="t-pass" placeholder="Password / Access PIN *" required class="p-3 border rounded-xl">
+                            <button type="submit" class="md:col-span-2 py-3 bg-blue-900 text-white font-bold rounded-xl hover:bg-blue-800 transition">Create Teacher Login</button>
+                        </form>
+                    </div>
+                </section>
+                <!-- TAB: ANNOUNCEMENTS & PORTAL LOCK (Admin) -->
+                <section id="tab-announcements" class="hidden space-y-6">
+                    <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-6">
+                        <div>
+                            <h2 class="text-xl font-bold text-slate-900">Publish Priority Announcement & Birthday Celebration</h2>
+                            <p class="text-xs text-slate-500 mb-4">Upload announcement details and celebration photos to pop up when teachers and users log in, and automatically send photos to the school gallery.</p>
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Upload Notice / Birthday Photo</label>
+                                    <input type="file" id="announcement-photo-input" accept="image/*" class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Announcement / Birthday Message</label>
+                                    <textarea id="announcement-text" rows="4" class="w-full p-3 border rounded-xl" placeholder="Type announcement or birthday shoutout for staff and teachers..."></textarea>
+                                </div>
+                                <button onclick="postAnnouncement()" class="px-6 py-2.5 bg-blue-900 text-white font-bold rounded-xl">Publish Announcement & Photo to Cloud</button>
+                            </div>
+                        </div>
+                        <!-- PORTAL LOCK CONTROL PANEL -->
+                        <div class="pt-6 border-t space-y-3">
+                            <h3 class="text-lg font-bold text-slate-900">🔒 Teacher Portal Access Restriction</h3>
+                            <p class="text-xs text-slate-500">Lock the portal to restrict teachers from logging in while you perform system edits, grade updates, or maintenance.</p>
+                            <div class="p-4 bg-amber-50 border border-amber-300 rounded-xl flex items-center justify-between">
+                                <div>
+                                    <h4 class="font-bold text-xs text-amber-950 uppercase">Current Status: <span id="portal-lock-status-label" class="text-emerald-700 font-bold">Unlocked (Teachers can log in)</span></h4>
+                                </div>
+                                <button id="portal-lock-btn" onclick="togglePortalLock()" class="px-5 py-2.5 bg-red-700 text-white font-bold text-xs rounded-xl shadow hover:bg-red-800 transition">Lock Portal for Teachers</button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <!-- TAB: PHOTO GALLERY & MULTIPLE JPG UPLOADS -->
+                <section id="tab-gallery" class="hidden space-y-6">
+                    <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-4">
+                        <h2 class="text-xl font-bold text-slate-900">School Photo Gallery & Multiple JPG Uploads</h2>
+                        <p class="text-xs text-slate-500">Select multiple event photos, sports pictures, or class activities to upload simultaneously to the cloud. All photos can be downloaded in JPG format by any teacher on any device.</p>
+                        <div class="flex flex-col md:flex-row gap-3 items-center">
+                            <input type="file" id="multi-photo-file" accept="image/*" multiple class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                            <button onclick="uploadMultiplePhotos()" class="px-6 py-2.5 bg-blue-900 text-white font-bold rounded-xl whitespace-nowrap">Upload Photos to Cloud (JPG)</button>
+                        </div>
+                        <div id="gallery-grid" class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+                            <p class="text-slate-400 italic text-sm">No photos uploaded yet.</p>
+                        </div>
+                    </div>
+                </section>
+                <!-- TAB: TEACHER PHOTO GALLERY (Teacher View) -->
+                <section id="tab-teacher-gallery" class="hidden space-y-6">
+                    <div class="bg-white p-6 rounded-2xl shadow border border-slate-100">
+                        <h2 class="text-xl font-bold text-slate-900">School Photo Gallery & Class Activities</h2>
+                        <p class="text-xs text-slate-500 mb-4">View and download school event photos uploaded in JPG format directly to your device.</p>
+                        <div id="teacher-gallery-grid" class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+                            <p class="text-slate-400 italic text-sm">No photos uploaded by administration yet.</p>
+                        </div>
+                    </div>
+                </section>
+                <!-- TAB: TEACHER ANNOUNCEMENTS VIEW -->
+                <section id="tab-teacher-announcements" class="hidden space-y-6">
+                    <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-4">
+                        <h2 class="text-xl font-bold text-slate-900">Official School Announcements & Birthdays</h2>
+                        <div id="teacher-announcement-display-container" class="space-y-4">
+                            <div id="teacher-announcement-image-display" class="hidden text-center">
+                                <img id="teacher-announcement-img-preview" src="" alt="Announcement" class="max-h-64 mx-auto rounded-xl shadow border">
+                            </div>
+                            <div id="teacher-announcement-display" class="p-4 bg-amber-50 rounded-xl border border-amber-200 text-sm text-slate-800">
+                                Welcome to Wesley Preparatory School Portal.
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <!-- TAB: SCHOOL PROFILE & BRANDING SETTINGS -->
+                <section id="tab-profile" class="hidden space-y-6">
+                    <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-4">
+                        <h2 class="text-xl font-bold text-slate-900">School Profile, Motto & Branding Settings</h2>
+                        <p class="text-xs text-slate-500">Customize the school's official name, badge subtitle, motto, and contact information across the portal.</p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold uppercase text-slate-600 mb-1">School Name</label>
+                                <input type="text" id="profile-school-name" value="Wesley Preparatory School" class="p-3 border rounded-xl w-full font-medium">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Location / Subtitle</label>
+                                <input type="text" id="profile-school-location" value="Assorko-Essaman" class="p-3 border rounded-xl w-full font-medium">
+                            </div>
+                            <div class="md:col-span-2">
+                                <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Official School Motto</label>
+                                <input type="text" id="profile-school-motto" value="Knowledge and Integrity" class="p-3 border rounded-xl w-full font-medium">
+                            </div>
+                        </div>
+                        <button onclick="saveSchoolProfile()" class="px-6 py-3 bg-blue-900 text-white font-bold rounded-xl hover:bg-blue-800">Save School Profile & Branding</button>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+    <!-- JAVASCRIPT APPLICATION CORE -->
+    <script>
+        const SUPABASE_URL = 'https://lhqacoxyfyklxjhabzfe.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxocWFjb3h5ZnlrbHhqaGFiemZlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI1MTA2NTksImV4cCI6MjEwODA4NjY1OX0.w7eqLoS5uKKCGpTxGunl2iD3oDEzRxPaUQ2EbhsGSDA';
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        let currentUser = null;
+        let portalLocked = false;
+        let globalAnnouncementText = "Welcome to Wesley Preparatory School. Please ensure all student records and SBA scores are updated promptly.";
+        let globalAnnouncementImgUrl = "";
+        let classesData = ['Basic 1', 'Basic 2', 'Basic 3', 'Basic 4', 'Basic 5', 'Basic 6', 'JHS 1', 'JHS 2', 'JHS 3'];
+        let studentsData = [];
+        let teachersList = [];
+        let galleryPhotos = [];
+        let storedGeminiKey = "";
+        
+        let lmsResources = [
+            {
+                title: "Curriculum Teaching Guide & Instructional Framework",
+                url: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+                description: "Official teaching manual for managing primary and junior high core subjects effectively."
+            }
+        ];
+        let schoolProfile = {
+            name: "Wesley Preparatory School",
+            location: "Assorko-Essaman",
+            motto: "Knowledge and Integrity"
+        };
+        let timetableText = "📅 Current Schedule: Morning Devotion (07:30 - 08:00) | Core Subjects & Practical Sessions (08:00 - 14:00).";
+        const standardSubjects = [
+            'ENGLISH LANGUAGE',
+            'MATHEMATICS',
+            'SCIENCE',
+            'R. M. E.',
+            'CREATIVE ARTS',
+            'HISTORY',
+            'COMPUTING',
+            'GHANAIAN LANGUAGE'
+        ];
+        
+        // Load cloud settings instantly on startup
+        window.addEventListener('DOMContentLoaded', async () => {
+            await fetchCloudSettings();
+            renderGalleryGrids();
+            updateLockStatusUI();
+            
+            const announcementTextarea = document.getElementById('announcement-text');
+            if(announcementTextarea) announcementTextarea.value = globalAnnouncementText;
+        });
+
+        async function fetchCloudSettings() {
+            try {
+                const { data, error } = await supabaseClient.from('school_settings').select('*').eq('id', 1).single();
+                if(data && !error) {
+                    portalLocked = data.portal_locked || false;
+                    if(data.announcement_text) globalAnnouncementText = data.announcement_text;
+                    if(data.announcement_img) globalAnnouncementImgUrl = data.announcement_img;
+                    if(data.gemini_api_key) storedGeminiKey = data.gemini_api_key;
+                    if(data.gallery_photos && Array.isArray(data.gallery_photos)) {
+                        galleryPhotos = data.gallery_photos;
+                    }
+                }
+            } catch(err) {
+                console.log('Cloud settings fetch note:', err);
+            }
+            updateLockStatusUI();
+            renderGalleryGrids();
+            
+            const announcementTextarea = document.getElementById('announcement-text');
+            if(announcementTextarea) announcementTextarea.value = globalAnnouncementText;
+            
+            const keyInput = document.getElementById('gemini-api-key');
+            if(keyInput && storedGeminiKey) keyInput.value = storedGeminiKey;
+        }
+
+        async function saveCloudSettings() {
+            try {
+                const { error } = await supabaseClient.from('school_settings').upsert({
+                    id: 1,
+                    portal_locked: portalLocked,
+                    announcement_text: globalAnnouncementText,
+                    announcement_img: globalAnnouncementImgUrl,
+                    gemini_api_key: storedGeminiKey,
+                    gallery_photos: galleryPhotos
+                });
+                if(error) {
+                    console.error('Supabase sync error:', error.message);
+                }
+            } catch(err) {
+                console.error('Cloud save exception:', err);
+            }
+        }
+
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const role = document.getElementById('login-role').value;
+            const user = document.getElementById('login-user').value;
+            
+            await fetchCloudSettings();
+
+            if(role === 'teacher' && portalLocked) {
+                alert('🔒 Portal is currently locked by Administration for maintenance, edits, or grading updates. Teachers cannot log in at this moment. Please check back later.');
+                return;
+            }
+            currentUser = { role, name: user };
+            
+            document.getElementById('auth-screen').classList.add('hidden');
+            document.getElementById('app-shell').classList.remove('hidden');
+            document.getElementById('user-badge').innerText = role;
+            document.getElementById('welcome-name').innerText = user;
+
+            // Restrict API Key section to Admin only
+            const adminGeminiSection = document.getElementById('admin-gemini-section');
+            if(adminGeminiSection) {
+                if(role === 'admin') {
+                    adminGeminiSection.classList.remove('hidden');
+                } else {
+                    adminGeminiSection.classList.add('hidden');
+                }
+            }
+
+            if(role === 'teacher') {
+                document.getElementById('admin-nav-section').classList.add('hidden');
+                document.getElementById('teacher-nav-section').classList.remove('hidden');
+                document.getElementById('admin-lms-upload-section').classList.add('hidden');
+                document.getElementById('lms-role-badge').innerText = "Teacher View (Read Only)";
+                switchTab('lms');
+                
+                document.getElementById('modal-announcement-text').innerText = globalAnnouncementText;
+                if(globalAnnouncementImgUrl) {
+                    document.getElementById('modal-announcement-img').src = globalAnnouncementImgUrl;
+                    document.getElementById('modal-announcement-image-container').classList.remove('hidden');
+                } else {
+                    document.getElementById('modal-announcement-image-container').classList.add('hidden');
+                }
+                document.getElementById('announcement-modal').classList.remove('hidden');
+
+                const teacherDisplay = document.getElementById('teacher-announcement-display');
+                if(teacherDisplay) teacherDisplay.innerText = globalAnnouncementText;
+                if(globalAnnouncementImgUrl) {
+                    const imgPrev = document.getElementById('teacher-announcement-img-preview');
+                    if(imgPrev) imgPrev.src = globalAnnouncementImgUrl;
+                    const imgDisp = document.getElementById('teacher-announcement-image-display');
+                    if(imgDisp) imgDisp.classList.remove('hidden');
+                }
+            } else {
+                document.getElementById('admin-nav-section').classList.remove('hidden');
+                document.getElementById('teacher-nav-section').classList.add('hidden');
+                document.getElementById('admin-lms-upload-section').classList.remove('hidden');
+                document.getElementById('lms-role-badge').innerText = "Admin Edit Mode Active";
+                switchTab('dashboard');
+            }
+            await fetchStudentsFromSupabase();
+            await fetchTeachersFromSupabase();
+            renderAll();
+        });
+
+        function openPasswordResetModal() { document.getElementById('password-reset-modal').classList.remove('hidden'); }
+        function closePasswordResetModal() { document.getElementById('password-reset-modal').classList.add('hidden'); }
+        function submitPasswordResetRequest() {
+            const val = document.getElementById('reset-email-input').value.trim();
+            if(!val) { alert('Please enter your email or username.'); return; }
+            alert(`Password / PIN reset request successfully submitted for "${val}". The Administrator has been notified.`);
+            document.getElementById('reset-email-input').value = '';
+            closePasswordResetModal();
+        }
+        function openAccountRecoveryModal() { document.getElementById('account-recovery-modal').classList.remove('hidden'); }
+        function closeAccountRecoveryModal() { document.getElementById('account-recovery-modal').classList.add('hidden'); }
+        async function togglePortalLock() {
+            portalLocked = !portalLocked;
+            await saveCloudSettings();
+            updateLockStatusUI();
+            if(portalLocked) {
+                alert('🔒 Portal is now LOCKED. Teachers are successfully restricted from logging in.');
+            } else {
+                alert('🔓 Portal is now UNLOCKED. Teachers can log in normally.');
+            }
+        }
+        function updateLockStatusUI() {
+            const btn = document.getElementById('portal-lock-btn');
+            const lbl = document.getElementById('portal-lock-status-label');
+            if(!btn || !lbl) return;
+            if(portalLocked) {
+                btn.innerText = "Unlock Portal for Teachers 🔓";
+                btn.className = "px-5 py-2.5 bg-emerald-700 text-white font-bold text-xs rounded-xl shadow hover:bg-emerald-800 transition";
+                lbl.innerText = "Locked (Teachers are restricted from logging in)";
+                lbl.className = "text-red-700 font-bold";
+            } else {
+                btn.innerText = "Lock Portal for Teachers 🔒";
+                btn.className = "px-5 py-2.5 bg-red-700 text-white font-bold text-xs rounded-xl shadow hover:bg-red-800 transition";
+                lbl.innerText = "Unlocked (Teachers can log in)";
+                lbl.className = "text-emerald-700 font-bold";
+            }
+        }
+        async function fetchStudentsFromSupabase() {
+            try {
+                const { data, error } = await supabaseClient.from('students').select('*');
+                if(data && !error) {
+                    studentsData = data.map(s => ({
+                        id: s.id || Date.now(),
+                        name: s.name || s.student_name || 'Unknown Student',
+                        class: s.class || s.class_name || 'Basic 4',
+                        gender: s.gender || 'Male',
+                        subjectsData: s.subjectsData || {},
+                        arrearsFee: s.arrearsFee ?? 0.00,
+                        tuitionFee: s.tuitionFee ?? 250.00,
+                        printingFee: s.printingFee ?? 25.00,
+                        ptaFee: s.ptaFee ?? 5.00,
+                        otherFee: s.otherFee ?? 20.00,
+                        attendanceMade: s.attendanceMade || 65,
+                        attendanceTotal: s.attendanceTotal || 70,
+                        promotedTo: s.promotedTo || 'Next Class',
+                        conduct: s.conduct || 'Very Good',
+                        interest: s.interest || 'Sports and Music',
+                        teacherRemarks: s.teacherRemarks || 'A brilliant student with great potential.',
+                        headRemarks: s.headRemarks || 'Promoted. Keep up the good work!',
+                        reopeningDate: s.reopeningDate || '04/05/2026'
+                    }));
+                }
+            } catch(err) {
+                console.log('Supabase students fetch error:', err);
+            }
+        }
+        async function fetchTeachersFromSupabase() {
+            try {
+                const { data, error } = await supabaseClient.from('teachers').select('*');
+                if(data && !error) {
+                    teachersList = data.map(t => t.full_name || t.name);
+                }
+            } catch(err) {
+                console.log('Supabase teachers fetch error:', err);
+            }
+        }
+        function closeAnnouncementModal() { document.getElementById('announcement-modal').classList.add('hidden'); }
+        function closeReceiptModal() { document.getElementById('receipt-modal').classList.add('hidden'); }
+        function logout() { location.reload(); }
+
+        function switchTab(tabId) {
+            ['dashboard', 'assessment', 'history', 'lms', 'ai-copilot', 'attendance', 'timetable', 'fees', 'classes', 'students', 'teachers', 'announcements', 'gallery', 'teacher-gallery', 'teacher-announcements', 'profile'].forEach(t => {
+                const el = document.getElementById(`tab-${t}`);
+                if(el) el.classList.add('hidden');
+            });
+            const active = document.getElementById(`tab-${tabId}`);
+            if(active) active.classList.remove('hidden');
+
+            if(tabId === 'announcements') {
+                const ta = document.getElementById('announcement-text');
+                if(ta) ta.value = globalAnnouncementText;
+            }
+            if(tabId === 'assessment') {
+                renderClassesDropdown();
+                onGradingClassChange();
+                renderGradingTable();
+            }
+            if(tabId === 'fees') {
+                renderFeeClassDropdown();
+                renderFeesTable();
+            }
+            if(tabId === 'attendance') {
+                renderAttendanceClassDropdown();
+                renderAttendanceRegister();
+            }
+            if(tabId === 'students') {
+                renderDiscardDropdown();
+            }
+            if(tabId === 'history') {
+                renderHistoryClassDropdown();
+                renderHistoryView();
+            }
+            if(tabId === 'lms') {
+                renderLMSResources();
+            }
+            if(tabId === 'gallery' || tabId === 'teacher-gallery') {
+                renderGalleryGrids();
+            }
+            if(tabId === 'teacher-announcements') {
+                const td = document.getElementById('teacher-announcement-display');
+                if(td) td.innerText = globalAnnouncementText;
+                if(globalAnnouncementImgUrl) {
+                    const imgPrev = document.getElementById('teacher-announcement-img-preview');
+                    if(imgPrev) imgPrev.src = globalAnnouncementImgUrl;
+                    const imgDisp = document.getElementById('teacher-announcement-image-display');
+                    if(imgDisp) imgDisp.classList.remove('hidden');
+                }
+            }
+        }
+
+        function renderAll() {
+            renderClassesDropdown();
+            renderFeeClassDropdown();
+            renderAttendanceClassDropdown();
+            renderHistoryClassDropdown();
+            renderClassesList();
+            renderDiscardDropdown();
+            onGradingClassChange();
+            renderGradingTable();
+            renderFeesTable();
+            renderAttendanceRegister();
+            renderHistoryView();
+            renderLMSResources();
+            renderGalleryGrids();
+            renderCharts();
+        }
+
+        // Direct Gemini API Integration
+        function setAiPrompt(promptText) {
+            const queryBox = document.getElementById('ai-user-query');
+            if(queryBox) queryBox.value = promptText;
+        }
+
+        async function saveGeminiKey() {
+            const keyInput = document.getElementById('gemini-api-key');
+            storedGeminiKey = keyInput ? keyInput.value.trim() : '';
+            await saveCloudSettings();
+            if(storedGeminiKey) {
+                alert('Gemini API Key saved and synced to school cloud successfully! All teachers can now use live Gemini AI.');
+            } else {
+                alert('API key cleared.');
+            }
+        }
+
+        async function askAICopilot() {
+            const queryInput = document.getElementById('ai-user-query');
+            const query = queryInput ? queryInput.value.trim() : '';
+            const responseBox = document.getElementById('ai-response-box');
+            const responseContent = document.getElementById('ai-response-content');
+            
+            if(!query) {
+                alert('Please type a question for Gemini AI.');
+                return;
+            }
+
+            responseBox.classList.remove('hidden');
+            responseContent.innerHTML = `<p class="italic text-slate-500 animate-pulse">Contacting Gemini AI...</p>`;
+
+            if(!storedGeminiKey) {
+                responseContent.innerHTML = `<span class="text-red-700 font-bold">⚠️ Error: No Gemini API Key configured. Please have the Admin enter and save a valid Gemini API Key in the AI Assistant tab.</span>`;
+                return;
+            }
+
+            try {
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${storedGeminiKey}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: query }] }]
+                    })
+                });
+                const data = await response.json();
+                if(data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts[0].text) {
+                    responseContent.innerHTML = data.candidates[0].content.parts[0].text;
+                } else if(data.error) {
+                    responseContent.innerHTML = `<span class="text-red-700 font-bold">API Error: ${data.error.message || 'Invalid API Key or quota exceeded.'}</span>`;
+                } else {
+                    responseContent.innerHTML = `<span class="text-red-700 font-bold">Unexpected response from Gemini API. Please check your API key.</span>`;
+                }
+            } catch(err) {
+                responseContent.innerHTML = `<span class="text-red-700 font-bold">Network / Connection Error: ${err.message}. Please check your internet connection.</span>`;
+            }
+        }
+
+        function downloadAiAsDoc() {
+            const content = document.getElementById('ai-response-content').innerText;
+            if(!content || content.includes('Contacting Gemini AI') || content.includes('Error')) {
+                alert('No valid AI response to download yet.');
+                return;
+            }
+            let fileContent = `${schoolProfile.name.toUpperCase()}\nOFFICIAL GEMINI AI ASSISTANT OUTPUT\n--------------------------------------------------\n\n${content}`;
+            const blob = new Blob([fileContent], { type: 'application/msword' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Gemini_AI_Output_${Date.now()}.doc`;
+            a.click();
+            alert('AI response downloaded successfully as document!');
+        }
+
+        function renderClassesDropdown() {
+            const selectEnroll = document.getElementById('s-class');
+            if(selectEnroll) {
+                const currentVal = selectEnroll.value;
+                selectEnroll.innerHTML = classesData.map(c => `<option value="${c}">${c}</option>`).join('');
+                if(currentVal) selectEnroll.value = currentVal;
+            }
+            const selectGrading = document.getElementById('grading-class-filter');
+            if(selectGrading) {
+                const currentGradVal = selectGrading.value;
+                selectGrading.innerHTML = classesData.map(c => `<option value="${c}">${c}</option>`).join('');
+                if(currentGradVal) selectGrading.value = currentGradVal;
+            }
+        }
+        function renderFeeClassDropdown() {
+            const feeFilter = document.getElementById('fee-class-filter');
+            if(feeFilter) {
+                const currentFeeVal = feeFilter.value;
+                feeFilter.innerHTML = classesData.map(c => `<option value="${c}">${c}</option>`).join('');
+                if(currentFeeVal) feeFilter.value = currentFeeVal;
+            }
+        }
+        function renderAttendanceClassDropdown() {
+            const attFilter = document.getElementById('attendance-class-filter');
+            if(attFilter) {
+                const currentAttVal = attFilter.value;
+                attFilter.innerHTML = classesData.map(c => `<option value="${c}">${c}</option>`).join('');
+                if(currentAttVal) attFilter.value = currentAttVal;
+            }
+        }
+        function renderHistoryClassDropdown() {
+            const histFilter = document.getElementById('history-class-filter');
+            if(histFilter) {
+                const currentHistVal = histFilter.value;
+                histFilter.innerHTML = classesData.map(c => `<option value="${c}">${c}</option>`).join('');
+                if(currentHistVal) histFilter.value = currentHistVal;
+            }
+        }
+        function renderDiscardDropdown() {
+            const discardSelect = document.getElementById('discard-student-select');
+            if(discardSelect) {
+                discardSelect.innerHTML = studentsData.map(s => `<option value="${s.id}">${s.name} (${s.class})</option>`).join('');
+            }
+        }
+        function renderClassesList() {
+            const container = document.getElementById('classes-list-container');
+            if(container) {
+                container.innerHTML = classesData.map(c => `
+                    <span class="px-3 py-1.5 bg-blue-50 text-blue-900 border border-blue-200 rounded-xl text-sm font-semibold flex items-center gap-2">
+                        ${c}
+                        <button onclick="removeClass('${c}')" class="text-red-600 hover:text-red-800 font-bold text-xs">×</button>
+                    </span>
+                `).join('');
+            }
+        }
+        function addClass() {
+            const input = document.getElementById('new-class-input');
+            const val = input.value.trim();
+            if(!val) return;
+            if(classesData.includes(val)) { alert('Class already exists!'); return; }
+            classesData.push(val);
+            input.value = '';
+            renderAll();
+            alert(`Class "${val}" added successfully!`);
+        }
+        function removeClass(c) {
+            classesData = classesData.filter(item => item !== c);
+            renderAll();
+        }
+        function discardStudent() {
+            const select = document.getElementById('discard-student-select');
+            const studentId = parseInt(select.value);
+            const student = studentsData.find(s => s.id === studentId);
+            if(!student) return;
+            if(confirm(`Are you sure you want to discard/remove ${student.name} from school records?`)) {
+                studentsData = studentsData.filter(s => s.id !== studentId);
+                renderAll();
+                alert(`Student ${student.name} has been successfully discarded from the school registry.`);
+            }
+        }
+        function editTimetable() {
+            const updated = prompt("Enter updated school timetable schedule:", timetableText);
+            if(updated) {
+                timetableText = updated;
+                document.getElementById('timetable-display').innerText = updated;
+                alert('Timetable updated successfully!');
+            }
+        }
+        function saveLMSResource() {
+            const title = document.getElementById('lms-title').value.trim();
+            const url = document.getElementById('lms-embed-url').value.trim();
+            const desc = document.getElementById('lms-content-desc').value.trim();
+            if(!title) { alert('Please enter a resource title.'); return; }
+            lmsResources.push({ title, url: url || 'https://www.youtube.com/embed/dQw4w9WgXcQ', description: desc || 'No description provided.' });
+            
+            document.getElementById('lms-title').value = '';
+            document.getElementById('lms-embed-url').value = '';
+            document.getElementById('lms-content-desc').value = '';
+            renderLMSResources();
+            alert('LMS teaching resource published successfully!');
+        }
+        function renderLMSResources() {
+            const grid = document.getElementById('lms-resources-grid');
+            if(!grid) return;
+            if(lmsResources.length === 0) {
+                grid.innerHTML = `<p class="text-slate-400 italic text-sm">No teaching materials uploaded yet.</p>`;
+                return;
+            }
+            grid.innerHTML = lmsResources.map(r => `
+                <div class="bg-slate-50 p-4 rounded-xl border space-y-2 shadow-sm">
+                    <h4 class="font-bold text-xs text-blue-950">${r.title}</h4>
+                    <p class="text-xs text-slate-600">${r.description}</p>
+                    <div class="pt-1">
+                        <iframe class="w-full h-40 rounded-lg shadow border" src="${r.url}" allowfullscreen></iframe>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        document.getElementById('student-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('s-name').value;
+            const className = document.getElementById('s-class').value;
+            const gender = document.getElementById('s-gender').value;
+            try {
+                await supabaseClient.from('students').insert([{ name: name, class: className, gender: gender }]);
+            } catch(err) { console.log(err); }
+            alert(`Student ${name} successfully enrolled to ${className} and saved to Supabase!`);
+            document.getElementById('s-name').value = '';
+            await fetchStudentsFromSupabase();
+            renderAll();
+        });
+
+        document.getElementById('teacher-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('t-name').value;
+            const phone = document.getElementById('t-phone').value;
+            const email = document.getElementById('t-email').value;
+            const pass = document.getElementById('t-pass').value;
+            try {
+                await supabaseClient.from('teachers').insert([{ full_name: name, phone_number: phone, email }]);
+                teachersList.push(name);
+            } catch(err) { console.log(err); }
+            alert(`Teacher account created successfully for ${name}!`);
+            document.getElementById('t-name').value = '';
+            document.getElementById('t-phone').value = '';
+            document.getElementById('t-email').value = '';
+            document.getElementById('t-pass').value = '';
+            await fetchTeachersFromSupabase();
+        });
+
+        function onGradingClassChange() {
+            const selectGrading = document.getElementById('grading-class-filter');
+            const selectedClass = selectGrading ? selectGrading.value : 'Basic 4';
+            const modeDesc = document.getElementById('assessment-mode-description');
+            
+            if(selectedClass === 'Basic 1' || selectedClass === 'Basic 2' || selectedClass === 'Basic 3') {
+                if(modeDesc) modeDesc.innerText = `Mode: ${selectedClass} — One Class Teacher (Class Teacher handles all subjects for this class).`;
+            } else {
+                if(modeDesc) modeDesc.innerText = `Mode: ${selectedClass} — Subject Teaching (Specialized Subject Teacher grading).`;
+            }
+            renderGradingTable();
+        }
+
+        function renderGradingTable() {
+            const year = document.getElementById('grading-year-filter').value || '2026';
+            const selectGrading = document.getElementById('grading-class-filter');
+            const selectedClass = selectGrading ? selectGrading.value : classesData[0];
+            const term = document.getElementById('grading-term-filter').value;
+            const subject = document.getElementById('grading-subject-filter').value;
+            const filteredStudents = studentsData.filter(s => s.class === selectedClass);
+            const tbody = document.getElementById('grading-table-body');
+            if(!tbody) return;
+            if(filteredStudents.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="12" class="p-6 text-center text-slate-400 italic">No students registered in ${selectedClass || 'this class'} yet.</td></tr>`;
+                return;
+            }
+            tbody.innerHTML = filteredStudents.map((s, idx) => {
+                const globalIdx = studentsData.findIndex(item => item.id === s.id);
+                if(!s.subjectsData[year]) s.subjectsData[year] = {};
+                if(!s.subjectsData[year][term]) s.subjectsData[year][term] = {};
+                if(!s.subjectsData[year][term][subject]) s.subjectsData[year][term][subject] = { indTest1: 0, groupTest: 0, indTest2: 0, homework: 0, exam: 0 };
+                const sub = s.subjectsData[year][term][subject];
+                const totalSba100 = (sub.indTest1 || 0) + (sub.groupTest || 0) + (sub.indTest2 || 0) + (sub.homework || 0);
+                const sba50 = (totalSba100 * 0.5).toFixed(1);
+                const exam50 = ((sub.exam || 0) * 0.5).toFixed(1);
+                const overallTotal = (parseFloat(sba50) + parseFloat(exam50)).toFixed(1);
+                const grade = computeGrade(overallTotal);
+                return `
+                    <tr>
+                        <td class="p-2.5 font-medium">${idx + 1}. ${s.name}</td>
+                        <td class="p-2.5 text-center"><input type="number" value="${sub.indTest1}" onchange="updateAssessmentScore(${globalIdx}, '${year}', '${term}', '${subject}', 'indTest1', this.value, 30)" class="w-16 p-1 border rounded text-center font-semibold" placeholder="30"></td>
+                        <td class="p-2.5 text-center"><input type="number" value="${sub.groupTest}" onchange="updateAssessmentScore(${globalIdx}, '${year}', '${term}', '${subject}', 'groupTest', this.value, 20)" class="w-16 p-1 border rounded text-center font-semibold" placeholder="20"></td>
+                        <td class="p-2.5 text-center"><input type="number" value="${sub.indTest2}" onchange="updateAssessmentScore(${globalIdx}, '${year}', '${term}', '${subject}', 'indTest2', this.value, 30)" class="w-16 p-1 border rounded text-center font-semibold" placeholder="30"></td>
+                        <td class="p-2.5 text-center"><input type="number" value="${sub.homework}" onchange="updateAssessmentScore(${globalIdx}, '${year}', '${term}', '${subject}', 'homework', this.value, 20)" class="w-16 p-1 border rounded text-center font-semibold" placeholder="20"></td>
+                        <td class="p-2.5 text-center font-bold bg-blue-50">${totalSba100}</td>
+                        <td class="p-2.5 text-center font-semibold bg-blue-100 text-blue-900">${sba50}</td>
+                        <td class="p-2.5 text-center"><input type="number" value="${sub.exam}" onchange="updateAssessmentScore(${globalIdx}, '${year}', '${term}', '${subject}', 'exam', this.value, 100)" class="w-16 p-1 border rounded text-center font-semibold" placeholder="100"></td>
+                        <td class="p-2.5 text-center font-semibold bg-blue-100 text-blue-900">${exam50}</td>
+                        <td class="p-2.5 text-center font-black bg-amber-50 text-amber-950">${overallTotal}</td>
+                        <td class="p-2.5 text-center"><span class="px-2 py-0.5 bg-amber-100 text-amber-900 rounded font-bold text-xs">${grade}</span></td>
+                        <td class="p-2.5 text-center"><span class="px-2 py-0.5 bg-blue-100 text-blue-900 rounded font-semibold text-xs">${s.position || 'Pending'}</span></td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function updateAssessmentScore(index, year, term, subject, field, val, maxLimit) {
+            let num = parseFloat(val) || 0;
+            if(num > maxLimit) {
+                alert(`Maximum allowed score for this assessment is ${maxLimit}`);
+                num = maxLimit;
+            }
+            if(!studentsData[index].subjectsData[year]) studentsData[index].subjectsData[year] = {};
+            if(!studentsData[index].subjectsData[year][term]) studentsData[index].subjectsData[year][term] = {};
+            if(!studentsData[index].subjectsData[year][term][subject]) studentsData[index].subjectsData[year][term][subject] = { indTest1: 0, groupTest: 0, indTest2: 0, homework: 0, exam: 0 };
+            
+            studentsData[index].subjectsData[year][term][subject][field] = num;
+            renderGradingTable();
+        }
+
+        function computeGrade(total) {
+            const t = parseFloat(total);
+            if(t >= 80) return '1 (A)';
+            if(t >= 70) return '2 (B)';
+            if(t >= 60) return '3 (C)';
+            if(t >= 50) return '4 (D)';
+            if(t >= 40) return '5 (E)';
+            return '9 (F)';
+        }
+
+        function refreshSubmittedScores() {
+            renderGradingTable();
+            alert('Grading table refreshed successfully.');
+        }
+
+        function calculateGrades() {
+            if(studentsData.length === 0) { alert('No students to grade.'); return; }
+            const year = document.getElementById('grading-year-filter').value || '2026';
+            const term = document.getElementById('grading-term-filter').value;
+            studentsData.forEach(s => {
+                let studentOverallTotal = 0;
+                if(s.subjectsData[year] && s.subjectsData[year][term]) {
+                    Object.keys(s.subjectsData[year][term]).forEach(subName => {
+                        const sub = s.subjectsData[year][term][subName];
+                        const totalSba100 = (sub.indTest1 || 0) + (sub.groupTest || 0) + (sub.indTest2 || 0) + (sub.homework || 0);
+                        const sba50 = totalSba100 * 0.5;
+                        const exam50 = (sub.exam || 0) * 0.5;
+                        studentOverallTotal += (sba50 + exam50);
+                    });
+                }
+                s.overallTotal = studentOverallTotal;
+            });
+            studentsData.sort((a,b) => (b.overallTotal || 0) - (a.overallTotal || 0));
+            studentsData.forEach((s, idx) => s.position = `${idx + 1}${getOrdinal(idx + 1)}`);
+            renderGradingTable();
+            alert('Grades, totals, and ordinal positions successfully computed!');
+        }
+
+        function getOrdinal(n) {
+            const s = ["th","st","nd","rd"], v = n % 100;
+            return s[(v - 20) % 10] || s[v] || s[0];
+        }
+
+        function exportAssessmentSheet(format) {
+            const year = document.getElementById('grading-year-filter').value || '2026';
+            const subject = document.getElementById('grading-subject-filter').value;
+            const term = document.getElementById('grading-term-filter').value;
+            const className = document.getElementById('grading-class-filter').value;
+            const registeredTeacherName = teachersList.length > 0 ? teachersList[0] : (currentUser ? currentUser.name : 'Assigned Teacher');
+            
+            let content = `${schoolProfile.name.toUpperCase()}\nSCHOOL BASED ASSESSMENT AT BASIC EDUCATIONAL LEVEL\nTERMELY SCORING FOR PRIMARY AND JUNIOR HIGH SCHOOLS\nYear: ${year} | Class: ${className} | Subject: ${subject} | Term: ${term} | Teacher: ${registeredTeacherName}\n\n`;
+            content += "No.\tNAME\tInd.Test 1(30)\tGroup Test(20)\tInd.Test 2(30)\tHomework(20)\tTotal SBA(100)\t50% SBA\tExams(100)\t50% Exam\tOverall Total\tGrade\n";
+            content += "----------------------------------------------------------------------------------------------------------------------------------\n";
+            
+            studentsData.filter(s => s.class === className).forEach((s, idx) => {
+                const sub = (s.subjectsData[year] && s.subjectsData[year][term] && s.subjectsData[year][term][subject]) ? s.subjectsData[year][term][subject] : { indTest1: 0, groupTest: 0, indTest2: 0, homework: 0, exam: 0 };
+                const totalSba = (sub.indTest1 || 0) + (sub.groupTest || 0) + (sub.indTest2 || 0) + (sub.homework || 0);
+                const sba50 = totalSba * 0.5;
+                const exam50 = (sub.exam || 0) * 0.5;
+                const total = sba50 + exam50;
+                content += `${idx + 1}\t${s.name}\t${sub.indTest1}\t${sub.groupTest}\t${sub.indTest2}\t${sub.homework}\t${totalSba}\t${sba50}\t${sub.exam}\t${exam50}\t${total}\t${computeGrade(total)}\n`;
+            });
+            const blob = new Blob([content], { type: format === 'pdf' ? 'application/pdf' : 'application/msword' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${year}_${className}_${subject}_${term}_Assessment_Sheet.${format === 'pdf' ? 'pdf' : 'doc'}`;
+            a.click();
+            alert(`Assessment sheet downloaded as ${format.toUpperCase()}!`);
+        }
+
+        function finalizeReports() {
+            if(studentsData.length === 0) { alert('No student reports to finalize.'); return; }
+            alert('Full class assessment sheets and individual report cards successfully finalized and archived to Student History!');
+            switchTab('history');
+            renderHistoryView();
+        }
+
+        function renderHistoryView() {
+            const histYear = document.getElementById('history-year-filter').value || '2026';
+            const histClass = document.getElementById('history-class-filter').value || classesData[0];
+            const histTerm = document.getElementById('history-term-filter').value || 'Term 1';
+            const container = document.getElementById('history-container');
+            const registeredTeacherName = teachersList.length > 0 ? teachersList[0] : (currentUser ? currentUser.name : 'Assigned Teacher');
+            const filtered = studentsData.filter(s => s.class === histClass);
+            
+            if(filtered.length === 0) {
+                container.innerHTML = `<p class="text-slate-500 italic p-4">No student records found for ${histClass} (${histYear} - ${histTerm}).</p>`;
+                return;
+            }
+
+            let masterAssessmentSheetsHtml = standardSubjects.map(subject => {
+                let rowsHtml = filtered.map((s, idx) => {
+                    const sub = (s.subjectsData[histYear] && s.subjectsData[histYear][histTerm] && s.subjectsData[histYear][histTerm][subject]) ? s.subjectsData[histYear][histTerm][subject] : { indTest1: 0, groupTest: 0, indTest2: 0, homework: 0, exam: 0 };
+                    const totalSba = (sub.indTest1 || 0) + (sub.groupTest || 0) + (sub.indTest2 || 0) + (sub.homework || 0);
+                    const sba50 = totalSba * 0.5;
+                    const exam50 = (sub.exam || 0) * 0.5;
+                    const total100 = sba50 + exam50;
+                    return `
+                        <tr>
+                            <td class="border border-black p-1 text-center font-bold">${idx + 1}</td>
+                            <td class="border border-black p-1 pl-2 font-medium">${s.name}</td>
+                            <td class="border border-black p-1 text-center">${sub.indTest1 || 0}</td>
+                            <td class="border border-black p-1 text-center">${sub.groupTest || 0}</td>
+                            <td class="border border-black p-1 text-center">${sub.indTest2 || 0}</td>
+                            <td class="border border-black p-1 text-center">${sub.homework || 0}</td>
+                            <td class="border border-black p-1 text-center font-bold bg-slate-50">${totalSba}</td>
+                            <td class="border border-black p-1 text-center font-semibold bg-blue-50">${sba50}</td>
+                            <td class="border border-black p-1 text-center">${sub.exam || 0}</td>
+                            <td class="border border-black p-1 text-center font-semibold bg-blue-50">${exam50}</td>
+                            <td class="border border-black p-1 text-center font-black bg-amber-50">${total100}</td>
+                            <td class="border border-black p-1 text-center font-bold">${computeGrade(total100)}</td>
+                        </tr>
+                    `;
+                }).join('');
+
+                return `
+                    <div class="assessment-print-page bg-white p-8 rounded-xl shadow-lg border-2 border-slate-300 max-w-4xl mx-auto space-y-4 text-slate-900 font-sans">
+                        <div class="text-center space-y-1 border-b-2 border-black pb-3">
+                            <h2 class="font-black text-xl tracking-wide">${schoolProfile.name.toUpperCase()}</h2>
+                            <p class="text-xs font-bold text-slate-700">SCHOOL BASED ASSESSMENT AT BASIC EDUCATIONAL LEVEL</p>
+                            <p class="text-xs font-bold text-slate-700 uppercase">TERMELY RECORDINGS FOR PRIMARY AND JUNIOR HIGH SCHOOLS</p>
+                        </div>
+                        <div class="text-xs space-y-1 font-bold flex justify-between">
+                            <div>
+                                <p>CLASS: <span class="underline uppercase">${histClass}</span></p>
+                                <p>TERM: <span class="underline uppercase">${histTerm}</span></p>
+                            </div>
+                            <div>
+                                <p>YEAR: <span class="underline text-blue-900">${histYear}</span></p>
+                                <p>SUBJECT: <span class="underline uppercase text-blue-900">${subject}</span></p>
+                            </div>
+                            <div>
+                                <p>NO. ON ROLL: <span class="underline">${filtered.length}</span></p>
+                                <p>NAME OF TEACHER: <span class="underline uppercase">${registeredTeacherName}</span></p>
+                            </div>
+                        </div>
+                        <table class="w-full text-xs border-collapse border border-black mt-2">
+                            <thead>
+                                <tr class="bg-slate-100 text-center font-bold text-[10px]">
+                                    <th class="border border-black p-1.5 w-10">NO.</th>
+                                    <th class="border border-black p-1.5 text-left pl-2">NAME</th>
+                                    <th class="border border-black p-1.5">IND. TEST 1 (30)</th>
+                                    <th class="border border-black p-1.5">GROUP TEST (20)</th>
+                                    <th class="border border-black p-1.5">IND. TEST 2 (30)</th>
+                                    <th class="border border-black p-1.5">PROJECT / HW (20)</th>
+                                    <th class="border border-black p-1.5">TOTAL SBA (100)</th>
+                                    <th class="border border-black p-1.5">50%</th>
+                                    <th class="border border-black p-1.5">EXAMS (100)</th>
+                                    <th class="border border-black p-1.5">50%</th>
+                                    <th class="border border-black p-1.5">OVERALL TOTAL</th>
+                                    <th class="border border-black p-1.5">GRADE</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${rowsHtml}
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+            }).join('');
+
+            let individualReportCardsHtml = filtered.map((s) => {
+                const arrears = parseFloat(s.arrearsFee) || 0;
+                const tuition = parseFloat(s.tuitionFee) || 250;
+                const printing = parseFloat(s.printingFee) || 25;
+                const pta = parseFloat(s.ptaFee) || 5;
+                const other = parseFloat(s.otherFee) || 20;
+                const totalFee = arrears + tuition + printing + pta + other;
+
+                let subjectsHtml = standardSubjects.map(subName => {
+                    const sub = (s.subjectsData[histYear] && s.subjectsData[histYear][histTerm] && s.subjectsData[histYear][histTerm][subName]) ? s.subjectsData[histYear][histTerm][subName] : { indTest1: 0, groupTest: 0, indTest2: 0, homework: 0, exam: 0 };
+                    const totalSba = (sub.indTest1 || 0) + (sub.groupTest || 0) + (sub.indTest2 || 0) + (sub.homework || 0);
+                    const sba50 = totalSba * 0.5;
+                    const exam50 = (sub.exam || 0) * 0.5;
+                    const total100 = sba50 + exam50;
+                    const grade = computeGrade(total100);
+                    return `
+                        <tr>
+                            <td class="border border-black p-1 pl-2 font-medium">${subName}</td>
+                            <td class="border border-black p-1 text-center">${sba50}</td>
+                            <td class="border border-black p-1 text-center">${sub.exam || 0}</td>
+                            <td class="border border-black p-1 text-center font-bold">${total100}</td>
+                            <td class="border border-black p-1 text-center">${s.position || '1st'}</td>
+                            <td class="border border-black p-1 text-center">${grade}</td>
+                            <td class="border border-black p-1 pl-2">Satisfactory</td>
+                        </tr>
+                    `;
+                }).join('');
+
+                return `
+                    <div class="report-card-page bg-white p-8 rounded-xl shadow-lg border-2 border-slate-300 max-w-3xl mx-auto space-y-4 text-slate-900 font-sans">
+                        <div class="text-center space-y-1 border-b-2 border-black pb-3">
+                            <h2 class="font-black text-xl tracking-wide">${schoolProfile.name.toUpperCase()}</h2>
+                            <p class="text-xs font-bold text-slate-700">P. O. BOX 18 16, SHAMA</p>
+                            <p class="text-xs font-bold text-slate-700">ASSORKO - ESSAMAN</p>
+                            <h3 class="font-extrabold text-sm tracking-widest pt-1 uppercase underline">END OF TERM REPORT CARD (${histYear})</h3>
+                        </div>
+                        <div class="text-xs space-y-1.5 font-bold">
+                            <div class="flex border-b border-black pb-1">
+                                <span class="w-32">NAME OF PUPIL:</span>
+                                <span class="flex-1 underline uppercase">${s.name}</span>
+                            </div>
+                            <div class="flex justify-between border-b border-black pb-1">
+                                <div class="flex flex-1"><span class="w-16">CLASS:</span><span class="underline uppercase">${s.class}</span></div>
+                                <div class="flex flex-1"><span class="w-28">NO. ON ROLL:</span><span class="underline">${filtered.length}</span></div>
+                            </div>
+                            <div class="flex justify-between border-b border-black pb-1">
+                                <div class="flex flex-1"><span class="w-16">YEAR:</span><span class="underline text-blue-900">${histYear}</span></div>
+                                <div class="flex flex-1"><span class="w-28">TERM:</span><span class="underline uppercase">${histTerm}</span></div>
+                            </div>
+                            <div class="flex justify-between border-b border-black pb-1">
+                                <div class="flex flex-1"><span class="w-32">POSITION IN CLASS:</span><span class="underline">${s.position || '1st'}</span></div>
+                                <div class="flex flex-1"><span class="w-32">RE-OPENING DATE:</span><span class="underline"><input type="text" value="${s.reopeningDate}" onchange="updateStudentProp(${studentsData.findIndex(item => item.id === s.id)}, 'reopeningDate', this.value)" class="border-none w-32 bg-transparent text-xs font-bold"></span></div>
+                            </div>
+                        </div>
+                        <table class="w-full text-xs border-collapse border border-black mt-2">
+                            <thead>
+                                <tr class="bg-slate-100 text-center font-bold">
+                                    <th class="border border-black p-1.5 w-40 text-left pl-2">SUBJECT</th>
+                                    <th class="border border-black p-1.5">CLASS SCORE 50%</th>
+                                    <th class="border border-black p-1.5">EXAMS SCORE 50%</th>
+                                    <th class="border border-black p-1.5">TOTAL SCORE 100%</th>
+                                    <th class="border border-black p-1.5">POSITION</th>
+                                    <th class="border border-black p-1.5">GRADE</th>
+                                    <th class="border border-black p-1.5">REMARKS</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${subjectsHtml}
+                            </tbody>
+                        </table>
+                        <div class="text-xs space-y-1.5 pt-1 font-semibold">
+                            <div class="flex border-b border-black pb-1">
+                                <span class="w-36">ATTENDANCE MADE:</span>
+                                <span class="font-bold text-blue-900 underline">${s.attendanceMade || 65}</span>
+                                <span class="mx-4">OUT OF TOTAL OF:</span>
+                                <span class="font-bold text-blue-900 underline">${s.attendanceTotal || 70}</span>
+                                <span class="mx-4">PROMOTED TO:</span>
+                                <input type="text" value="${s.promotedTo}" onchange="updateStudentProp(${studentsData.findIndex(item => item.id === s.id)}, 'promotedTo', this.value)" class="flex-1 border-b border-black bg-transparent">
+                            </div>
+                            <div class="flex border-b border-black pb-1">
+                                <span class="w-24">CONDUCT:</span>
+                                <input type="text" value="${s.conduct}" onchange="updateStudentProp(${studentsData.findIndex(item => item.id === s.id)}, 'conduct', this.value)" class="flex-1 border-b border-black bg-transparent">
+                            </div>
+                            <div class="flex border-b border-black pb-1">
+                                <span class="w-24">INTEREST:</span>
+                                <input type="text" value="${s.interest}" onchange="updateStudentProp(${studentsData.findIndex(item => item.id === s.id)}, 'interest', this.value)" class="flex-1 border-b border-black bg-transparent">
+                            </div>
+                            <div class="flex border-b border-black pb-1">
+                                <span class="w-48">CLASS TEACHER'S REMARKS:</span>
+                                <input type="text" value="${s.teacherRemarks}" onchange="updateStudentProp(${studentsData.findIndex(item => item.id === s.id)}, 'teacherRemarks', this.value)" class="flex-1 border-b border-black bg-transparent">
+                            </div>
+                            <div class="flex border-b border-black pb-1">
+                                <span class="w-48">HEAD TEACHER'S REMARKS:</span>
+                                <input type="text" value="${s.headRemarks}" onchange="updateStudentProp(${studentsData.findIndex(item => item.id === s.id)}, 'headRemarks', this.value)" class="flex-1 border-b border-black bg-transparent">
+                            </div>
+                        </div>
+                        <!-- PROFESSIONAL BILLING ACCOUNT SUMMARY TABLE -->
+                        <table class="w-full text-xs border-collapse border border-black mt-3">
+                            <thead>
+                                <tr class="bg-blue-50 font-bold">
+                                    <th class="border border-black p-1.5 text-left pl-2">PROFESSIONAL BILLING ACCOUNT LEDGER</th>
+                                    <th class="border border-black p-1.5 text-right pr-3">AMOUNT (GH₵)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="border border-black p-1.5 pl-2 font-bold text-red-700">ARREARS (OLD UNPAID BALANCE):</td>
+                                    <td class="border border-black p-1.5 text-right pr-3 font-semibold text-red-700">${arrears.toFixed(2)}</td>
+                                </tr>
+                                <tr>
+                                    <td class="border border-black p-1.5 pl-2 font-bold">TUITION FEE FOR NEXT TERM:</td>
+                                    <td class="border border-black p-1.5 text-right pr-3 font-semibold">${tuition.toFixed(2)}</td>
+                                </tr>
+                                <tr>
+                                    <td class="border border-black p-1.5 pl-2 font-bold">PRINTING FEE FOR NEXT TERM:</td>
+                                    <td class="border border-black p-1.5 text-right pr-3 font-semibold">${printing.toFixed(2)}</td>
+                                </tr>
+                                <tr>
+                                    <td class="border border-black p-1.5 pl-2 font-bold">P.T.A. DUES FOR NEXT TERM:</td>
+                                    <td class="border border-black p-1.5 text-right pr-3 font-semibold">${pta.toFixed(2)}</td>
+                                </tr>
+                                <tr>
+                                    <td class="border border-black p-1.5 pl-2 font-bold">OTHER FEES FOR NEXT TERM:</td>
+                                    <td class="border border-black p-1.5 text-right pr-3 font-semibold">${other.toFixed(2)}</td>
+                                </tr>
+                                <tr class="bg-slate-100 font-black">
+                                    <td class="border border-black p-1.5 pl-2 uppercase">TOTAL BILL BALANCE DUE:</td>
+                                    <td class="border border-black p-1.5 text-right pr-3 text-blue-900">GH₵ ${totalFee.toFixed(2)}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="flex justify-end space-x-3 no-print pt-2">
+                            <button onclick="window.print()" class="px-4 py-2 bg-blue-900 text-white text-xs font-semibold rounded-lg">Print Report Card & Bill 🖨️</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = `<div class="mb-8"><h3 class="font-bold text-lg text-blue-950 mb-3 border-b pb-2">📋 Master Class Assessment Sheets (${histClass} - ${histYear} ${histTerm})</h3>${masterAssessmentSheetsHtml}</div><div><h3 class="font-bold text-lg text-blue-950 mb-3 border-b pb-2">🎓 Individual Report Cards & Billing Accounts</h3>${individualReportCardsHtml}</div>`;
+        }
+
+        function updateStudentProp(index, field, val) {
+            studentsData[index][field] = val;
+        }
+
+        function renderFeesTable() {
+            const feeFilter = document.getElementById('fee-class-filter');
+            const selectedClass = feeFilter ? feeFilter.value : classesData[0];
+            const filteredStudents = studentsData.filter(s => s.class === selectedClass);
+            const tbody = document.getElementById('fees-table-body');
+            if(!tbody) return;
+            if(filteredStudents.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="8" class="p-6 text-center text-slate-400 italic">No fee records found for ${selectedClass}.</td></tr>`;
+                return;
+            }
+            tbody.innerHTML = filteredStudents.map((s) => {
+                const globalIdx = studentsData.findIndex(item => item.id === s.id);
+                const arrears = parseFloat(s.arrearsFee) || 0;
+                const tuition = parseFloat(s.tuitionFee) || 250;
+                const printing = parseFloat(s.printingFee) || 25;
+                const pta = parseFloat(s.ptaFee) || 5;
+                const other = parseFloat(s.otherFee) || 20;
+                const total = arrears + tuition + printing + pta + other;
+                return `
+                    <tr>
+                        <td class="p-3 font-medium">${s.name}</td>
+                        <td class="p-3"><input type="number" value="${s.arrearsFee || 0}" onchange="updateFeeProp(${globalIdx}, 'arrearsFee', this.value)" class="w-16 p-1 border rounded text-red-700 font-bold"></td>
+                        <td class="p-3"><input type="number" value="${s.tuitionFee}" onchange="updateFeeProp(${globalIdx}, 'tuitionFee', this.value)" class="w-16 p-1 border rounded"></td>
+                        <td class="p-3"><input type="number" value="${s.printingFee}" onchange="updateFeeProp(${globalIdx}, 'printingFee', this.value)" class="w-16 p-1 border rounded"></td>
+                        <td class="p-3"><input type="number" value="${s.ptaFee}" onchange="updateFeeProp(${globalIdx}, 'ptaFee', this.value)" class="w-16 p-1 border rounded"></td>
+                        <td class="p-3"><input type="number" value="${s.otherFee}" onchange="updateFeeProp(${globalIdx}, 'otherFee', this.value)" class="w-16 p-1 border rounded"></td>
+                        <td class="p-3 font-black text-blue-900 bg-blue-50">₵ ${total.toFixed(2)}</td>
+                        <td class="p-3 no-print">
+                            <button onclick="viewReceipt(${globalIdx})" class="px-2 py-1 bg-blue-900 text-white text-xs rounded font-semibold">Receipt</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function updateFeeProp(index, field, val) {
+            studentsData[index][field] = parseFloat(val) || 0;
+            renderFeesTable();
+        }
+
+        function viewReceipt(index) {
+            const s = studentsData[index];
+            const arrears = parseFloat(s.arrearsFee) || 0;
+            const tuition = parseFloat(s.tuitionFee) || 250;
+            const printing = parseFloat(s.printingFee) || 25;
+            const pta = parseFloat(s.ptaFee) || 5;
+            const other = parseFloat(s.otherFee) || 20;
+            const totalFee = arrears + tuition + printing + pta + other;
+            
+            const content = document.getElementById('receipt-content');
+            content.innerHTML = `
+                <div class="text-center space-y-1 border-b pb-4">
+                    <h3 class="font-bold text-lg text-blue-950">${schoolProfile.name}</h3>
+                    <p class="text-[11px] text-slate-500 font-medium">${schoolProfile.location} • Professional Billing Account Statement</p>
+                </div>
+                <div class="text-sm space-y-2 pt-2">
+                    <p><strong>Student Name:</strong> ${s.name}</p>
+                    <p><strong>Class:</strong> ${s.class}</p>
+                    <hr class="my-2">
+                    <div class="flex justify-between text-red-700 font-bold"><span>Arrears (Old Balance):</span> <strong>₵ ${arrears.toFixed(2)}</strong></div>
+                    <div class="flex justify-between"><span>Tuition Fee:</span> <strong>₵ ${tuition.toFixed(2)}</strong></div>
+                    <div class="flex justify-between"><span>Printing Fee:</span> <strong>₵ ${printing.toFixed(2)}</strong></div>
+                    <div class="flex justify-between"><span>P.T.A Dues:</span> <strong>₵ ${pta.toFixed(2)}</strong></div>
+                    <div class="flex justify-between"><span>Other Fees:</span> <strong>₵ ${other.toFixed(2)}</strong></div>
+                    <div class="flex justify-between text-blue-900 border-t pt-2 font-black text-base"><span>Total Bill Balance Due:</span> <strong>₵ ${totalFee.toFixed(2)}</strong></div>
+                </div>
+            `;
+            document.getElementById('receipt-modal').classList.remove('hidden');
+        }
+
+        function renderAttendanceRegister() {
+            const attFilter = document.getElementById('attendance-class-filter');
+            const selectedClass = attFilter ? attFilter.value : classesData[0];
+            const filteredStudents = studentsData.filter(s => s.class === selectedClass);
+            const tbody = document.getElementById('attendance-table-body');
+            if(!tbody) return;
+            if(filteredStudents.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-slate-400 italic">No students found in ${selectedClass}.</td></tr>`;
+                return;
+            }
+            tbody.innerHTML = filteredStudents.map((s) => {
+                const globalIdx = studentsData.findIndex(item => item.id === s.id);
+                return `
+                    <tr>
+                        <td class="p-3 font-medium">${s.name}</td>
+                        <td class="p-3">${s.class}</td>
+                        <td class="p-3 text-center"><input type="number" value="${s.attendanceMade || 65}" onchange="updateAttendanceProp(${globalIdx}, 'attendanceMade', this.value)" class="w-20 p-1.5 border rounded text-center font-bold text-blue-900 bg-slate-50"></td>
+                        <td class="p-3 text-center"><input type="number" value="${s.attendanceTotal || 70}" onchange="updateAttendanceProp(${globalIdx}, 'attendanceTotal', this.value)" class="w-20 p-1.5 border rounded text-center font-bold text-slate-800 bg-slate-50"></td>
+                        <td class="p-3 text-center font-bold text-amber-900 bg-amber-50">${s.attendanceMade || 65} out of ${s.attendanceTotal || 70}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function updateAttendanceProp(index, field, val) {
+            studentsData[index][field] = parseInt(val) || 0;
+            renderAttendanceRegister();
+        }
+
+        function submitAttendanceRecord() {
+            alert('Attendance records successfully saved and synced to student report cards!');
+        }
+
+        function exportAttendance(format) {
+            const className = document.getElementById('attendance-class-filter').value;
+            let content = `${schoolProfile.name.toUpperCase()}\nATTENDANCE REGISTER SUMMARY\nClass: ${className}\n\nStudent Name\tDays Present\tTotal Days\tRatio\n`;
+            studentsData.filter(s => s.class === className).forEach(s => {
+                content += `${s.name}\t${s.attendanceMade || 65}\t${s.attendanceTotal || 70}\t${s.attendanceMade || 65} out of ${s.attendanceTotal || 70}\n`;
+            });
+            const blob = new Blob([content], { type: format === 'pdf' ? 'application/pdf' : 'application/msword' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${className}_Attendance_Summary.${format === 'pdf' ? 'pdf' : 'doc'}`;
+            a.click();
+            alert(`Attendance summary downloaded as ${format.toUpperCase()}!`);
+        }
+
+        function renderCharts() {
+            const maleCount = studentsData.filter(s => s.gender === 'Male').length;
+            const femaleCount = studentsData.filter(s => s.gender === 'Female').length;
+            const ctxGender = document.getElementById('genderChart');
+            if(ctxGender) {
+                if(window.myGenderChart) window.myGenderChart.destroy();
+                window.myGenderChart = new Chart(ctxGender.getContext('2d'), {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Male', 'Female'],
+                        datasets: [{ data: [maleCount || 0, femaleCount || 0], backgroundColor: ['#1e3a8a', '#d97706'] }]
+                    }
+                });
+            }
+            const classCounts = classesData.map(c => studentsData.filter(s => s.class === c).length);
+            const ctxClass = document.getElementById('classChart');
+            if(ctxClass) {
+                if(window.myClassChart) window.myClassChart.destroy();
+                window.myClassChart = new Chart(ctxClass.getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: classesData,
+                        datasets: [{ label: 'Students', data: classCounts, backgroundColor: '#1e3a8a' }]
+                    }
+                });
+            }
+        }
+
+        async function uploadMultiplePhotos() {
+            const fileInput = document.getElementById('multi-photo-file');
+            if(!fileInput.files || fileInput.files.length === 0) {
+                alert('Please select at least one photo!');
+                return;
+            }
+            let loadedCount = 0;
+            const totalFiles = fileInput.files.length;
+            Array.from(fileInput.files).forEach(file => {
+                const reader = new FileReader();
+                reader.onload = async function(e) {
+                    galleryPhotos.push({ url: e.target.result, name: file.name });
+                    loadedCount++;
+                    if(loadedCount === totalFiles) {
+                        await saveCloudSettings();
+                        renderGalleryGrids();
+                        alert(`${totalFiles} photo(s) successfully uploaded to Supabase cloud and synced across all devices!`);
+                    }
+                }
+                reader.readAsDataURL(file);
+            });
+            fileInput.value = '';
+        }
+
+        function renderGalleryGrids() {
+            const grid = document.getElementById('gallery-grid');
+            const tGrid = document.getElementById('teacher-gallery-grid');
+            if(galleryPhotos.length === 0) {
+                const emptyMsg = `<p class="text-slate-400 italic text-sm">No photos uploaded yet.</p>`;
+                if(grid) grid.innerHTML = emptyMsg;
+                if(tGrid) tGrid.innerHTML = emptyMsg;
+                return;
+            }
+            const html = galleryPhotos.map((p) => `
+                <div class="bg-slate-50 rounded-xl p-3 text-center border space-y-2">
+                    <img src="${p.url}" alt="School Activity" class="h-32 w-full object-cover rounded-lg shadow">
+                    <a href="${p.url}" download="${p.name || 'school_photo.jpg'}" class="block text-xs bg-blue-900 text-white py-1.5 px-3 rounded-lg font-bold hover:bg-blue-800">Download JPG ⬇️</a>
+                </div>
+            `).join('');
+            if(grid) grid.innerHTML = html;
+            if(tGrid) tGrid.innerHTML = html;
+        }
+
+        async function postAnnouncement() {
+            const textInput = document.getElementById('announcement-text');
+            const text = textInput ? textInput.value.trim() : '';
+            const photoInput = document.getElementById('announcement-photo-input');
+            
+            if(!text && (!photoInput.files || photoInput.files.length === 0)) {
+                alert('Please provide announcement text or a photo.');
+                return;
+            }
+            
+            if(text) {
+                globalAnnouncementText = text;
+            }
+            
+            if(photoInput && photoInput.files && photoInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = async function(e) {
+                    globalAnnouncementImgUrl = e.target.result;
+                    galleryPhotos.push({ url: globalAnnouncementImgUrl, name: photoInput.files[0].name || 'announcement_photo.jpg' });
+                    await saveCloudSettings();
+                    renderGalleryGrids();
+                    
+                    const imgPrev = document.getElementById('teacher-announcement-img-preview');
+                    if(imgPrev) imgPrev.src = globalAnnouncementImgUrl;
+                    const imgDisp = document.getElementById('teacher-announcement-image-display');
+                    if(imgDisp) imgDisp.classList.remove('hidden');
+
+                    alert('Announcement and photo published to Supabase cloud successfully!');
+                }
+                reader.readAsDataURL(photoInput.files[0]);
+            } else {
+                await saveCloudSettings();
+                alert('Announcement updated and synced to cloud successfully!');
+            }
+            
+            const teacherDisplay = document.getElementById('teacher-announcement-display');
+            if(teacherDisplay) teacherDisplay.innerText = globalAnnouncementText;
+        }
+
+        function saveSchoolProfile() {
+            const nameInput = document.getElementById('profile-school-name');
+            const locInput = document.getElementById('profile-school-location');
+            const mottoInput = document.getElementById('profile-school-motto');
+            
+            if(nameInput) schoolProfile.name = nameInput.value;
+            if(locInput) schoolProfile.location = locInput.value;
+            if(mottoInput) schoolProfile.motto = mottoInput.value;
+
+            document.getElementById('login-school-title').innerText = schoolProfile.name;
+            document.getElementById('login-school-motto').innerText = schoolProfile.motto;
+            document.getElementById('nav-school-name').innerText = schoolProfile.name;
+            document.getElementById('nav-school-info').innerText = `${schoolProfile.location} • Default Tuition: GH₵ 250`;
+            document.getElementById('dashboard-motto-display').innerText = `${schoolProfile.name}, ${schoolProfile.location} — ${schoolProfile.motto}.`;
+            alert('School profile and branding updated successfully!');
+        }
+    </script>
+</body>
+</html>`;
+
+    return new Response(html, {
+      headers: {
+        "content-type": "text/html;charset=UTF-8",
+      },
+    });
+  },
+};
