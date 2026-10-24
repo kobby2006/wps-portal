@@ -401,16 +401,16 @@
                                 <h2 class="text-xl font-bold text-slate-900">🤖 Live Gemini AI Assistant</h2>
                                 <p class="text-xs text-slate-500 mt-1">Ask any question on teaching, lesson planning, student support, or general knowledge. Powered live by the Gemini API.</p>
                             </div>
-                            <span class="px-3 py-1 bg-emerald-100 text-emerald-900 text-xs font-bold rounded-full">Gemini API Active</span>
+                            <span class="px-3 py-1 bg-emerald-100 text-emerald-900 text-xs font-bold rounded-full">Gemini AI Active</span>
                         </div>
-                        <!-- GEMINI API KEY INPUT -->
-                        <div class="bg-amber-50 p-4 rounded-xl border border-amber-200 space-y-2">
-                            <label class="block text-xs font-bold uppercase text-amber-900">Enter Your Gemini API Key (or use built-in default assistant):</label>
+                        <!-- ADMIN ONLY: GEMINI API KEY INPUT -->
+                        <div id="admin-gemini-section" class="hidden bg-amber-50 p-4 rounded-xl border border-amber-200 space-y-2">
+                            <label class="block text-xs font-bold uppercase text-amber-900">Admin: Enter School Gemini API Key:</label>
                             <div class="flex gap-2">
-                                <input type="password" id="gemini-api-key" placeholder="Paste your Gemini API Key here (optional)..." class="p-2.5 border rounded-xl text-xs bg-white font-medium flex-1">
-                                <button onclick="saveGeminiKey()" class="px-4 py-2 bg-amber-700 text-white font-bold rounded-xl text-xs hover:bg-amber-800">Save Key</button>
+                                <input type="password" id="gemini-api-key" placeholder="Paste your Gemini API Key here..." class="p-2.5 border rounded-xl text-xs bg-white font-medium flex-1">
+                                <button onclick="saveGeminiKey()" class="px-4 py-2 bg-amber-700 text-white font-bold rounded-xl text-xs hover:bg-amber-800">Save & Sync Key</button>
                             </div>
-                            <p class="text-[11px] text-amber-800">Get a free Gemini API key from <a href="https://aistudio.google.com/" target="_blank" class="underline font-bold">Google AI Studio</a> to unlock live web and AI intelligence.</p>
+                            <p class="text-[11px] text-amber-800">Get a free Gemini API key from <a href="https://aistudio.google.com/" target="_blank" class="underline font-bold">Google AI Studio</a>. Once saved by Admin, all teachers can use Gemini live.</p>
                         </div>
                         <div class="space-y-3">
                             <label class="block text-xs font-bold uppercase text-slate-600">Quick-Select Prompt:</label>
@@ -731,6 +731,7 @@
                     portalLocked = data.portal_locked || false;
                     if(data.announcement_text) globalAnnouncementText = data.announcement_text;
                     if(data.announcement_img) globalAnnouncementImgUrl = data.announcement_img;
+                    if(data.gemini_api_key) storedGeminiKey = data.gemini_api_key;
                     if(data.gallery_photos && Array.isArray(data.gallery_photos)) {
                         galleryPhotos = data.gallery_photos;
                     }
@@ -743,6 +744,9 @@
             
             const announcementTextarea = document.getElementById('announcement-text');
             if(announcementTextarea) announcementTextarea.value = globalAnnouncementText;
+            
+            const keyInput = document.getElementById('gemini-api-key');
+            if(keyInput && storedGeminiKey) keyInput.value = storedGeminiKey;
         }
 
         async function saveCloudSettings() {
@@ -752,6 +756,7 @@
                     portal_locked: portalLocked,
                     announcement_text: globalAnnouncementText,
                     announcement_img: globalAnnouncementImgUrl,
+                    gemini_api_key: storedGeminiKey,
                     gallery_photos: galleryPhotos
                 });
                 if(error) {
@@ -779,6 +784,16 @@
             document.getElementById('app-shell').classList.remove('hidden');
             document.getElementById('user-badge').innerText = role;
             document.getElementById('welcome-name').innerText = user;
+
+            // Restrict API Key section to Admin only
+            const adminGeminiSection = document.getElementById('admin-gemini-section');
+            if(adminGeminiSection) {
+                if(role === 'admin') {
+                    adminGeminiSection.classList.remove('hidden');
+                } else {
+                    adminGeminiSection.classList.add('hidden');
+                }
+            }
 
             if(role === 'teacher') {
                 document.getElementById('admin-nav-section').classList.add('hidden');
@@ -963,19 +978,20 @@
             renderCharts();
         }
 
-        // Robust Live Gemini API Integration with Fallback
+        // Live Gemini API Integration with Cloud Sync
         function setAiPrompt(promptText) {
             const queryBox = document.getElementById('ai-user-query');
             if(queryBox) queryBox.value = promptText;
         }
 
-        function saveGeminiKey() {
+        async function saveGeminiKey() {
             const keyInput = document.getElementById('gemini-api-key');
             storedGeminiKey = keyInput ? keyInput.value.trim() : '';
+            await saveCloudSettings();
             if(storedGeminiKey) {
-                alert('Gemini API Key saved successfully! Your assistant is now fully connected to Gemini.');
+                alert('Gemini API Key saved and synced to school cloud successfully! All teachers can now use live Gemini AI.');
             } else {
-                alert('API key cleared. Using built-in school assistant mode.');
+                alert('API key cleared.');
             }
         }
 
@@ -1010,12 +1026,11 @@
                         return;
                     }
                 } catch(err) {
-                    console.log('Gemini API direct network/CORS note, falling back to built-in smart brain:', err);
+                    console.log('Gemini API direct network note, falling back to smart assistant:', err);
                 }
             }
 
             if(!apiSuccess) {
-                // Intelligent fallback assistant response
                 setTimeout(() => {
                     let answer = "";
                     const qLower = query.toLowerCase();
@@ -1025,9 +1040,9 @@
                     } else if(qLower.includes('attendance') || qLower.includes('out of')) {
                         answer = `📅 **Portal Guide**: Go to **Attendance Register**, select your class, and type each student's days present out of total days (e.g. 65 out of 70). Click **Save Attendance** to update their report cards instantly.`;
                     } else if(qLower.includes('lesson plan') || qLower.includes('science') || qLower.includes('math')) {
-                        answer = `✨ **Gemini AI Lesson Plan Guidance**:\nFor "${query}":\n1. **Objective**: Clearly state what pupils should master by the end of the 45 minutes.\n2. **Introduction (10 mins)**: Use a real-world local example or interactive question.\n3. **Core Activity (25 mins)**: Guide pupils through structured, step-by-step practice.\n4. **Conclusion (10 mins)**: Quick review quiz or summary check. *(Tip: Add your Gemini API key above for instant AI-generated lesson plans on any topic!)*`;
+                        answer = `✨ **Gemini AI Lesson Plan Guidance**:\nFor "${query}":\n1. **Objective**: Clearly state what pupils should master by the end of the 45 minutes.\n2. **Introduction (10 mins)**: Use a real-world local example or interactive question.\n3. **Core Activity (25 mins)**: Guide pupils through structured, step-by-step practice.\n4. **Conclusion (10 mins)**: Quick review quiz or summary check.`;
                     } else {
-                        answer = `💡 **Gemini AI Assistant Answer**:\nIn response to "${query}": Ensure all portal records are up to date and your pupils are engaged with active learning strategies. *(Enter your free Gemini API key in the yellow box above to unlock fully live AI answers for any question!)*`;
+                        answer = `💡 **Gemini AI Assistant Answer**:\nIn response to "${query}": Ensure all portal records are up to date and your pupils are engaged with active learning strategies.`;
                     }
 
                     responseContent.innerHTML = answer;
@@ -1349,7 +1364,7 @@
 
             let masterAssessmentSheetsHtml = standardSubjects.map(subject => {
                 let rowsHtml = filtered.map((s, idx) => {
-                    const sub = (s.subjectsData[histYear] && s.subjectsData[histYear][histTerm] && s.subjectsData[histYear][histTerm][subject]) ? s.subjectsData[histYear][histTerm][subject] : { indTest1: 0, groupTest: 0, indTest2: 0, homework: 0, exam: 0 };
+                    const sub = (s.subjectsData[histYear] && s.subjectsData[histYear][histTerm] && s.subjectsData[histYear][histTerm][subject]) ? s.subjectsData[histYear][histYear][histTerm][subject] : (s.subjectsData[histYear] && s.subjectsData[histYear][histTerm] && s.subjectsData[histYear][histTerm][subject]) ? s.subjectsData[histYear][histTerm][subject] : { indTest1: 0, groupTest: 0, indTest2: 0, homework: 0, exam: 0 };
                     const totalSba = (sub.indTest1 || 0) + (sub.groupTest || 0) + (sub.indTest2 || 0) + (sub.homework || 0);
                     const sba50 = totalSba * 0.5;
                     const exam50 = (sub.exam || 0) * 0.5;
