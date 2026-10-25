@@ -999,7 +999,7 @@ export default {
             alert('Gemini OAuth Token is active and locked!');
         }
 
-        async function askAICopilot() {
+                async function askAICopilot() {
             const queryInput = document.getElementById('ai-user-query');
             const query = queryInput ? queryInput.value.trim() : '';
             const responseBox = document.getElementById('ai-response-box');
@@ -1014,7 +1014,7 @@ export default {
             responseContent.innerHTML = `<p class="italic text-slate-500 animate-pulse">Contacting Gemini AI...</p>`;
 
             try {
-                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent`, {
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-2.0-flash:generateContent`, {
                     method: 'POST',
                     headers: { 
                         'Content-Type': 'application/json',
@@ -1036,7 +1036,7 @@ export default {
             } catch (err) {
                 responseContent.innerHTML = `<span class="text-red-700 font-bold">⚠️ Network Error: Could not connect to Gemini API.</span>`;
             }
-        }
+  }
   
         function downloadAiAsDoc() {
             const content = document.getElementById('ai-response-content').innerText;
