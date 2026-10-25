@@ -998,12 +998,6 @@ function setAiPrompt(promptText) {
 }
 
 async function saveGeminiKey() {
-    const keyInput = document.getElementById('gemini-api-key');
-    storedGeminiKey = keyInput ? keyInput.value.trim() : GEMINI_KEY;
-    await saveCloudSettings();
-    alert('Gemini API Key saved successfully!');
-}
-
 async function askAICopilot() {
     const queryInput = document.getElementById('ai-user-query');
     const query = queryInput ? queryInput.value.trim() : '';
@@ -1018,14 +1012,15 @@ async function askAICopilot() {
     responseBox.classList.remove('hidden');
     responseContent.innerHTML = `<p class="italic text-slate-500 animate-pulse">Contacting Gemini AI...</p>`;
 
-    const activeKey = GEMINI_KEY;
+    // Forcefully use your working token, bypassing any blank settings
+    const activeKey = "AQ.Ab8RN6KsUT8wZG0V6_YwWni-DarZF346a6ciPzryLuClwGzTZw";
 
     try {
         const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent`, {
             method: 'POST',
             headers: { 
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${activeKey}`
+                'x-goog-api-key': activeKey
             },
             body: JSON.stringify({
                 contents: [{ parts: [{ text: query }] }]
@@ -1044,6 +1039,7 @@ async function askAICopilot() {
         responseContent.innerHTML = `<span class="text-red-700 font-bold">⚠️ Network Error: Could not connect to Gemini API.</span>`;
     }
   }
+  
   
         function downloadAiAsDoc() {
             const content = document.getElementById('ai-response-content').innerText;
