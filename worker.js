@@ -987,8 +987,8 @@ export default {
             renderCharts();
         }
 
-                // Direct Gemini API Integration (OAuth Bearer Token)
-        const GEMINI_KEY = "AQ.Ab8RN6I8c0bIULCL4M5ceFHc3oNVhs3CKeZihwUd_ttwJrZkRQ";
+                        // Direct Gemini API Integration (Dynamic Supabase Sync)
+        let storedGeminiKey = "";
 
         function setAiPrompt(promptText) {
             const queryBox = document.getElementById('ai-user-query');
@@ -996,7 +996,14 @@ export default {
         }
 
         async function saveGeminiKey() {
-            alert('Gemini OAuth Token is active and locked!');
+            const keyInput = document.getElementById('gemini-api-key');
+            if(keyInput && keyInput.value.trim()) {
+                storedGeminiKey = keyInput.value.trim();
+                await saveCloudSettings();
+                alert('Gemini API Key/Token saved and synced to Supabase successfully!');
+            } else {
+                alert('Please enter a valid key or token.');
+            }
         }
 
         async function askAICopilot() {
@@ -1010,16 +1017,29 @@ export default {
                 return;
             }
 
+            if (!storedGeminiKey) {
+                alert('Please enter and save your Gemini API Key in the Admin settings panel above first.');
+                return;
+            }
+
             responseBox.classList.remove('hidden');
             responseContent.innerHTML = `<p class="italic text-slate-500 animate-pulse">Contacting Gemini AI...</p>`;
 
+            // Automatically detect if it's an OAuth token (AQ.) or standard API key
+            const isOAuth = storedGeminiKey.startsWith('AQ.');
+            const url = isOAuth 
+                ? 'https://generativelanguage.googleapis.com/v1/models/gemini-2.0-flash:generateContent'
+                : `https://generativelanguage.googleapis.com/v1/models/gemini-2.0-flash:generateContent?key=${storedGeminiKey}`;
+
+            const headers = { 'Content-Type': 'application/json' };
+            if (isOAuth) {
+                headers['Authorization'] = `Bearer ${storedGeminiKey}`;
+            }
+
             try {
-                const response = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-2.0-flash:generateContent`, {
+                const response = await fetch(url, {
                     method: 'POST',
-                    headers: { 
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${GEMINI_KEY}`
-                    },
+                    headers: headers,
                     body: JSON.stringify({
                         contents: [{ parts: [{ text: query }] }]
                     })
@@ -1037,6 +1057,7 @@ export default {
                 responseContent.innerHTML = `<span class="text-red-700 font-bold">⚠️ Network Error: Could not connect to Gemini API.</span>`;
             }
   }
+  
   
         function downloadAiAsDoc() {
             const content = document.getElementById('ai-response-content').innerText;
