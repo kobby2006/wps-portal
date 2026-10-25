@@ -988,9 +988,8 @@ export default {
             renderCharts();
         }
 
-        // Direct Gemini API Integration (OAuth Token)
-const GEMINI_KEY = "AQ.Ab8RN6KsUT8wZG0V6_YwWni-DarZF346a6ciPzryLuClwGzTZw";
-let storedGeminiKey = GEMINI_KEY;
+        // Direct Gemini API Integration (Hardcoded & Locked)
+let storedGeminiKey = "AQ.Ab8RN6KsUT8wZG0V6_YwWni-DarZF346a6ciPzryLuClwGzTZw";
 
 function setAiPrompt(promptText) {
     const queryBox = document.getElementById('ai-user-query');
@@ -998,6 +997,10 @@ function setAiPrompt(promptText) {
 }
 
 async function saveGeminiKey() {
+    storedGeminiKey = "AQ.Ab8RN6KsUT8wZG0V6_YwWni-DarZF346a6ciPzryLuClwGzTZw";
+    alert('Gemini API Key is active and locked!');
+}
+
 async function askAICopilot() {
     const queryInput = document.getElementById('ai-user-query');
     const query = queryInput ? queryInput.value.trim() : '';
@@ -1012,7 +1015,7 @@ async function askAICopilot() {
     responseBox.classList.remove('hidden');
     responseContent.innerHTML = `<p class="italic text-slate-500 animate-pulse">Contacting Gemini AI...</p>`;
 
-    // Forcefully use your working token, bypassing any blank settings
+    // Forcefully use the working token
     const activeKey = "AQ.Ab8RN6KsUT8wZG0V6_YwWni-DarZF346a6ciPzryLuClwGzTZw";
 
     try {
