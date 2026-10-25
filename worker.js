@@ -987,7 +987,7 @@ export default {
             renderCharts();
         }
 
-        // Direct Gemini API Integration (OAuth Token Bearer)
+                // Direct Gemini API Integration (OAuth Bearer Token)
         const GEMINI_KEY = "AQ.Ab8RN6I8c0bIULCL4M5ceFHc3oNVhs3CKeZihwUd_ttwJrZkRQ";
 
         function setAiPrompt(promptText) {
@@ -999,7 +999,7 @@ export default {
             alert('Gemini OAuth Token is active and locked!');
         }
 
-                async function askAICopilot() {
+        async function askAICopilot() {
             const queryInput = document.getElementById('ai-user-query');
             const query = queryInput ? queryInput.value.trim() : '';
             const responseBox = document.getElementById('ai-response-box');
