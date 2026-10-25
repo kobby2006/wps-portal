@@ -1,6 +1,5 @@
 export default {
   async fetch(request, env, ctx) { 
- evn.GEMINI_API_KEY = "AQ.Ab8RN6KXhERqwXKXGFh_ADYYhoo9G_hcjiRTZB_3-YG6T66Duw";
     const html = `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -988,61 +987,56 @@ export default {
             renderCharts();
         }
 
-        // Direct Gemini API Integration (Hardcoded & Locked)
-let storedGeminiKey = "AQ.Ab8RN6KsUT8wZG0V6_YwWni-DarZF346a6ciPzryLuClwGzTZw";
+        // Direct Gemini API Integration (OAuth Token Bearer)
+        const GEMINI_KEY = "AQ.Ab8RN6I8c0bIULCL4M5ceFHc3oNVhs3CKeZihwUd_ttwJrZkRQ";
 
-function setAiPrompt(promptText) {
-    const queryBox = document.getElementById('ai-user-query');
-    if(queryBox) queryBox.value = promptText;
-}
-
-async function saveGeminiKey() {
-    storedGeminiKey = "AQ.Ab8RN6KsUT8wZG0V6_YwWni-DarZF346a6ciPzryLuClwGzTZw";
-    alert('Gemini API Key is active and locked!');
-}
-
-async function askAICopilot() {
-    const queryInput = document.getElementById('ai-user-query');
-    const query = queryInput ? queryInput.value.trim() : '';
-    const responseBox = document.getElementById('ai-response-box');
-    const responseContent = document.getElementById('ai-response-content');
-
-    if (!query) {
-        alert('Please type a question for Gemini AI.');
-        return;
-    }
-
-    responseBox.classList.remove('hidden');
-    responseContent.innerHTML = `<p class="italic text-slate-500 animate-pulse">Contacting Gemini AI...</p>`;
-
-    // Forcefully use the working token
-    const activeKey = "AQ.Ab8RN6KsUT8wZG0V6_YwWni-DarZF346a6ciPzryLuClwGzTZw";
-
-    try {
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent`, {
-            method: 'POST',
-            headers: { 
-                'Content-Type': 'application/json',
-                'x-goog-api-key': activeKey
-            },
-            body: JSON.stringify({
-                contents: [{ parts: [{ text: query }] }]
-            })
-        });
-
-        const data = await response.json();
-        if (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0]) {
-            responseContent.innerHTML = data.candidates[0].content.parts[0].text;
-        } else if (data.error) {
-            responseContent.innerHTML = `<span class="text-red-700 font-bold">⚠️ Gemini API Error: ${data.error.message || 'Unknown error'}</span>`;
-        } else {
-            responseContent.innerHTML = `<span class="text-red-700 font-bold">⚠️ Error: Unexpected response format from Gemini API.</span>`;
+        function setAiPrompt(promptText) {
+            const queryBox = document.getElementById('ai-user-query');
+            if(queryBox) queryBox.value = promptText;
         }
-    } catch (err) {
-        responseContent.innerHTML = `<span class="text-red-700 font-bold">⚠️ Network Error: Could not connect to Gemini API.</span>`;
-    }
-  }
-  
+
+        async function saveGeminiKey() {
+            alert('Gemini OAuth Token is active and locked!');
+        }
+
+        async function askAICopilot() {
+            const queryInput = document.getElementById('ai-user-query');
+            const query = queryInput ? queryInput.value.trim() : '';
+            const responseBox = document.getElementById('ai-response-box');
+            const responseContent = document.getElementById('ai-response-content');
+
+            if (!query) {
+                alert('Please type a question for Gemini AI.');
+                return;
+            }
+
+            responseBox.classList.remove('hidden');
+            responseContent.innerHTML = `<p class="italic text-slate-500 animate-pulse">Contacting Gemini AI...</p>`;
+
+            try {
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent`, {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${GEMINI_KEY}`
+                    },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: query }] }]
+                    })
+                });
+
+                const data = await response.json();
+                if (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0]) {
+                    responseContent.innerHTML = data.candidates[0].content.parts[0].text;
+                } else if (data.error) {
+                    responseContent.innerHTML = `<span class="text-red-700 font-bold">⚠️ Gemini API Error: ${data.error.message || 'Unknown error'}</span>`;
+                } else {
+                    responseContent.innerHTML = `<span class="text-red-700 font-bold">⚠️ Error: Unexpected response format from Gemini API.</span>`;
+                }
+            } catch (err) {
+                responseContent.innerHTML = `<span class="text-red-700 font-bold">⚠️ Network Error: Could not connect to Gemini API.</span>`;
+            }
+        }
   
         function downloadAiAsDoc() {
             const content = document.getElementById('ai-response-content').innerText;
