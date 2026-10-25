@@ -988,8 +988,8 @@ export default {
             renderCharts();
         }
 
-        // Direct Gemini API Integration
-const GEMINI_KEY = "AQ.Ab8RN6KXhERqwXKXGFh_ADYYhoo9G_hcjiRTZB_3-YG6T66Duw";
+        // Direct Gemini API Integration (OAuth Token)
+const GEMINI_KEY = "AQ.Ab8RN6KsUT8wZG0V6_YwWni-DarZF346a6ciPzryLuClwGzTZw";
 let storedGeminiKey = GEMINI_KEY;
 
 function setAiPrompt(promptText) {
@@ -1020,7 +1020,7 @@ async function askAICopilot() {
 
     const activeKey = GEMINI_KEY;
 
-        try {
+    try {
         const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent`, {
             method: 'POST',
             headers: { 
@@ -1031,7 +1031,7 @@ async function askAICopilot() {
                 contents: [{ parts: [{ text: query }] }]
             })
         });
-          
+
         const data = await response.json();
         if (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0]) {
             responseContent.innerHTML = data.candidates[0].content.parts[0].text;
@@ -1044,6 +1044,7 @@ async function askAICopilot() {
         responseContent.innerHTML = `<span class="text-red-700 font-bold">⚠️ Network Error: Could not connect to Gemini API.</span>`;
     }
   }
+  
         function downloadAiAsDoc() {
             const content = document.getElementById('ai-response-content').innerText;
             if(!content || content.includes('Contacting Gemini AI') || content.includes('Error')) {
