@@ -1020,18 +1020,18 @@ async function askAICopilot() {
 
     const activeKey = GEMINI_KEY;
 
-    try {
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${activeKey}`, {
+        try {
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent`, {
             method: 'POST',
             headers: { 
                 'Content-Type': 'application/json',
-                'x-goog-api-key': activeKey
+                'Authorization': `Bearer ${activeKey}`
             },
             body: JSON.stringify({
                 contents: [{ parts: [{ text: query }] }]
             })
         });
-
+          
         const data = await response.json();
         if (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0]) {
             responseContent.innerHTML = data.candidates[0].content.parts[0].text;
