@@ -1288,7 +1288,7 @@
             await fetchTeachersFromSupabase();
         });
 
-        // Strict mapping function for teachers based on class and subject
+        // Strict subject-teacher and class-teacher mapping function
         function getTeacherNameForDocument(className, subjectName) {
             const subLower = (subjectName || '').toLowerCase();
             const classLower = (className || '').toLowerCase();
@@ -1299,31 +1299,29 @@
                 if(classTeacher) return classTeacher.name;
             }
 
-            // 2. For Basic 4-JHS: Match by subject assignment
-            if(subLower.includes('mathematics') || subLower.includes('integrated science') || subLower.includes('science')) {
-                const t = teachersList.find(item => item.name.toLowerCase().includes('prince'));
+            // 2. For Basic 4 to JHS 3: Match strictly by subject teacher
+            if(subLower.includes('mathematics') || subLower.includes('science') || subLower.includes('integrated science')) {
+                const t = teachersList.find(item => item.name.toLowerCase().includes('prince') || (item.assignment && item.assignment.toLowerCase().includes('math')));
                 if(t) return t.name;
+                return 'Prince Mensah';
             }
             if(subLower.includes('computing') || subLower.includes('creative arts') || subLower.includes('creative')) {
-                const t = teachersList.find(item => item.name.toLowerCase().includes('priscilla'));
+                const t = teachersList.find(item => item.name.toLowerCase().includes('priscilla') || (item.assignment && item.assignment.toLowerCase().includes('computing')));
                 if(t) return t.name;
+                return 'Priscilla Annan';
             }
             if(subLower.includes('r.m.e') || subLower.includes('rme') || subLower.includes('history')) {
-                const t = teachersList.find(item => item.name.toLowerCase().includes('margret') || item.name.toLowerCase().includes('aidoo'));
+                const t = teachersList.find(item => item.name.toLowerCase().includes('margret') || item.name.toLowerCase().includes('aidoo') || (item.assignment && item.assignment.toLowerCase().includes('history')));
                 if(t) return t.name;
+                return 'Madam Margret Aidoo';
             }
-            if(subLower.includes('english') || subLower.includes('ghanaian language') || subLower.includes('fante')) {
-                const t = teachersList.find(item => item.name.toLowerCase().includes('naa') || item.name.toLowerCase().includes('loretta'));
+            if(subLower.includes('english') || subLower.includes('ghanaian') || subLower.includes('fante')) {
+                const t = teachersList.find(item => item.name.toLowerCase().includes('naa') || item.name.toLowerCase().includes('loretta') || (item.assignment && item.assignment.toLowerCase().includes('english')));
                 if(t) return t.name;
+                return 'Madam Naa Loretta';
             }
 
-            // Fallback to first teacher matching subject keyword in general assignment if any
-            const subMatch = teachersList.find(t => t.assignment && t.assignment.toLowerCase().includes(subLower));
-            if(subMatch) return subMatch.name;
-
-            // Final fallback
-            if(teachersList.length > 0) return teachersList[0].name;
-            return 'Assigned Subject Teacher';
+            return 'Subject Teacher';
         }
 
         function onGradingClassChange() {
