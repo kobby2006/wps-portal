@@ -147,7 +147,7 @@
                 <div id="admin-nav-section" class="pt-4 border-t border-slate-200 space-y-2">
                     <p class="px-4 text-xs font-bold uppercase tracking-wider text-slate-400">Administration</p>
                     <button onclick="switchTab('fees')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">💰 <span>Billing Account & Fees</span></button>
-                    <button onclick="switchTab('students')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🎓 <span>Student Enrollment & Discard</span></button>
+                    <button onclick="switchTab('students')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🎓 <span>Student Enrollment & Edit</span></button>
                     <button onclick="switchTab('teachers')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">👨‍🏫 <span>Teacher Accounts</span></button>
                     <button onclick="switchTab('classes')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🏫 <span>Manage Classes (1-6 & JHS)</span></button>
                     <button onclick="switchTab('announcements')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📢 <span>Announcements & Portal Lock</span></button>
@@ -548,7 +548,7 @@
                         </div>
                     </div>
                 </section>
-                <!-- TAB: STUDENT ENROLLMENT & DISCARD (Admin) -->
+                <!-- TAB: STUDENT ENROLLMENT & EDIT / DISCARD (Admin) -->
                 <section id="tab-students" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-6">
                         <div>
@@ -564,12 +564,33 @@
                                 <button type="submit" class="md:col-span-3 py-3 bg-blue-900 text-white font-bold rounded-xl hover:bg-blue-800 transition">Save Student to Database</button>
                             </form>
                         </div>
-                        <div class="pt-4 border-t">
-                            <h3 class="text-lg font-bold text-slate-900 mb-2">Discard / Remove Withdrawn Student</h3>
-                            <p class="text-xs text-slate-500 mb-4">Select a student who has stopped school to discard their enrollment.</p>
-                            <div class="flex gap-3">
-                                <select id="discard-student-select" class="p-3 border rounded-xl flex-1 font-medium bg-slate-50"></select>
-                                <button onclick="discardStudent()" class="px-6 py-3 bg-red-700 hover:bg-red-800 text-white font-bold rounded-xl text-xs">Discard / Remove Student</button>
+
+                        <!-- EDIT STUDENT ROSTER & SPELLING SECTION -->
+                        <div class="pt-6 border-t space-y-4">
+                            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                                <div>
+                                    <h3 class="text-lg font-bold text-slate-900">✏️ Edit Student Roster & Fix Spelling Mistakes</h3>
+                                    <p class="text-xs text-slate-500">Edit student names, classes, or gender directly and click "Save" on their row to update Supabase.</p>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Filter Class to Edit</label>
+                                    <select id="edit-student-class-filter" onchange="renderEditStudentsTable()" class="p-2 border rounded-xl text-sm bg-slate-50 font-medium w-48"></select>
+                                </div>
+                            </div>
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-left border-collapse">
+                                    <thead class="bg-slate-100 text-xs uppercase font-bold text-slate-600">
+                                        <tr>
+                                            <th class="p-3">Student Name (Edit Spelling)</th>
+                                            <th class="p-3">Class</th>
+                                            <th class="p-3">Gender</th>
+                                            <th class="p-3 text-center">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="edit-students-table-body" class="divide-y divide-slate-100 text-sm">
+                                        <tr><td colspan="4" class="p-6 text-center text-slate-400 italic">No students found.</td></tr>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
@@ -944,7 +965,10 @@
                 renderAttendanceRegister();
             }
             if(tabId === 'students') {
-                renderDiscardDropdown();
+                fetchStudentsFromSupabase().then(() => {
+                    renderEditStudentClassDropdown();
+                    renderEditStudentsTable();
+                });
             }
             if(tabId === 'history') {
                 renderHistoryClassDropdown();
@@ -974,7 +998,8 @@
             renderAttendanceClassDropdown();
             renderHistoryClassDropdown();
             renderClassesList();
-            renderDiscardDropdown();
+            renderEditStudentClassDropdown();
+            renderEditStudentsTable();
             onGradingClassChange();
             renderGradingTable();
             renderFeesTable();
@@ -1096,12 +1121,111 @@
                 if(currentHistVal) histFilter.value = currentHistVal;
             }
         }
-        function renderDiscardDropdown() {
-            const discardSelect = document.getElementById('discard-student-select');
-            if(discardSelect) {
-                discardSelect.innerHTML = studentsData.map(s => `<option value="${s.id}">${s.name} (${s.class})</option>`).join('');
+        function renderEditStudentClassDropdown() {
+            const editFilter = document.getElementById('edit-student-class-filter');
+            if(editFilter) {
+                const currentVal = editFilter.value;
+                editFilter.innerHTML = classesData.map(c => `<option value="${c}">${c}</option>`).join('');
+                if(currentVal) editFilter.value = currentVal;
             }
         }
+
+        function renderEditStudentsTable() {
+            const editFilter = document.getElementById('edit-student-class-filter');
+            const selectedClass = editFilter ? editFilter.value : classesData[0];
+            const filteredStudents = studentsData.filter(s => s.class === selectedClass);
+            const tbody = document.getElementById('edit-students-table-body');
+            if(!tbody) return;
+            
+            if(filteredStudents.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" class="p-6 text-center text-slate-400 italic">No students registered in ${selectedClass}.</td></tr>`;
+                return;
+            }
+            
+            tbody.innerHTML = filteredStudents.map((s) => {
+                return `
+                    <tr>
+                        <td class="p-3">
+                            <input type="text" id="edit-name-${s.id}" value="${s.name}" class="w-full p-2 border rounded font-semibold text-slate-800 bg-white">
+                        </td>
+                        <td class="p-3">
+                            <select id="edit-class-${s.id}" class="p-2 border rounded font-medium bg-white">
+                                ${classesData.map(c => `<option value="${c}" ${c === s.class ? 'selected' : ''}>${c}</option>`).join('')}
+                            </select>
+                        </td>
+                        <td class="p-3">
+                            <select id="edit-gender-${s.id}" class="p-2 border rounded font-medium bg-white">
+                                <option value="Male" ${s.gender === 'Male' ? 'selected' : ''}>Male</option>
+                                <option value="Female" ${s.gender === 'Female' ? 'selected' : ''}>Female</option>
+                            </select>
+                        </td>
+                        <td class="p-3 text-center space-x-1">
+                            <button onclick="saveStudentEdits('${s.id}')" class="px-3 py-1.5 bg-blue-900 text-white font-bold rounded-lg text-xs hover:bg-blue-800">Save</button>
+                            <button onclick="discardStudentDirect('${s.id}')" class="px-3 py-1.5 bg-red-700 text-white font-bold rounded-lg text-xs hover:bg-red-800">Discard</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        async function saveStudentEdits(studentId) {
+            const nameInput = document.getElementById(`edit-name-${studentId}`);
+            const classSelect = document.getElementById(`edit-class-${studentId}`);
+            const genderSelect = document.getElementById(`edit-gender-${studentId}`);
+            
+            const newName = nameInput ? nameInput.value.trim() : '';
+            const newClass = classSelect ? classSelect.value : 'Basic 4';
+            const newGender = genderSelect ? genderSelect.value : 'Male';
+
+            if(!newName) {
+                alert('Student name cannot be empty.');
+                return;
+            }
+
+            try {
+                const { error } = await supabaseClient.from('students').update({
+                    name: newName,
+                    class: newClass,
+                    gender: newGender
+                }).eq('id', studentId);
+
+                if(error) {
+                    alert('Error updating student: ' + error.message);
+                    return;
+                }
+
+                await fetchStudentsFromSupabase();
+                alert(`Student record for "${newName}" successfully updated!`);
+                renderAll();
+            } catch(err) {
+                alert('Exception updating student: ' + err.message);
+            }
+        }
+
+        async function discardStudentDirect(studentId) {
+            const student = studentsData.find(s => String(s.id) === String(studentId));
+            if(!student) {
+                alert('Student not found.');
+                return;
+            }
+            
+            if(confirm(`Are you sure you want to permanently discard/remove ${student.name} from school records and Supabase?`)) {
+                try {
+                    const { error } = await supabaseClient.from('students').delete().eq('id', studentId);
+                    if(error) {
+                        alert('Error removing student from cloud: ' + error.message);
+                        return;
+                    }
+                    
+                    await fetchStudentsFromSupabase();
+                    renderAll();
+                    alert(`Student ${student.name} has been successfully and permanently discarded.`);
+                } catch(err) {
+                    alert('Exception removing student: ' + err.message);
+                }
+            }
+        }
+
         function renderClassesList() {
             const container = document.getElementById('classes-list-container');
             if(container) {
@@ -1126,17 +1250,6 @@
         function removeClass(c) {
             classesData = classesData.filter(item => item !== c);
             renderAll();
-        }
-        function discardStudent() {
-            const select = document.getElementById('discard-student-select');
-            const studentId = parseInt(select.value);
-            const student = studentsData.find(s => s.id === studentId);
-            if(!student) return;
-            if(confirm(`Are you sure you want to discard/remove ${student.name} from school records?`)) {
-                studentsData = studentsData.filter(s => s.id !== studentId);
-                renderAll();
-                alert(`Student ${student.name} has been successfully discarded from the school registry.`);
-            }
         }
         function editTimetable() {
             const updated = prompt("Enter updated school timetable schedule:", timetableText);
