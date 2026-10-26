@@ -1168,121 +1168,100 @@ export default {
         }
 
         function renderEditStudentsTable() {
-            const editFilter = document.getElementById('edit-student-class-filter');
-            const selectedClass = editFilter ? editFilter.value : classesData[0];
-            const filteredStudents = studentsData.filter(s => s.class === selectedClass);
-            const tbody = document.getElementById('edit-students-table-body');
-            if(!tbody) return;
-            if(filteredStudents.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" class="p-6 text-center text-slate-400 italic">No students registered in ${selectedClass}.</td></tr>`;
-                return;
-            }
-            tbody.innerHTML = filteredStudents.map((s) => {
-                return `
-                    <tr>
-                        <td class="p-3"><input type="text" id="edit-name-${s.id}" value="${s.name}" class="w-full p-2 border rounded font-semibold text-slate-800 bg-white"></td>
-                        <td class="p-3">
-                            <select id="edit-class-${s.id}" class="p-2 border rounded font-medium bg-white">
-                                ${classesData.map(c => `<option value="${c}" ${c === s.class ? 'selected' : ''}>${c}</option>`).join('')}
-                            </select>
-                        </td>
-                        <td class="p-3">
-                            <select id="edit-gender-${s.id}" class="p-2 border rounded font-medium bg-white">
-                                <option value="Male" ${s.gender === 'Male' ? 'selected' : ''}>Male</option>
-                                <option value="Female" ${s.gender === 'Female' ? 'selected' : ''}>Female</option>
-                            </select>
-                        </td>
-                        <td class="p-3 text-center">
-                            <button onclick="saveStudentEdits('${s.id}')" class="px-3 py-1.5 bg-blue-900 text-white font-bold rounded-lg text-xs hover:bg-blue-800">Save Changes</button>
-                        </td>
-                    </tr>
-                `;
-            }).join('');
+    const editFilter = document.getElementById('edit-student-class-filter');
+    const selectedClass = editFilter ? editFilter.value : classesData[0];
+    const filteredStudents = studentsData.filter(s => s.class === selectedClass);
+    const tbody = document.getElementById('edit-students-table-body');
+    if(!tbody) return;
+    
+    if(filteredStudents.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="4" class="p-6 text-center text-slate-400 italic">No students registered in ${selectedClass}.</td></tr>`;
+        return;
+    }
+    
+    tbody.innerHTML = filteredStudents.map((s) => {
+        return `
+            <tr>
+                <td class="p-3">
+                    <input type="text" id="edit-name-${s.id}" value="${s.name}" class="w-full p-2 border rounded font-semibold text-slate-800 bg-white">
+                </td>
+                <td class="p-3">
+                    <select id="edit-class-${s.id}" class="p-2 border rounded font-medium bg-white">
+                        ${classesData.map(c => `<option value="${c}" ${c === s.class ? 'selected' : ''}>${c}</option>`).join('')}
+                    </select>
+                </td>
+                <td class="p-3">
+                    <select id="edit-gender-${s.id}" class="p-2 border rounded font-medium bg-white">
+                        <option value="Male" ${s.gender === 'Male' ? 'selected' : ''}>Male</option>
+                        <option value="Female" ${s.gender === 'Female' ? 'selected' : ''}>Female</option>
+                    </select>
+                </td>
+                <td class="p-3 text-center space-x-1">
+                    <button onclick="saveStudentEdits('${s.id}')" class="px-3 py-1.5 bg-blue-900 text-white font-bold rounded-lg text-xs hover:bg-blue-800">Save</button>
+                    <button onclick="discardStudentDirect('${s.id}')" class="px-3 py-1.5 bg-red-700 text-white font-bold rounded-lg text-xs hover:bg-red-800">Discard</button>
+                </td>
+            </tr>
+        `;
+    }).join('');
+}
+
+async function saveStudentEdits(studentId) {
+    const nameInput = document.getElementById(`edit-name-${studentId}`);
+    const classSelect = document.getElementById(`edit-class-${studentId}`);
+    const genderSelect = document.getElementById(`edit-gender-${studentId}`);
+    
+    const newName = nameInput ? nameInput.value.trim() : '';
+    const newClass = classSelect ? classSelect.value : 'Basic 4';
+    const newGender = genderSelect ? genderSelect.value : 'Male';
+
+    if(!newName) {
+        alert('Student name cannot be empty.');
+        return;
+    }
+
+    try {
+        const { error } = await supabaseClient.from('students').update({
+            name: newName,
+            class: newClass,
+            gender: newGender
+        }).eq('id', studentId);
+
+        if(error) {
+            alert('Error updating student: ' + error.message);
+            return;
         }
 
-        async function saveStudentEdits(studentId) {
-            const nameInput = document.getElementById(`edit-name-${studentId}`);
-            const classSelect = document.getElementById(`edit-class-${studentId}`);
-            const genderSelect = document.getElementById(`edit-gender-${studentId}`);
+        await fetchStudentsFromSupabase();
+        alert(`Student record for "${newName}" successfully updated!`);
+        renderAll();
+    } catch(err) {
+        alert('Exception updating student: ' + err.message);
+    }
+}
+
+async function discardStudentDirect(studentId) {
+    const student = studentsData.find(s => String(s.id) === String(studentId));
+    if(!student) {
+        alert('Student not found.');
+        return;
+    }
+    
+    if(confirm(`Are you sure you want to permanently discard/remove ${student.name} from school records and Supabase?`)) {
+        try {
+            const { error } = await supabaseClient.from('students').delete().eq('id', studentId);
+            if(error) {
+                alert('Error removing student from cloud: ' + error.message);
+                return;
+            }
             
-            const newName = nameInput ? nameInput.value.trim() : '';
-            const newClass = classSelect ? classSelect.value : 'Basic 4';
-            const newGender = genderSelect ? genderSelect.value : 'Male';
-
-            if(!newName) {
-                alert('Student name cannot be empty.');
-                return;
-            }
-
-            try {
-                const { error } = await supabaseClient.from('students').update({
-                    name: newName,
-                    class: newClass,
-                    gender: newGender
-                }).eq('id', studentId);
-
-                if(error) {
-                    alert('Error updating student: ' + error.message);
-                    return;
-                }
-
-                // Update local array & re-fetch
-                await fetchStudentsFromSupabase();
-                alert(`Student record for "${newName}" successfully updated!`);
-                renderAll();
-            } catch(err) {
-                alert('Exception updating student: ' + err.message);
-            }
-        }
-
-        function renderClassesList() {
-            const container = document.getElementById('classes-list-container');
-            if(container) {
-                container.innerHTML = classesData.map(c => `
-                    <span class="px-3 py-1.5 bg-blue-50 text-blue-900 border border-blue-200 rounded-xl text-sm font-semibold flex items-center gap-2">
-                        ${c}
-                        <button onclick="removeClass('${c}')" class="text-red-600 hover:text-red-800 font-bold text-xs">×</button>
-                    </span>
-                `).join('');
-            }
-        }
-        function addClass() {
-            const input = document.getElementById('new-class-input');
-            const val = input.value.trim();
-            if(!val) return;
-            if(classesData.includes(val)) { alert('Class already exists!'); return; }
-            classesData.push(val);
-            input.value = '';
+            await fetchStudentsFromSupabase();
             renderAll();
-            alert(`Class "${val}" added successfully!`);
+            alert(`Student ${student.name} has been successfully and permanently discarded.`);
+        } catch(err) {
+            alert('Exception removing student: ' + err.message);
         }
-        function removeClass(c) {
-            classesData = classesData.filter(item => item !== c);
-            renderAll();
-        }
-        async function discardStudent() {
-            const select = document.getElementById('discard-student-select');
-            const studentId = select.value;
-            const student = studentsData.find(s => String(s.id) === String(studentId));
-            if(!student) {
-                alert('Please select a valid student to discard.');
-                return;
-            }
-            if(confirm(`Are you sure you want to permanently discard/remove ${student.name} from school records and Supabase?`)) {
-                try {
-                    const { error } = await supabaseClient.from('students').delete().eq('id', studentId);
-                    if(error) {
-                        alert('Error removing student from cloud: ' + error.message);
-                        return;
-                    }
-                } catch(err) {
-                    console.log('Discard error:', err);
-                }
-                await fetchStudentsFromSupabase();
-                renderAll();
-                alert(`Student ${student.name} has been successfully and permanently discarded from the school registry.`);
-            }
-        }
+    }
+}
         function editTimetable() {
             const updated = prompt("Enter updated school timetable schedule:", timetableText);
             if(updated) {
