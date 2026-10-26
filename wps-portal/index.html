@@ -1203,28 +1203,38 @@
         }
 
         async function discardStudentDirect(studentId) {
-            const student = studentsData.find(s => String(s.id) === String(studentId));
-            if(!student) {
-                alert('Student not found.');
+    // Convert ID to a number if it's numeric, otherwise keep as string (for UUIDs)
+    const parsedId = !isNaN(studentId) && studentId !== '' ? Number(studentId) : studentId;
+    
+    const student = studentsData.find(s => String(s.id) === String(studentId));
+    if(!student) {
+        alert('Student not found in local data. ID: ' + studentId);
+        return;
+    }
+    
+    if(confirm(`Are you sure you want to permanently discard/remove ${student.name} from school records and Supabase?`)) {
+        try {
+            console.log("Deleting student ID:", parsedId, "Type:", typeof parsedId);
+            
+            // Execute Supabase delete query with the correctly typed ID
+            const { data, error } = await supabaseClient.from('students').delete().eq('id', parsedId).select();
+            
+            if(error) {
+                alert('Supabase Delete Error: ' + error.message);
+                console.error(error);
                 return;
             }
-            
-            if(confirm(`Are you sure you want to permanently discard/remove ${student.name} from school records and Supabase?`)) {
-                try {
-                    const { error } = await supabaseClient.from('students').delete().eq('id', studentId);
-                    if(error) {
-                        alert('Error removing student from cloud: ' + error.message);
-                        return;
-                    }
-                    
-                    await fetchStudentsFromSupabase();
-                    renderAll();
-                    alert(`Student ${student.name} has been successfully and permanently discarded.`);
-                } catch(err) {
-                    alert('Exception removing student: ' + err.message);
-                }
-            }
+
+            console.log("Delete success response:", data);
+            await fetchStudentsFromSupabase();
+            renderAll();
+            alert(`Student ${student.name} has been successfully and permanently discarded.`);
+        } catch(err) {
+            alert('Exception removing student: ' + err.message);
+            console.error(err);
         }
+    }
+}
 
         function renderClassesList() {
             const container = document.getElementById('classes-list-container');
