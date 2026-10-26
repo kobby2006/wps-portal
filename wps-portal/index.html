@@ -157,6 +157,9 @@
                 <!-- Teacher Nav -->
                 <div id="teacher-nav-section" class="hidden pt-4 border-t border-slate-200 space-y-2">
                     <p class="px-4 text-xs font-bold uppercase tracking-wider text-slate-400">Staff Portal</p>
+                    <button onclick="switchTab('assessment')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📝 <span>SBA & Exam Grading</span></button>
+                    <button onclick="switchTab('history')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📁 <span>Student History & Reports</span></button>
+                    <button onclick="switchTab('attendance')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📅 <span>Attendance Register</span></button>
                     <button onclick="switchTab('lms')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📚 <span>Teaching Hub & Resources</span></button>
                     <button onclick="switchTab('ai-copilot')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🤖 <span>Live Gemini AI Assistant</span></button>
                     <button onclick="switchTab('timetable')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">⏰ <span>Manage Timetable</span></button>
@@ -833,7 +836,7 @@
                 document.getElementById('teacher-nav-section').classList.remove('hidden');
                 document.getElementById('admin-lms-upload-section').classList.add('hidden');
                 document.getElementById('lms-role-badge').innerText = "Teacher View (Read Only)";
-                switchTab('lms');
+                switchTab('assessment'); // Default teacher view to SBA Grading
                 
                 document.getElementById('modal-announcement-text').innerText = globalAnnouncementText;
                 if(globalAnnouncementImgUrl) {
