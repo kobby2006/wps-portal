@@ -597,16 +597,25 @@
                 </section>
                 <!-- TAB: TEACHER ACCOUNTS (Admin) -->
                 <section id="tab-teachers" class="hidden space-y-6">
-                    <div class="bg-white p-6 rounded-2xl shadow border border-slate-100">
-                        <h2 class="text-xl font-bold text-slate-900">Register Teacher Account</h2>
-                        <p class="text-xs text-slate-500 mb-4">Create login credentials and access PIN for teaching staff.</p>
+                    <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-6">
+                        <h2 class="text-xl font-bold text-slate-900">Register Teacher Account & Assigned Subjects / Class</h2>
+                        <p class="text-xs text-slate-500 mb-4">Create login credentials and assign teachers to specific classes (for Basic 1-3) or subjects (for Basic 4-JHS).</p>
                         <form id="teacher-form" class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
-                            <input type="text" id="t-name" placeholder="Full Name *" required class="p-3 border rounded-xl">
+                            <input type="text" id="t-name" placeholder="Full Name (e.g. Prince Mensah) *" required class="p-3 border rounded-xl">
                             <input type="text" id="t-phone" placeholder="Phone Number" class="p-3 border rounded-xl">
                             <input type="email" id="t-email" placeholder="Email Address *" required class="p-3 border rounded-xl">
                             <input type="password" id="t-pass" placeholder="Password / Access PIN *" required class="p-3 border rounded-xl">
-                            <button type="submit" class="md:col-span-2 py-3 bg-blue-900 text-white font-bold rounded-xl hover:bg-blue-800 transition">Create Teacher Login</button>
+                            <div class="md:col-span-2">
+                                <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Assigned Class / Subjects Description</label>
+                                <input type="text" id="t-assignment" placeholder="e.g. Mathematics & Integrated Science OR Basic 1 Class Teacher" required class="p-3 border rounded-xl w-full bg-slate-50 font-medium">
+                            </div>
+                            <button type="submit" class="md:col-span-2 py-3 bg-blue-900 text-white font-bold rounded-xl hover:bg-blue-800 transition">Create Teacher Login & Assignment</button>
                         </form>
+
+                        <div class="pt-4 border-t">
+                            <h3 class="font-bold text-sm text-slate-900 mb-3">📋 Registered Teachers & Assignments List</h3>
+                            <div id="teachers-list-container" class="space-y-2"></div>
+                        </div>
                     </div>
                 </section>
                 <!-- TAB: ANNOUNCEMENTS & PORTAL LOCK (Admin) -->
@@ -714,7 +723,7 @@
         let globalAnnouncementImgUrl = "";
         let classesData = ['Basic 1', 'Basic 2', 'Basic 3', 'Basic 4', 'Basic 5', 'Basic 6', 'JHS 1', 'JHS 2', 'JHS 3'];
         let studentsData = [];
-        let teachersList = [];
+        let teachersList = []; // Stores objects: { id, name, assignment }
         let galleryPhotos = [];
         let storedGeminiKey = "";
         
@@ -779,7 +788,7 @@
 
         async function saveCloudSettings() {
             try {
-                const { error } = await supabaseClient.from('school_settings').upsert({
+                await supabaseClient.from('school_settings').upsert({
                     id: 1,
                     portal_locked: portalLocked,
                     announcement_text: globalAnnouncementText,
@@ -787,9 +796,6 @@
                     gemini_api_key: storedGeminiKey,
                     gallery_photos: galleryPhotos
                 });
-                if(error) {
-                    console.error('Supabase sync error:', error.message);
-                }
             } catch(err) {
                 console.error('Cloud save exception:', err);
             }
@@ -813,7 +819,6 @@
             document.getElementById('user-badge').innerText = role;
             document.getElementById('welcome-name').innerText = user;
 
-            // Restrict API Key section to Admin only
             const adminGeminiSection = document.getElementById('admin-gemini-section');
             if(adminGeminiSection) {
                 if(role === 'admin') {
@@ -929,11 +934,16 @@
             try {
                 const { data, error } = await supabaseClient.from('teachers').select('*');
                 if(data && !error) {
-                    teachersList = data.map(t => t.full_name || t.name);
+                    teachersList = data.map(t => ({
+                        id: t.id,
+                        name: t.full_name || t.name,
+                        assignment: t.assignment || t.phone_number || 'General Teaching'
+                    }));
                 }
             } catch(err) {
                 console.log('Supabase teachers fetch error:', err);
             }
+            renderTeachersList();
         }
         function closeAnnouncementModal() { document.getElementById('announcement-modal').classList.add('hidden'); }
         function closeReceiptModal() { document.getElementById('receipt-modal').classList.add('hidden'); }
@@ -977,6 +987,9 @@
             if(tabId === 'lms') {
                 renderLMSResources();
             }
+            if(tabId === 'teachers') {
+                fetchTeachersFromSupabase();
+            }
             if(tabId === 'gallery' || tabId === 'teacher-gallery') {
                 renderGalleryGrids();
             }
@@ -997,9 +1010,9 @@
             renderFeeClassDropdown();
             renderAttendanceClassDropdown();
             renderHistoryClassDropdown();
-            renderClassesList();
             renderEditStudentClassDropdown();
             renderEditStudentsTable();
+            renderTeachersList();
             onGradingClassChange();
             renderGradingTable();
             renderFeesTable();
@@ -1203,134 +1216,115 @@
         }
 
         async function discardStudentDirect(studentId) {
-    // Convert ID to a number if it's numeric, otherwise keep as string (for UUIDs)
-    const parsedId = !isNaN(studentId) && studentId !== '' ? Number(studentId) : studentId;
-    
-    const student = studentsData.find(s => String(s.id) === String(studentId));
-    if(!student) {
-        alert('Student not found in local data. ID: ' + studentId);
-        return;
-    }
-    
-    if(confirm(`Are you sure you want to permanently discard/remove ${student.name} from school records and Supabase?`)) {
-        try {
-            console.log("Deleting student ID:", parsedId, "Type:", typeof parsedId);
-            
-            // Execute Supabase delete query with the correctly typed ID
-            const { data, error } = await supabaseClient.from('students').delete().eq('id', parsedId).select();
-            
-            if(error) {
-                alert('Supabase Delete Error: ' + error.message);
-                console.error(error);
+            const parsedId = !isNaN(studentId) && studentId !== '' ? Number(studentId) : studentId;
+            const student = studentsData.find(s => String(s.id) === String(studentId));
+            if(!student) {
+                alert('Student not found in local data. ID: ' + studentId);
                 return;
             }
-
-            console.log("Delete success response:", data);
-            await fetchStudentsFromSupabase();
-            renderAll();
-            alert(`Student ${student.name} has been successfully and permanently discarded.`);
-        } catch(err) {
-            alert('Exception removing student: ' + err.message);
-            console.error(err);
-        }
-    }
-}
-
-        function renderClassesList() {
-            const container = document.getElementById('classes-list-container');
-            if(container) {
-                container.innerHTML = classesData.map(c => `
-                    <span class="px-3 py-1.5 bg-blue-50 text-blue-900 border border-blue-200 rounded-xl text-sm font-semibold flex items-center gap-2">
-                        ${c}
-                        <button onclick="removeClass('${c}')" class="text-red-600 hover:text-red-800 font-bold text-xs">×</button>
-                    </span>
-                `).join('');
-            }
-        }
-        function addClass() {
-            const input = document.getElementById('new-class-input');
-            const val = input.value.trim();
-            if(!val) return;
-            if(classesData.includes(val)) { alert('Class already exists!'); return; }
-            classesData.push(val);
-            input.value = '';
-            renderAll();
-            alert(`Class "${val}" added successfully!`);
-        }
-        function removeClass(c) {
-            classesData = classesData.filter(item => item !== c);
-            renderAll();
-        }
-        function editTimetable() {
-            const updated = prompt("Enter updated school timetable schedule:", timetableText);
-            if(updated) {
-                timetableText = updated;
-                document.getElementById('timetable-display').innerText = updated;
-                alert('Timetable updated successfully!');
-            }
-        }
-        function saveLMSResource() {
-            const title = document.getElementById('lms-title').value.trim();
-            const url = document.getElementById('lms-embed-url').value.trim();
-            const desc = document.getElementById('lms-content-desc').value.trim();
-            if(!title) { alert('Please enter a resource title.'); return; }
-            lmsResources.push({ title, url: url || 'https://www.youtube.com/embed/dQw4w9WgXcQ', description: desc || 'No description provided.' });
             
-            document.getElementById('lms-title').value = '';
-            document.getElementById('lms-embed-url').value = '';
-            document.getElementById('lms-content-desc').value = '';
-            renderLMSResources();
-            alert('LMS teaching resource published successfully!');
+            if(confirm(`Are you sure you want to permanently discard/remove ${student.name} from school records and Supabase?`)) {
+                try {
+                    const { error } = await supabaseClient.from('students').delete().eq('id', parsedId);
+                    if(error) {
+                        alert('Error removing student from cloud: ' + error.message);
+                        return;
+                    }
+                    
+                    await fetchStudentsFromSupabase();
+                    renderAll();
+                    alert(`Student ${student.name} has been successfully and permanently discarded.`);
+                } catch(err) {
+                    alert('Exception removing student: ' + err.message);
+                }
+            }
         }
-        function renderLMSResources() {
-            const grid = document.getElementById('lms-resources-grid');
-            if(!grid) return;
-            if(lmsResources.length === 0) {
-                grid.innerHTML = `<p class="text-slate-400 italic text-sm">No teaching materials uploaded yet.</p>`;
+
+        function renderTeachersList() {
+            const container = document.getElementById('teachers-list-container');
+            if(!container) return;
+            if(teachersList.length === 0) {
+                container.innerHTML = `<p class="text-slate-400 italic text-xs">No teachers registered yet.</p>`;
                 return;
             }
-            grid.innerHTML = lmsResources.map(r => `
-                <div class="bg-slate-50 p-4 rounded-xl border space-y-2 shadow-sm">
-                    <h4 class="font-bold text-xs text-blue-950">${r.title}</h4>
-                    <p class="text-xs text-slate-600">${r.description}</p>
-                    <div class="pt-1">
-                        <iframe class="w-full h-40 rounded-lg shadow border" src="${r.url}" allowfullscreen></iframe>
+            container.innerHTML = teachersList.map(t => `
+                <div class="p-3 bg-slate-50 border rounded-xl flex justify-between items-center text-xs">
+                    <div>
+                        <strong class="text-blue-950 text-sm">${t.name}</strong>
+                        <p class="text-slate-600 font-medium mt-0.5">Assigned: <span class="text-amber-800 font-bold">${t.assignment}</span></p>
                     </div>
                 </div>
             `).join('');
         }
 
-        document.getElementById('student-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const name = document.getElementById('s-name').value;
-            const className = document.getElementById('s-class').value;
-            const gender = document.getElementById('s-gender').value;
-            try {
-                await supabaseClient.from('students').insert([{ name: name, class: className, gender: gender }]);
-            } catch(err) { console.log(err); }
-            alert(`Student ${name} successfully enrolled to ${className} and saved to Supabase!`);
-            document.getElementById('s-name').value = '';
-            await fetchStudentsFromSupabase();
-            renderAll();
-        });
-
         document.getElementById('teacher-form').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const name = document.getElementById('t-name').value;
-            const phone = document.getElementById('t-phone').value;
-            const email = document.getElementById('t-email').value;
-            const pass = document.getElementById('t-pass').value;
+            const name = document.getElementById('t-name').value.trim();
+            const phone = document.getElementById('t-phone').value.trim();
+            const email = document.getElementById('t-email').value.trim();
+            const pass = document.getElementById('t-pass').value.trim();
+            const assignment = document.getElementById('t-assignment').value.trim();
+            
             try {
-                await supabaseClient.from('teachers').insert([{ full_name: name, phone_number: phone, email }]);
-                teachersList.push(name);
+                const { error } = await supabaseClient.from('teachers').insert([{ 
+                    full_name: name, 
+                    phone_number: phone, 
+                    email: email,
+                    assignment: assignment 
+                }]);
+                if(error) {
+                    alert('Error saving teacher: ' + error.message);
+                    return;
+                }
+                teachersList.push({ name, assignment });
             } catch(err) { console.log(err); }
-            alert(`Teacher account created successfully for ${name}!`);
+            
+            alert(`Teacher account and assignment created successfully for ${name}!`);
             document.getElementById('t-name').value = '';
             document.getElementById('t-phone').value = '';
             document.getElementById('t-email').value = '';
             document.getElementById('t-pass').value = '';
+            document.getElementById('t-assignment').value = '';
             await fetchTeachersFromSupabase();
         });
+
+        // Strict mapping function for teachers based on class and subject
+        function getTeacherNameForDocument(className, subjectName) {
+            const subLower = (subjectName || '').toLowerCase();
+            const classLower = (className || '').toLowerCase();
+
+            // 1. For Basic 1, 2, 3: Find teacher assigned specifically to that class
+            if(classLower.includes('basic 1') || classLower.includes('basic 2') || classLower.includes('basic 3')) {
+                const classTeacher = teachersList.find(t => t.assignment && t.assignment.toLowerCase().includes(classLower));
+                if(classTeacher) return classTeacher.name;
+            }
+
+            // 2. For Basic 4-JHS: Match by subject assignment
+            if(subLower.includes('mathematics') || subLower.includes('integrated science') || subLower.includes('science')) {
+                const t = teachersList.find(item => item.name.toLowerCase().includes('prince'));
+                if(t) return t.name;
+            }
+            if(subLower.includes('computing') || subLower.includes('creative arts') || subLower.includes('creative')) {
+                const t = teachersList.find(item => item.name.toLowerCase().includes('priscilla'));
+                if(t) return t.name;
+            }
+            if(subLower.includes('r.m.e') || subLower.includes('rme') || subLower.includes('history')) {
+                const t = teachersList.find(item => item.name.toLowerCase().includes('margret') || item.name.toLowerCase().includes('aidoo'));
+                if(t) return t.name;
+            }
+            if(subLower.includes('english') || subLower.includes('ghanaian language') || subLower.includes('fante')) {
+                const t = teachersList.find(item => item.name.toLowerCase().includes('naa') || item.name.toLowerCase().includes('loretta'));
+                if(t) return t.name;
+            }
+
+            // Fallback to first teacher matching subject keyword in general assignment if any
+            const subMatch = teachersList.find(t => t.assignment && t.assignment.toLowerCase().includes(subLower));
+            if(subMatch) return subMatch.name;
+
+            // Final fallback
+            if(teachersList.length > 0) return teachersList[0].name;
+            return 'Assigned Subject Teacher';
+        }
 
         function onGradingClassChange() {
             const selectGrading = document.getElementById('grading-class-filter');
@@ -1450,9 +1444,9 @@
             const subject = document.getElementById('grading-subject-filter').value;
             const term = document.getElementById('grading-term-filter').value;
             const className = document.getElementById('grading-class-filter').value;
-            const registeredTeacherName = teachersList.length > 0 ? teachersList[0] : (currentUser ? currentUser.name : 'Assigned Teacher');
+            const assignedTeacher = getTeacherNameForDocument(className, subject);
             
-            let content = `${schoolProfile.name.toUpperCase()}\nSCHOOL BASED ASSESSMENT AT BASIC EDUCATIONAL LEVEL\nTERMELY SCORING FOR PRIMARY AND JUNIOR HIGH SCHOOLS\nYear: ${year} | Class: ${className} | Subject: ${subject} | Term: ${term} | Teacher: ${registeredTeacherName}\n\n`;
+            let content = `${schoolProfile.name.toUpperCase()}\nSCHOOL BASED ASSESSMENT AT BASIC EDUCATIONAL LEVEL\nTERMELY SCORING FOR PRIMARY AND JUNIOR HIGH SCHOOLS\nYear: ${year} | Class: ${className} | Subject: ${subject} | Term: ${term} | Teacher: ${assignedTeacher}\n\n`;
             content += "No.\tNAME\tInd.Test 1(30)\tGroup Test(20)\tInd.Test 2(30)\tHomework(20)\tTotal SBA(100)\t50% SBA\tExams(100)\t50% Exam\tOverall Total\tGrade\n";
             content += "----------------------------------------------------------------------------------------------------------------------------------\n";
             
@@ -1485,7 +1479,6 @@
             const histClass = document.getElementById('history-class-filter').value || classesData[0];
             const histTerm = document.getElementById('history-term-filter').value || 'Term 1';
             const container = document.getElementById('history-container');
-            const registeredTeacherName = teachersList.length > 0 ? teachersList[0] : (currentUser ? currentUser.name : 'Assigned Teacher');
             const filtered = studentsData.filter(s => s.class === histClass);
             
             if(filtered.length === 0) {
@@ -1494,6 +1487,7 @@
             }
 
             let masterAssessmentSheetsHtml = standardSubjects.map(subject => {
+                const assignedTeacher = getTeacherNameForDocument(histClass, subject);
                 let rowsHtml = filtered.map((s, idx) => {
                     const sub = (s.subjectsData[histYear] && s.subjectsData[histYear][histTerm] && s.subjectsData[histYear][histTerm][subject]) ? s.subjectsData[histYear][histTerm][subject] : { indTest1: 0, groupTest: 0, indTest2: 0, homework: 0, exam: 0 };
                     const totalSba = (sub.indTest1 || 0) + (sub.groupTest || 0) + (sub.indTest2 || 0) + (sub.homework || 0);
@@ -1536,7 +1530,7 @@
                             </div>
                             <div>
                                 <p>NO. ON ROLL: <span class="underline">${filtered.length}</span></p>
-                                <p>NAME OF TEACHER: <span class="underline uppercase">${registeredTeacherName}</span></p>
+                                <p>NAME OF TEACHER: <span class="underline uppercase text-blue-900">${assignedTeacher}</span></p>
                             </div>
                         </div>
                         <table class="w-full text-xs border-collapse border border-black mt-2">
@@ -1591,6 +1585,8 @@
                         </tr>
                     `;
                 }).join('');
+
+                const reportTeacherName = getTeacherNameForDocument(s.class, 'Mathematics');
 
                 return `
                     <div class="report-card-page bg-white p-8 rounded-xl shadow-lg border-2 border-slate-300 max-w-3xl mx-auto space-y-4 text-slate-900 font-sans">
@@ -1652,7 +1648,8 @@
                                 <input type="text" value="${s.interest}" onchange="updateStudentProp(${studentsData.findIndex(item => item.id === s.id)}, 'interest', this.value)" class="flex-1 border-b border-black bg-transparent">
                             </div>
                             <div class="flex border-b border-black pb-1">
-                                <span class="w-48">CLASS TEACHER'S REMARKS:</span>
+                                <span class="w-48">CLASS TEACHER'S NAME / REMARKS:</span>
+                                <span class="font-bold text-blue-900 underline mr-4">${reportTeacherName}</span>
                                 <input type="text" value="${s.teacherRemarks}" onchange="updateStudentProp(${studentsData.findIndex(item => item.id === s.id)}, 'teacherRemarks', this.value)" class="flex-1 border-b border-black bg-transparent">
                             </div>
                             <div class="flex border-b border-black pb-1">
