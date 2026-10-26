@@ -1169,7 +1169,6 @@ export default {
                 return;
             }
             tbody.innerHTML = filteredStudents.map((s) => {
-                const globalIdx = studentsData.findIndex(item => item.id === s.id);
                 return \`
                     <tr>
                         <td class="p-3"><input type="text" id="edit-name-\${s.id}" value="\${s.name}" class="w-full p-2 border rounded font-semibold text-slate-800 bg-white"></td>
@@ -1185,7 +1184,7 @@ export default {
                             </select>
                         </td>
                         <td class="p-3 text-center">
-                            <button onclick="saveStudentEdits(\${s.id})" class="px-3 py-1.5 bg-blue-900 text-white font-bold rounded-lg text-xs hover:bg-blue-800">Save Changes</button>
+                            <button onclick="saveStudentEdits('\${s.id}')" class="px-3 py-1.5 bg-blue-900 text-white font-bold rounded-lg text-xs hover:bg-blue-800">Save Changes</button>
                         </td>
                     </tr>
                 \`;
@@ -1219,14 +1218,14 @@ export default {
                 }
 
                 // Update local array
-                const student = studentsData.find(s => s.id === studentId);
+                const student = studentsData.find(s => String(s.id) === String(studentId));
                 if(student) {
                     student.name = newName;
                     student.class = newClass;
                     student.gender = newGender;
                 }
 
-                alert(`Student record for "${newName}" successfully updated!`);
+                alert(\`Student record for "\${newName}" successfully updated!\`);
                 renderAll();
             } catch(err) {
                 alert('Exception updating student: ' + err.message);
@@ -1260,8 +1259,8 @@ export default {
         }
         async function discardStudent() {
             const select = document.getElementById('discard-student-select');
-            const studentId = parseInt(select.value);
-            const student = studentsData.find(s => s.id === studentId);
+            const studentId = select.value;
+            const student = studentsData.find(s => String(s.id) === String(studentId));
             if(!student) return;
             if(confirm(\`Are you sure you want to permanently discard/remove \${student.name} from school records and Supabase?\`)) {
                 try {
@@ -1273,7 +1272,7 @@ export default {
                 } catch(err) {
                     console.log('Discard error:', err);
                 }
-                studentsData = studentsData.filter(s => s.id !== studentId);
+                studentsData = studentsData.filter(s => String(s.id) !== String(studentId));
                 renderAll();
                 alert(\`Student \${student.name} has been successfully and permanently discarded from the school registry.\`);
             }
