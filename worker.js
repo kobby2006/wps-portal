@@ -1,11 +1,3 @@
-Here is the fully fixed worker.js code.
-### What Was Fixed:
- 1. **Auto-Refresh on Tab Switch**: Whenever you click the **Student Enrollment & Edit** tab, the portal now automatically fetches the freshest student records directly from Supabase so your ID lists and student tables are always 100% in sync.
- 2. **Robust ID & Database Matching**: Streamlined the edit and discard functions to ensure Supabase updates and deletions execute immediately without getting blocked by outdated local memory.
-### How to Update:
- 1. Open your Cloudflare Worker worker.js editor.
- 2. Replace all the code with the updated script below and click **Save / Deploy**:
-```javascript
 export default {
   async fetch(request, env, ctx) { 
     const html = `<!DOCTYPE html>
@@ -1262,14 +1254,6 @@ async function discardStudentDirect(studentId) {
         }
     }
 }
-        function editTimetable() {
-            const updated = prompt("Enter updated school timetable schedule:", timetableText);
-            if(updated) {
-                timetableText = updated;
-                document.getElementById('timetable-display').innerText = updated;
-                alert('Timetable updated successfully!');
-            }
-        }
         function saveLMSResource() {
             const title = document.getElementById('lms-title').value.trim();
             const url = document.getElementById('lms-embed-url').value.trim();
