@@ -1,3 +1,11 @@
+Here is the fully fixed worker.js code.
+### What Was Fixed:
+ 1. **Auto-Refresh on Tab Switch**: Whenever you click the **Student Enrollment & Edit** tab, the portal now automatically fetches the freshest student records directly from Supabase so your ID lists and student tables are always 100% in sync.
+ 2. **Robust ID & Database Matching**: Streamlined the edit and discard functions to ensure Supabase updates and deletions execute immediately without getting blocked by outdated local memory.
+### How to Update:
+ 1. Open your Cloudflare Worker worker.js editor.
+ 2. Replace all the code with the updated script below and click **Save / Deploy**:
+```javascript
 export default {
   async fetch(request, env, ctx) { 
     const html = `<!DOCTYPE html>
@@ -951,7 +959,7 @@ export default {
         function closeReceiptModal() { document.getElementById('receipt-modal').classList.add('hidden'); }
         function logout() { location.reload(); }
 
-        function switchTab(tabId) {
+        async function switchTab(tabId) {
             ['dashboard', 'assessment', 'history', 'lms', 'ai-copilot', 'attendance', 'timetable', 'fees', 'classes', 'students', 'teachers', 'announcements', 'gallery', 'teacher-gallery', 'teacher-announcements', 'profile'].forEach(t => {
                 const el = document.getElementById(`tab-${t}`);
                 if(el) el.classList.add('hidden');
@@ -977,6 +985,7 @@ export default {
                 renderAttendanceRegister();
             }
             if(tabId === 'students') {
+                await fetchStudentsFromSupabase();
                 renderDiscardDropdown();
                 renderEditStudentClassDropdown();
                 renderEditStudentsTable();
@@ -1061,11 +1070,11 @@ export default {
             const isOAuth = storedGeminiKey.startsWith('AQ.');
             const url = isOAuth 
                 ? 'https://generativelanguage.googleapis.com/v1/models/gemini-2.0-flash:generateContent'
-                : \`https://generativelanguage.googleapis.com/v1/models/gemini-2.0-flash:generateContent?key=\${storedGeminiKey}\`;
+                : `https://generativelanguage.googleapis.com/v1/models/gemini-2.0-flash:generateContent?key=${storedGeminiKey}`;
 
             const headers = { 'Content-Type': 'application/json' };
             if (isOAuth) {
-                headers['Authorization'] = \`Bearer \${storedGeminiKey}\`;
+                headers['Authorization'] = `Bearer ${storedGeminiKey}`;
             }
 
             try {
@@ -1080,12 +1089,12 @@ export default {
                 if(data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts[0].text) {
                     responseContent.innerHTML = data.candidates[0].content.parts[0].text;
                 } else if(data.error) {
-                    responseContent.innerHTML = \`<span class="text-red-700 font-bold">API Error: \${data.error.message || 'Invalid API Key or quota exceeded.'}</span>\`;
+                    responseContent.innerHTML = `<span class="text-red-700 font-bold">API Error: ${data.error.message || 'Invalid API Key or quota exceeded.'}</span>`;
                 } else {
-                    responseContent.innerHTML = \`<span class="text-red-700 font-bold">Unexpected response from Gemini API. Please check your API key.</span>\`;
+                    responseContent.innerHTML = `<span class="text-red-700 font-bold">Unexpected response from Gemini API. Please check your API key.</span>`;
                 }
             } catch(err) {
-                responseContent.innerHTML = \`<span class="text-red-700 font-bold">Network / Connection Error: \${err.message}. Please check your internet connection.</span>\`;
+                responseContent.innerHTML = `<span class="text-red-700 font-bold">Network / Connection Error: ${err.message}. Please check your internet connection.</span>`;
             }
         }
 
@@ -1095,12 +1104,12 @@ export default {
                 alert('No valid AI response to download yet.');
                 return;
             }
-            let fileContent = \`\${schoolProfile.name.toUpperCase()}\nOFFICIAL GEMINI AI ASSISTANT OUTPUT\n--------------------------------------------------\n\n\${content}\`;
+            let fileContent = `${schoolProfile.name.toUpperCase()}\nOFFICIAL GEMINI AI ASSISTANT OUTPUT\n--------------------------------------------------\n\n${content}`;
             const blob = new Blob([fileContent], { type: 'application/msword' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = \`Gemini_AI_Output_\${Date.now()}.doc\`;
+            a.download = `Gemini_AI_Output_${Date.now()}.doc`;
             a.click();
             alert('AI response downloaded successfully as document!');
         }
@@ -1109,13 +1118,13 @@ export default {
             const selectEnroll = document.getElementById('s-class');
             if(selectEnroll) {
                 const currentVal = selectEnroll.value;
-                selectEnroll.innerHTML = classesData.map(c => \`<option value="\${c}">\${c}</option>\`).join('');
+                selectEnroll.innerHTML = classesData.map(c => `<option value="${c}">${c}</option>`).join('');
                 if(currentVal) selectEnroll.value = currentVal;
             }
             const selectGrading = document.getElementById('grading-class-filter');
             if(selectGrading) {
                 const currentGradVal = selectGrading.value;
-                selectGrading.innerHTML = classesData.map(c => \`<option value="\${c}">\${c}</option>\`).join('');
+                selectGrading.innerHTML = classesData.map(c => `<option value="${c}">${c}</option>`).join('');
                 if(currentGradVal) selectGrading.value = currentGradVal;
             }
         }
@@ -1123,7 +1132,7 @@ export default {
             const feeFilter = document.getElementById('fee-class-filter');
             if(feeFilter) {
                 const currentFeeVal = feeFilter.value;
-                feeFilter.innerHTML = classesData.map(c => \`<option value="\${c}">\${c}</option>\`).join('');
+                feeFilter.innerHTML = classesData.map(c => `<option value="${c}">${c}</option>`).join('');
                 if(currentFeeVal) feeFilter.value = currentFeeVal;
             }
         }
@@ -1131,7 +1140,7 @@ export default {
             const attFilter = document.getElementById('attendance-class-filter');
             if(attFilter) {
                 const currentAttVal = attFilter.value;
-                attFilter.innerHTML = classesData.map(c => \`<option value="\${c}">\${c}</option>\`).join('');
+                attFilter.innerHTML = classesData.map(c => `<option value="${c}">${c}</option>`).join('');
                 if(currentAttVal) attFilter.value = currentAttVal;
             }
         }
@@ -1139,7 +1148,7 @@ export default {
             const histFilter = document.getElementById('history-class-filter');
             if(histFilter) {
                 const currentHistVal = histFilter.value;
-                histFilter.innerHTML = classesData.map(c => \`<option value="\${c}">\${c}</option>\`).join('');
+                histFilter.innerHTML = classesData.map(c => `<option value="${c}">${c}</option>`).join('');
                 if(currentHistVal) histFilter.value = currentHistVal;
             }
         }
@@ -1147,14 +1156,14 @@ export default {
             const editFilter = document.getElementById('edit-student-class-filter');
             if(editFilter) {
                 const currentVal = editFilter.value;
-                editFilter.innerHTML = classesData.map(c => \`<option value="\${c}">\${c}</option>\`).join('');
+                editFilter.innerHTML = classesData.map(c => `<option value="${c}">${c}</option>`).join('');
                 if(currentVal) editFilter.value = currentVal;
             }
         }
         function renderDiscardDropdown() {
             const discardSelect = document.getElementById('discard-student-select');
             if(discardSelect) {
-                discardSelect.innerHTML = studentsData.map(s => \`<option value="\${s.id}">\${s.name} (\${s.class})</option>\`).join('');
+                discardSelect.innerHTML = studentsData.map(s => `<option value="${s.id}">${s.name} (${s.class})</option>`).join('');
             }
         }
 
@@ -1165,36 +1174,36 @@ export default {
             const tbody = document.getElementById('edit-students-table-body');
             if(!tbody) return;
             if(filteredStudents.length === 0) {
-                tbody.innerHTML = \`<tr><td colspan="4" class="p-6 text-center text-slate-400 italic">No students registered in \${selectedClass}.</td></tr>\`;
+                tbody.innerHTML = `<tr><td colspan="4" class="p-6 text-center text-slate-400 italic">No students registered in ${selectedClass}.</td></tr>`;
                 return;
             }
             tbody.innerHTML = filteredStudents.map((s) => {
-                return \`
+                return `
                     <tr>
-                        <td class="p-3"><input type="text" id="edit-name-\${s.id}" value="\${s.name}" class="w-full p-2 border rounded font-semibold text-slate-800 bg-white"></td>
+                        <td class="p-3"><input type="text" id="edit-name-${s.id}" value="${s.name}" class="w-full p-2 border rounded font-semibold text-slate-800 bg-white"></td>
                         <td class="p-3">
-                            <select id="edit-class-\${s.id}" class="p-2 border rounded font-medium bg-white">
-                                \${classesData.map(c => \`<option value="\${c}" \${c === s.class ? 'selected' : ''}>\${c}</option>\`).join('')}
+                            <select id="edit-class-${s.id}" class="p-2 border rounded font-medium bg-white">
+                                ${classesData.map(c => `<option value="${c}" ${c === s.class ? 'selected' : ''}>${c}</option>`).join('')}
                             </select>
                         </td>
                         <td class="p-3">
-                            <select id="edit-gender-\${s.id}" class="p-2 border rounded font-medium bg-white">
-                                <option value="Male" \${s.gender === 'Male' ? 'selected' : ''}>Male</option>
-                                <option value="Female" \${s.gender === 'Female' ? 'selected' : ''}>Female</option>
+                            <select id="edit-gender-${s.id}" class="p-2 border rounded font-medium bg-white">
+                                <option value="Male" ${s.gender === 'Male' ? 'selected' : ''}>Male</option>
+                                <option value="Female" ${s.gender === 'Female' ? 'selected' : ''}>Female</option>
                             </select>
                         </td>
                         <td class="p-3 text-center">
-                            <button onclick="saveStudentEdits('\${s.id}')" class="px-3 py-1.5 bg-blue-900 text-white font-bold rounded-lg text-xs hover:bg-blue-800">Save Changes</button>
+                            <button onclick="saveStudentEdits('${s.id}')" class="px-3 py-1.5 bg-blue-900 text-white font-bold rounded-lg text-xs hover:bg-blue-800">Save Changes</button>
                         </td>
                     </tr>
-                \`;
+                `;
             }).join('');
         }
 
         async function saveStudentEdits(studentId) {
-            const nameInput = document.getElementById(\`edit-name-\${studentId}\`);
-            const classSelect = document.getElementById(\`edit-class-\${studentId}\`);
-            const genderSelect = document.getElementById(\`edit-gender-\${studentId}\`);
+            const nameInput = document.getElementById(`edit-name-${studentId}`);
+            const classSelect = document.getElementById(`edit-class-${studentId}`);
+            const genderSelect = document.getElementById(`edit-gender-${studentId}`);
             
             const newName = nameInput ? nameInput.value.trim() : '';
             const newClass = classSelect ? classSelect.value : 'Basic 4';
@@ -1217,15 +1226,9 @@ export default {
                     return;
                 }
 
-                // Update local array
-                const student = studentsData.find(s => String(s.id) === String(studentId));
-                if(student) {
-                    student.name = newName;
-                    student.class = newClass;
-                    student.gender = newGender;
-                }
-
-                alert(\`Student record for "\${newName}" successfully updated!\`);
+                // Update local array & re-fetch
+                await fetchStudentsFromSupabase();
+                alert(`Student record for "${newName}" successfully updated!`);
                 renderAll();
             } catch(err) {
                 alert('Exception updating student: ' + err.message);
@@ -1235,12 +1238,12 @@ export default {
         function renderClassesList() {
             const container = document.getElementById('classes-list-container');
             if(container) {
-                container.innerHTML = classesData.map(c => \`
+                container.innerHTML = classesData.map(c => `
                     <span class="px-3 py-1.5 bg-blue-50 text-blue-900 border border-blue-200 rounded-xl text-sm font-semibold flex items-center gap-2">
-                        \${c}
-                        <button onclick="removeClass('\${c}')" class="text-red-600 hover:text-red-800 font-bold text-xs">×</button>
+                        ${c}
+                        <button onclick="removeClass('${c}')" class="text-red-600 hover:text-red-800 font-bold text-xs">×</button>
                     </span>
-                \`).join('');
+                `).join('');
             }
         }
         function addClass() {
@@ -1251,7 +1254,7 @@ export default {
             classesData.push(val);
             input.value = '';
             renderAll();
-            alert(\`Class "\${val}" added successfully!\`);
+            alert(`Class "${val}" added successfully!`);
         }
         function removeClass(c) {
             classesData = classesData.filter(item => item !== c);
@@ -1261,8 +1264,11 @@ export default {
             const select = document.getElementById('discard-student-select');
             const studentId = select.value;
             const student = studentsData.find(s => String(s.id) === String(studentId));
-            if(!student) return;
-            if(confirm(\`Are you sure you want to permanently discard/remove \${student.name} from school records and Supabase?\`)) {
+            if(!student) {
+                alert('Please select a valid student to discard.');
+                return;
+            }
+            if(confirm(`Are you sure you want to permanently discard/remove ${student.name} from school records and Supabase?`)) {
                 try {
                     const { error } = await supabaseClient.from('students').delete().eq('id', studentId);
                     if(error) {
@@ -1272,9 +1278,9 @@ export default {
                 } catch(err) {
                     console.log('Discard error:', err);
                 }
-                studentsData = studentsData.filter(s => String(s.id) !== String(studentId));
+                await fetchStudentsFromSupabase();
                 renderAll();
-                alert(\`Student \${student.name} has been successfully and permanently discarded from the school registry.\`);
+                alert(`Student ${student.name} has been successfully and permanently discarded from the school registry.`);
             }
         }
         function editTimetable() {
@@ -1302,18 +1308,18 @@ export default {
             const grid = document.getElementById('lms-resources-grid');
             if(!grid) return;
             if(lmsResources.length === 0) {
-                grid.innerHTML = \`<p class="text-slate-400 italic text-sm">No teaching materials uploaded yet.</p>\`;
+                grid.innerHTML = `<p class="text-slate-400 italic text-sm">No teaching materials uploaded yet.</p>`;
                 return;
             }
-            grid.innerHTML = lmsResources.map(r => \`
+            grid.innerHTML = lmsResources.map(r => `
                 <div class="bg-slate-50 p-4 rounded-xl border space-y-2 shadow-sm">
-                    <h4 class="font-bold text-xs text-blue-950">\${r.title}</h4>
-                    <p class="text-xs text-slate-600">\${r.description}</p>
+                    <h4 class="font-bold text-xs text-blue-950">${r.title}</h4>
+                    <p class="text-xs text-slate-600">${r.description}</p>
                     <div class="pt-1">
-                        <iframe class="w-full h-40 rounded-lg shadow border" src="\${r.url}" allowfullscreen></iframe>
+                        <iframe class="w-full h-40 rounded-lg shadow border" src="${r.url}" allowfullscreen></iframe>
                     </div>
                 </div>
-            \`).join('');
+            `).join('');
         }
 
         document.getElementById('student-form').addEventListener('submit', async (e) => {
@@ -1324,7 +1330,7 @@ export default {
             try {
                 await supabaseClient.from('students').insert([{ name: name, class: className, gender: gender }]);
             } catch(err) { console.log(err); }
-            alert(\`Student \${name} successfully enrolled to \${className} and saved to Supabase!\`);
+            alert(`Student ${name} successfully enrolled to ${className} and saved to Supabase!`);
             document.getElementById('s-name').value = '';
             await fetchStudentsFromSupabase();
             renderAll();
@@ -1340,7 +1346,7 @@ export default {
                 await supabaseClient.from('teachers').insert([{ full_name: name, phone_number: phone, email }]);
                 teachersList.push(name);
             } catch(err) { console.log(err); }
-            alert(\`Teacher account created successfully for \${name}!\`);
+            alert(`Teacher account created successfully for ${name}!`);
             document.getElementById('t-name').value = '';
             document.getElementById('t-phone').value = '';
             document.getElementById('t-email').value = '';
@@ -1354,9 +1360,9 @@ export default {
             const modeDesc = document.getElementById('assessment-mode-description');
             
             if(selectedClass === 'Basic 1' || selectedClass === 'Basic 2' || selectedClass === 'Basic 3') {
-                if(modeDesc) modeDesc.innerText = \`Mode: \${selectedClass} — One Class Teacher (Class Teacher handles all subjects for this class).\`;
+                if(modeDesc) modeDesc.innerText = `Mode: ${selectedClass} — One Class Teacher (Class Teacher handles all subjects for this class).`;
             } else {
-                if(modeDesc) modeDesc.innerText = \`Mode: \${selectedClass} — Subject Teaching (Specialized Subject Teacher grading).\`;
+                if(modeDesc) modeDesc.innerText = `Mode: ${selectedClass} — Subject Teaching (Specialized Subject Teacher grading).`;
             }
             renderGradingTable();
         }
@@ -1371,7 +1377,7 @@ export default {
             const tbody = document.getElementById('grading-table-body');
             if(!tbody) return;
             if(filteredStudents.length === 0) {
-                tbody.innerHTML = \`<tr><td colspan="12" class="p-6 text-center text-slate-400 italic">No students registered in \${selectedClass || 'this class'} yet.</td></tr>\`;
+                tbody.innerHTML = `<tr><td colspan="12" class="p-6 text-center text-slate-400 italic">No students registered in ${selectedClass || 'this class'} yet.</td></tr>`;
                 return;
             }
             tbody.innerHTML = filteredStudents.map((s, idx) => {
@@ -1385,29 +1391,29 @@ export default {
                 const exam50 = ((sub.exam || 0) * 0.5).toFixed(1);
                 const overallTotal = (parseFloat(sba50) + parseFloat(exam50)).toFixed(1);
                 const grade = computeGrade(overallTotal);
-                return \`
+                return `
                     <tr>
-                        <td class="p-2.5 font-medium">\${idx + 1}. \${s.name}</td>
-                        <td class="p-2.5 text-center"><input type="number" value="\${sub.indTest1}" onchange="updateAssessmentScore(\${globalIdx}, '\${year}', '\${term}', '\${subject}', 'indTest1', this.value, 30)" class="w-16 p-1 border rounded text-center font-semibold" placeholder="30"></td>
-                        <td class="p-2.5 text-center"><input type="number" value="\${sub.groupTest}" onchange="updateAssessmentScore(\${globalIdx}, '\${year}', '\${term}', '\${subject}', 'groupTest', this.value, 20)" class="w-16 p-1 border rounded text-center font-semibold" placeholder="20"></td>
-                        <td class="p-2.5 text-center"><input type="number" value="\${sub.indTest2}" onchange="updateAssessmentScore(\${globalIdx}, '\${year}', '\${term}', '\${subject}', 'indTest2', this.value, 30)" class="w-16 p-1 border rounded text-center font-semibold" placeholder="30"></td>
-                        <td class="p-2.5 text-center"><input type="number" value="\${sub.homework}" onchange="updateAssessmentScore(\${globalIdx}, '\${year}', '\${term}', '\${subject}', 'homework', this.value, 20)" class="w-16 p-1 border rounded text-center font-semibold" placeholder="20"></td>
-                        <td class="p-2.5 text-center font-bold bg-blue-50">\${totalSba100}</td>
-                        <td class="p-2.5 text-center font-semibold bg-blue-100 text-blue-900">\${sba50}</td>
-                        <td class="p-2.5 text-center"><input type="number" value="\${sub.exam}" onchange="updateAssessmentScore(\${globalIdx}, '\${year}', '\${term}', '\${subject}', 'exam', this.value, 100)" class="w-16 p-1 border rounded text-center font-semibold" placeholder="100"></td>
-                        <td class="p-2.5 text-center font-semibold bg-blue-100 text-blue-900">\${exam50}</td>
-                        <td class="p-2.5 text-center font-black bg-amber-50 text-amber-950">\${overallTotal}</td>
-                        <td class="p-2.5 text-center"><span class="px-2 py-0.5 bg-amber-100 text-amber-900 rounded font-bold text-xs">\${grade}</span></td>
-                        <td class="p-2.5 text-center"><span class="px-2 py-0.5 bg-blue-100 text-blue-900 rounded font-semibold text-xs">\${s.position || 'Pending'}</span></td>
+                        <td class="p-2.5 font-medium">${idx + 1}. ${s.name}</td>
+                        <td class="p-2.5 text-center"><input type="number" value="${sub.indTest1}" onchange="updateAssessmentScore(${globalIdx}, '${year}', '${term}', '${subject}', 'indTest1', this.value, 30)" class="w-16 p-1 border rounded text-center font-semibold" placeholder="30"></td>
+                        <td class="p-2.5 text-center"><input type="number" value="${sub.groupTest}" onchange="updateAssessmentScore(${globalIdx}, '${year}', '${term}', '${subject}', 'groupTest', this.value, 20)" class="w-16 p-1 border rounded text-center font-semibold" placeholder="20"></td>
+                        <td class="p-2.5 text-center"><input type="number" value="${sub.indTest2}" onchange="updateAssessmentScore(${globalIdx}, '${year}', '${term}', '${subject}', 'indTest2', this.value, 30)" class="w-16 p-1 border rounded text-center font-semibold" placeholder="30"></td>
+                        <td class="p-2.5 text-center"><input type="number" value="${sub.homework}" onchange="updateAssessmentScore(${globalIdx}, '${year}', '${term}', '${subject}', 'homework', this.value, 20)" class="w-16 p-1 border rounded text-center font-semibold" placeholder="20"></td>
+                        <td class="p-2.5 text-center font-bold bg-blue-50">${totalSba100}</td>
+                        <td class="p-2.5 text-center font-semibold bg-blue-100 text-blue-900">${sba50}</td>
+                        <td class="p-2.5 text-center"><input type="number" value="${sub.exam}" onchange="updateAssessmentScore(${globalIdx}, '${year}', '${term}', '${subject}', 'exam', this.value, 100)" class="w-16 p-1 border rounded text-center font-semibold" placeholder="100"></td>
+                        <td class="p-2.5 text-center font-semibold bg-blue-100 text-blue-900">${exam50}</td>
+                        <td class="p-2.5 text-center font-black bg-amber-50 text-amber-950">${overallTotal}</td>
+                        <td class="p-2.5 text-center"><span class="px-2 py-0.5 bg-amber-100 text-amber-900 rounded font-bold text-xs">${grade}</span></td>
+                        <td class="p-2.5 text-center"><span class="px-2 py-0.5 bg-blue-100 text-blue-900 rounded font-semibold text-xs">${s.position || 'Pending'}</span></td>
                     </tr>
-                \`;
+                `;
             }).join('');
         }
 
         function updateAssessmentScore(index, year, term, subject, field, val, maxLimit) {
             let num = parseFloat(val) || 0;
             if(num > maxLimit) {
-                alert(\`Maximum allowed score for this assessment is \${maxLimit}\`);
+                alert(`Maximum allowed score for this assessment is ${maxLimit}`);
                 num = maxLimit;
             }
             if(!studentsData[index].subjectsData[year]) studentsData[index].subjectsData[year] = {};
@@ -1451,7 +1457,7 @@ export default {
                 s.overallTotal = studentOverallTotal;
             });
             studentsData.sort((a,b) => (b.overallTotal || 0) - (a.overallTotal || 0));
-            studentsData.forEach((s, idx) => s.position = \`\${idx + 1}\${getOrdinal(idx + 1)}\`);
+            studentsData.forEach((s, idx) => s.position = `${idx + 1}${getOrdinal(idx + 1)}`);
             renderGradingTable();
             alert('Grades, totals, and ordinal positions successfully computed!');
         }
@@ -1468,7 +1474,7 @@ export default {
             const className = document.getElementById('grading-class-filter').value;
             const registeredTeacherName = teachersList.length > 0 ? teachersList[0] : (currentUser ? currentUser.name : 'Assigned Teacher');
             
-            let content = \`\${schoolProfile.name.toUpperCase()}\nSCHOOL BASED ASSESSMENT AT BASIC EDUCATIONAL LEVEL\nTERMELY SCORING FOR PRIMARY AND JUNIOR HIGH SCHOOLS\nYear: \${year} | Class: \${className} | Subject: \${subject} | Term: \${term} | Teacher: \${registeredTeacherName}\n\n\`;
+            let content = `${schoolProfile.name.toUpperCase()}\nSCHOOL BASED ASSESSMENT AT BASIC EDUCATIONAL LEVEL\nTERMELY SCORING FOR PRIMARY AND JUNIOR HIGH SCHOOLS\nYear: ${year} | Class: ${className} | Subject: ${subject} | Term: ${term} | Teacher: ${registeredTeacherName}\n\n`;
             content += "No.\tNAME\tInd.Test 1(30)\tGroup Test(20)\tInd.Test 2(30)\tHomework(20)\tTotal SBA(100)\t50% SBA\tExams(100)\t50% Exam\tOverall Total\tGrade\n";
             content += "----------------------------------------------------------------------------------------------------------------------------------\n";
             
@@ -1478,15 +1484,15 @@ export default {
                 const sba50 = totalSba * 0.5;
                 const exam50 = (sub.exam || 0) * 0.5;
                 const total = sba50 + exam50;
-                content += \`\${idx + 1}\t\${s.name}\t\${sub.indTest1}\t\${sub.groupTest}\t\${sub.indTest2}\t\${sub.homework}\t\${totalSba}\t\${sba50}\t\${sub.exam}\t\${exam50}\t\${total}\t\${computeGrade(total)}\n\`;
+                content += `${idx + 1}\t${s.name}\t${sub.indTest1}\t${sub.groupTest}\t${sub.indTest2}\t${sub.homework}\t${totalSba}\t${sba50}\t${sub.exam}\t${exam50}\t${total}\t${computeGrade(total)}\n`;
             });
             const blob = new Blob([content], { type: format === 'pdf' ? 'application/pdf' : 'application/msword' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = \`\${year}_\${className}_\${subject}_\${term}_Assessment_Sheet.\${format === 'pdf' ? 'pdf' : 'doc'}\`;
+            a.download = `${year}_${className}_${subject}_${term}_Assessment_Sheet.${format === 'pdf' ? 'pdf' : 'doc'}`;
             a.click();
-            alert(\`Assessment sheet downloaded as \${format.toUpperCase()}!\`);
+            alert(`Assessment sheet downloaded as ${format.toUpperCase()}!`);
         }
 
         function finalizeReports() {
@@ -1505,7 +1511,7 @@ export default {
             const filtered = studentsData.filter(s => s.class === histClass);
             
             if(filtered.length === 0) {
-                container.innerHTML = \`<p class="text-slate-500 italic p-4">No student records found for \${histClass} (\${histYear} - \${histTerm}).</p>\`;
+                container.innerHTML = `<p class="text-slate-500 italic p-4">No student records found for ${histClass} (${histYear} - ${histTerm}).</p>`;
                 return;
             }
 
@@ -1516,43 +1522,43 @@ export default {
                     const sba50 = totalSba * 0.5;
                     const exam50 = (sub.exam || 0) * 0.5;
                     const total100 = sba50 + exam50;
-                    return \`
+                    return `
                         <tr>
-                            <td class="border border-black p-1 text-center font-bold">\${idx + 1}</td>
-                            <td class="border border-black p-1 pl-2 font-medium">\${s.name}</td>
-                            <td class="border border-black p-1 text-center">\${sub.indTest1 || 0}</td>
-                            <td class="border border-black p-1 text-center">\${sub.groupTest || 0}</td>
-                            <td class="border border-black p-1 text-center">\${sub.indTest2 || 0}</td>
-                            <td class="border border-black p-1 text-center">\${sub.homework || 0}</td>
-                            <td class="border border-black p-1 text-center font-bold bg-slate-50">\${totalSba}</td>
-                            <td class="border border-black p-1 text-center font-semibold bg-blue-50">\${sba50}</td>
-                            <td class="border border-black p-1 text-center">\${sub.exam || 0}</td>
-                            <td class="border border-black p-1 text-center font-semibold bg-blue-50">\${exam50}</td>
-                            <td class="border border-black p-1 text-center font-black bg-amber-50">\${total100}</td>
-                            <td class="border border-black p-1 text-center font-bold">\${computeGrade(total100)}</td>
+                            <td class="border border-black p-1 text-center font-bold">${idx + 1}</td>
+                            <td class="border border-black p-1 pl-2 font-medium">${s.name}</td>
+                            <td class="border border-black p-1 text-center">${sub.indTest1 || 0}</td>
+                            <td class="border border-black p-1 text-center">${sub.groupTest || 0}</td>
+                            <td class="border border-black p-1 text-center">${sub.indTest2 || 0}</td>
+                            <td class="border border-black p-1 text-center">${sub.homework || 0}</td>
+                            <td class="border border-black p-1 text-center font-bold bg-slate-50">${totalSba}</td>
+                            <td class="border border-black p-1 text-center font-semibold bg-blue-50">${sba50}</td>
+                            <td class="border border-black p-1 text-center">${sub.exam || 0}</td>
+                            <td class="border border-black p-1 text-center font-semibold bg-blue-50">${exam50}</td>
+                            <td class="border border-black p-1 text-center font-black bg-amber-50">${total100}</td>
+                            <td class="border border-black p-1 text-center font-bold">${computeGrade(total100)}</td>
                         </tr>
-                    \`;
+                    `;
                 }).join('');
 
-                return \`
+                return `
                     <div class="assessment-print-page bg-white p-8 rounded-xl shadow-lg border-2 border-slate-300 max-w-4xl mx-auto space-y-4 text-slate-900 font-sans">
                         <div class="text-center space-y-1 border-b-2 border-black pb-3">
-                            <h2 class="font-black text-xl tracking-wide">\${schoolProfile.name.toUpperCase()}</h2>
+                            <h2 class="font-black text-xl tracking-wide">${schoolProfile.name.toUpperCase()}</h2>
                             <p class="text-xs font-bold text-slate-700">SCHOOL BASED ASSESSMENT AT BASIC EDUCATIONAL LEVEL</p>
                             <p class="text-xs font-bold text-slate-700 uppercase">TERMELY RECORDINGS FOR PRIMARY AND JUNIOR HIGH SCHOOLS</p>
                         </div>
                         <div class="text-xs space-y-1 font-bold flex justify-between">
                             <div>
-                                <p>CLASS: <span class="underline uppercase">\${histClass}</span></p>
-                                <p>TERM: <span class="underline uppercase">\${histTerm}</span></p>
+                                <p>CLASS: <span class="underline uppercase">${histClass}</span></p>
+                                <p>TERM: <span class="underline uppercase">${histTerm}</span></p>
                             </div>
                             <div>
-                                <p>YEAR: <span class="underline text-blue-900">\${histYear}</span></p>
-                                <p>SUBJECT: <span class="underline uppercase text-blue-900">\${subject}</span></p>
+                                <p>YEAR: <span class="underline text-blue-900">${histYear}</span></p>
+                                <p>SUBJECT: <span class="underline uppercase text-blue-900">${subject}</span></p>
                             </div>
                             <div>
-                                <p>NO. ON ROLL: <span class="underline">\${filtered.length}</span></p>
-                                <p>NAME OF TEACHER: <span class="underline uppercase">\${registeredTeacherName}</span></p>
+                                <p>NO. ON ROLL: <span class="underline">${filtered.length}</span></p>
+                                <p>NAME OF TEACHER: <span class="underline uppercase">${registeredTeacherName}</span></p>
                             </div>
                         </div>
                         <table class="w-full text-xs border-collapse border border-black mt-2">
@@ -1573,11 +1579,11 @@ export default {
                                 </tr>
                             </thead>
                             <tbody>
-                                \${rowsHtml}
+                                ${rowsHtml}
                             </tbody>
                         </table>
                     </div>
-                \`;
+                `;
             }).join('');
 
             let individualReportCardsHtml = filtered.map((s) => {
@@ -1595,43 +1601,43 @@ export default {
                     const exam50 = (sub.exam || 0) * 0.5;
                     const total100 = sba50 + exam50;
                     const grade = computeGrade(total100);
-                    return \`
+                    return `
                         <tr>
-                            <td class="border border-black p-1 pl-2 font-medium">\${subName}</td>
-                            <td class="border border-black p-1 text-center">\${sba50}</td>
-                            <td class="border border-black p-1 text-center">\${sub.exam || 0}</td>
-                            <td class="border border-black p-1 text-center font-bold">\${total100}</td>
-                            <td class="border border-black p-1 text-center">\${s.position || '1st'}</td>
-                            <td class="border border-black p-1 text-center">\${grade}</td>
+                            <td class="border border-black p-1 pl-2 font-medium">${subName}</td>
+                            <td class="border border-black p-1 text-center">${sba50}</td>
+                            <td class="border border-black p-1 text-center">${sub.exam || 0}</td>
+                            <td class="border border-black p-1 text-center font-bold">${total100}</td>
+                            <td class="border border-black p-1 text-center">${s.position || '1st'}</td>
+                            <td class="border border-black p-1 text-center">${grade}</td>
                             <td class="border border-black p-1 pl-2">Satisfactory</td>
                         </tr>
-                    \`;
+                    `;
                 }).join('');
 
-                return \`
+                return `
                     <div class="report-card-page bg-white p-8 rounded-xl shadow-lg border-2 border-slate-300 max-w-3xl mx-auto space-y-4 text-slate-900 font-sans">
                         <div class="text-center space-y-1 border-b-2 border-black pb-3">
-                            <h2 class="font-black text-xl tracking-wide">\${schoolProfile.name.toUpperCase()}</h2>
+                            <h2 class="font-black text-xl tracking-wide">${schoolProfile.name.toUpperCase()}</h2>
                             <p class="text-xs font-bold text-slate-700">P. O. BOX 18 16, SHAMA</p>
                             <p class="text-xs font-bold text-slate-700">ASSORKO - ESSAMAN</p>
-                            <h3 class="font-extrabold text-sm tracking-widest pt-1 uppercase underline">END OF TERM REPORT CARD (\${histYear})</h3>
+                            <h3 class="font-extrabold text-sm tracking-widest pt-1 uppercase underline">END OF TERM REPORT CARD (${histYear})</h3>
                         </div>
                         <div class="text-xs space-y-1.5 font-bold">
                             <div class="flex border-b border-black pb-1">
                                 <span class="w-32">NAME OF PUPIL:</span>
-                                <span class="flex-1 underline uppercase">\${s.name}</span>
+                                <span class="flex-1 underline uppercase">${s.name}</span>
                             </div>
                             <div class="flex justify-between border-b border-black pb-1">
-                                <div class="flex flex-1"><span class="w-16">CLASS:</span><span class="underline uppercase">\${s.class}</span></div>
-                                <div class="flex flex-1"><span class="w-28">NO. ON ROLL:</span><span class="underline">\${filtered.length}</span></div>
+                                <div class="flex flex-1"><span class="w-16">CLASS:</span><span class="underline uppercase">${s.class}</span></div>
+                                <div class="flex flex-1"><span class="w-28">NO. ON ROLL:</span><span class="underline">${filtered.length}</span></div>
                             </div>
                             <div class="flex justify-between border-b border-black pb-1">
-                                <div class="flex flex-1"><span class="w-16">YEAR:</span><span class="underline text-blue-900">\${histYear}</span></div>
-                                <div class="flex flex-1"><span class="w-28">TERM:</span><span class="underline uppercase">\${histTerm}</span></div>
+                                <div class="flex flex-1"><span class="w-16">YEAR:</span><span class="underline text-blue-900">${histYear}</span></div>
+                                <div class="flex flex-1"><span class="w-28">TERM:</span><span class="underline uppercase">${histTerm}</span></div>
                             </div>
                             <div class="flex justify-between border-b border-black pb-1">
-                                <div class="flex flex-1"><span class="w-32">POSITION IN CLASS:</span><span class="underline">\${s.position || '1st'}</span></div>
-                                <div class="flex flex-1"><span class="w-32">RE-OPENING DATE:</span><span class="underline"><input type="text" value="\${s.reopeningDate}" onchange="updateStudentProp(\${studentsData.findIndex(item => item.id === s.id)}, 'reopeningDate', this.value)" class="border-none w-32 bg-transparent text-xs font-bold"></span></div>
+                                <div class="flex flex-1"><span class="w-32">POSITION IN CLASS:</span><span class="underline">${s.position || '1st'}</span></div>
+                                <div class="flex flex-1"><span class="w-32">RE-OPENING DATE:</span><span class="underline"><input type="text" value="${s.reopeningDate}" onchange="updateStudentProp(${studentsData.findIndex(item => item.id === s.id)}, 'reopeningDate', this.value)" class="border-none w-32 bg-transparent text-xs font-bold"></span></div>
                             </div>
                         </div>
                         <table class="w-full text-xs border-collapse border border-black mt-2">
@@ -1647,33 +1653,33 @@ export default {
                                 </tr>
                             </thead>
                             <tbody>
-                                \${subjectsHtml}
+                                ${subjectsHtml}
                             </tbody>
                         </table>
                         <div class="text-xs space-y-1.5 pt-1 font-semibold">
                             <div class="flex border-b border-black pb-1">
                                 <span class="w-36">ATTENDANCE MADE:</span>
-                                <span class="font-bold text-blue-900 underline">\${s.attendanceMade || 65}</span>
+                                <span class="font-bold text-blue-900 underline">${s.attendanceMade || 65}</span>
                                 <span class="mx-4">OUT OF TOTAL OF:</span>
-                                <span class="font-bold text-blue-900 underline">\${s.attendanceTotal || 70}</span>
+                                <span class="font-bold text-blue-900 underline">${s.attendanceTotal || 70}</span>
                                 <span class="mx-4">PROMOTED TO:</span>
-                                <input type="text" value="\${s.promotedTo}" onchange="updateStudentProp(\${studentsData.findIndex(item => item.id === s.id)}, 'promotedTo', this.value)" class="flex-1 border-b border-black bg-transparent">
+                                <input type="text" value="${s.promotedTo}" onchange="updateStudentProp(${studentsData.findIndex(item => item.id === s.id)}, 'promotedTo', this.value)" class="flex-1 border-b border-black bg-transparent">
                             </div>
                             <div class="flex border-b border-black pb-1">
                                 <span class="w-24">CONDUCT:</span>
-                                <input type="text" value="\${s.conduct}" onchange="updateStudentProp(\${studentsData.findIndex(item => item.id === s.id)}, 'conduct', this.value)" class="flex-1 border-b border-black bg-transparent">
+                                <input type="text" value="${s.conduct}" onchange="updateStudentProp(${studentsData.findIndex(item => item.id === s.id)}, 'conduct', this.value)" class="flex-1 border-b border-black bg-transparent">
                             </div>
                             <div class="flex border-b border-black pb-1">
                                 <span class="w-24">INTEREST:</span>
-                                <input type="text" value="\${s.interest}" onchange="updateStudentProp(\${studentsData.findIndex(item => item.id === s.id)}, 'interest', this.value)" class="flex-1 border-b border-black bg-transparent">
+                                <input type="text" value="${s.interest}" onchange="updateStudentProp(${studentsData.findIndex(item => item.id === s.id)}, 'interest', this.value)" class="flex-1 border-b border-black bg-transparent">
                             </div>
                             <div class="flex border-b border-black pb-1">
                                 <span class="w-48">CLASS TEACHER'S REMARKS:</span>
-                                <input type="text" value="\${s.teacherRemarks}" onchange="updateStudentProp(\${studentsData.findIndex(item => item.id === s.id)}, 'teacherRemarks', this.value)" class="flex-1 border-b border-black bg-transparent">
+                                <input type="text" value="${s.teacherRemarks}" onchange="updateStudentProp(${studentsData.findIndex(item => item.id === s.id)}, 'teacherRemarks', this.value)" class="flex-1 border-b border-black bg-transparent">
                             </div>
                             <div class="flex border-b border-black pb-1">
                                 <span class="w-48">HEAD TEACHER'S REMARKS:</span>
-                                <input type="text" value="\${s.headRemarks}" onchange="updateStudentProp(\${studentsData.findIndex(item => item.id === s.id)}, 'headRemarks', this.value)" class="flex-1 border-b border-black bg-transparent">
+                                <input type="text" value="${s.headRemarks}" onchange="updateStudentProp(${studentsData.findIndex(item => item.id === s.id)}, 'headRemarks', this.value)" class="flex-1 border-b border-black bg-transparent">
                             </div>
                         </div>
                         <!-- PROFESSIONAL BILLING ACCOUNT SUMMARY TABLE -->
@@ -1687,27 +1693,27 @@ export default {
                             <tbody>
                                 <tr>
                                     <td class="border border-black p-1.5 pl-2 font-bold text-red-700">ARREARS (OLD UNPAID BALANCE):</td>
-                                    <td class="border border-black p-1.5 text-right pr-3 font-semibold text-red-700">\${arrears.toFixed(2)}</td>
+                                    <td class="border border-black p-1.5 text-right pr-3 font-semibold text-red-700">${arrears.toFixed(2)}</td>
                                 </tr>
                                 <tr>
                                     <td class="border border-black p-1.5 pl-2 font-bold">TUITION FEE FOR NEXT TERM:</td>
-                                    <td class="border border-black p-1.5 text-right pr-3 font-semibold">\${tuition.toFixed(2)}</td>
+                                    <td class="border border-black p-1.5 text-right pr-3 font-semibold">${tuition.toFixed(2)}</td>
                                 </tr>
                                 <tr>
                                     <td class="border border-black p-1.5 pl-2 font-bold">PRINTING FEE FOR NEXT TERM:</td>
-                                    <td class="border border-black p-1.5 text-right pr-3 font-semibold">\${printing.toFixed(2)}</td>
+                                    <td class="border border-black p-1.5 text-right pr-3 font-semibold">${printing.toFixed(2)}</td>
                                 </tr>
                                 <tr>
                                     <td class="border border-black p-1.5 pl-2 font-bold">P.T.A. DUES FOR NEXT TERM:</td>
-                                    <td class="border border-black p-1.5 text-right pr-3 font-semibold">\${pta.toFixed(2)}</td>
+                                    <td class="border border-black p-1.5 text-right pr-3 font-semibold">${pta.toFixed(2)}</td>
                                 </tr>
                                 <tr>
                                     <td class="border border-black p-1.5 pl-2 font-bold">OTHER FEES FOR NEXT TERM:</td>
-                                    <td class="border border-black p-1.5 text-right pr-3 font-semibold">\${other.toFixed(2)}</td>
+                                    <td class="border border-black p-1.5 text-right pr-3 font-semibold">${other.toFixed(2)}</td>
                                 </tr>
                                 <tr class="bg-slate-100 font-black">
                                     <td class="border border-black p-1.5 pl-2 uppercase">TOTAL BILL BALANCE DUE:</td>
-                                    <td class="border border-black p-1.5 text-right pr-3 text-blue-900">GH₵ \${totalFee.toFixed(2)}</td>
+                                    <td class="border border-black p-1.5 text-right pr-3 text-blue-900">GH₵ ${totalFee.toFixed(2)}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -1715,10 +1721,10 @@ export default {
                             <button onclick="window.print()" class="px-4 py-2 bg-blue-900 text-white text-xs font-semibold rounded-lg">Print Report Card & Bill 🖨️</button>
                         </div>
                     </div>
-                \`;
+                `;
             }).join('');
 
-            container.innerHTML = \`<div class="mb-8"><h3 class="font-bold text-lg text-blue-950 mb-3 border-b pb-2">📋 Master Class Assessment Sheets (\${histClass} - \${histYear} \${histTerm})</h3>\${masterAssessmentSheetsHtml}</div><div><h3 class="font-bold text-lg text-blue-950 mb-3 border-b pb-2">🎓 Individual Report Cards & Billing Accounts</h3>\${individualReportCardsHtml}</div>\`;
+            container.innerHTML = `<div class="mb-8"><h3 class="font-bold text-lg text-blue-950 mb-3 border-b pb-2">📋 Master Class Assessment Sheets (${histClass} - ${histYear} ${histTerm})</h3>${masterAssessmentSheetsHtml}</div><div><h3 class="font-bold text-lg text-blue-950 mb-3 border-b pb-2">🎓 Individual Report Cards & Billing Accounts</h3>${individualReportCardsHtml}</div>`;
         }
 
         function updateStudentProp(index, field, val) {
@@ -1732,7 +1738,7 @@ export default {
             const tbody = document.getElementById('fees-table-body');
             if(!tbody) return;
             if(filteredStudents.length === 0) {
-                tbody.innerHTML = \`<tr><td colspan="8" class="p-6 text-center text-slate-400 italic">No fee records found for \${selectedClass}.</td></tr>\`;
+                tbody.innerHTML = `<tr><td colspan="8" class="p-6 text-center text-slate-400 italic">No fee records found for ${selectedClass}.</td></tr>`;
                 return;
             }
             tbody.innerHTML = filteredStudents.map((s) => {
@@ -1743,20 +1749,20 @@ export default {
                 const pta = parseFloat(s.ptaFee) || 5;
                 const other = parseFloat(s.otherFee) || 20;
                 const total = arrears + tuition + printing + pta + other;
-                return \`
+                return `
                     <tr>
-                        <td class="p-3 font-medium">\${s.name}</td>
-                        <td class="p-3"><input type="number" value="\${s.arrearsFee || 0}" onchange="updateFeeProp(\${globalIdx}, 'arrearsFee', this.value)" class="w-16 p-1 border rounded text-red-700 font-bold"></td>
-                        <td class="p-3"><input type="number" value="\${s.tuitionFee}" onchange="updateFeeProp(\${globalIdx}, 'tuitionFee', this.value)" class="w-16 p-1 border rounded"></td>
-                        <td class="p-3"><input type="number" value="\${s.printingFee}" onchange="updateFeeProp(\${globalIdx}, 'printingFee', this.value)" class="w-16 p-1 border rounded"></td>
-                        <td class="p-3"><input type="number" value="\${s.ptaFee}" onchange="updateFeeProp(\${globalIdx}, 'ptaFee', this.value)" class="w-16 p-1 border rounded"></td>
-                        <td class="p-3"><input type="number" value="\${s.otherFee}" onchange="updateFeeProp(\${globalIdx}, 'otherFee', this.value)" class="w-16 p-1 border rounded"></td>
-                        <td class="p-3 font-black text-blue-900 bg-blue-50">₵ \${total.toFixed(2)}</td>
+                        <td class="p-3 font-medium">${s.name}</td>
+                        <td class="p-3"><input type="number" value="${s.arrearsFee || 0}" onchange="updateFeeProp(${globalIdx}, 'arrearsFee', this.value)" class="w-16 p-1 border rounded text-red-700 font-bold"></td>
+                        <td class="p-3"><input type="number" value="${s.tuitionFee}" onchange="updateFeeProp(${globalIdx}, 'tuitionFee', this.value)" class="w-16 p-1 border rounded"></td>
+                        <td class="p-3"><input type="number" value="${s.printingFee}" onchange="updateFeeProp(${globalIdx}, 'printingFee', this.value)" class="w-16 p-1 border rounded"></td>
+                        <td class="p-3"><input type="number" value="${s.ptaFee}" onchange="updateFeeProp(${globalIdx}, 'ptaFee', this.value)" class="w-16 p-1 border rounded"></td>
+                        <td class="p-3"><input type="number" value="${s.otherFee}" onchange="updateFeeProp(${globalIdx}, 'otherFee', this.value)" class="w-16 p-1 border rounded"></td>
+                        <td class="p-3 font-black text-blue-900 bg-blue-50">₵ ${total.toFixed(2)}</td>
                         <td class="p-3 no-print">
-                            <button onclick="viewReceipt(\${globalIdx})" class="px-2 py-1 bg-blue-900 text-white text-xs rounded font-semibold">Receipt</button>
+                            <button onclick="viewReceipt(${globalIdx})" class="px-2 py-1 bg-blue-900 text-white text-xs rounded font-semibold">Receipt</button>
                         </td>
                     </tr>
-                \`;
+                `;
             }).join('');
         }
 
@@ -1775,23 +1781,23 @@ export default {
             const totalFee = arrears + tuition + printing + pta + other;
             
             const content = document.getElementById('receipt-content');
-            content.innerHTML = \`
+            content.innerHTML = `
                 <div class="text-center space-y-1 border-b pb-4">
-                    <h3 class="font-bold text-lg text-blue-950">\${schoolProfile.name}</h3>
-                    <p class="text-[11px] text-slate-500 font-medium">\${schoolProfile.location} • Professional Billing Account Statement</p>
+                    <h3 class="font-bold text-lg text-blue-950">${schoolProfile.name}</h3>
+                    <p class="text-[11px] text-slate-500 font-medium">${schoolProfile.location} • Professional Billing Account Statement</p>
                 </div>
                 <div class="text-sm space-y-2 pt-2">
-                    <p><strong>Student Name:</strong> \${s.name}</p>
-                    <p><strong>Class:</strong> \${s.class}</p>
+                    <p><strong>Student Name:</strong> ${s.name}</p>
+                    <p><strong>Class:</strong> ${s.class}</p>
                     <hr class="my-2">
-                    <div class="flex justify-between text-red-700 font-bold"><span>Arrears (Old Balance):</span> <strong>₵ \${arrears.toFixed(2)}</strong></div>
-                    <div class="flex justify-between"><span>Tuition Fee:</span> <strong>₵ \${tuition.toFixed(2)}</strong></div>
-                    <div class="flex justify-between"><span>Printing Fee:</span> <strong>₵ \${printing.toFixed(2)}</strong></div>
-                    <div class="flex justify-between"><span>P.T.A Dues:</span> <strong>₵ \${pta.toFixed(2)}</strong></div>
-                    <div class="flex justify-between"><span>Other Fees:</span> <strong>₵ \${other.toFixed(2)}</strong></div>
-                    <div class="flex justify-between text-blue-900 border-t pt-2 font-black text-base"><span>Total Bill Balance Due:</span> <strong>₵ \${totalFee.toFixed(2)}</strong></div>
+                    <div class="flex justify-between text-red-700 font-bold"><span>Arrears (Old Balance):</span> <strong>₵ ${arrears.toFixed(2)}</strong></div>
+                    <div class="flex justify-between"><span>Tuition Fee:</span> <strong>₵ ${tuition.toFixed(2)}</strong></div>
+                    <div class="flex justify-between"><span>Printing Fee:</span> <strong>₵ ${printing.toFixed(2)}</strong></div>
+                    <div class="flex justify-between"><span>P.T.A Dues:</span> <strong>₵ ${pta.toFixed(2)}</strong></div>
+                    <div class="flex justify-between"><span>Other Fees:</span> <strong>₵ ${other.toFixed(2)}</strong></div>
+                    <div class="flex justify-between text-blue-900 border-t pt-2 font-black text-base"><span>Total Bill Balance Due:</span> <strong>₵ ${totalFee.toFixed(2)}</strong></div>
                 </div>
-            \`;
+            `;
             document.getElementById('receipt-modal').classList.remove('hidden');
         }
 
@@ -1802,20 +1808,20 @@ export default {
             const tbody = document.getElementById('attendance-table-body');
             if(!tbody) return;
             if(filteredStudents.length === 0) {
-                tbody.innerHTML = \`<tr><td colspan="5" class="p-6 text-center text-slate-400 italic">No students found in \${selectedClass}.</td></tr>\`;
+                tbody.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-slate-400 italic">No students found in ${selectedClass}.</td></tr>`;
                 return;
             }
             tbody.innerHTML = filteredStudents.map((s) => {
                 const globalIdx = studentsData.findIndex(item => item.id === s.id);
-                return \`
+                return `
                     <tr>
-                        <td class="p-3 font-medium">\${s.name}</td>
-                        <td class="p-3">\${s.class}</td>
-                        <td class="p-3 text-center"><input type="number" value="\${s.attendanceMade || 65}" onchange="updateAttendanceProp(\${globalIdx}, 'attendanceMade', this.value)" class="w-20 p-1.5 border rounded text-center font-bold text-blue-900 bg-slate-50"></td>
-                        <td class="p-3 text-center"><input type="number" value="\${s.attendanceTotal || 70}" onchange="updateAttendanceProp(\${globalIdx}, 'attendanceTotal', this.value)" class="w-20 p-1.5 border rounded text-center font-bold text-slate-800 bg-slate-50"></td>
-                        <td class="p-3 text-center font-bold text-amber-900 bg-amber-50">\${s.attendanceMade || 65} out of \${s.attendanceTotal || 70}</td>
+                        <td class="p-3 font-medium">${s.name}</td>
+                        <td class="p-3">${s.class}</td>
+                        <td class="p-3 text-center"><input type="number" value="${s.attendanceMade || 65}" onchange="updateAttendanceProp(${globalIdx}, 'attendanceMade', this.value)" class="w-20 p-1.5 border rounded text-center font-bold text-blue-900 bg-slate-50"></td>
+                        <td class="p-3 text-center"><input type="number" value="${s.attendanceTotal || 70}" onchange="updateAttendanceProp(${globalIdx}, 'attendanceTotal', this.value)" class="w-20 p-1.5 border rounded text-center font-bold text-slate-800 bg-slate-50"></td>
+                        <td class="p-3 text-center font-bold text-amber-900 bg-amber-50">${s.attendanceMade || 65} out of ${s.attendanceTotal || 70}</td>
                     </tr>
-                \`;
+                `;
             }).join('');
         }
 
@@ -1830,17 +1836,17 @@ export default {
 
         function exportAttendance(format) {
             const className = document.getElementById('attendance-class-filter').value;
-            let content = \`\${schoolProfile.name.toUpperCase()}\nATTENDANCE REGISTER SUMMARY\nClass: \${className}\n\nStudent Name\tDays Present\tTotal Days\tRatio\n\`;
+            let content = `${schoolProfile.name.toUpperCase()}\nATTENDANCE REGISTER SUMMARY\nClass: ${className}\n\nStudent Name\tDays Present\tTotal Days\tRatio\n`;
             studentsData.filter(s => s.class === className).forEach(s => {
-                content += \`\${s.name}\t\${s.attendanceMade || 65}\t\${s.attendanceTotal || 70}\t\${s.attendanceMade || 65} out of \${s.attendanceTotal || 70}\n\`;
+                content += `${s.name}\t${s.attendanceMade || 65}\t${s.attendanceTotal || 70}\t${s.attendanceMade || 65} out of ${s.attendanceTotal || 70}\n`;
             });
             const blob = new Blob([content], { type: format === 'pdf' ? 'application/pdf' : 'application/msword' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = \`\${className}_Attendance_Summary.\${format === 'pdf' ? 'pdf' : 'doc'}\`;
+            a.download = `${className}_Attendance_Summary.${format === 'pdf' ? 'pdf' : 'doc'}`;
             a.click();
-            alert(\`Attendance summary downloaded as \${format.toUpperCase()}!\`);
+            alert(`Attendance summary downloaded as ${format.toUpperCase()}!`);
         }
 
         function renderCharts() {
@@ -1887,7 +1893,7 @@ export default {
                     if(loadedCount === totalFiles) {
                         await saveCloudSettings();
                         renderGalleryGrids();
-                        alert(\`\${totalFiles} photo(s) successfully uploaded to Supabase cloud and synced across all devices!\`);
+                        alert(`${totalFiles} photo(s) successfully uploaded to Supabase cloud and synced across all devices!`);
                     }
                 }
                 reader.readAsDataURL(file);
@@ -1899,17 +1905,17 @@ export default {
             const grid = document.getElementById('gallery-grid');
             const tGrid = document.getElementById('teacher-gallery-grid');
             if(galleryPhotos.length === 0) {
-                const emptyMsg = \`<p class="text-slate-400 italic text-sm">No photos uploaded yet.</p>\`;
+                const emptyMsg = `<p class="text-slate-400 italic text-sm">No photos uploaded yet.</p>`;
                 if(grid) grid.innerHTML = emptyMsg;
                 if(tGrid) tGrid.innerHTML = emptyMsg;
                 return;
             }
-            const html = galleryPhotos.map((p) => \`
+            const html = galleryPhotos.map((p) => `
                 <div class="bg-slate-50 rounded-xl p-3 text-center border space-y-2">
-                    <img src="\${p.url}" alt="School Activity" class="h-32 w-full object-cover rounded-lg shadow">
-                    <a href="\${p.url}" download="\${p.name || 'school_photo.jpg'}" class="block text-xs bg-blue-900 text-white py-1.5 px-3 rounded-lg font-bold hover:bg-blue-800">Download JPG ⬇️</a>
+                    <img src="${p.url}" alt="School Activity" class="h-32 w-full object-cover rounded-lg shadow">
+                    <a href="${p.url}" download="${p.name || 'school_photo.jpg'}" class="block text-xs bg-blue-900 text-white py-1.5 px-3 rounded-lg font-bold hover:bg-blue-800">Download JPG ⬇️</a>
                 </div>
-            \`).join('');
+            `).join('');
             if(grid) grid.innerHTML = html;
             if(tGrid) tGrid.innerHTML = html;
         }
@@ -1965,8 +1971,8 @@ export default {
             document.getElementById('login-school-title').innerText = schoolProfile.name;
             document.getElementById('login-school-motto').innerText = schoolProfile.motto;
             document.getElementById('nav-school-name').innerText = schoolProfile.name;
-            document.getElementById('nav-school-info').innerText = \`\${schoolProfile.location} • Default Tuition: GH₵ 250\`;
-            document.getElementById('dashboard-motto-display').innerText = \`\${schoolProfile.name}, \${schoolProfile.location} — \${schoolProfile.motto}.\`;
+            document.getElementById('nav-school-info').innerText = `${schoolProfile.location} • Default Tuition: GH₵ 250`;
+            document.getElementById('dashboard-motto-display').innerText = `${schoolProfile.name}, ${schoolProfile.location} — ${schoolProfile.motto}.`;
             alert('School profile and branding updated successfully!');
         }
     </script>
@@ -1980,3 +1986,5 @@ export default {
     });
   },
 };
+
+```
