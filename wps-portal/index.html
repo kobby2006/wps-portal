@@ -864,6 +864,47 @@
             renderAll();
         });
 
+        // STUDENT REGISTRATION SUBMIT HANDLER
+        document.getElementById('student-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('s-name').value.trim();
+            const studentClass = document.getElementById('s-class').value;
+            const gender = document.getElementById('s-gender').value;
+
+            if(!name) {
+                alert('Please enter the student name.');
+                return;
+            }
+
+            try {
+                const { error } = await supabaseClient.from('students').insert([{
+                    name: name,
+                    class: studentClass,
+                    gender: gender,
+                    subjectsData: {},
+                    arrearsFee: 0.00,
+                    tuitionFee: 250.00,
+                    printingFee: 25.00,
+                    ptaFee: 5.00,
+                    otherFee: 20.00,
+                    attendanceMade: 65,
+                    attendanceTotal: 70
+                }]);
+
+                if(error) {
+                    alert('Error saving student: ' + error.message);
+                    return;
+                }
+
+                alert(`Student "${name}" successfully registered to ${studentClass}!`);
+                document.getElementById('s-name').value = '';
+                await fetchStudentsFromSupabase();
+                renderAll();
+            } catch(err) {
+                alert('Exception saving student: ' + err.message);
+            }
+        });
+
         function openPasswordResetModal() { document.getElementById('password-reset-modal').classList.remove('hidden'); }
         function closePasswordResetModal() { document.getElementById('password-reset-modal').classList.add('hidden'); }
         function submitPasswordResetRequest() {
