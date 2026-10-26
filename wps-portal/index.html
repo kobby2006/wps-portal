@@ -936,7 +936,7 @@
                 if(data && !error) {
                     teachersList = data.map(t => ({
                         id: t.id,
-                        name: t.full_name || t.name,
+                        name: t.name || t.full_name || 'Teacher',
                         assignment: t.assignment || t.phone_number || 'General Teaching'
                     }));
                 }
@@ -1267,6 +1267,7 @@
             
             try {
                 const { error } = await supabaseClient.from('teachers').insert([{ 
+                    name: name,
                     full_name: name, 
                     phone_number: phone, 
                     email: email,
