@@ -238,7 +238,7 @@
                                     <option value="Computing">Computing</option>
                                     <option value="Creative Arts">Creative Arts</option>
                                     <option value="Ghanaian Language">Ghanaian Language</option>
-                                    <option value="RME">RME</option>
+                                    <option value="R. M. E.">R. M. E.</option>
                                 </select>
                             </div>
                         </div>
@@ -836,7 +836,7 @@
                 document.getElementById('teacher-nav-section').classList.remove('hidden');
                 document.getElementById('admin-lms-upload-section').classList.add('hidden');
                 document.getElementById('lms-role-badge').innerText = "Teacher View (Read Only)";
-                switchTab('assessment'); // Default teacher view to SBA Grading
+                switchTab('assessment');
                 
                 document.getElementById('modal-announcement-text').innerText = globalAnnouncementText;
                 if(globalAnnouncementImgUrl) {
@@ -1333,9 +1333,10 @@
             await fetchTeachersFromSupabase();
         });
 
-        // Strict subject-teacher and class-teacher mapping function
+        // Strict subject-teacher and class-teacher mapping function (normalized)
         function getTeacherNameForDocument(className, subjectName) {
-            const subLower = (subjectName || '').toLowerCase();
+            const subRaw = (subjectName || '').toLowerCase();
+            const subClean = subRaw.replace(/[\.\s]/g, ''); // Removes spaces and dots for reliable matching
             const classLower = (className || '').toLowerCase();
 
             // 1. For Basic 1, 2, 3: Find teacher assigned specifically to that class
@@ -1345,22 +1346,22 @@
             }
 
             // 2. For Basic 4 to JHS 3: Match strictly by subject teacher
-            if(subLower.includes('mathematics') || subLower.includes('science') || subLower.includes('integrated science')) {
+            if(subClean.includes('math') || subClean.includes('science') || subClean.includes('integratedscience')) {
                 const t = teachersList.find(item => item.name.toLowerCase().includes('prince') || (item.assignment && item.assignment.toLowerCase().includes('math')));
                 if(t) return t.name;
                 return 'Prince Mensah';
             }
-            if(subLower.includes('computing') || subLower.includes('creative arts') || subLower.includes('creative')) {
+            if(subClean.includes('computing') || subClean.includes('creativearts') || subClean.includes('creative')) {
                 const t = teachersList.find(item => item.name.toLowerCase().includes('priscilla') || (item.assignment && item.assignment.toLowerCase().includes('computing')));
                 if(t) return t.name;
                 return 'Priscilla Annan';
             }
-            if(subLower.includes('r.m.e') || subLower.includes('rme') || subLower.includes('history')) {
-                const t = teachersList.find(item => item.name.toLowerCase().includes('margret') || item.name.toLowerCase().includes('aidoo') || (item.assignment && item.assignment.toLowerCase().includes('history')));
+            if(subClean.includes('rme') || subClean.includes('history')) {
+                const t = teachersList.find(item => item.name.toLowerCase().includes('margret') || item.name.toLowerCase().includes('aidoo') || (item.assignment && item.assignment.toLowerCase().includes('history')) || (item.assignment && item.assignment.toLowerCase().includes('rme')));
                 if(t) return t.name;
-                return 'Madam Margret Aidoo';
+                return 'Margaret Aidoo';
             }
-            if(subLower.includes('english') || subLower.includes('ghanaian') || subLower.includes('fante')) {
+            if(subClean.includes('english') || subClean.includes('ghanaianlanguage') || subClean.includes('fante')) {
                 const t = teachersList.find(item => item.name.toLowerCase().includes('naa') || item.name.toLowerCase().includes('loretta') || (item.assignment && item.assignment.toLowerCase().includes('english')));
                 if(t) return t.name;
                 return 'Madam Naa Loretta';
