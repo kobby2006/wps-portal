@@ -992,7 +992,7 @@
                         name: s.name || s.student_name || 'Unknown Student',
                         class: s.class || s.class_name || 'Basic 4',
                         gender: s.gender || 'Male',
-                        photo: s.photo || '',
+                        photo: s.photo || s.student_photo || '',
                         subjectsData: s.subjectsData || {},
                         arrearsFee: s.arrearsFee ?? 0.00,
                         tuitionFee: s.tuitionFee ?? 250.00,
