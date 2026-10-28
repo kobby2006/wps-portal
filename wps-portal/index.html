@@ -208,13 +208,15 @@
                         
                         <div class="grid grid-cols-1 md:grid-cols-4 gap-4 pt-2 border-t">
                             <div>
-                                <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Academic Year</label>
-                                <select id="grading-year-filter" onchange="renderGradingTable()" class="p-2.5 border rounded-xl w-full text-sm bg-slate-50 font-medium">
-                                    <option value="2026" selected>2026</option>
-                                    <option value="2025">2025</option>
-                                    <option value="2024">2024</option>
-                                    <option value="2023">2023</option>
-                                </select>
+                                <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Academic Year (Select or Type)</label>
+                                <input type="text" id="grading-year-filter" value="2026" list="academic-years-list" onchange="renderGradingTable()" class="p-2.5 border rounded-xl w-full text-sm bg-slate-50 font-medium">
+                                <datalist id="academic-years-list">
+                                    <option value="2026">
+                                    <option value="2027">
+                                    <option value="2028">
+                                    <option value="2029">
+                                    <option value="2030">
+                                </datalist>
                             </div>
                             <div>
                                 <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Select Class</label>
@@ -286,33 +288,35 @@
                     <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-4">
                         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                             <div>
-                                <h2 class="text-xl font-bold text-slate-900">Student History & Full Class Assessment Sheets (Year Till Date Archive)</h2>
+                                <h2 class="text-xl font-bold text-slate-900">Student History & Full Class Assessment Sheets (Year Archive)</h2>
                                 <p class="text-xs text-slate-500">View official master class assessment sheets and individual end-of-term report cards archived by year and term.</p>
                             </div>
                             <button onclick="window.print()" class="px-4 py-2 bg-slate-800 text-white text-xs font-semibold rounded-lg hover:bg-slate-700 no-print">Print All Records</button>
                         </div>
                         <!-- Year, Class & Term Selector for History -->
-                        <div class="flex flex-wrap gap-4 pt-2 border-t items-center">
-                            <div>
-                                <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Choose Academic Year</label>
-                                <select id="history-year-filter" onchange="renderHistoryView()" class="p-2 border rounded-xl text-sm bg-slate-50 font-medium w-40">
-                                    <option value="2026" selected>2026</option>
-                                    <option value="2025">2025</option>
-                                    <option value="2024">2024</option>
-                                    <option value="2023">2023</option>
-                                </select>
+                        <div class="flex flex-wrap gap-4 pt-2 border-t items-center justify-between">
+                            <div class="flex flex-wrap gap-4 items-center">
+                                <div>
+                                    <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Academic Year (Select or Type)</label>
+                                    <input type="text" id="history-year-filter" value="2026" list="academic-years-list" onchange="renderHistoryView()" class="p-2 border rounded-xl text-sm bg-slate-50 font-medium w-40">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Choose Class</label>
+                                    <select id="history-class-filter" onchange="renderHistoryView()" class="p-2 border rounded-xl text-sm bg-slate-50 font-medium w-48"></select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Choose Term</label>
+                                    <select id="history-term-filter" onchange="renderHistoryView()" class="p-2 border rounded-xl text-sm bg-slate-50 font-medium w-40">
+                                        <option value="Term 1" selected>Term 1</option>
+                                        <option value="Term 2">Term 2</option>
+                                        <option value="Term 3">Term 3</option>
+                                    </select>
+                                </div>
                             </div>
-                            <div>
-                                <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Choose Class</label>
-                                <select id="history-class-filter" onchange="renderHistoryView()" class="p-2 border rounded-xl text-sm bg-slate-50 font-medium w-48"></select>
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Choose Term</label>
-                                <select id="history-term-filter" onchange="renderHistoryView()" class="p-2 border rounded-xl text-sm bg-slate-50 font-medium w-40">
-                                    <option value="Term 1" selected>Term 1</option>
-                                    <option value="Term 2">Term 2</option>
-                                    <option value="Term 3">Term 3</option>
-                                </select>
+                            <!-- PASSPORT PHOTO TOGGLE -->
+                            <div class="bg-amber-50 p-3 rounded-xl border border-amber-200 flex items-center space-x-2">
+                                <input type="checkbox" id="include-photos-toggle" checked onchange="renderHistoryView()" class="w-4 h-4 text-blue-900 rounded">
+                                <label for="include-photos-toggle" class="text-xs font-bold text-amber-950 cursor-pointer">Include Passport Photos on Report Cards</label>
                             </div>
                         </div>
                     </div>
@@ -326,25 +330,48 @@
                         <div class="border-b pb-4 flex justify-between items-center">
                             <div>
                                 <h2 class="text-xl font-bold text-slate-900">📚 LMS & Professional Teacher Training Hub</h2>
-                                <p class="text-xs text-slate-500 mt-1">Curriculum resources, classroom control methodologies, student behavioral analysis, and problem-solving strategies.</p>
+                                <p class="text-xs text-slate-500 mt-1">Curriculum resources, downloadable PDF/Word handouts, classroom control methodologies, and problem-solving strategies.</p>
                             </div>
                             <span id="lms-role-badge" class="px-3 py-1 bg-amber-100 text-amber-900 text-xs font-bold rounded-full">Admin Edit Mode Active</span>
                         </div>
-                        <!-- ADMIN ONLY: ADD NEW RESOURCE OR TRAINING GUIDE -->
-                        <div id="admin-lms-upload-section" class="bg-blue-50/60 p-4 rounded-xl border border-blue-200 space-y-3">
-                            <h3 class="font-bold text-sm text-blue-950">➕ Upload Teaching Resource / Embed Video / Update Training Guide (Admin Only)</h3>
+                        <!-- ADMIN ONLY: UPLOAD PDF / WORD / MATERIALS -->
+                        <div id="admin-lms-upload-section" class="bg-blue-50/60 p-5 rounded-xl border border-blue-200 space-y-4">
+                            <h3 class="font-bold text-sm text-blue-950">➕ Upload PDF, Word Handout, or Teaching Document (Admin Only)</h3>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                <input type="text" id="lms-title" placeholder="Resource Title (e.g. Basic 4 Mathematics Handout)" class="p-2.5 border rounded-xl text-xs bg-white font-medium">
-                                <input type="text" id="lms-embed-url" placeholder="Embed YouTube Link (e.g. https://www.youtube.com/embed/...)" class="p-2.5 border rounded-xl text-xs bg-white font-medium">
+                                <div>
+                                    <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Document Title</label>
+                                    <input type="text" id="lms-doc-title" placeholder="e.g. Basic 4 Mathematics Syllabus & Handout" class="p-2.5 border rounded-xl text-xs bg-white font-medium w-full">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Select File (PDF, Word DOCX, etc.)</label>
+                                    <input type="file" id="lms-doc-file" accept=".pdf,.doc,.docx,.txt" class="block w-full text-xs text-slate-500 file:mr-2 file:py-2 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-blue-900 file:text-white hover:file:bg-blue-800">
+                                </div>
                             </div>
-                            <textarea id="lms-content-desc" rows="3" placeholder="Enter lesson description, teaching strategy, or classroom management tips..." class="w-full p-3 border rounded-xl text-xs bg-white"></textarea>
+                            <div>
+                                <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Description / Teaching Guidelines</label>
+                                <textarea id="lms-doc-desc" rows="2" placeholder="Brief summary of what teachers will find in this document..." class="w-full p-3 border rounded-xl text-xs bg-white"></textarea>
+                            </div>
                             <div class="flex justify-end">
-                                <button onclick="saveLMSResource()" class="px-5 py-2 bg-blue-900 text-white font-bold rounded-xl text-xs">Publish LMS Resource</button>
+                                <button onclick="uploadLMSDocument()" class="px-6 py-2.5 bg-blue-900 text-white font-bold rounded-xl text-xs hover:bg-blue-800 shadow">Upload Document to Cloud 📁</button>
                             </div>
                         </div>
+
+                        <!-- DOWNLOADABLE DOCUMENTS VAULT CONTAINER -->
+                        <div class="space-y-4 pt-2">
+                            <h3 class="font-bold text-sm text-slate-900 border-b pb-2">📥 Downloadable PDF & Word Document Vault for Teachers</h3>
+                            <div id="lms-documents-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="bg-slate-50 p-4 rounded-xl border flex justify-between items-center">
+                                    <div>
+                                        <h4 class="font-bold text-xs text-blue-950">Sample Curriculum Guide (PDF)</h4>
+                                        <p class="text-[11px] text-slate-600">Official syllabus breakdown for core subjects.</p>
+                                    </div>
+                                    <span class="text-xs text-slate-400 italic">Default</span>
+                                </div>
+                            </div>
+                        </div>
+
                         <!-- LMS CONTENT TABS / SECTIONS -->
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2">
-                            <!-- Section 1: How to Control a Class -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4 border-t">
                             <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-3 shadow-sm">
                                 <div class="flex items-center space-x-2 text-blue-900 font-bold text-sm">
                                     <span>🛡️</span> <h4>Classroom Control & Discipline</h4>
@@ -353,45 +380,27 @@
                                     <li><strong>Proactive Engagement:</strong> Keep lessons fast-paced with interactive questioning to prevent downtime.</li>
                                     <li><strong>Non-Verbal Cues:</strong> Use eye contact, proximity, and hand gestures rather than shouting to regain attention.</li>
                                     <li><strong>Clear Routine:</strong> Establish entry, seating, and transition procedures from Day 1.</li>
-                                    <li><strong>Positive Reinforcement:</strong> Praise focused students publicly to encourage compliance across the room.</li>
                                 </ul>
                             </div>
-                            <!-- Section 2: Types of Students & Identification -->
                             <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-3 shadow-sm">
                                 <div class="flex items-center space-x-2 text-blue-900 font-bold text-sm">
                                     <span>🧠</span> <h4>Types of Students & Profiles</h4>
                                 </div>
                                 <ul class="text-xs text-slate-700 space-y-2 list-disc pl-4">
-                                    <li><strong>The Visual Learner:</strong> Learns best through diagrams, charts, and colored notes. Needs visual aids on the board.</li>
-                                    <li><strong>The Auditory Learner:</strong> Thrives on verbal instructions, read-alouds, discussions, and mnemonic chants.</li>
-                                    <li><strong>The Kinesthetic Learner:</strong> Needs physical movement, hands-on practice, and manipulative objects to grasp concepts.</li>
-                                    <li><strong>The Withdrawn / Quiet Student:</strong> Shy or anxious; requires gentle 1-on-1 encouragement and low-pressure participation.</li>
+                                    <li><strong>The Visual Learner:</strong> Learns best through diagrams, charts, and colored notes.</li>
+                                    <li><strong>The Auditory Learner:</strong> Thrives on verbal instructions, read-alouds, and discussions.</li>
+                                    <li><strong>The Kinesthetic Learner:</strong> Needs physical movement and hands-on manipulative practice.</li>
                                 </ul>
                             </div>
-                            <!-- Section 3: Solving Student Problems -->
                             <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-3 shadow-sm">
                                 <div class="flex items-center space-x-2 text-blue-900 font-bold text-sm">
                                     <span>💡</span> <h4>Problem-Solving Strategies</h4>
                                 </div>
                                 <ul class="text-xs text-slate-700 space-y-2 list-disc pl-4">
-                                    <li><strong>Root-Cause Analysis:</strong> Is poor performance due to comprehension gaps, hunger, home stress, or distraction? Speak privately.</li>
-                                    <li><strong>Differentiated Tasks:</strong> Break complex problems into smaller, scaffolded steps for struggling learners.</li>
-                                    <li><strong>Peer Tutoring:</strong> Pair high-performing pupils with peers needing reinforcement to build community and mastery.</li>
-                                    <li><strong>Parental Collaboration:</strong> Maintain transparent communication logs with guardians regarding behavioral or academic shifts.</li>
+                                    <li><strong>Root-Cause Analysis:</strong> Is poor performance due to comprehension gaps or home stress? Speak privately.</li>
+                                    <li><strong>Differentiated Tasks:</strong> Break complex problems into smaller, scaffolded steps.</li>
+                                    <li><strong>Peer Tutoring:</strong> Pair high-performing pupils with peers needing reinforcement.</li>
                                 </ul>
-                            </div>
-                        </div>
-                        <!-- DYNAMIC LMS RESOURCES & EMBEDDED VIDEOS CONTAINER -->
-                        <div class="pt-4 border-t space-y-4">
-                            <h3 class="font-bold text-sm text-slate-900">📂 Uploaded Teaching Materials & Embedded Media</h3>
-                            <div id="lms-resources-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div class="bg-slate-50 p-4 rounded-xl border space-y-2">
-                                    <h4 class="font-bold text-xs text-blue-950">Sample Curriculum Guide: Basic Mathematics & Literacy</h4>
-                                    <p class="text-xs text-slate-600">Official syllabus breakdown for Term 1 core topics.</p>
-                                    <div class="aspect-w-16 aspect-h-9 pt-2">
-                                        <iframe class="w-full h-40 rounded-lg shadow border" src="https://www.youtube.com/embed/dQw4w9WgXcQ" allowfullscreen></iframe>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -564,6 +573,10 @@
                                     <option value="Male">Male</option>
                                     <option value="Female">Female</option>
                                 </select>
+                                <div class="md:col-span-3">
+                                    <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Student Passport Photo (Optional)</label>
+                                    <input type="file" id="s-photo" accept="image/*" class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                                </div>
                                 <button type="submit" class="md:col-span-3 py-3 bg-blue-900 text-white font-bold rounded-xl hover:bg-blue-800 transition">Save Student to Database</button>
                             </form>
                         </div>
@@ -572,8 +585,8 @@
                         <div class="pt-6 border-t space-y-4">
                             <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                                 <div>
-                                    <h3 class="text-lg font-bold text-slate-900">✏️ Edit Student Roster & Fix Spelling Mistakes</h3>
-                                    <p class="text-xs text-slate-500">Edit student names, classes, or gender directly and click "Save" on their row to update Supabase.</p>
+                                    <h3 class="text-lg font-bold text-slate-900">✏️ Edit Student Roster & Upload Passport Photos</h3>
+                                    <p class="text-xs text-slate-500">Edit student names, classes, gender, or upload passport photos directly and click "Save" on their row to update Supabase.</p>
                                 </div>
                                 <div>
                                     <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Filter Class to Edit</label>
@@ -584,14 +597,16 @@
                                 <table class="w-full text-left border-collapse">
                                     <thead class="bg-slate-100 text-xs uppercase font-bold text-slate-600">
                                         <tr>
-                                            <th class="p-3">Student Name (Edit Spelling)</th>
+                                            <th class="p-3 w-16 text-center">Photo</th>
+                                            <th class="p-3">Student Name</th>
                                             <th class="p-3">Class</th>
                                             <th class="p-3">Gender</th>
+                                            <th class="p-3">Upload / Change Photo</th>
                                             <th class="p-3 text-center">Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody id="edit-students-table-body" class="divide-y divide-slate-100 text-sm">
-                                        <tr><td colspan="4" class="p-6 text-center text-slate-400 italic">No students found.</td></tr>
+                                        <tr><td colspan="6" class="p-6 text-center text-slate-400 italic">No students found.</td></tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -730,13 +745,15 @@
         let galleryPhotos = [];
         let storedGeminiKey = "";
         
-        let lmsResources = [
+        let lmsDocuments = [
             {
-                title: "Curriculum Teaching Guide & Instructional Framework",
-                url: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-                description: "Official teaching manual for managing primary and junior high core subjects effectively."
+                title: "Curriculum Teaching Guide & Instructional Framework (PDF)",
+                dataUrl: "#",
+                description: "Official teaching manual for managing primary and junior high core subjects effectively.",
+                fileName: "Curriculum_Guide.pdf"
             }
         ];
+
         let schoolProfile = {
             name: "Wesley Preparatory School",
             location: "Assorko-Essaman",
@@ -758,6 +775,7 @@
         window.addEventListener('DOMContentLoaded', async () => {
             await fetchCloudSettings();
             renderGalleryGrids();
+            renderLMSDocuments();
             updateLockStatusUI();
             
             const announcementTextarea = document.getElementById('announcement-text');
@@ -775,12 +793,16 @@
                     if(data.gallery_photos && Array.isArray(data.gallery_photos)) {
                         galleryPhotos = data.gallery_photos;
                     }
+                    if(data.lms_documents && Array.isArray(data.lms_documents)) {
+                        lmsDocuments = data.lms_documents;
+                    }
                 }
             } catch(err) {
                 console.log('Cloud settings fetch note:', err);
             }
             updateLockStatusUI();
             renderGalleryGrids();
+            renderLMSDocuments();
             
             const announcementTextarea = document.getElementById('announcement-text');
             if(announcementTextarea) announcementTextarea.value = globalAnnouncementText;
@@ -797,7 +819,8 @@
                     announcement_text: globalAnnouncementText,
                     announcement_img: globalAnnouncementImgUrl,
                     gemini_api_key: storedGeminiKey,
-                    gallery_photos: galleryPhotos
+                    gallery_photos: galleryPhotos,
+                    lms_documents: lmsDocuments
                 });
             } catch(err) {
                 console.error('Cloud save exception:', err);
@@ -835,7 +858,7 @@
                 document.getElementById('admin-nav-section').classList.add('hidden');
                 document.getElementById('teacher-nav-section').classList.remove('hidden');
                 document.getElementById('admin-lms-upload-section').classList.add('hidden');
-                document.getElementById('lms-role-badge').innerText = "Teacher View (Read Only)";
+                document.getElementById('lms-role-badge').innerText = "Teacher View (Download Handouts)";
                 switchTab('assessment');
                 
                 document.getElementById('modal-announcement-text').innerText = globalAnnouncementText;
@@ -867,44 +890,59 @@
             renderAll();
         });
 
-        // STUDENT REGISTRATION SUBMIT HANDLER
+        // STUDENT REGISTRATION SUBMIT HANDLER WITH PASSPORT PHOTO
         document.getElementById('student-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const name = document.getElementById('s-name').value.trim();
             const studentClass = document.getElementById('s-class').value;
             const gender = document.getElementById('s-gender').value;
+            const photoInput = document.getElementById('s-photo');
 
             if(!name) {
                 alert('Please enter the student name.');
                 return;
             }
 
-            try {
-                const { error } = await supabaseClient.from('students').insert([{
-                    name: name,
-                    class: studentClass,
-                    gender: gender,
-                    subjectsData: {},
-                    arrearsFee: 0.00,
-                    tuitionFee: 250.00,
-                    printingFee: 25.00,
-                    ptaFee: 5.00,
-                    otherFee: 20.00,
-                    attendanceMade: 65,
-                    attendanceTotal: 70
-                }]);
+            const processRegistration = async (photoUrl = '') => {
+                try {
+                    const { error } = await supabaseClient.from('students').insert([{
+                        name: name,
+                        class: studentClass,
+                        gender: gender,
+                        photo: photoUrl,
+                        subjectsData: {},
+                        arrearsFee: 0.00,
+                        tuitionFee: 250.00,
+                        printingFee: 25.00,
+                        ptaFee: 5.00,
+                        otherFee: 20.00,
+                        attendanceMade: 65,
+                        attendanceTotal: 70
+                    }]);
 
-                if(error) {
-                    alert('Error saving student: ' + error.message);
-                    return;
+                    if(error) {
+                        alert('Error saving student: ' + error.message);
+                        return;
+                    }
+
+                    alert(`Student "${name}" successfully registered to ${studentClass}!`);
+                    document.getElementById('s-name').value = '';
+                    if(photoInput) photoInput.value = '';
+                    await fetchStudentsFromSupabase();
+                    renderAll();
+                } catch(err) {
+                    alert('Exception saving student: ' + err.message);
                 }
+            };
 
-                alert(`Student "${name}" successfully registered to ${studentClass}!`);
-                document.getElementById('s-name').value = '';
-                await fetchStudentsFromSupabase();
-                renderAll();
-            } catch(err) {
-                alert('Exception saving student: ' + err.message);
+            if(photoInput && photoInput.files && photoInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = async function(evt) {
+                    await processRegistration(evt.target.result);
+                };
+                reader.readAsDataURL(photoInput.files[0]);
+            } else {
+                await processRegistration('');
             }
         });
 
@@ -954,6 +992,7 @@
                         name: s.name || s.student_name || 'Unknown Student',
                         class: s.class || s.class_name || 'Basic 4',
                         gender: s.gender || 'Male',
+                        photo: s.photo || '',
                         subjectsData: s.subjectsData || {},
                         arrearsFee: s.arrearsFee ?? 0.00,
                         tuitionFee: s.tuitionFee ?? 250.00,
@@ -1029,7 +1068,7 @@
                 renderHistoryView();
             }
             if(tabId === 'lms') {
-                renderLMSResources();
+                renderLMSDocuments();
             }
             if(tabId === 'teachers') {
                 fetchTeachersFromSupabase();
@@ -1062,9 +1101,69 @@
             renderFeesTable();
             renderAttendanceRegister();
             renderHistoryView();
-            renderLMSResources();
+            renderLMSDocuments();
             renderGalleryGrids();
             renderCharts();
+        }
+
+        // Upload PDF / Word Document handler for Admin LMS
+        async function uploadLMSDocument() {
+            const titleInput = document.getElementById('lms-doc-title');
+            const descInput = document.getElementById('lms-doc-desc');
+            const fileInput = document.getElementById('lms-doc-file');
+
+            const title = titleInput ? titleInput.value.trim() : '';
+            const description = descInput ? descInput.value.trim() : '';
+
+            if(!title) {
+                alert('Please enter a document title.');
+                return;
+            }
+            if(!fileInput.files || !fileInput.files[0]) {
+                alert('Please select a PDF or Word document file to upload.');
+                return;
+            }
+
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+            reader.onload = async function(e) {
+                const fileDataUrl = e.target.result;
+                lmsDocuments.push({
+                    title: title,
+                    description: description,
+                    dataUrl: fileDataUrl,
+                    fileName: file.name
+                });
+                await saveCloudSettings();
+                renderLMSDocuments();
+
+                titleInput.value = '';
+                descInput.value = '';
+                fileInput.value = '';
+                alert(`Document "${title}" successfully uploaded to cloud and made available for teachers to download!`);
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function renderLMSDocuments() {
+            const grid = document.getElementById('lms-documents-grid');
+            if(!grid) return;
+            if(lmsDocuments.length === 0) {
+                grid.innerHTML = `<p class="text-slate-400 italic text-xs">No documents uploaded yet.</p>`;
+                return;
+            }
+            grid.innerHTML = lmsDocuments.map(doc => `
+                <div class="bg-slate-50 p-4 rounded-xl border flex flex-col justify-between space-y-3 shadow-sm">
+                    <div>
+                        <h4 class="font-bold text-xs text-blue-950">${doc.title}</h4>
+                        <p class="text-[11px] text-slate-600 mt-1">${doc.description || 'No description provided.'}</p>
+                    </div>
+                    <div class="flex justify-between items-center pt-2 border-t">
+                        <span class="text-[10px] text-slate-500 font-mono">${doc.fileName || 'document'}</span>
+                        <a href="${doc.dataUrl}" download="${doc.fileName || 'download'}" class="px-3 py-1.5 bg-blue-900 hover:bg-blue-800 text-white font-bold text-xs rounded-lg shadow">Download File 📥</a>
+                    </div>
+                </div>
+            `).join('');
         }
 
         // Direct Gemini API Integration
@@ -1195,13 +1294,15 @@
             if(!tbody) return;
             
             if(filteredStudents.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" class="p-6 text-center text-slate-400 italic">No students registered in ${selectedClass}.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="6" class="p-6 text-center text-slate-400 italic">No students registered in ${selectedClass}.</td></tr>`;
                 return;
             }
             
             tbody.innerHTML = filteredStudents.map((s) => {
+                const photoDisplay = s.photo ? `<img src="${s.photo}" class="w-10 h-10 object-cover rounded-full mx-auto border shadow">` : `<div class="w-10 h-10 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center font-bold text-xs mx-auto">No Photo</div>`;
                 return `
                     <tr>
+                        <td class="p-3 text-center">${photoDisplay}</td>
                         <td class="p-3">
                             <input type="text" id="edit-name-${s.id}" value="${s.name}" class="w-full p-2 border rounded font-semibold text-slate-800 bg-white">
                         </td>
@@ -1216,6 +1317,9 @@
                                 <option value="Female" ${s.gender === 'Female' ? 'selected' : ''}>Female</option>
                             </select>
                         </td>
+                        <td class="p-3">
+                            <input type="file" id="edit-photo-${s.id}" accept="image/*" class="block w-full text-xs text-slate-500 file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                        </td>
                         <td class="p-3 text-center space-x-1">
                             <button onclick="saveStudentEdits('${s.id}')" class="px-3 py-1.5 bg-blue-900 text-white font-bold rounded-lg text-xs hover:bg-blue-800">Save</button>
                             <button onclick="discardStudentDirect('${s.id}')" class="px-3 py-1.5 bg-red-700 text-white font-bold rounded-lg text-xs hover:bg-red-800">Discard</button>
@@ -1229,33 +1333,50 @@
             const nameInput = document.getElementById(`edit-name-${studentId}`);
             const classSelect = document.getElementById(`edit-class-${studentId}`);
             const genderSelect = document.getElementById(`edit-gender-${studentId}`);
+            const photoInput = document.getElementById(`edit-photo-${studentId}`);
             
             const newName = nameInput ? nameInput.value.trim() : '';
             const newClass = classSelect ? classSelect.value : 'Basic 4';
             const newGender = genderSelect ? genderSelect.value : 'Male';
+            const currentStudent = studentsData.find(s => String(s.id) === String(studentId));
+            let existingPhoto = currentStudent ? currentStudent.photo : '';
 
             if(!newName) {
                 alert('Student name cannot be empty.');
                 return;
             }
 
-            try {
-                const { error } = await supabaseClient.from('students').update({
-                    name: newName,
-                    class: newClass,
-                    gender: newGender
-                }).eq('id', studentId);
+            const executeUpdate = async (finalPhoto) => {
+                try {
+                    const parsedId = !isNaN(studentId) && studentId !== '' ? Number(studentId) : studentId;
+                    const { error } = await supabaseClient.from('students').update({
+                        name: newName,
+                        class: newClass,
+                        gender: newGender,
+                        photo: finalPhoto
+                    }).eq('id', parsedId);
 
-                if(error) {
-                    alert('Error updating student: ' + error.message);
-                    return;
+                    if(error) {
+                        alert('Error updating student: ' + error.message);
+                        return;
+                    }
+
+                    await fetchStudentsFromSupabase();
+                    alert(`Student record for "${newName}" successfully updated!`);
+                    renderAll();
+                } catch(err) {
+                    alert('Exception updating student: ' + err.message);
                 }
+            };
 
-                await fetchStudentsFromSupabase();
-                alert(`Student record for "${newName}" successfully updated!`);
-                renderAll();
-            } catch(err) {
-                alert('Exception updating student: ' + err.message);
+            if(photoInput && photoInput.files && photoInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = async function(evt) {
+                    await executeUpdate(evt.target.result);
+                };
+                reader.readAsDataURL(photoInput.files[0]);
+            } else {
+                await executeUpdate(existingPhoto);
             }
         }
 
@@ -1336,16 +1457,14 @@
         // Strict subject-teacher and class-teacher mapping function (normalized)
         function getTeacherNameForDocument(className, subjectName) {
             const subRaw = (subjectName || '').toLowerCase();
-            const subClean = subRaw.replace(/[\.\s]/g, ''); // Removes spaces and dots for reliable matching
+            const subClean = subRaw.replace(/[\.\s]/g, '');
             const classLower = (className || '').toLowerCase();
 
-            // 1. For Basic 1, 2, 3: Find teacher assigned specifically to that class
             if(classLower.includes('basic 1') || classLower.includes('basic 2') || classLower.includes('basic 3')) {
                 const classTeacher = teachersList.find(t => t.assignment && t.assignment.toLowerCase().includes(classLower));
                 if(classTeacher) return classTeacher.name;
             }
 
-            // 2. For Basic 4 to JHS 3: Match strictly by subject teacher
             if(subClean.includes('math') || subClean.includes('science') || subClean.includes('integratedscience')) {
                 const t = teachersList.find(item => item.name.toLowerCase().includes('prince') || (item.assignment && item.assignment.toLowerCase().includes('math')));
                 if(t) return t.name;
@@ -1384,7 +1503,8 @@
         }
 
         function renderGradingTable() {
-            const year = document.getElementById('grading-year-filter').value || '2026';
+            const yearInput = document.getElementById('grading-year-filter');
+            const year = yearInput && yearInput.value.trim() ? yearInput.value.trim() : '2026';
             const selectGrading = document.getElementById('grading-class-filter');
             const selectedClass = selectGrading ? selectGrading.value : classesData[0];
             const term = document.getElementById('grading-term-filter').value;
@@ -1457,7 +1577,8 @@
 
         function calculateGrades() {
             if(studentsData.length === 0) { alert('No students to grade.'); return; }
-            const year = document.getElementById('grading-year-filter').value || '2026';
+            const yearInput = document.getElementById('grading-year-filter');
+            const year = yearInput && yearInput.value.trim() ? yearInput.value.trim() : '2026';
             const term = document.getElementById('grading-term-filter').value;
             studentsData.forEach(s => {
                 let studentOverallTotal = 0;
@@ -1484,7 +1605,8 @@
         }
 
         function exportAssessmentSheet(format) {
-            const year = document.getElementById('grading-year-filter').value || '2026';
+            const yearInput = document.getElementById('grading-year-filter');
+            const year = yearInput && yearInput.value.trim() ? yearInput.value.trim() : '2026';
             const subject = document.getElementById('grading-subject-filter').value;
             const term = document.getElementById('grading-term-filter').value;
             const className = document.getElementById('grading-class-filter').value;
@@ -1519,9 +1641,11 @@
         }
 
         function renderHistoryView() {
-            const histYear = document.getElementById('history-year-filter').value || '2026';
+            const histYearInput = document.getElementById('history-year-filter');
+            const histYear = histYearInput && histYearInput.value.trim() ? histYearInput.value.trim() : '2026';
             const histClass = document.getElementById('history-class-filter').value || classesData[0];
             const histTerm = document.getElementById('history-term-filter').value || 'Term 1';
+            const includePhotos = document.getElementById('include-photos-toggle') ? document.getElementById('include-photos-toggle').checked : true;
             const container = document.getElementById('history-container');
             const filtered = studentsData.filter(s => s.class === histClass);
             
@@ -1631,14 +1755,20 @@
                 }).join('');
 
                 const reportTeacherName = getTeacherNameForDocument(s.class, 'Mathematics');
+                const passportPhotoHtml = (includePhotos && s.photo) ? `<img src="${s.photo}" class="w-20 h-20 object-cover rounded border border-black shadow">` : (includePhotos ? `<div class="w-20 h-20 border border-dashed border-black flex items-center justify-center text-[10px] text-center font-bold text-slate-500 bg-slate-50">PASSPORT PHOTO</div>` : ``);
 
                 return `
-                    <div class="report-card-page bg-white p-8 rounded-xl shadow-lg border-2 border-slate-300 max-w-3xl mx-auto space-y-4 text-slate-900 font-sans">
-                        <div class="text-center space-y-1 border-b-2 border-black pb-3">
-                            <h2 class="font-black text-xl tracking-wide">${schoolProfile.name.toUpperCase()}</h2>
-                            <p class="text-xs font-bold text-slate-700">P. O. BOX 18 16, SHAMA</p>
-                            <p class="text-xs font-bold text-slate-700">ASSORKO - ESSAMAN</p>
-                            <h3 class="font-extrabold text-sm tracking-widest pt-1 uppercase underline">END OF TERM REPORT CARD (${histYear})</h3>
+                    <div class="report-card-page bg-white p-8 rounded-xl shadow-lg border-2 border-slate-300 max-w-3xl mx-auto space-y-4 text-slate-900 font-sans relative">
+                        <div class="flex justify-between items-start border-b-2 border-black pb-3">
+                            <div class="text-center flex-1 space-y-1">
+                                <h2 class="font-black text-xl tracking-wide">${schoolProfile.name.toUpperCase()}</h2>
+                                <p class="text-xs font-bold text-slate-700">P. O. BOX 18 16, SHAMA</p>
+                                <p class="text-xs font-bold text-slate-700">ASSORKO - ESSAMAN</p>
+                                <h3 class="font-extrabold text-sm tracking-widest pt-1 uppercase underline">END OF TERM REPORT CARD (${histYear})</h3>
+                            </div>
+                            <div class="ml-4">
+                                ${passportPhotoHtml}
+                            </div>
                         </div>
                         <div class="text-xs space-y-1.5 font-bold">
                             <div class="flex border-b border-black pb-1">
