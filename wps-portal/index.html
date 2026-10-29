@@ -1095,66 +1095,101 @@ function restrictTeacherDropdowns() {
     } catch(err) {
         console.log('Supabase teachers fetch error:', err);
     }
-        }
-        function closeAnnouncementModal() { document.getElementById('announcement-modal').classList.add('hidden'); }
-        function closeReceiptModal() { document.getElementById('receipt-modal').classList.add('hidden'); }
-        function logout() { location.reload(); }
+}
+Updated login handler (with password verification)
+Replace your login handler with this — it now verifies the teacher's password before allowing login:
 
-        function switchTab(tabId) {
-            ['dashboard', 'assessment', 'history', 'lms', 'ai-copilot', 'attendance', 'timetable', 'fees', 'classes', 'students', 'teachers', 'announcements', 'gallery', 'teacher-gallery', 'teacher-announcements', 'profile'].forEach(t => {
-                const el = document.getElementById(`tab-${t}`);
-                if(el) el.classList.add('hidden');
-            });
-            const active = document.getElementById(`tab-${tabId}`);
-            if(active) active.classList.remove('hidden');
+document.getElementById('login-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const role = document.getElementById('login-role').value;
+    const user = document.getElementById('login-user').value;
+    const pass = document.getElementById('login-pass').value;
+    
+    await fetchCloudSettings();
 
-            if(tabId === 'announcements') {
-                const ta = document.getElementById('announcement-text');
-                if(ta) ta.value = globalAnnouncementText;
-            }
-            if(tabId === 'assessment') {
-                renderClassesDropdown();
-                onGradingClassChange();
-                renderGradingTable();
-            }
-            if(tabId === 'fees') {
-                renderFeeClassDropdown();
-                renderFeesTable();
-            }
-            if(tabId === 'attendance') {
-                renderAttendanceClassDropdown();
-                renderAttendanceRegister();
-            }
-            if(tabId === 'students') {
-                fetchStudentsFromSupabase().then(() => {
-                    renderEditStudentClassDropdown();
-                    renderEditStudentsTable();
-                });
-            }
-            if(tabId === 'history') {
-                renderHistoryClassDropdown();
-                renderHistoryView();
-            }
-            if(tabId === 'lms') {
-                renderLMSDocuments();
-            }
-            if(tabId === 'teachers') {
-                fetchTeachersFromSupabase();
-            }
-            if(tabId === 'gallery' || tabId === 'teacher-gallery') {
-                renderGalleryGrids();
-            }
-            if(tabId === 'teacher-announcements') {
-                const td = document.getElementById('teacher-announcement-display');
-                if(td) td.innerText = globalAnnouncementText;
-                if(globalAnnouncementImgUrl) {
-                    const imgPrev = document.getElementById('teacher-announcement-img-preview');
-                    if(imgPrev) imgPrev.src = globalAnnouncementImgUrl;
-                    const imgDisp = document.getElementById('teacher-announcement-image-display');
-                    if(imgDisp) imgDisp.classList.remove('hidden');
-                }
-            }
+    if(role === 'teacher' && portalLocked) {
+        alert('🔒 Portal is currently locked by Administration. Please check back later.');
+        return;
+    }
+
+    // Fetch teachers FIRST so we can verify the password
+    await fetchTeachersFromSupabase();
+
+    // Verify teacher credentials
+    if(role === 'teacher') {
+        const teacherRecord = teachersList.find(t => 
+            (t.email && t.email.toLowerCase() === user.toLowerCase()) || 
+            (t.name && t.name.toLowerCase() === user.toLowerCase())
+        );
+        
+        if(!teacherRecord) {
+            alert('Teacher not found. Please check your email or username.');
+            return;
         }
+        
+        if(teacherRecord.password && teacherRecord.password !== pass) {
+            alert('Incorrect password. Please try again.');
+            return;
+        }
+        
+        currentUser = { 
+            role, 
+            name: teacherRecord.name,
+            teacherClass: teacherRecord.class || [],
+            teacherSubjects: teacherRecord.subjects || []
+        };
+    } else {
+        currentUser = { role, name: user };
+    }
+    
+    document.getElementById('auth-screen').classList.add('hidden');
+    document.getElementById('app-shell').classList.remove('hidden');
+    document.getElementById('user-badge').innerText = role;
+    document.getElementById('welcome-name').innerText = currentUser.name;
+
+    const adminGeminiSection = document.getElementById('admin-gemini-section');
+    if(adminGeminiSection) {
+        if(role === 'admin') adminGeminiSection.classList.remove('hidden');
+        else adminGeminiSection.classList.add('hidden');
+    }
+
+    // Fetch students after authentication
+    await fetchStudentsFromSupabase();
+
+    if(role === 'teacher') {
+        document.getElementById('admin-nav-section').classList.add('hidden');
+        document.getElementById('teacher-nav-section').classList.remove('hidden');
+        document.getElementById('admin-lms-upload-section').classList.add('hidden');
+        document.getElementById('lms-role-badge').innerText = "Teacher View (Download Handouts)";
+        switchTab('assessment');
+        
+        document.getElementById('modal-announcement-text').innerText = globalAnnouncementText;
+        if(globalAnnouncementImgUrl) {
+            document.getElementById('modal-announcement-img').src = globalAnnouncementImgUrl;
+            document.getElementById('modal-announcement-image-container').classList.remove('hidden');
+        } else {
+            document.getElementById('modal-announcement-image-container').classList.add('hidden');
+        }
+        document.getElementById('announcement-modal').classList.remove('hidden');
+
+        const teacherDisplay = document.getElementById('teacher-announcement-display');
+        if(teacherDisplay) teacherDisplay.innerText = globalAnnouncementText;
+        if(globalAnnouncementImgUrl) {
+            const imgPrev = document.getElementById('teacher-announcement-img-preview');
+            if(imgPrev) imgPrev.src = globalAnnouncementImgUrl;
+            const imgDisp = document.getElementById('teacher-announcement-image-display');
+            if(imgDisp) imgDisp.classList.remove('hidden');
+        }
+    } else {
+        document.getElementById('admin-nav-section').classList.remove('hidden');
+        document.getElementById('teacher-nav-section').classList.add('hidden');
+        document.getElementById('admin-lms-upload-section').classList.remove('hidden');
+        document.getElementById('lms-role-badge').innerText = "Admin Edit Mode Active";
+        switchTab('dashboard');
+}
+    renderAll();
+    restrictTeacherDropdowns();
+});
 
         function renderAll() {
             renderClassesDropdown();
