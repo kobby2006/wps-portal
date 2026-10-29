@@ -746,7 +746,63 @@
         let storedGeminiKey = "";
         
         let lmsDocuments = [
-            {
+            {function getAllowedClasses() {
+    if(!currentUser || currentUser.role === 'admin') return classesData;
+    return currentUser.teacherClass || [];
+}
+
+function getAllowedSubjects() {
+    if(!currentUser || currentUser.role === 'admin') return [];
+    return currentUser.teacherSubjects || [];
+}
+
+function isClassAllowed(className) {
+    if(!currentUser || currentUser.role === 'admin') return true;
+    const allowed = getAllowedClasses();
+    return allowed.length === 0 || allowed.includes(className);
+}
+
+function isSubjectAllowed(subjectName) {
+    if(!currentUser || currentUser.role === 'admin') return true;
+    const allowed = getAllowedSubjects();
+    return allowed.length === 0 || allowed.includes(subjectName);
+}
+
+function restrictTeacherDropdowns() {
+    if(!currentUser || currentUser.role !== 'teacher') return;
+    const allowedClasses = getAllowedClasses();
+    const allowedSubjects = getAllowedSubjects();
+
+    const gradingClass = document.getElementById('grading-class-filter');
+    if(gradingClass && allowedClasses.length > 0) {
+        Array.from(gradingClass.options).forEach(opt => { opt.hidden = !allowedClasses.includes(opt.value); });
+        if(!allowedClasses.includes(gradingClass.value)) gradingClass.value = allowedClasses[0];
+    }
+
+    const gradingSubject = document.getElementById('grading-subject-filter');
+    if(gradingSubject && allowedSubjects.length > 0) {
+        Array.from(gradingSubject.options).forEach(opt => { opt.hidden = !allowedSubjects.includes(opt.value); });
+        if(!allowedSubjects.includes(gradingSubject.value)) gradingSubject.value = allowedSubjects[0];
+    }
+
+    const historyClass = document.getElementById('history-class-filter');
+    if(historyClass && allowedClasses.length > 0) {
+        Array.from(historyClass.options).forEach(opt => { opt.hidden = !allowedClasses.includes(opt.value); });
+        if(!allowedClasses.includes(historyClass.value)) historyClass.value = allowedClasses[0];
+    }
+
+    const attendanceClass = document.getElementById('attendance-class-filter');
+    if(attendanceClass && allowedClasses.length > 0) {
+        Array.from(attendanceClass.options).forEach(opt => { opt.hidden = !allowedClasses.includes(opt.value); });
+        if(!allowedClasses.includes(attendanceClass.value)) attendanceClass.value = allowedClasses[0];
+    }
+
+    const feesClass = document.getElementById('fees-class-filter');
+    if(feesClass && allowedClasses.length > 0) {
+        Array.from(feesClass.options).forEach(opt => { opt.hidden = !allowedClasses.includes(opt.value); });
+        if(!allowedClasses.includes(feesClass.value)) feesClass.value = allowedClasses[0];
+    }
+        }
                 title: "Curriculum Teaching Guide & Instructional Framework (PDF)",
                 dataUrl: "#",
                 description: "Official teaching manual for managing primary and junior high core subjects effectively.",
