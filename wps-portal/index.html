@@ -1811,8 +1811,11 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
                 container.innerHTML = `<p class="text-slate-500 italic p-4">No student records found for ${histClass} (${histYear} - ${histTerm}).</p>`;
                 return;
             }
-
-            let masterAssessmentSheetsHtml = standardSubjects.map(subject => {
+const subjectsToShow = (currentUser && currentUser.role === 'teacher' && currentUser.teacherSubjects && currentUser.teacherSubjects.length > 0) 
+    ? currentUser.teacherSubjects 
+    : standardSubjects;
+let masterAssessmentSheetsHtml = subjectsToShow.map(subject => {
+let subjectsHtml = standardSubjects.map(subName => {
                 const assignedTeacher = getTeacherNameForDocument(histClass, subject);
                 let rowsHtml = filtered.map((s, idx) => {
                     const sub = (s.subjectsData[histYear] && s.subjectsData[histYear][histTerm] && s.subjectsData[histYear][histTerm][subject]) ? s.subjectsData[histYear][histTerm][subject] : { indTest1: 0, groupTest: 0, indTest2: 0, homework: 0, exam: 0 };
