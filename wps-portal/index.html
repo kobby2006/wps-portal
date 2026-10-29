@@ -1151,8 +1151,6 @@ function switchTab(tabId) {
         console.log('Supabase teachers fetch error:', err);
     }
 }
-Updated login handler (with password verification)
-Replace your login handler with this — it now verifies the teacher's password before allowing login:
 
 document.getElementById('login-form').addEventListener('submit', async (e) => {
     e.preventDefault();
