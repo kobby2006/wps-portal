@@ -1644,41 +1644,56 @@
         }
 
                 async function finalizeReports() {
-            if(studentsData.length === 0) { 
-                alert('No student reports to finalize.'); 
-                return; 
+    if(studentsData.length === 0) { 
+        alert('No student reports to finalize.'); 
+        return; 
+    }
+    
+    let successCount = 0;
+    let failCount = 0;
+    let failErrors = [];
+    
+    try {
+        for (let s of studentsData) {
+            const parsedId = !isNaN(s.id) && s.id !== '' ? Number(s.id) : s.id;
+            const { error } = await supabaseClient.from('students').update({
+                subjectsData: s.subjectsData,
+                attendanceMade: s.attendanceMade,
+                attendanceTotal: s.attendanceTotal,
+                promotedTo: s.promotedTo,
+                conduct: s.conduct,
+                interest: s.interest,
+                teacherRemarks: s.teacherRemarks,
+                headRemarks: s.headRemarks,
+                reopeningDate: s.reopeningDate
+            }).eq('id', parsedId);
+
+            if (error) {
+                console.error('Error syncing student ID ' + s.id + ':', error.message);
+                failCount++;
+                failErrors.push(s.name + ': ' + error.message);
+            } else {
+                successCount++;
             }
-            
-            // Show loading alert or indicator
-            alert('Saving and syncing all student assessment scores to Supabase cloud...');
+        }
 
-            try {
-                // Loop through all students and update their records in Supabase
-                for (let s of studentsData) {
-                    const parsedId = !isNaN(s.id) && s.id !== '' ? Number(s.id) : s.id;
-                    const { error } = await supabaseClient.from('students').update({
-                        subjectsData: s.subjectsData,
-                        attendanceMade: s.attendanceMade,
-                        attendanceTotal: s.attendanceTotal,
-                        promotedTo: s.promotedTo,
-                        conduct: s.conduct,
-                        interest: s.interest,
-                        teacherRemarks: s.teacherRemarks,
-                        headRemarks: s.headRemarks,
-                        reopeningDate: s.reopeningDate
-                    }).eq('id', parsedId);
+        if (failCount > 0 && successCount === 0) {
+            alert('Failed to save all student reports. Errors:\n' + failErrors.join('\n'));
+            return;
+        }
 
-                    if (error) {
-                        console.error('Error syncing student ID ' + s.id + ':', error.message);
-                    }
-                }
+        if (failCount > 0) {
+            alert(successCount + ' student(s) saved.\n' + failCount + ' failed:\n' + failErrors.join('\n'));
+        } else {
+            alert('All ' + successCount + ' student assessment sheets finalized, saved, and archived to Student History!');
+        }
 
-                alert('Full class assessment sheets and individual report cards successfully finalized, saved to Supabase, and archived to Student History!');
-                switchTab('history');
-                renderHistoryView();
-            } catch(err) {
-                alert('Exception while saving assessment sheets to cloud: ' + err.message);
-            }
+        await fetchStudentsFromSupabase();
+        switchTab('history');
+        renderHistoryView();
+    } catch(err) {
+        alert('Exception while saving: ' + err.message);
+    }
                 }
 
         function renderHistoryView() {
