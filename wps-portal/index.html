@@ -984,34 +984,44 @@
             }
         }
         async function fetchStudentsFromSupabase() {
-            try {
-                const { data, error } = await supabaseClient.from('students').select('*');
-                if(data && !error) {
-                    studentsData = data.map(s => ({
-                        id: s.id || Date.now(),
-                        name: s.name || s.student_name || 'Unknown Student',
-                        class: s.class || s.class_name || 'Basic 4',
-                        gender: s.gender || 'Male',
-                        photo: s.photo || s.student_photo || '',
-                        subjectsData: s.subjectsData || {},
-                        arrearsFee: s.arrearsFee ?? 0.00,
-                        tuitionFee: s.tuitionFee ?? 250.00,
-                        printingFee: s.printingFee ?? 25.00,
-                        ptaFee: s.ptaFee ?? 5.00,
-                        otherFee: s.otherFee ?? 20.00,
-                        attendanceMade: s.attendanceMade || 65,
-                        attendanceTotal: s.attendanceTotal || 70,
-                        promotedTo: s.promotedTo || 'Next Class',
-                        conduct: s.conduct || 'Very Good',
-                        interest: s.interest || 'Sports and Music',
-                        teacherRemarks: s.teacherRemarks || 'A brilliant student with great potential.',
-                        headRemarks: s.headRemarks || 'Promoted. Keep up the good work!',
-                        reopeningDate: s.reopeningDate || '04/05/2026'
-                    }));
+    try {
+        const { data, error } = await supabaseClient.from('students').select('*');
+        if(error) {
+            console.error('Supabase students fetch error:', error.message);
+            return;
+        }
+        if(data) {
+            studentsData = data.map(s => {
+                let subjectsData = s.subjectsData;
+                if (typeof subjectsData === 'string') {
+                    try { subjectsData = JSON.parse(subjectsData); } catch(e) { subjectsData = {}; }
                 }
-            } catch(err) {
-                console.log('Supabase students fetch error:', err);
-            }
+                return {
+                    id: s.id || Date.now(),
+                    name: s.name || s.student_name || 'Unknown Student',
+                    class: s.class || s.class_name || 'Basic 4',
+                    gender: s.gender || 'Male',
+                    photo: s.photo || s.student_photo || '',
+                    subjectsData: subjectsData || {},
+                    arrearsFee: s.arrearsFee ?? 0.00,
+                    tuitionFee: s.tuitionFee ?? 250.00,
+                    printingFee: s.printingFee ?? 25.00,
+                    ptaFee: s.ptaFee ?? 5.00,
+                    otherFee: s.otherFee ?? 20.00,
+                    attendanceMade: s.attendanceMade ?? 65,
+                    attendanceTotal: s.attendanceTotal ?? 70,
+                    promotedTo: s.promotedTo || 'Next Class',
+                    conduct: s.conduct || 'Very Good',
+                    interest: s.interest || 'Sports and Music',
+                    teacherRemarks: s.teacherRemarks || 'A brilliant student with great potential.',
+                    headRemarks: s.headRemarks || 'Promoted. Keep up the good work!',
+                    reopeningDate: s.reopeningDate || '04/05/2026'
+                };
+            });
+        }
+    } catch(err) {
+        console.error('Supabase students fetch error:', err);
+    }
         }
         async function fetchTeachersFromSupabase() {
             try {
