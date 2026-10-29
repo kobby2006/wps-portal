@@ -746,6 +746,65 @@
         let storedGeminiKey = "";
         
         let lmsDocuments = [
+            function switchTab(tabId) {
+    ['dashboard', 'assessment', 'history', 'lms', 'ai-copilot', 'attendance', 'timetable', 'fees', 'classes', 'students', 'teachers', 'announcements', 'gallery', 'teacher-gallery', 'teacher-announcements', 'profile'].forEach(t => {
+        const el = document.getElementById(`tab-${t}`);
+        if(el) el.classList.add('hidden');
+    });
+    const active = document.getElementById(`tab-${tabId}`);
+    if(active) active.classList.remove('hidden');
+
+    if(tabId === 'announcements') {
+        const ta = document.getElementById('announcement-text');
+        if(ta) ta.value = globalAnnouncementText;
+    }
+    if(tabId === 'assessment') {
+        renderClassesDropdown();
+        onGradingClassChange();
+        renderGradingTable();
+        restrictTeacherDropdowns();
+    }
+    if(tabId === 'fees') {
+        renderFeeClassDropdown();
+        renderFeesTable();
+        restrictTeacherDropdowns();
+    }
+    if(tabId === 'attendance') {
+        renderAttendanceClassDropdown();
+        renderAttendanceRegister();
+        restrictTeacherDropdowns();
+    }
+    if(tabId === 'students') {
+        fetchStudentsFromSupabase().then(() => {
+            renderEditStudentClassDropdown();
+            renderEditStudentsTable();
+        });
+    }
+    if(tabId === 'history') {
+        renderHistoryClassDropdown();
+        renderHistoryView();
+        restrictTeacherDropdowns();
+    }
+    if(tabId === 'lms') {
+        renderLMSDocuments();
+    }
+    if(tabId === 'teachers') {
+        fetchTeachersFromSupabase();
+    }
+    if(tabId === 'gallery' || tabId === 'teacher-gallery') {
+        renderGalleryGrids();
+    }
+    if(tabId === 'teacher-announcements') {
+        const td = document.getElementById('teacher-announcement-display');
+        if(td) td.innerText = globalAnnouncementText;
+        if(globalAnnouncementImgUrl) {
+            const imgPrev = document.getElementById('teacher-announcement-img-preview');
+            if(imgPrev) imgPrev.src = globalAnnouncementImgUrl;
+            const imgDisp = document.getElementById('teacher-announcement-image-display');
+            if(imgDisp) imgDisp.classList.remove('hidden');
+        }
+    }
+            }
             {function getAllowedClasses() {
     if(!currentUser || currentUser.role === 'admin') return classesData;
     return currentUser.teacherClass || [];
