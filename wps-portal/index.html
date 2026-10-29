@@ -772,6 +772,41 @@ function restrictTeacherDropdowns() {
     if(!currentUser || currentUser.role !== 'teacher') return;
     const allowedClasses = getAllowedClasses();
     const allowedSubjects = getAllowedSubjects();
+    
+    const gradingClass = document.getElementById('grading-class-filter');
+    if(gradingClass && allowedClasses.length > 0) {
+        Array.from(gradingClass.options).forEach(opt => { opt.hidden = !allowedClasses.includes(opt.value); });
+        if(!allowedClasses.includes(gradingClass.value)) gradingClass.value = allowedClasses[0];
+    }
+
+    const gradingSubject = document.getElementById('grading-subject-filter');
+    if(gradingSubject && allowedSubjects.length > 0) {
+        Array.from(gradingSubject.options).forEach(opt => { opt.hidden = !allowedSubjects.includes(opt.value); });
+        if(!allowedSubjects.includes(gradingSubject.value)) gradingSubject.value = allowedSubjects[0];
+    }
+
+    const historyClass = document.getElementById('history-class-filter');
+    if(historyClass && allowedClasses.length > 0) {
+        Array.from(historyClass.options).forEach(opt => { opt.hidden = !allowedClasses.includes(opt.value); });
+        if(!allowedClasses.includes(historyClass.value)) historyClass.value = allowedClasses[0];
+    }
+
+    const attendanceClass = document.getElementById('attendance-class-filter');
+    if(attendanceClass && allowedClasses.length > 0) {
+        Array.from(attendanceClass.options).forEach(opt => { opt.hidden = !allowedClasses.includes(opt.value); });
+        if(!allowedClasses.includes(attendanceClass.value)) attendanceClass.value = allowedClasses[0];
+    }
+
+    const feesClass = document.getElementById('fees-class-filter');
+    if(feesClass && allowedClasses.length > 0) {
+        Array.from(feesClass.options).forEach(opt => { opt.hidden = !allowedClasses.includes(opt.value); });
+        if(!allowedClasses.includes(feesClass.value)) feesClass.value = allowedClasses[0];
+    }
+        }
+        function restrictTeacherDropdowns() {
+    if(!currentUser || currentUser.role !== 'teacher') return;
+    const allowedClasses = getAllowedClasses();
+    const allowedSubjects = getAllowedSubjects();
     function switchTab(tabId) {
     ['dashboard', 'assessment', 'history', 'lms', 'ai-copilot', 'attendance', 'timetable', 'fees', 'classes', 'students', 'teachers', 'announcements', 'gallery', 'teacher-gallery', 'teacher-announcements', 'profile'].forEach(t => {
         const el = document.getElementById(`tab-${t}`);
@@ -807,61 +842,6 @@ function restrictTeacherDropdowns() {
         });
     }
     if(tabId === 'history') {
-        renderHistoryClassDropdown();
-        renderHistoryView();
-        restrictTeacherDropdowns();
-    }
-    if(tabId === 'lms') {
-        renderLMSDocuments();
-    }
-    if(tabId === 'teachers') {
-        fetchTeachersFromSupabase();
-    }
-    if(tabId === 'gallery' || tabId === 'teacher-gallery') {
-        renderGalleryGrids();
-    }
-    if(tabId === 'teacher-announcements') {
-        const td = document.getElementById('teacher-announcement-display');
-        if(td) td.innerText = globalAnnouncementText;
-        if(globalAnnouncementImgUrl) {
-            const imgPrev = document.getElementById('teacher-announcement-img-preview');
-            if(imgPrev) imgPrev.src = globalAnnouncementImgUrl;
-            const imgDisp = document.getElementById('teacher-announcement-image-display');
-            if(imgDisp) imgDisp.classList.remove('hidden');
-        }
-    }
-    }
-
-    const gradingClass = document.getElementById('grading-class-filter');
-    if(gradingClass && allowedClasses.length > 0) {
-        Array.from(gradingClass.options).forEach(opt => { opt.hidden = !allowedClasses.includes(opt.value); });
-        if(!allowedClasses.includes(gradingClass.value)) gradingClass.value = allowedClasses[0];
-    }
-
-    const gradingSubject = document.getElementById('grading-subject-filter');
-    if(gradingSubject && allowedSubjects.length > 0) {
-        Array.from(gradingSubject.options).forEach(opt => { opt.hidden = !allowedSubjects.includes(opt.value); });
-        if(!allowedSubjects.includes(gradingSubject.value)) gradingSubject.value = allowedSubjects[0];
-    }
-
-    const historyClass = document.getElementById('history-class-filter');
-    if(historyClass && allowedClasses.length > 0) {
-        Array.from(historyClass.options).forEach(opt => { opt.hidden = !allowedClasses.includes(opt.value); });
-        if(!allowedClasses.includes(historyClass.value)) historyClass.value = allowedClasses[0];
-    }
-
-    const attendanceClass = document.getElementById('attendance-class-filter');
-    if(attendanceClass && allowedClasses.length > 0) {
-        Array.from(attendanceClass.options).forEach(opt => { opt.hidden = !allowedClasses.includes(opt.value); });
-        if(!allowedClasses.includes(attendanceClass.value)) attendanceClass.value = allowedClasses[0];
-    }
-
-    const feesClass = document.getElementById('fees-class-filter');
-    if(feesClass && allowedClasses.length > 0) {
-        Array.from(feesClass.options).forEach(opt => { opt.hidden = !allowedClasses.includes(opt.value); });
-        if(!allowedClasses.includes(feesClass.value)) feesClass.value = allowedClasses[0];
-    }
-        }
                 title: "Curriculum Teaching Guide & Instructional Framework (PDF)",
                 dataUrl: "#",
                 description: "Official teaching manual for managing primary and junior high core subjects effectively.",
