@@ -1192,23 +1192,24 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
 });
 
         function renderAll() {
-            renderClassesDropdown();
-            renderFeeClassDropdown();
-            renderAttendanceClassDropdown();
-            renderHistoryClassDropdown();
-            renderEditStudentClassDropdown();
-            renderEditStudentsTable();
-            renderTeachersList();
-            onGradingClassChange();
-            renderGradingTable();
-            renderFeesTable();
-            renderAttendanceRegister();
-            renderHistoryView();
-            renderLMSDocuments();
-            renderGalleryGrids();
-            renderCharts();
+    renderClassesDropdown();
+    renderFeeClassDropdown();
+    renderAttendanceClassDropdown();
+    renderHistoryClassDropdown();
+    renderEditStudentClassDropdown();
+    renderEditStudentsTable();
+    renderTeachersList();
+    onGradingClassChange();
+    renderGradingTable();
+    renderFeesTable();
+    renderAttendanceRegister();
+    renderHistoryView();
+    renderLMSDocuments();
+    renderGalleryGrids();
+    renderCharts();
+    restrictTeacherDropdowns();
         }
-
+        
         // Upload PDF / Word Document handler for Admin LMS
         async function uploadLMSDocument() {
             const titleInput = document.getElementById('lms-doc-title');
