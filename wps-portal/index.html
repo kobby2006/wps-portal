@@ -1023,19 +1023,22 @@
     }
         }
         async function fetchTeachersFromSupabase() {
-            try {
-                const { data, error } = await supabaseClient.from('teachers').select('*');
-                if(data && !error) {
-                    teachersList = data.map(t => ({
-                        id: t.id,
-                        name: t.name || t.full_name || 'Teacher',
-                        assignment: t.assignment || t.phone_number || 'General Teaching'
-                    }));
-                }
-            } catch(err) {
-                console.log('Supabase teachers fetch error:', err);
-            }
-            renderTeachersList();
+    try {
+        const { data, error } = await supabaseClient.from('teachers').select('*');
+        if(data && !error) {
+            teachersList = data.map(t => ({
+                id: t.id,
+                name: t.name || t.full_name || 'Teacher',
+                email: t.email || t.gmail || t.username || '',
+                password: t.password || t.pin || t.access_pin || '',
+                assignment: t.assignment || t.phone_number || 'General Teaching',
+                class: t.class || [],
+                subjects: t.subjects || []
+            }));
+        }
+    } catch(err) {
+        console.log('Supabase teachers fetch error:', err);
+    }
         }
         function closeAnnouncementModal() { document.getElementById('announcement-modal').classList.add('hidden'); }
         function closeReceiptModal() { document.getElementById('receipt-modal').classList.add('hidden'); }
