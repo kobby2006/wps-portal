@@ -1633,12 +1633,43 @@
             alert(`Assessment sheet downloaded as ${format.toUpperCase()}!`);
         }
 
-        function finalizeReports() {
-            if(studentsData.length === 0) { alert('No student reports to finalize.'); return; }
-            alert('Full class assessment sheets and individual report cards successfully finalized and archived to Student History!');
-            switchTab('history');
-            renderHistoryView();
-        }
+                async function finalizeReports() {
+            if(studentsData.length === 0) { 
+                alert('No student reports to finalize.'); 
+                return; 
+            }
+            
+            // Show loading alert or indicator
+            alert('Saving and syncing all student assessment scores to Supabase cloud...');
+
+            try {
+                // Loop through all students and update their records in Supabase
+                for (let s of studentsData) {
+                    const parsedId = !isNaN(s.id) && s.id !== '' ? Number(s.id) : s.id;
+                    const { error } = await supabaseClient.from('students').update({
+                        subjectsData: s.subjectsData,
+                        attendanceMade: s.attendanceMade,
+                        attendanceTotal: s.attendanceTotal,
+                        promotedTo: s.promotedTo,
+                        conduct: s.conduct,
+                        interest: s.interest,
+                        teacherRemarks: s.teacherRemarks,
+                        headRemarks: s.headRemarks,
+                        reopeningDate: s.reopeningDate
+                    }).eq('id', parsedId);
+
+                    if (error) {
+                        console.error('Error syncing student ID ' + s.id + ':', error.message);
+                    }
+                }
+
+                alert('Full class assessment sheets and individual report cards successfully finalized, saved to Supabase, and archived to Student History!');
+                switchTab('history');
+                renderHistoryView();
+            } catch(err) {
+                alert('Exception while saving assessment sheets to cloud: ' + err.message);
+            }
+                }
 
         function renderHistoryView() {
             const histYearInput = document.getElementById('history-year-filter');
