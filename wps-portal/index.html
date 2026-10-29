@@ -1654,7 +1654,11 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
         `;
     }).join('');
         }
-        function updateAssessmentScore(index, year, term, subject, field, val, maxLimit) {
+        function updateAssessmentScore(idx, year, term, subject, field, value, max) {
+    if(!isSubjectAllowed(subject)) {
+        alert('You can only edit your assigned subjects.');
+        return;
+}
             let num = parseFloat(val) || 0;
             if(num > maxLimit) {
                 alert(`Maximum allowed score for this assessment is ${maxLimit}`);
