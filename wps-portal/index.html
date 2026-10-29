@@ -1606,49 +1606,54 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
         }
 
         function renderGradingTable() {
-            const yearInput = document.getElementById('grading-year-filter');
-            const year = yearInput && yearInput.value.trim() ? yearInput.value.trim() : '2026';
-            const selectGrading = document.getElementById('grading-class-filter');
-            const selectedClass = selectGrading ? selectGrading.value : classesData[0];
-            const term = document.getElementById('grading-term-filter').value;
-            const subject = document.getElementById('grading-subject-filter').value;
-            const filteredStudents = studentsData.filter(s => s.class === selectedClass);
-            const tbody = document.getElementById('grading-table-body');
-            if(!tbody) return;
-            if(filteredStudents.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="12" class="p-6 text-center text-slate-400 italic">No students registered in ${selectedClass || 'this class'} yet.</td></tr>`;
-                return;
-            }
-            tbody.innerHTML = filteredStudents.map((s, idx) => {
-                const globalIdx = studentsData.findIndex(item => item.id === s.id);
-                if(!s.subjectsData[year]) s.subjectsData[year] = {};
-                if(!s.subjectsData[year][term]) s.subjectsData[year][term] = {};
-                if(!s.subjectsData[year][term][subject]) s.subjectsData[year][term][subject] = { indTest1: 0, groupTest: 0, indTest2: 0, homework: 0, exam: 0 };
-                const sub = s.subjectsData[year][term][subject];
-                const totalSba100 = (sub.indTest1 || 0) + (sub.groupTest || 0) + (sub.indTest2 || 0) + (sub.homework || 0);
-                const sba50 = (totalSba100 * 0.5).toFixed(1);
-                const exam50 = ((sub.exam || 0) * 0.5).toFixed(1);
-                const overallTotal = (parseFloat(sba50) + parseFloat(exam50)).toFixed(1);
-                const grade = computeGrade(overallTotal);
-                return `
-                    <tr>
-                        <td class="p-2.5 font-medium">${idx + 1}. ${s.name}</td>
-                        <td class="p-2.5 text-center"><input type="number" value="${sub.indTest1}" onchange="updateAssessmentScore(${globalIdx}, '${year}', '${term}', '${subject}', 'indTest1', this.value, 30)" class="w-16 p-1 border rounded text-center font-semibold" placeholder="30"></td>
-                        <td class="p-2.5 text-center"><input type="number" value="${sub.groupTest}" onchange="updateAssessmentScore(${globalIdx}, '${year}', '${term}', '${subject}', 'groupTest', this.value, 20)" class="w-16 p-1 border rounded text-center font-semibold" placeholder="20"></td>
-                        <td class="p-2.5 text-center"><input type="number" value="${sub.indTest2}" onchange="updateAssessmentScore(${globalIdx}, '${year}', '${term}', '${subject}', 'indTest2', this.value, 30)" class="w-16 p-1 border rounded text-center font-semibold" placeholder="30"></td>
-                        <td class="p-2.5 text-center"><input type="number" value="${sub.homework}" onchange="updateAssessmentScore(${globalIdx}, '${year}', '${term}', '${subject}', 'homework', this.value, 20)" class="w-16 p-1 border rounded text-center font-semibold" placeholder="20"></td>
-                        <td class="p-2.5 text-center font-bold bg-blue-50">${totalSba100}</td>
-                        <td class="p-2.5 text-center font-semibold bg-blue-100 text-blue-900">${sba50}</td>
-                        <td class="p-2.5 text-center"><input type="number" value="${sub.exam}" onchange="updateAssessmentScore(${globalIdx}, '${year}', '${term}', '${subject}', 'exam', this.value, 100)" class="w-16 p-1 border rounded text-center font-semibold" placeholder="100"></td>
-                        <td class="p-2.5 text-center font-semibold bg-blue-100 text-blue-900">${exam50}</td>
-                        <td class="p-2.5 text-center font-black bg-amber-50 text-amber-950">${overallTotal}</td>
-                        <td class="p-2.5 text-center"><span class="px-2 py-0.5 bg-amber-100 text-amber-900 rounded font-bold text-xs">${grade}</span></td>
-                        <td class="p-2.5 text-center"><span class="px-2 py-0.5 bg-blue-100 text-blue-900 rounded font-semibold text-xs">${s.position || 'Pending'}</span></td>
-                    </tr>
-                `;
-            }).join('');
+    const yearInput = document.getElementById('grading-year-filter');
+    const year = yearInput && yearInput.value.trim() ? yearInput.value.trim() : '2026';
+    const selectGrading = document.getElementById('grading-class-filter');
+    const selectedClass = selectGrading ? selectGrading.value : classesData[0];
+    const term = document.getElementById('grading-term-filter').value;
+    const subject = document.getElementById('grading-subject-filter').value;
+    
+    const filteredStudents = studentsData.filter(s => s.class === selectedClass && isClassAllowed(s.class));
+    
+    const tbody = document.getElementById('grading-table-body');
+    if(!tbody) return;
+    if(filteredStudents.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="12" class="p-6 text-center text-slate-400 italic">No students registered in ${selectedClass || 'this class'} yet.</td></tr>`;
+        return;
+    }
+    tbody.innerHTML = filteredStudents.map((s, idx) => {
+        const globalIdx = studentsData.findIndex(item => item.id === s.id);
+        if(!s.subjectsData[year]) s.subjectsData[year] = {};
+        if(!s.subjectsData[year][term]) s.subjectsData[year][term] = {};
+        if(!s.subjectsData[year][term][subject]) s.subjectsData[year][term][subject] = { indTest1: 0, groupTest: 0, indTest2: 0, homework: 0, exam: 0 };
+        const sub = s.subjectsData[year][term][subject];
+        const totalSba100 = (sub.indTest1 || 0) + (sub.groupTest || 0) + (sub.indTest2 || 0) + (sub.homework || 0);
+        const sba50 = (totalSba100 * 0.5).toFixed(1);
+        const exam50 = ((sub.exam || 0) * 0.5).toFixed(1);
+        const overallTotal = (parseFloat(sba50) + parseFloat(exam50)).toFixed(1);
+        const grade = computeGrade(overallTotal);
+        
+        const canEdit = isSubjectAllowed(subject);
+        const inputAttrs = canEdit ? '' : 'disabled style="opacity:0.5;cursor:not-allowed"';
+        
+        return `
+            <tr>
+                <td class="p-2.5 font-medium">${idx + 1}. ${s.name}</td>
+                <td class="p-2.5 text-center"><input type="number" value="${sub.indTest1}" onchange="updateAssessmentScore(${globalIdx}, '${year}', '${term}', '${subject}', 'indTest1', this.value, 30)" class="w-16 p-1 border rounded text-center font-semibold" placeholder="30" ${inputAttrs}></td>
+                <td class="p-2.5 text-center"><input type="number" value="${sub.groupTest}" onchange="updateAssessmentScore(${globalIdx}, '${year}', '${term}', '${subject}', 'groupTest', this.value, 20)" class="w-16 p-1 border rounded text-center font-semibold" placeholder="20" ${inputAttrs}></td>
+                <td class="p-2.5 text-center"><input type="number" value="${sub.indTest2}" onchange="updateAssessmentScore(${globalIdx}, '${year}', '${term}', '${subject}', 'indTest2', this.value, 30)" class="w-16 p-1 border rounded text-center font-semibold" placeholder="30" ${inputAttrs}></td>
+                <td class="p-2.5 text-center"><input type="number" value="${sub.homework}" onchange="updateAssessmentScore(${globalIdx}, '${year}', '${term}', '${subject}', 'homework', this.value, 20)" class="w-16 p-1 border rounded text-center font-semibold" placeholder="20" ${inputAttrs}></td>
+                <td class="p-2.5 text-center font-bold bg-blue-50">${totalSba100}</td>
+                <td class="p-2.5 text-center font-semibold bg-blue-100 text-blue-900">${sba50}</td>
+                <td class="p-2.5 text-center"><input type="number" value="${sub.exam}" onchange="updateAssessmentScore(${globalIdx}, '${year}', '${term}', '${subject}', 'exam', this.value, 100)" class="w-16 p-1 border rounded text-center font-semibold" placeholder="100" ${inputAttrs}></td>
+                <td class="p-2.5 text-center font-semibold bg-blue-100 text-blue-900">${exam50}</td>
+                <td class="p-2.5 text-center font-black bg-amber-50 text-amber-950">${overallTotal}</td>
+                <td class="p-2.5 text-center"><span class="px-2 py-0.5 bg-amber-100 text-amber-900 rounded font-bold text-xs">${grade}</span></td>
+                <td class="p-2.5 text-center"><span class="px-2 py-0.5 bg-blue-100 text-blue-900 rounded font-semibold text-xs">${s.position || 'Pending'}</span></td>
+            </tr>
+        `;
+    }).join('');
         }
-
         function updateAssessmentScore(index, year, term, subject, field, val, maxLimit) {
             let num = parseFloat(val) || 0;
             if(num > maxLimit) {
