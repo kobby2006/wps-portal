@@ -4,10 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Wesley Preparatory School - Portal</title>
-    <!-- Tailwind CSS & Chart.js -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- Supabase JS SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root {
@@ -38,7 +36,7 @@
                 <h1 id="login-school-title" class="text-2xl font-bold text-slate-900">Wesley Preparatory School</h1>
                 <p id="login-school-motto" class="text-xs text-slate-500 font-semibold uppercase tracking-wider mt-1">Knowledge and Integrity</p>
             </div>
-            
+
             <form id="login-form" class="space-y-4">
                 <div>
                     <label class="block text-xs font-semibold uppercase text-slate-600 mb-1">Select Role</label>
@@ -63,6 +61,7 @@
             </div>
         </div>
     </div>
+
     <!-- PASSWORD RESET MODAL -->
     <div id="password-reset-modal" class="hidden fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-6 border-t-4 border-blue-900 space-y-4">
@@ -75,6 +74,7 @@
             </div>
         </div>
     </div>
+
     <!-- ACCOUNT RECOVERY MODAL -->
     <div id="account-recovery-modal" class="hidden fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-6 border-t-4 border-amber-500 space-y-4">
@@ -85,6 +85,7 @@
             </div>
         </div>
     </div>
+
     <!-- ANNOUNCEMENT & BIRTHDAY POPUP MODAL -->
     <div id="announcement-modal" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full p-6 border-t-4 border-amber-500 space-y-4">
@@ -103,6 +104,7 @@
             </div>
         </div>
     </div>
+
     <!-- RECEIPT MODAL POPUP -->
     <div id="receipt-modal" class="hidden fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 border-t-4 border-blue-900 space-y-4 relative">
@@ -113,6 +115,7 @@
             </div>
         </div>
     </div>
+
     <!-- MAIN APP SHELL -->
     <div id="app-shell" class="hidden flex-1 flex flex-col">
         <!-- TOP NAVBAR -->
@@ -131,6 +134,7 @@
                 <button onclick="logout()" class="text-xs bg-red-700 hover:bg-red-800 px-3 py-2 rounded-lg font-semibold transition">Logout</button>
             </div>
         </header>
+
         <!-- DASHBOARD CONTAINER -->
         <div class="flex-1 flex flex-col md:flex-row">
             <!-- SIDEBAR NAVIGATION -->
@@ -142,7 +146,7 @@
                 <button onclick="switchTab('ai-copilot')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🤖 <span>Live Gemini AI Assistant</span></button>
                 <button onclick="switchTab('attendance')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📅 <span>Attendance Register</span></button>
                 <button onclick="switchTab('timetable')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">⏰ <span>Timetable & Time Mgmt</span></button>
-                
+
                 <!-- Admin Only Nav Items -->
                 <div id="admin-nav-section" class="pt-4 border-t border-slate-200 space-y-2">
                     <p class="px-4 text-xs font-bold uppercase tracking-wider text-slate-400">Administration</p>
@@ -154,6 +158,7 @@
                     <button onclick="switchTab('gallery')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🖼️ <span>Photo Gallery & JPG Uploads</span></button>
                     <button onclick="switchTab('profile')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">⚙️ <span>School Profile & Branding</span></button>
                 </div>
+
                 <!-- Teacher Nav -->
                 <div id="teacher-nav-section" class="hidden pt-4 border-t border-slate-200 space-y-2">
                     <p class="px-4 text-xs font-bold uppercase tracking-wider text-slate-400">Staff Portal</p>
@@ -167,6 +172,7 @@
                     <button onclick="switchTab('teacher-announcements')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📢 <span>View Announcements</span></button>
                 </div>
             </aside>
+
             <!-- MAIN CONTENT AREA -->
             <main class="flex-1 p-6 overflow-y-auto">
                 <!-- TAB: DASHBOARD & CHARTS -->
@@ -180,6 +186,7 @@
                             <span class="px-3 py-1 bg-amber-500 text-slate-950 text-xs font-bold rounded-full">Default Tuition: GH₵ 250</span>
                         </div>
                     </div>
+
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="bg-white p-6 rounded-2xl shadow border border-slate-100">
                             <h3 class="font-bold text-slate-800 mb-4">Student Gender Distribution (Active Registry)</h3>
@@ -195,6 +202,7 @@
                         </div>
                     </div>
                 </section>
+
                 <!-- TAB: SBA & EXAM GRADING -->
                 <section id="tab-assessment" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-4">
@@ -205,7 +213,7 @@
                             </div>
                             <button onclick="calculateGrades()" class="px-5 py-2.5 bg-blue-900 text-white font-semibold rounded-xl hover:bg-blue-800 transition shadow">Compute Totals & Grades</button>
                         </div>
-                        
+
                         <div class="grid grid-cols-1 md:grid-cols-4 gap-4 pt-2 border-t">
                             <div>
                                 <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Academic Year (Select or Type)</label>
@@ -245,6 +253,7 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="bg-white rounded-2xl shadow overflow-hidden border border-slate-100">
                         <div class="overflow-x-auto">
                             <table class="w-full text-left border-collapse text-xs">
@@ -270,11 +279,13 @@
                             </table>
                         </div>
                     </div>
+
                     <div class="flex justify-start">
                         <button onclick="refreshSubmittedScores()" class="px-5 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold rounded-xl text-xs transition flex items-center gap-2 shadow">
                             🔄 Refresh / Edit Submitted Scores for this Class & Term
                         </button>
                     </div>
+
                     <div class="flex flex-wrap justify-between items-center gap-3 pt-2">
                         <div class="flex gap-2">
                             <button onclick="exportAssessmentSheet('pdf')" class="px-4 py-2 bg-slate-800 text-white text-xs font-semibold rounded-lg hover:bg-slate-700">Download Assessment PDF 📄</button>
@@ -283,6 +294,7 @@
                         <button onclick="finalizeReports()" class="px-6 py-3 bg-amber-600 hover:bg-amber-700 text-white font-bold rounded-xl shadow-lg transition">Finalize & Save Assessment Sheet to Site ➔</button>
                     </div>
                 </section>
+
                 <!-- TAB: STUDENT HISTORY & SUBMITTED ASSESSMENT SHEETS -->
                 <section id="tab-history" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-4">
@@ -293,6 +305,7 @@
                             </div>
                             <button onclick="window.print()" class="px-4 py-2 bg-slate-800 text-white text-xs font-semibold rounded-lg hover:bg-slate-700 no-print">Print All Records</button>
                         </div>
+
                         <!-- Year, Class & Term Selector for History -->
                         <div class="flex flex-wrap gap-4 pt-2 border-t items-center justify-between">
                             <div class="flex flex-wrap gap-4 items-center">
@@ -313,6 +326,7 @@
                                     </select>
                                 </div>
                             </div>
+
                             <!-- PASSPORT PHOTO TOGGLE -->
                             <div class="bg-amber-50 p-3 rounded-xl border border-amber-200 flex items-center space-x-2">
                                 <input type="checkbox" id="include-photos-toggle" checked onchange="renderHistoryView()" class="w-4 h-4 text-blue-900 rounded">
@@ -320,10 +334,12 @@
                             </div>
                         </div>
                     </div>
+
                     <div id="history-container" class="space-y-8">
                         <p class="text-slate-500 italic p-4">No finalized assessment sheets or reports found. Click "Finalize & Save Assessment Sheet" from the SBA grading tab.</p>
                     </div>
                 </section>
+
                 <!-- TAB: LMS & TEACHER TRAINING HUB -->
                 <section id="tab-lms" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-6">
@@ -334,6 +350,7 @@
                             </div>
                             <span id="lms-role-badge" class="px-3 py-1 bg-amber-100 text-amber-900 text-xs font-bold rounded-full">Admin Edit Mode Active</span>
                         </div>
+
                         <!-- ADMIN ONLY: UPLOAD PDF / WORD / MATERIALS -->
                         <div id="admin-lms-upload-section" class="bg-blue-50/60 p-5 rounded-xl border border-blue-200 space-y-4">
                             <h3 class="font-bold text-sm text-blue-950">➕ Upload PDF, Word Handout, or Teaching Document (Admin Only)</h3>
@@ -405,6 +422,7 @@
                         </div>
                     </div>
                 </section>
+
                 <!-- TAB: LIVE GEMINI AI ASSISTANT -->
                 <section id="tab-ai-copilot" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-4">
@@ -415,6 +433,7 @@
                             </div>
                             <span class="px-3 py-1 bg-emerald-100 text-emerald-900 text-xs font-bold rounded-full">Gemini AI Active</span>
                         </div>
+
                         <!-- ADMIN ONLY: GEMINI API KEY INPUT -->
                         <div id="admin-gemini-section" class="hidden bg-amber-50 p-4 rounded-xl border border-amber-200 space-y-2">
                             <label class="block text-xs font-bold uppercase text-amber-900">Admin: Enter School Gemini API Key:</label>
@@ -424,6 +443,7 @@
                             </div>
                             <p class="text-[11px] text-amber-800">Get a free Gemini API key from <a href="https://aistudio.google.com/" target="_blank" class="underline font-bold">Google AI Studio</a>. Once saved by Admin, all teachers can use Gemini live.</p>
                         </div>
+
                         <div class="space-y-3">
                             <label class="block text-xs font-bold uppercase text-slate-600">Quick-Select Prompt:</label>
                             <div class="flex flex-wrap gap-2">
@@ -432,6 +452,7 @@
                                 <button onclick="setAiPrompt('How do I explain long division clearly to Basic 4 students?')" class="px-3 py-1.5 bg-slate-100 hover:bg-blue-50 hover:text-blue-900 border rounded-xl text-xs font-semibold transition">➗ Long Division Teaching Guide</button>
                             </div>
                         </div>
+
                         <div class="space-y-2 pt-2">
                             <label class="block text-xs font-bold uppercase text-slate-600">Type Your Question for Gemini:</label>
                             <textarea id="ai-user-query" rows="4" class="w-full p-4 border rounded-xl text-sm bg-slate-50 focus:ring-2 focus:ring-blue-900" placeholder="Ask anything, e.g., Create quiz questions for RME or summarize teaching strategies..."></textarea>
@@ -441,6 +462,7 @@
                                 </button>
                             </div>
                         </div>
+
                         <!-- AI RESPONSE BOX WITH DOWNLOAD & PRINT BUTTONS -->
                         <div id="ai-response-box" class="hidden mt-6 p-5 bg-blue-50/70 border border-blue-200 rounded-2xl space-y-3 text-slate-800">
                             <div class="flex justify-between items-center border-b pb-2">
@@ -456,6 +478,7 @@
                         </div>
                     </div>
                 </section>
+
                 <!-- TAB: ATTENDANCE REGISTER -->
                 <section id="tab-attendance" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-4">
@@ -471,6 +494,7 @@
                                 </div>
                             </div>
                         </div>
+
                         <div class="overflow-x-auto pt-2">
                             <table class="w-full text-left border-collapse">
                                 <thead class="bg-slate-100 text-xs uppercase font-bold text-slate-600">
@@ -487,6 +511,7 @@
                                 </tbody>
                             </table>
                         </div>
+
                         <div class="flex flex-wrap justify-between items-center gap-3 pt-4 border-t">
                             <button onclick="submitAttendanceRecord()" class="px-6 py-3 bg-blue-900 text-white font-bold rounded-xl text-xs hover:bg-blue-800 shadow transition">Save Attendance to Student Records & Reports ➔</button>
                             <div class="flex gap-2">
@@ -496,6 +521,7 @@
                         </div>
                     </div>
                 </section>
+
                 <!-- TAB: TIMETABLE & TIME MANAGEMENT -->
                 <section id="tab-timetable" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-4">
@@ -511,6 +537,7 @@
                         </div>
                     </div>
                 </section>
+
                 <!-- TAB: FEE MANAGEMENT / PROFESSIONAL BILLING ACCOUNT (Admin Only) -->
                 <section id="tab-fees" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-4">
@@ -524,6 +551,7 @@
                                 <select id="fee-class-filter" onchange="renderFeesTable()" class="p-2 border rounded-xl text-sm bg-slate-50 font-medium w-48"></select>
                             </div>
                         </div>
+
                         <div class="overflow-x-auto pt-2">
                             <table class="w-full text-left border-collapse">
                                 <thead class="bg-slate-100 text-xs uppercase font-bold text-slate-600">
@@ -545,6 +573,7 @@
                         </div>
                     </div>
                 </section>
+
                 <!-- TAB: MANAGE CLASSES (Admin) -->
                 <section id="tab-classes" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-4">
@@ -560,12 +589,14 @@
                         </div>
                     </div>
                 </section>
+
                 <!-- TAB: STUDENT ENROLLMENT & EDIT / DISCARD (Admin) -->
                 <section id="tab-students" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-6">
                         <div>
                             <h2 class="text-xl font-bold text-slate-900">Register New Student</h2>
                             <p class="text-xs text-slate-500 mb-4">Enrolled students immediately sync and appear in teacher portals.</p>
+
                             <form id="student-form" class="grid grid-cols-1 md:grid-cols-3 gap-4">
                                 <input type="text" id="s-name" placeholder="Full Name *" required class="p-3 border rounded-xl">
                                 <select id="s-class" class="p-3 border rounded-xl font-medium"></select>
@@ -593,6 +624,7 @@
                                     <select id="edit-student-class-filter" onchange="renderEditStudentsTable()" class="p-2 border rounded-xl text-sm bg-slate-50 font-medium w-48"></select>
                                 </div>
                             </div>
+
                             <div class="overflow-x-auto">
                                 <table class="w-full text-left border-collapse">
                                     <thead class="bg-slate-100 text-xs uppercase font-bold text-slate-600">
@@ -613,11 +645,13 @@
                         </div>
                     </div>
                 </section>
+
                 <!-- TAB: TEACHER ACCOUNTS (Admin) -->
                 <section id="tab-teachers" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-6">
                         <h2 class="text-xl font-bold text-slate-900">Register Teacher Account & Assigned Subjects / Class</h2>
                         <p class="text-xs text-slate-500 mb-4">Create login credentials and assign teachers to specific classes (for Basic 1-3) or subjects (for Basic 4-JHS).</p>
+
                         <form id="teacher-form" class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
                             <input type="text" id="t-name" placeholder="Full Name (e.g. Prince Mensah) *" required class="p-3 border rounded-xl">
                             <input type="text" id="t-phone" placeholder="Phone Number" class="p-3 border rounded-xl">
@@ -636,12 +670,14 @@
                         </div>
                     </div>
                 </section>
+
                 <!-- TAB: ANNOUNCEMENTS & PORTAL LOCK (Admin) -->
                 <section id="tab-announcements" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-6">
                         <div>
                             <h2 class="text-xl font-bold text-slate-900">Publish Priority Announcement & Birthday Celebration</h2>
                             <p class="text-xs text-slate-500 mb-4">Upload announcement details and celebration photos to pop up when teachers and users log in, and automatically send photos to the school gallery.</p>
+
                             <div class="space-y-4">
                                 <div>
                                     <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Upload Notice / Birthday Photo</label>
@@ -654,10 +690,12 @@
                                 <button onclick="postAnnouncement()" class="px-6 py-2.5 bg-blue-900 text-white font-bold rounded-xl">Publish Announcement & Photo to Cloud</button>
                             </div>
                         </div>
+
                         <!-- PORTAL LOCK CONTROL PANEL -->
                         <div class="pt-6 border-t space-y-3">
                             <h3 class="text-lg font-bold text-slate-900">🔒 Teacher Portal Access Restriction</h3>
                             <p class="text-xs text-slate-500">Lock the portal to restrict teachers from logging in while you perform system edits, grade updates, or maintenance.</p>
+
                             <div class="p-4 bg-amber-50 border border-amber-300 rounded-xl flex items-center justify-between">
                                 <div>
                                     <h4 class="font-bold text-xs text-amber-950 uppercase">Current Status: <span id="portal-lock-status-label" class="text-emerald-700 font-bold">Unlocked (Teachers can log in)</span></h4>
@@ -667,20 +705,24 @@
                         </div>
                     </div>
                 </section>
+
                 <!-- TAB: PHOTO GALLERY & MULTIPLE JPG UPLOADS -->
                 <section id="tab-gallery" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-4">
                         <h2 class="text-xl font-bold text-slate-900">School Photo Gallery & Multiple JPG Uploads</h2>
                         <p class="text-xs text-slate-500">Select multiple event photos, sports pictures, or class activities to upload simultaneously to the cloud. All photos can be downloaded in JPG format by any teacher on any device.</p>
+
                         <div class="flex flex-col md:flex-row gap-3 items-center">
                             <input type="file" id="multi-photo-file" accept="image/*" multiple class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
                             <button onclick="uploadMultiplePhotos()" class="px-6 py-2.5 bg-blue-900 text-white font-bold rounded-xl whitespace-nowrap">Upload Photos to Cloud (JPG)</button>
                         </div>
+
                         <div id="gallery-grid" class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
                             <p class="text-slate-400 italic text-sm">No photos uploaded yet.</p>
                         </div>
                     </div>
                 </section>
+
                 <!-- TAB: TEACHER PHOTO GALLERY (Teacher View) -->
                 <section id="tab-teacher-gallery" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl shadow border border-slate-100">
@@ -691,6 +733,7 @@
                         </div>
                     </div>
                 </section>
+
                 <!-- TAB: TEACHER ANNOUNCEMENTS VIEW -->
                 <section id="tab-teacher-announcements" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-4">
@@ -705,11 +748,13 @@
                         </div>
                     </div>
                 </section>
+
                 <!-- TAB: SCHOOL PROFILE & BRANDING SETTINGS -->
                 <section id="tab-profile" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-4">
                         <h2 class="text-xl font-bold text-slate-900">School Profile, Motto & Branding Settings</h2>
                         <p class="text-xs text-slate-500">Customize the school's official name, badge subtitle, motto, and contact information across the portal.</p>
+
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
                                 <label class="block text-xs font-bold uppercase text-slate-600 mb-1">School Name</label>
@@ -724,152 +769,183 @@
                                 <input type="text" id="profile-school-motto" value="Knowledge and Integrity" class="p-3 border rounded-xl w-full font-medium">
                             </div>
                         </div>
+
                         <button onclick="saveSchoolProfile()" class="px-6 py-3 bg-blue-900 text-white font-bold rounded-xl hover:bg-blue-800">Save School Profile & Branding</button>
                     </div>
                 </section>
             </main>
         </div>
     </div>
-    <!-- JAVASCRIPT APPLICATION CORE -->
+
     <script>
         const SUPABASE_URL = 'https://lhqacoxyfyklxjhabzfe.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxocWFjb3h5ZnlrbHhqaGFiemZlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI1MTA2NTksImV4cCI6MjEwODA4NjY1OX0.w7eqLoS5uKKCGpTxGunl2iD3oDEzRxPaUQ2EbhsGSDA';
         const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
         let currentUser = null;
         let portalLocked = false;
         let globalAnnouncementText = "Welcome to Wesley Preparatory School. Please ensure all student records and SBA scores are updated promptly.";
         let globalAnnouncementImgUrl = "";
         let classesData = ['Basic 1', 'Basic 2', 'Basic 3', 'Basic 4', 'Basic 5', 'Basic 6', 'JHS 1', 'JHS 2', 'JHS 3'];
         let studentsData = [];
-        let teachersList = []; // Stores objects: { id, name, assignment }
+        let teachersList = [];
         let galleryPhotos = [];
         let storedGeminiKey = "";
-        
-        let lmsDocuments = [ 
-]; 
-function getAllowedClasses() {
-    if(!currentUser || currentUser.role === 'admin') return classesData;
-    return currentUser.teacherClass || [];
-}
+        let lmsDocuments = [];
 
-function getAllowedSubjects() {
-    if(!currentUser || currentUser.role === 'admin') return [];
-    return currentUser.teacherSubjects || [];
-}
-
-function isClassAllowed(className) {
-    if(!currentUser || currentUser.role === 'admin') return true;
-    const allowed = getAllowedClasses();
-    return allowed.length === 0 || allowed.includes(className);
-}
-
-function isSubjectAllowed(subjectName) {
-    if(!currentUser || currentUser.role === 'admin') return true;
-    const allowed = getAllowedSubjects();
-    return allowed.length === 0 || allowed.includes(subjectName);
-}
-
-function restrictTeacherDropdowns() {
-    if(!currentUser || currentUser.role !== 'teacher') return;
-    const allowedClasses = getAllowedClasses();
-    const allowedSubjects = getAllowedSubjects();
-
-    const gradingClass = document.getElementById('grading-class-filter');
-    if(gradingClass && allowedClasses.length > 0) {
-        Array.from(gradingClass.options).forEach(opt => { opt.hidden = !allowedClasses.includes(opt.value); });
-        if(!allowedClasses.includes(gradingClass.value)) gradingClass.value = allowedClasses[0];
-    }
-
-    const gradingSubject = document.getElementById('grading-subject-filter');
-    if(gradingSubject && allowedSubjects.length > 0) {
-        Array.from(gradingSubject.options).forEach(opt => { opt.hidden = !allowedSubjects.includes(opt.value); });
-        if(!allowedSubjects.includes(gradingSubject.value)) gradingSubject.value = allowedSubjects[0];
-    }
-
-    const historyClass = document.getElementById('history-class-filter');
-    if(historyClass && allowedClasses.length > 0) {
-        Array.from(historyClass.options).forEach(opt => { opt.hidden = !allowedClasses.includes(opt.value); });
-        if(!allowedClasses.includes(historyClass.value)) historyClass.value = allowedClasses[0];
-    }
-
-    const attendanceClass = document.getElementById('attendance-class-filter');
-    if(attendanceClass && allowedClasses.length > 0) {
-        Array.from(attendanceClass.options).forEach(opt => { opt.hidden = !allowedClasses.includes(opt.value); });
-        if(!allowedClasses.includes(attendanceClass.value)) attendanceClass.value = allowedClasses[0];
-    }
-
-    const feesClass = document.getElementById('fees-class-filter');
-    if(feesClass && allowedClasses.length > 0) {
-        Array.from(feesClass.options).forEach(opt => { opt.hidden = !allowedClasses.includes(opt.value); });
-        if(!allowedClasses.includes(feesClass.value)) feesClass.value = allowedClasses[0];
-    }
-}
-
-function switchTab(tabId) {
-    ['dashboard', 'assessment', 'history', 'lms', 'ai-copilot', 'attendance', 'timetable', 'fees', 'classes', 'students', 'teachers', 'announcements', 'gallery', 'teacher-gallery', 'teacher-announcements', 'profile'].forEach(t => {
-        const el = document.getElementById(`tab-${t}`);
-        if(el) el.classList.add('hidden');
-    });
-    const active = document.getElementById(`tab-${tabId}`);
-    if(active) active.classList.remove('hidden');
-
-    if(tabId === 'announcements') {
-        const ta = document.getElementById('announcement-text');
-        if(ta) ta.value = globalAnnouncementText;
-    }
-    if(tabId === 'assessment') {
-        renderClassesDropdown();
-        onGradingClassChange();
-        renderGradingTable();
-        restrictTeacherDropdowns();
-    }
-    if(tabId === 'fees') {
-        renderFeeClassDropdown();
-        renderFeesTable();
-        restrictTeacherDropdowns();
-    }
-    if(tabId === 'attendance') {
-        renderAttendanceClassDropdown();
-        renderAttendanceRegister();
-        restrictTeacherDropdowns();
-    }
-    if(tabId === 'students') {
-        fetchStudentsFromSupabase().then(() => {
-            renderEditStudentClassDropdown();
-            renderEditStudentsTable();
-        });
-    }
-    if(tabId === 'history') {
-        renderHistoryClassDropdown();
-        renderHistoryView();
-        restrictTeacherDropdowns();
-    }
-    if(tabId === 'lms') {
-        renderLMSDocuments();
-    }
-    if(tabId === 'teachers') {
-        fetchTeachersFromSupabase();
-    }
-    if(tabId === 'gallery' || tabId === 'teacher-gallery') {
-        renderGalleryGrids();
-    }
-    if(tabId === 'teacher-announcements') {
-        const td = document.getElementById('teacher-announcement-display');
-        if(td) td.innerText = globalAnnouncementText;
-        if(globalAnnouncementImgUrl) {
-            const imgPrev = document.getElementById('teacher-announcement-img-preview');
-            if(imgPrev) imgPrev.src = globalAnnouncementImgUrl;
-            const imgDisp = document.getElementById('teacher-announcement-image-display');
-            if(imgDisp) imgDisp.classList.remove('hidden');
+        function getAllowedClasses() {
+            if (!currentUser || currentUser.role === 'admin') return classesData;
+            return currentUser.teacherClass || [];
         }
-    }
-}
+
+        function getAllowedSubjects() {
+            if (!currentUser || currentUser.role === 'admin') return [];
+            return currentUser.teacherSubjects || [];
+        }
+
+        function isClassAllowed(className) {
+            if (!currentUser || currentUser.role === 'admin') return true;
+            const allowed = getAllowedClasses();
+            return allowed.length === 0 || allowed.includes(className);
+        }
+
+        function isSubjectAllowed(subjectName) {
+            if (!currentUser || currentUser.role === 'admin') return true;
+            const allowed = getAllowedSubjects();
+            return allowed.length === 0 || allowed.includes(subjectName);
+        }
+
+        function restrictTeacherDropdowns() {
+            if (!currentUser || currentUser.role !== 'teacher') return;
+
+            const allowedClasses = getAllowedClasses();
+            const allowedSubjects = getAllowedSubjects();
+
+            const gradingClass = document.getElementById('grading-class-filter');
+            if (gradingClass && allowedClasses.length > 0) {
+                Array.from(gradingClass.options).forEach(opt => {
+                    opt.hidden = !allowedClasses.includes(opt.value);
+                });
+                if (!allowedClasses.includes(gradingClass.value)) gradingClass.value = allowedClasses[0];
+            }
+
+            const gradingSubject = document.getElementById('grading-subject-filter');
+            if (gradingSubject && allowedSubjects.length > 0) {
+                Array.from(gradingSubject.options).forEach(opt => {
+                    opt.hidden = !allowedSubjects.includes(opt.value);
+                });
+                if (!allowedSubjects.includes(gradingSubject.value)) gradingSubject.value = allowedSubjects[0];
+            }
+
+            const historyClass = document.getElementById('history-class-filter');
+            if (historyClass && allowedClasses.length > 0) {
+                Array.from(historyClass.options).forEach(opt => {
+                    opt.hidden = !allowedClasses.includes(opt.value);
+                });
+                if (!allowedClasses.includes(historyClass.value)) historyClass.value = allowedClasses[0];
+            }
+
+            const attendanceClass = document.getElementById('attendance-class-filter');
+            if (attendanceClass && allowedClasses.length > 0) {
+                Array.from(attendanceClass.options).forEach(opt => {
+                    opt.hidden = !allowedClasses.includes(opt.value);
+                });
+                if (!allowedClasses.includes(attendanceClass.value)) attendanceClass.value = allowedClasses[0];
+            }
+
+            const feesClass = document.getElementById('fee-class-filter');
+            if (feesClass && allowedClasses.length > 0) {
+                Array.from(feesClass.options).forEach(opt => {
+                    opt.hidden = !allowedClasses.includes(opt.value);
+                });
+                if (!allowedClasses.includes(feesClass.value)) feesClass.value = allowedClasses[0];
+            }
+        }
+
+        function switchTab(tabId) {
+            const tabs = [
+                'dashboard', 'assessment', 'history', 'lms', 'ai-copilot', 'attendance',
+                'timetable', 'fees', 'classes', 'students', 'teachers', 'announcements',
+                'gallery', 'teacher-gallery', 'teacher-announcements', 'profile'
+            ];
+
+            tabs.forEach(t => {
+                const el = document.getElementById(`tab-${t}`);
+                if (el) el.classList.add('hidden');
+            });
+
+            const active = document.getElementById(`tab-${tabId}`);
+            if (active) active.classList.remove('hidden');
+
+            if (tabId === 'announcements') {
+                const ta = document.getElementById('announcement-text');
+                if (ta) ta.value = globalAnnouncementText;
+            }
+
+            if (tabId === 'assessment') {
+                renderClassesDropdown();
+                onGradingClassChange();
+                renderGradingTable();
+                restrictTeacherDropdowns();
+            }
+
+            if (tabId === 'fees') {
+                renderFeeClassDropdown();
+                renderFeesTable();
+                restrictTeacherDropdowns();
+            }
+
+            if (tabId === 'attendance') {
+                renderAttendanceClassDropdown();
+                renderAttendanceRegister();
+                restrictTeacherDropdowns();
+            }
+
+            if (tabId === 'students') {
+                fetchStudentsFromSupabase().then(() => {
+                    renderEditStudentClassDropdown();
+                    renderEditStudentsTable();
+                });
+            }
+
+            if (tabId === 'history') {
+                renderHistoryClassDropdown();
+                renderHistoryView();
+                restrictTeacherDropdowns();
+            }
+
+            if (tabId === 'lms') {
+                renderLMSDocuments();
+            }
+
+            if (tabId === 'teachers') {
+                fetchTeachersFromSupabase();
+            }
+
+            if (tabId === 'gallery' || tabId === 'teacher-gallery') {
+                renderGalleryGrids();
+            }
+
+            if (tabId === 'teacher-announcements') {
+                const td = document.getElementById('teacher-announcement-display');
+                if (td) td.innerText = globalAnnouncementText;
+
+                if (globalAnnouncementImgUrl) {
+                    const imgPrev = document.getElementById('teacher-announcement-img-preview');
+                    if (imgPrev) imgPrev.src = globalAnnouncementImgUrl;
+
+                    const imgDisp = document.getElementById('teacher-announcement-image-display');
+                    if (imgDisp) imgDisp.classList.remove('hidden');
+                }
+            }
+        }
 
         let schoolProfile = {
             name: "Wesley Preparatory School",
             location: "Assorko-Essaman",
             motto: "Knowledge and Integrity"
         };
+
         let timetableText = "📅 Current Schedule: Morning Devotion (07:30 - 08:00) | Core Subjects & Practical Sessions (08:00 - 14:00).";
         const standardSubjects = [
             'ENGLISH LANGUAGE',
@@ -881,45 +957,42 @@ function switchTab(tabId) {
             'COMPUTING',
             'GHANAIAN LANGUAGE'
         ];
-        
-        // Load cloud settings instantly on startup
+
         window.addEventListener('DOMContentLoaded', async () => {
             await fetchCloudSettings();
             renderGalleryGrids();
             renderLMSDocuments();
             updateLockStatusUI();
-            
+
             const announcementTextarea = document.getElementById('announcement-text');
-            if(announcementTextarea) announcementTextarea.value = globalAnnouncementText;
+            if (announcementTextarea) announcementTextarea.value = globalAnnouncementText;
         });
 
         async function fetchCloudSettings() {
             try {
                 const { data, error } = await supabaseClient.from('school_settings').select('*').eq('id', 1).single();
-                if(data && !error) {
+
+                if (data && !error) {
                     portalLocked = data.portal_locked || false;
-                    if(data.announcement_text) globalAnnouncementText = data.announcement_text;
-                    if(data.announcement_img) globalAnnouncementImgUrl = data.announcement_img;
-                    if(data.gemini_api_key) storedGeminiKey = data.gemini_api_key;
-                    if(data.gallery_photos && Array.isArray(data.gallery_photos)) {
-                        galleryPhotos = data.gallery_photos;
-                    }
-                    if(data.lms_documents && Array.isArray(data.lms_documents)) {
-                        lmsDocuments = data.lms_documents;
-                    }
+                    if (data.announcement_text) globalAnnouncementText = data.announcement_text;
+                    if (data.announcement_img) globalAnnouncementImgUrl = data.announcement_img;
+                    if (data.gemini_api_key) storedGeminiKey = data.gemini_api_key;
+                    if (data.gallery_photos && Array.isArray(data.gallery_photos)) galleryPhotos = data.gallery_photos;
+                    if (data.lms_documents && Array.isArray(data.lms_documents)) lmsDocuments = data.lms_documents;
                 }
-            } catch(err) {
+            } catch (err) {
                 console.log('Cloud settings fetch note:', err);
             }
+
             updateLockStatusUI();
             renderGalleryGrids();
             renderLMSDocuments();
-            
+
             const announcementTextarea = document.getElementById('announcement-text');
-            if(announcementTextarea) announcementTextarea.value = globalAnnouncementText;
-            
+            if (announcementTextarea) announcementTextarea.value = globalAnnouncementText;
+
             const keyInput = document.getElementById('gemini-api-key');
-            if(keyInput && storedGeminiKey) keyInput.value = storedGeminiKey;
+            if (keyInput && storedGeminiKey) keyInput.value = storedGeminiKey;
         }
 
         async function saveCloudSettings() {
@@ -933,74 +1006,103 @@ function switchTab(tabId) {
                     gallery_photos: galleryPhotos,
                     lms_documents: lmsDocuments
                 });
-            } catch(err) {
+            } catch (err) {
                 console.error('Cloud save exception:', err);
             }
         }
 
         document.getElementById('login-form').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const role = document.getElementById('login-role').value;
-    const user = document.getElementById('login-user').value;
-    
-    await fetchCloudSettings();
+            e.preventDefault();
+            const role = document.getElementById('login-role').value;
+            const user = document.getElementById('login-user').value;
+            const pass = document.getElementById('login-pass').value;
 
-    if(role === 'teacher' && portalLocked) {
-        alert('🔒 Portal is currently locked by Administration. Please check back later.');
-        return;
-    }
-    currentUser = { role, name: user };
-    
-    document.getElementById('auth-screen').classList.add('hidden');
-    document.getElementById('app-shell').classList.remove('hidden');
-    document.getElementById('user-badge').innerText = role;
-    document.getElementById('welcome-name').innerText = user;
+            await fetchCloudSettings();
 
-    const adminGeminiSection = document.getElementById('admin-gemini-section');
-    if(adminGeminiSection) {
-        if(role === 'admin') adminGeminiSection.classList.remove('hidden');
-        else adminGeminiSection.classList.add('hidden');
-    }
+            if (role === 'teacher' && portalLocked) {
+                alert('🔒 Portal is currently locked by Administration. Please check back later.');
+                return;
+            }
 
-    // FETCH DATA FIRST — before any tab rendering
-    await fetchStudentsFromSupabase();
-    await fetchTeachersFromSupabase();
+            await fetchTeachersFromSupabase();
 
-    if(role === 'teacher') {
-        document.getElementById('admin-nav-section').classList.add('hidden');
-        document.getElementById('teacher-nav-section').classList.remove('hidden');
-        document.getElementById('admin-lms-upload-section').classList.add('hidden');
-        document.getElementById('lms-role-badge').innerText = "Teacher View (Download Handouts)";
-        switchTab('assessment');
-        
-        document.getElementById('modal-announcement-text').innerText = globalAnnouncementText;
-        if(globalAnnouncementImgUrl) {
-            document.getElementById('modal-announcement-img').src = globalAnnouncementImgUrl;
-            document.getElementById('modal-announcement-image-container').classList.remove('hidden');
-        } else {
-            document.getElementById('modal-announcement-image-container').classList.add('hidden');
-        }
-        document.getElementById('announcement-modal').classList.remove('hidden');
+            if (role === 'teacher') {
+                const teacherRecord = teachersList.find(t =>
+                    (t.email && t.email.toLowerCase() === user.toLowerCase()) ||
+                    (t.name && t.name.toLowerCase() === user.toLowerCase())
+                );
 
-        const teacherDisplay = document.getElementById('teacher-announcement-display');
-        if(teacherDisplay) teacherDisplay.innerText = globalAnnouncementText;
-        if(globalAnnouncementImgUrl) {
-            const imgPrev = document.getElementById('teacher-announcement-img-preview');
-            if(imgPrev) imgPrev.src = globalAnnouncementImgUrl;
-            const imgDisp = document.getElementById('teacher-announcement-image-display');
-            if(imgDisp) imgDisp.classList.remove('hidden');
-        }
-    } else {
-        document.getElementById('admin-nav-section').classList.remove('hidden');
-        document.getElementById('teacher-nav-section').classList.add('hidden');
-        document.getElementById('admin-lms-upload-section').classList.remove('hidden');
-        document.getElementById('lms-role-badge').innerText = "Admin Edit Mode Active";
-        switchTab('dashboard');
-    }
-    renderAll();
-});
+                if (!teacherRecord) {
+                    alert('Teacher not found. Please check your email or username.');
+                    return;
+                }
 
-        // STUDENT REGISTRATION SUBMIT HANDLER WITH PASSPORT PHOTO
+                if (teacherRecord.password && teacherRecord.password !== pass) {
+                    alert('Incorrect password. Please try again.');
+                    return;
+                }
+
+                currentUser = {
+                    role,
+                    name: teacherRecord.name,
+                    teacherClass: teacherRecord.class || [],
+                    teacherSubjects: teacherRecord.subjects || []
+                };
+            } else {
+                currentUser = { role, name: user };
+            }
+
+            document.getElementById('auth-screen').classList.add('hidden');
+            document.getElementById('app-shell').classList.remove('hidden');
+            document.getElementById('user-badge').innerText = role;
+            document.getElementById('welcome-name').innerText = currentUser.name;
+
+            const adminGeminiSection = document.getElementById('admin-gemini-section');
+            if (adminGeminiSection) {
+                if (role === 'admin') adminGeminiSection.classList.remove('hidden');
+                else adminGeminiSection.classList.add('hidden');
+            }
+
+            await fetchStudentsFromSupabase();
+
+            if (role === 'teacher') {
+                document.getElementById('admin-nav-section').classList.add('hidden');
+                document.getElementById('teacher-nav-section').classList.remove('hidden');
+                document.getElementById('admin-lms-upload-section').classList.add('hidden');
+                document.getElementById('lms-role-badge').innerText = "Teacher View (Download Handouts)";
+                switchTab('assessment');
+
+                document.getElementById('modal-announcement-text').innerText = globalAnnouncementText;
+                if (globalAnnouncementImgUrl) {
+                    document.getElementById('modal-announcement-img').src = globalAnnouncementImgUrl;
+                    document.getElementById('modal-announcement-image-container').classList.remove('hidden');
+                } else {
+                    document.getElementById('modal-announcement-image-container').classList.add('hidden');
+                }
+                document.getElementById('announcement-modal').classList.remove('hidden');
+
+                const teacherDisplay = document.getElementById('teacher-announcement-display');
+                if (teacherDisplay) teacherDisplay.innerText = globalAnnouncementText;
+
+                if (globalAnnouncementImgUrl) {
+                    const imgPrev = document.getElementById('teacher-announcement-img-preview');
+                    if (imgPrev) imgPrev.src = globalAnnouncementImgUrl;
+
+                    const imgDisp = document.getElementById('teacher-announcement-image-display');
+                    if (imgDisp) imgDisp.classList.remove('hidden');
+                }
+            } else {
+                document.getElementById('admin-nav-section').classList.remove('hidden');
+                document.getElementById('teacher-nav-section').classList.add('hidden');
+                document.getElementById('admin-lms-upload-section').classList.remove('hidden');
+                document.getElementById('lms-role-badge').innerText = "Admin Edit Mode Active";
+                switchTab('dashboard');
+            }
+
+            renderAll();
+            restrictTeacherDropdowns();
+        });
+
         document.getElementById('student-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const name = document.getElementById('s-name').value.trim();
@@ -1008,7 +1110,7 @@ function switchTab(tabId) {
             const gender = document.getElementById('s-gender').value;
             const photoInput = document.getElementById('s-photo');
 
-            if(!name) {
+            if (!name) {
                 alert('Please enter the student name.');
                 return;
             }
@@ -1030,22 +1132,22 @@ function switchTab(tabId) {
                         attendanceTotal: 70
                     }]);
 
-                    if(error) {
+                    if (error) {
                         alert('Error saving student: ' + error.message);
                         return;
                     }
 
                     alert(`Student "${name}" successfully registered to ${studentClass}!`);
                     document.getElementById('s-name').value = '';
-                    if(photoInput) photoInput.value = '';
+                    if (photoInput) photoInput.value = '';
                     await fetchStudentsFromSupabase();
                     renderAll();
-                } catch(err) {
+                } catch (err) {
                     alert('Exception saving student: ' + err.message);
                 }
             };
 
-            if(photoInput && photoInput.files && photoInput.files[0]) {
+            if (photoInput && photoInput.files && photoInput.files[0]) {
                 const reader = new FileReader();
                 reader.onload = async function(evt) {
                     await processRegistration(evt.target.result);
@@ -1056,32 +1158,51 @@ function switchTab(tabId) {
             }
         });
 
-        function openPasswordResetModal() { document.getElementById('password-reset-modal').classList.remove('hidden'); }
-        function closePasswordResetModal() { document.getElementById('password-reset-modal').classList.add('hidden'); }
+        function openPasswordResetModal() {
+            document.getElementById('password-reset-modal').classList.remove('hidden');
+        }
+
+        function closePasswordResetModal() {
+            document.getElementById('password-reset-modal').classList.add('hidden');
+        }
+
         function submitPasswordResetRequest() {
             const val = document.getElementById('reset-email-input').value.trim();
-            if(!val) { alert('Please enter your email or username.'); return; }
+            if (!val) {
+                alert('Please enter your email or username.');
+                return;
+            }
             alert(`Password / PIN reset request successfully submitted for "${val}". The Administrator has been notified.`);
             document.getElementById('reset-email-input').value = '';
             closePasswordResetModal();
         }
-        function openAccountRecoveryModal() { document.getElementById('account-recovery-modal').classList.remove('hidden'); }
-        function closeAccountRecoveryModal() { document.getElementById('account-recovery-modal').classList.add('hidden'); }
+
+        function openAccountRecoveryModal() {
+            document.getElementById('account-recovery-modal').classList.remove('hidden');
+        }
+
+        function closeAccountRecoveryModal() {
+            document.getElementById('account-recovery-modal').classList.add('hidden');
+        }
+
         async function togglePortalLock() {
             portalLocked = !portalLocked;
             await saveCloudSettings();
             updateLockStatusUI();
-            if(portalLocked) {
+
+            if (portalLocked) {
                 alert('🔒 Portal is now LOCKED. Teachers are successfully restricted from logging in.');
             } else {
                 alert('🔓 Portal is now UNLOCKED. Teachers can log in normally.');
             }
         }
+
         function updateLockStatusUI() {
             const btn = document.getElementById('portal-lock-btn');
             const lbl = document.getElementById('portal-lock-status-label');
-            if(!btn || !lbl) return;
-            if(portalLocked) {
+            if (!btn || !lbl) return;
+
+            if (portalLocked) {
                 btn.innerText = "Unlock Portal for Teachers 🔓";
                 btn.className = "px-5 py-2.5 bg-emerald-700 text-white font-bold text-xs rounded-xl shadow hover:bg-emerald-800 transition";
                 lbl.innerText = "Locked (Teachers are restricted from logging in)";
@@ -1093,177 +1214,94 @@ function switchTab(tabId) {
                 lbl.className = "text-emerald-700 font-bold";
             }
         }
+
         async function fetchStudentsFromSupabase() {
-    try {
-        const { data, error } = await supabaseClient.from('students').select('*');
-        if(error) {
-            console.error('Supabase students fetch error:', error.message);
-            return;
-        }
-        if(data) {
-            studentsData = data.map(s => {
-                let subjectsData = s.subjectsData;
-                if (typeof subjectsData === 'string') {
-                    try { subjectsData = JSON.parse(subjectsData); } catch(e) { subjectsData = {}; }
+            try {
+                const { data, error } = await supabaseClient.from('students').select('*');
+
+                if (error) {
+                    console.error('Supabase students fetch error:', error.message);
+                    return;
                 }
-                return {
-                    id: s.id || Date.now(),
-                    name: s.name || s.student_name || 'Unknown Student',
-                    class: s.class || s.class_name || 'Basic 4',
-                    gender: s.gender || 'Male',
-                    photo: s.photo || s.student_photo || '',
-                    subjectsData: subjectsData || {},
-                    arrearsFee: s.arrearsFee ?? 0.00,
-                    tuitionFee: s.tuitionFee ?? 250.00,
-                    printingFee: s.printingFee ?? 25.00,
-                    ptaFee: s.ptaFee ?? 5.00,
-                    otherFee: s.otherFee ?? 20.00,
-                    attendanceMade: s.attendanceMade ?? 65,
-                    attendanceTotal: s.attendanceTotal ?? 70,
-                    promotedTo: s.promotedTo || 'Next Class',
-                    conduct: s.conduct || 'Very Good',
-                    interest: s.interest || 'Sports and Music',
-                    teacherRemarks: s.teacherRemarks || 'A brilliant student with great potential.',
-                    headRemarks: s.headRemarks || 'Promoted. Keep up the good work!',
-                    reopeningDate: s.reopeningDate || '04/05/2026'
-                };
-            });
+
+                if (data) {
+                    studentsData = data.map(s => {
+                        let subjectsData = s.subjectsData;
+
+                        if (typeof subjectsData === 'string') {
+                            try {
+                                subjectsData = JSON.parse(subjectsData);
+                            } catch (e) {
+                                subjectsData = {};
+                            }
+                        }
+
+                        return {
+                            id: s.id || Date.now(),
+                            name: s.name || s.student_name || 'Unknown Student',
+                            class: s.class || s.class_name || 'Basic 4',
+                            gender: s.gender || 'Male',
+                            photo: s.photo || s.student_photo || '',
+                            subjectsData: subjectsData || {},
+                            arrearsFee: s.arrearsFee ?? 0.00,
+                            tuitionFee: s.tuitionFee ?? 250.00,
+                            printingFee: s.printingFee ?? 25.00,
+                            ptaFee: s.ptaFee ?? 5.00,
+                            otherFee: s.otherFee ?? 20.00,
+                            attendanceMade: s.attendanceMade ?? 65,
+                            attendanceTotal: s.attendanceTotal ?? 70,
+                            promotedTo: s.promotedTo || 'Next Class',
+                            conduct: s.conduct || 'Very Good',
+                            interest: s.interest || 'Sports and Music',
+                            teacherRemarks: s.teacherRemarks || 'A brilliant student with great potential.',
+                            headRemarks: s.headRemarks || 'Promoted. Keep up the good work!',
+                            reopeningDate: s.reopeningDate || '04/05/2026'
+                        };
+                    });
+                }
+            } catch (err) {
+                console.error('Supabase students fetch error:', err);
+            }
         }
-    } catch(err) {
-        console.error('Supabase students fetch error:', err);
-    }
-        }
+
         async function fetchTeachersFromSupabase() {
-    try {
-        const { data, error } = await supabaseClient.from('teachers').select('*');
-        if(data && !error) {
-            teachersList = data.map(t => ({
-                id: t.id,
-                name: t.name || t.full_name || 'Teacher',
-                email: t.email || t.gmail || t.username || '',
-                password: t.password || t.pin || t.access_pin || '',
-                assignment: t.assignment || t.phone_number || 'General Teaching',
-                class: t.class || [],
-                subjects: t.subjects || []
-            }));
+            try {
+                const { data, error } = await supabaseClient.from('teachers').select('*');
+                if (data && !error) {
+                    teachersList = data.map(t => ({
+                        id: t.id,
+                        name: t.name || t.full_name || 'Teacher',
+                        email: t.email || t.gmail || t.username || '',
+                        password: t.password || t.pin || t.access_pin || '',
+                        assignment: t.assignment || t.phone_number || 'General Teaching',
+                        class: t.class || [],
+                        subjects: t.subjects || []
+                    }));
+                }
+            } catch (err) {
+                console.log('Supabase teachers fetch error:', err);
+            }
         }
-    } catch(err) {
-        console.log('Supabase teachers fetch error:', err);
-    }
-}
-
-document.getElementById('login-form').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const role = document.getElementById('login-role').value;
-    const user = document.getElementById('login-user').value;
-    const pass = document.getElementById('login-pass').value;
-    
-    await fetchCloudSettings();
-
-    if(role === 'teacher' && portalLocked) {
-        alert('🔒 Portal is currently locked by Administration. Please check back later.');
-        return;
-    }
-
-    // Fetch teachers FIRST so we can verify the password
-    await fetchTeachersFromSupabase();
-
-    // Verify teacher credentials
-    if(role === 'teacher') {
-        const teacherRecord = teachersList.find(t => 
-            (t.email && t.email.toLowerCase() === user.toLowerCase()) || 
-            (t.name && t.name.toLowerCase() === user.toLowerCase())
-        );
-        
-        if(!teacherRecord) {
-            alert('Teacher not found. Please check your email or username.');
-            return;
-        }
-        
-        if(teacherRecord.password && teacherRecord.password !== pass) {
-            alert('Incorrect password. Please try again.');
-            return;
-        }
-        
-        currentUser = { 
-            role, 
-            name: teacherRecord.name,
-            teacherClass: teacherRecord.class || [],
-            teacherSubjects: teacherRecord.subjects || []
-        };
-    } else {
-        currentUser = { role, name: user };
-    }
-    
-    document.getElementById('auth-screen').classList.add('hidden');
-    document.getElementById('app-shell').classList.remove('hidden');
-    document.getElementById('user-badge').innerText = role;
-    document.getElementById('welcome-name').innerText = currentUser.name;
-
-    const adminGeminiSection = document.getElementById('admin-gemini-section');
-    if(adminGeminiSection) {
-        if(role === 'admin') adminGeminiSection.classList.remove('hidden');
-        else adminGeminiSection.classList.add('hidden');
-    }
-
-    // Fetch students after authentication
-    await fetchStudentsFromSupabase();
-
-    if(role === 'teacher') {
-        document.getElementById('admin-nav-section').classList.add('hidden');
-        document.getElementById('teacher-nav-section').classList.remove('hidden');
-        document.getElementById('admin-lms-upload-section').classList.add('hidden');
-        document.getElementById('lms-role-badge').innerText = "Teacher View (Download Handouts)";
-        switchTab('assessment');
-        
-        document.getElementById('modal-announcement-text').innerText = globalAnnouncementText;
-        if(globalAnnouncementImgUrl) {
-            document.getElementById('modal-announcement-img').src = globalAnnouncementImgUrl;
-            document.getElementById('modal-announcement-image-container').classList.remove('hidden');
-        } else {
-            document.getElementById('modal-announcement-image-container').classList.add('hidden');
-        }
-        document.getElementById('announcement-modal').classList.remove('hidden');
-
-        const teacherDisplay = document.getElementById('teacher-announcement-display');
-        if(teacherDisplay) teacherDisplay.innerText = globalAnnouncementText;
-        if(globalAnnouncementImgUrl) {
-            const imgPrev = document.getElementById('teacher-announcement-img-preview');
-            if(imgPrev) imgPrev.src = globalAnnouncementImgUrl;
-            const imgDisp = document.getElementById('teacher-announcement-image-display');
-            if(imgDisp) imgDisp.classList.remove('hidden');
-        }
-    } else {
-        document.getElementById('admin-nav-section').classList.remove('hidden');
-        document.getElementById('teacher-nav-section').classList.add('hidden');
-        document.getElementById('admin-lms-upload-section').classList.remove('hidden');
-        document.getElementById('lms-role-badge').innerText = "Admin Edit Mode Active";
-        switchTab('dashboard');
-}
-    renderAll();
-    restrictTeacherDropdowns();
-});
 
         function renderAll() {
-    renderClassesDropdown();
-    renderFeeClassDropdown();
-    renderAttendanceClassDropdown();
-    renderHistoryClassDropdown();
-    renderEditStudentClassDropdown();
-    renderEditStudentsTable();
-    renderTeachersList();
-    onGradingClassChange();
-    renderGradingTable();
-    renderFeesTable();
-    renderAttendanceRegister();
-    renderHistoryView();
-    renderLMSDocuments();
-    renderGalleryGrids();
-    renderCharts();
-    restrictTeacherDropdowns();
+            renderClassesDropdown();
+            renderFeeClassDropdown();
+            renderAttendanceClassDropdown();
+            renderHistoryClassDropdown();
+            renderEditStudentClassDropdown();
+            renderEditStudentsTable();
+            renderTeachersList();
+            onGradingClassChange();
+            renderGradingTable();
+            renderFeesTable();
+            renderAttendanceRegister();
+            renderHistoryView();
+            renderLMSDocuments();
+            renderGalleryGrids();
+            renderCharts();
+            restrictTeacherDropdowns();
         }
-        
-        // Upload PDF / Word Document handler for Admin LMS
+
         async function uploadLMSDocument() {
             const titleInput = document.getElementById('lms-doc-title');
             const descInput = document.getElementById('lms-doc-desc');
@@ -1272,11 +1310,12 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
             const title = titleInput ? titleInput.value.trim() : '';
             const description = descInput ? descInput.value.trim() : '';
 
-            if(!title) {
+            if (!title) {
                 alert('Please enter a document title.');
                 return;
             }
-            if(!fileInput.files || !fileInput.files[0]) {
+
+            if (!fileInput || !fileInput.files || !fileInput.files[0]) {
                 alert('Please select a PDF or Word document file to upload.');
                 return;
             }
@@ -1285,30 +1324,36 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
             const reader = new FileReader();
             reader.onload = async function(e) {
                 const fileDataUrl = e.target.result;
+
                 lmsDocuments.push({
                     title: title,
                     description: description,
                     dataUrl: fileDataUrl,
                     fileName: file.name
                 });
+
                 await saveCloudSettings();
                 renderLMSDocuments();
 
-                titleInput.value = '';
-                descInput.value = '';
-                fileInput.value = '';
+                if (titleInput) titleInput.value = '';
+                if (descInput) descInput.value = '';
+                if (fileInput) fileInput.value = '';
+
                 alert(`Document "${title}" successfully uploaded to cloud and made available for teachers to download!`);
             };
+
             reader.readAsDataURL(file);
         }
 
         function renderLMSDocuments() {
             const grid = document.getElementById('lms-documents-grid');
-            if(!grid) return;
-            if(lmsDocuments.length === 0) {
+            if (!grid) return;
+
+            if (lmsDocuments.length === 0) {
                 grid.innerHTML = `<p class="text-slate-400 italic text-xs">No documents uploaded yet.</p>`;
                 return;
             }
+
             grid.innerHTML = lmsDocuments.map(doc => `
                 <div class="bg-slate-50 p-4 rounded-xl border flex flex-col justify-between space-y-3 shadow-sm">
                     <div>
@@ -1323,17 +1368,17 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
             `).join('');
         }
 
-        // Direct Gemini API Integration
         function setAiPrompt(promptText) {
             const queryBox = document.getElementById('ai-user-query');
-            if(queryBox) queryBox.value = promptText;
+            if (queryBox) queryBox.value = promptText;
         }
 
         async function saveGeminiKey() {
             const keyInput = document.getElementById('gemini-api-key');
             storedGeminiKey = keyInput ? keyInput.value.trim() : '';
             await saveCloudSettings();
-            if(storedGeminiKey) {
+
+            if (storedGeminiKey) {
                 alert('Gemini API Key saved and synced to school cloud successfully! All teachers can now use live Gemini AI.');
             } else {
                 alert('API key cleared.');
@@ -1345,8 +1390,8 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
             const query = queryInput ? queryInput.value.trim() : '';
             const responseBox = document.getElementById('ai-response-box');
             const responseContent = document.getElementById('ai-response-content');
-            
-            if(!query) {
+
+            if (!query) {
                 alert('Please type a question for Gemini AI.');
                 return;
             }
@@ -1354,7 +1399,7 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
             responseBox.classList.remove('hidden');
             responseContent.innerHTML = `<p class="italic text-slate-500 animate-pulse">Contacting Gemini AI...</p>`;
 
-            if(!storedGeminiKey) {
+            if (!storedGeminiKey) {
                 responseContent.innerHTML = `<span class="text-red-700 font-bold">⚠️ Error: No Gemini API Key configured. Please have the Admin enter and save a valid Gemini API Key in the AI Assistant tab.</span>`;
                 return;
             }
@@ -1367,25 +1412,29 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
                         contents: [{ parts: [{ text: query }] }]
                     })
                 });
+
                 const data = await response.json();
-                if(data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts[0].text) {
+
+                if (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts[0].text) {
                     responseContent.innerHTML = data.candidates[0].content.parts[0].text;
-                } else if(data.error) {
+                } else if (data.error) {
                     responseContent.innerHTML = `<span class="text-red-700 font-bold">API Error: ${data.error.message || 'Invalid API Key or quota exceeded.'}</span>`;
                 } else {
                     responseContent.innerHTML = `<span class="text-red-700 font-bold">Unexpected response from Gemini API. Please check your API key.</span>`;
                 }
-            } catch(err) {
+            } catch (err) {
                 responseContent.innerHTML = `<span class="text-red-700 font-bold">Network / Connection Error: ${err.message}. Please check your internet connection.</span>`;
             }
         }
 
         function downloadAiAsDoc() {
             const content = document.getElementById('ai-response-content').innerText;
-            if(!content || content.includes('Contacting Gemini AI') || content.includes('Error')) {
+
+            if (!content || content.includes('Contacting Gemini AI') || content.includes('Error')) {
                 alert('No valid AI response to download yet.');
                 return;
             }
+
             let fileContent = `${schoolProfile.name.toUpperCase()}\nOFFICIAL GEMINI AI ASSISTANT OUTPUT\n--------------------------------------------------\n\n${content}`;
             const blob = new Blob([fileContent], { type: 'application/msword' });
             const url = URL.createObjectURL(blob);
@@ -1393,53 +1442,59 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
             a.href = url;
             a.download = `Gemini_AI_Output_${Date.now()}.doc`;
             a.click();
+
             alert('AI response downloaded successfully as document!');
         }
 
         function renderClassesDropdown() {
             const selectEnroll = document.getElementById('s-class');
-            if(selectEnroll) {
+            if (selectEnroll) {
                 const currentVal = selectEnroll.value;
                 selectEnroll.innerHTML = classesData.map(c => `<option value="${c}">${c}</option>`).join('');
-                if(currentVal) selectEnroll.value = currentVal;
+                if (currentVal) selectEnroll.value = currentVal;
             }
+
             const selectGrading = document.getElementById('grading-class-filter');
-            if(selectGrading) {
+            if (selectGrading) {
                 const currentGradVal = selectGrading.value;
                 selectGrading.innerHTML = classesData.map(c => `<option value="${c}">${c}</option>`).join('');
-                if(currentGradVal) selectGrading.value = currentGradVal;
+                if (currentGradVal) selectGrading.value = currentGradVal;
             }
         }
+
         function renderFeeClassDropdown() {
             const feeFilter = document.getElementById('fee-class-filter');
-            if(feeFilter) {
+            if (feeFilter) {
                 const currentFeeVal = feeFilter.value;
                 feeFilter.innerHTML = classesData.map(c => `<option value="${c}">${c}</option>`).join('');
-                if(currentFeeVal) feeFilter.value = currentFeeVal;
+                if (currentFeeVal) feeFilter.value = currentFeeVal;
             }
         }
+
         function renderAttendanceClassDropdown() {
             const attFilter = document.getElementById('attendance-class-filter');
-            if(attFilter) {
+            if (attFilter) {
                 const currentAttVal = attFilter.value;
                 attFilter.innerHTML = classesData.map(c => `<option value="${c}">${c}</option>`).join('');
-                if(currentAttVal) attFilter.value = currentAttVal;
+                if (currentAttVal) attFilter.value = currentAttVal;
             }
         }
+
         function renderHistoryClassDropdown() {
             const histFilter = document.getElementById('history-class-filter');
-            if(histFilter) {
+            if (histFilter) {
                 const currentHistVal = histFilter.value;
                 histFilter.innerHTML = classesData.map(c => `<option value="${c}">${c}</option>`).join('');
-                if(currentHistVal) histFilter.value = currentHistVal;
+                if (currentHistVal) histFilter.value = currentHistVal;
             }
         }
+
         function renderEditStudentClassDropdown() {
             const editFilter = document.getElementById('edit-student-class-filter');
-            if(editFilter) {
+            if (editFilter) {
                 const currentVal = editFilter.value;
                 editFilter.innerHTML = classesData.map(c => `<option value="${c}">${c}</option>`).join('');
-                if(currentVal) editFilter.value = currentVal;
+                if (currentVal) editFilter.value = currentVal;
             }
         }
 
@@ -1448,15 +1503,19 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
             const selectedClass = editFilter ? editFilter.value : classesData[0];
             const filteredStudents = studentsData.filter(s => s.class === selectedClass);
             const tbody = document.getElementById('edit-students-table-body');
-            if(!tbody) return;
-            
-            if(filteredStudents.length === 0) {
+
+            if (!tbody) return;
+
+            if (filteredStudents.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="6" class="p-6 text-center text-slate-400 italic">No students registered in ${selectedClass}.</td></tr>`;
                 return;
             }
-            
+
             tbody.innerHTML = filteredStudents.map((s) => {
-                const photoDisplay = s.photo ? `<img src="${s.photo}" class="w-10 h-10 object-cover rounded-full mx-auto border shadow">` : `<div class="w-10 h-10 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center font-bold text-xs mx-auto">No Photo</div>`;
+                const photoDisplay = s.photo
+                    ? `<img src="${s.photo}" class="w-10 h-10 object-cover rounded-full mx-auto border shadow">`
+                    : `<div class="w-10 h-10 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center font-bold text-xs mx-auto">No Photo</div>`;
+
                 return `
                     <tr>
                         <td class="p-3 text-center">${photoDisplay}</td>
@@ -1491,14 +1550,14 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
             const classSelect = document.getElementById(`edit-class-${studentId}`);
             const genderSelect = document.getElementById(`edit-gender-${studentId}`);
             const photoInput = document.getElementById(`edit-photo-${studentId}`);
-            
+
             const newName = nameInput ? nameInput.value.trim() : '';
             const newClass = classSelect ? classSelect.value : 'Basic 4';
             const newGender = genderSelect ? genderSelect.value : 'Male';
             const currentStudent = studentsData.find(s => String(s.id) === String(studentId));
-            let existingPhoto = currentStudent ? currentStudent.photo : '';
+            const existingPhoto = currentStudent ? currentStudent.photo : '';
 
-            if(!newName) {
+            if (!newName) {
                 alert('Student name cannot be empty.');
                 return;
             }
@@ -1513,7 +1572,7 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
                         photo: finalPhoto
                     }).eq('id', parsedId);
 
-                    if(error) {
+                    if (error) {
                         alert('Error updating student: ' + error.message);
                         return;
                     }
@@ -1521,12 +1580,12 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
                     await fetchStudentsFromSupabase();
                     alert(`Student record for "${newName}" successfully updated!`);
                     renderAll();
-                } catch(err) {
+                } catch (err) {
                     alert('Exception updating student: ' + err.message);
                 }
             };
 
-            if(photoInput && photoInput.files && photoInput.files[0]) {
+            if (photoInput && photoInput.files && photoInput.files[0]) {
                 const reader = new FileReader();
                 reader.onload = async function(evt) {
                     await executeUpdate(evt.target.result);
@@ -1540,23 +1599,24 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
         async function discardStudentDirect(studentId) {
             const parsedId = !isNaN(studentId) && studentId !== '' ? Number(studentId) : studentId;
             const student = studentsData.find(s => String(s.id) === String(studentId));
-            if(!student) {
+
+            if (!student) {
                 alert('Student not found in local data. ID: ' + studentId);
                 return;
             }
-            
-            if(confirm(`Are you sure you want to permanently discard/remove ${student.name} from school records and Supabase?`)) {
+
+            if (confirm(`Are you sure you want to permanently discard/remove ${student.name} from school records and Supabase?`)) {
                 try {
                     const { error } = await supabaseClient.from('students').delete().eq('id', parsedId);
-                    if(error) {
+                    if (error) {
                         alert('Error removing student from cloud: ' + error.message);
                         return;
                     }
-                    
+
                     await fetchStudentsFromSupabase();
                     renderAll();
                     alert(`Student ${student.name} has been successfully and permanently discarded.`);
-                } catch(err) {
+                } catch (err) {
                     alert('Exception removing student: ' + err.message);
                 }
             }
@@ -1564,11 +1624,13 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
 
         function renderTeachersList() {
             const container = document.getElementById('teachers-list-container');
-            if(!container) return;
-            if(teachersList.length === 0) {
+            if (!container) return;
+
+            if (teachersList.length === 0) {
                 container.innerHTML = `<p class="text-slate-400 italic text-xs">No teachers registered yet.</p>`;
                 return;
             }
+
             container.innerHTML = teachersList.map(t => `
                 <div class="p-3 bg-slate-50 border rounded-xl flex justify-between items-center text-xs">
                     <div>
@@ -1581,27 +1643,33 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
 
         document.getElementById('teacher-form').addEventListener('submit', async (e) => {
             e.preventDefault();
+
             const name = document.getElementById('t-name').value.trim();
             const phone = document.getElementById('t-phone').value.trim();
             const email = document.getElementById('t-email').value.trim();
             const pass = document.getElementById('t-pass').value.trim();
             const assignment = document.getElementById('t-assignment').value.trim();
-            
+
             try {
-                const { error } = await supabaseClient.from('teachers').insert([{ 
+                const { error } = await supabaseClient.from('teachers').insert([{
                     name: name,
-                    full_name: name, 
-                    phone_number: phone, 
+                    full_name: name,
+                    phone_number: phone,
                     email: email,
-                    assignment: assignment 
+                    assignment: assignment,
+                    password: pass
                 }]);
-                if(error) {
+
+                if (error) {
                     alert('Error saving teacher: ' + error.message);
                     return;
                 }
-                teachersList.push({ name, assignment });
-            } catch(err) { console.log(err); }
-            
+
+                teachersList.push({ name, assignment, email, password: pass });
+            } catch (err) {
+                console.log(err);
+            }
+
             alert(`Teacher account and assignment created successfully for ${name}!`);
             document.getElementById('t-name').value = '';
             document.getElementById('t-phone').value = '';
@@ -1609,37 +1677,49 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
             document.getElementById('t-pass').value = '';
             document.getElementById('t-assignment').value = '';
             await fetchTeachersFromSupabase();
+            renderTeachersList();
         });
 
-        // Strict subject-teacher and class-teacher mapping function (normalized)
         function getTeacherNameForDocument(className, subjectName) {
             const subRaw = (subjectName || '').toLowerCase();
             const subClean = subRaw.replace(/[\.\s]/g, '');
             const classLower = (className || '').toLowerCase();
 
-            if(classLower.includes('basic 1') || classLower.includes('basic 2') || classLower.includes('basic 3')) {
+            if (classLower.includes('basic 1') || classLower.includes('basic 2') || classLower.includes('basic 3')) {
                 const classTeacher = teachersList.find(t => t.assignment && t.assignment.toLowerCase().includes(classLower));
-                if(classTeacher) return classTeacher.name;
+                if (classTeacher) return classTeacher.name;
             }
 
-            if(subClean.includes('math') || subClean.includes('science') || subClean.includes('integratedscience')) {
+            if (subClean.includes('math') || subClean.includes('science') || subClean.includes('integratedscience')) {
                 const t = teachersList.find(item => item.name.toLowerCase().includes('prince') || (item.assignment && item.assignment.toLowerCase().includes('math')));
-                if(t) return t.name;
+                if (t) return t.name;
                 return 'Prince Mensah';
             }
-            if(subClean.includes('computing') || subClean.includes('creativearts') || subClean.includes('creative')) {
+
+            if (subClean.includes('computing') || subClean.includes('creativearts') || subClean.includes('creative')) {
                 const t = teachersList.find(item => item.name.toLowerCase().includes('priscilla') || (item.assignment && item.assignment.toLowerCase().includes('computing')));
-                if(t) return t.name;
+                if (t) return t.name;
                 return 'Priscilla Annan';
             }
-            if(subClean.includes('rme') || subClean.includes('history')) {
-                const t = teachersList.find(item => item.name.toLowerCase().includes('margret') || item.name.toLowerCase().includes('aidoo') || (item.assignment && item.assignment.toLowerCase().includes('history')) || (item.assignment && item.assignment.toLowerCase().includes('rme')));
-                if(t) return t.name;
+
+            if (subClean.includes('rme') || subClean.includes('history')) {
+                const t = teachersList.find(item =>
+                    item.name.toLowerCase().includes('margret') ||
+                    item.name.toLowerCase().includes('aidoo') ||
+                    (item.assignment && item.assignment.toLowerCase().includes('history')) ||
+                    (item.assignment && item.assignment.toLowerCase().includes('rme'))
+                );
+                if (t) return t.name;
                 return 'Margaret Aidoo';
             }
-            if(subClean.includes('english') || subClean.includes('ghanaianlanguage') || subClean.includes('fante')) {
-                const t = teachersList.find(item => item.name.toLowerCase().includes('naa') || item.name.toLowerCase().includes('loretta') || (item.assignment && item.assignment.toLowerCase().includes('english')));
-                if(t) return t.name;
+
+            if (subClean.includes('english') || subClean.includes('ghanaianlanguage') || subClean.includes('fante')) {
+                const t = teachersList.find(item =>
+                    item.name.toLowerCase().includes('naa') ||
+                    item.name.toLowerCase().includes('loretta') ||
+                    (item.assignment && item.assignment.toLowerCase().includes('english'))
+                );
+                if (t) return t.name;
                 return 'Madam Naa Loretta';
             }
 
@@ -1650,89 +1730,107 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
             const selectGrading = document.getElementById('grading-class-filter');
             const selectedClass = selectGrading ? selectGrading.value : 'Basic 4';
             const modeDesc = document.getElementById('assessment-mode-description');
-            
-            if(selectedClass === 'Basic 1' || selectedClass === 'Basic 2' || selectedClass === 'Basic 3') {
-                if(modeDesc) modeDesc.innerText = `Mode: ${selectedClass} — One Class Teacher (Class Teacher handles all subjects for this class).`;
+
+            if (selectedClass === 'Basic 1' || selectedClass === 'Basic 2' || selectedClass === 'Basic 3') {
+                if (modeDesc) modeDesc.innerText = `Mode: ${selectedClass} — One Class Teacher (Class Teacher handles all subjects for this class).`;
             } else {
-                if(modeDesc) modeDesc.innerText = `Mode: ${selectedClass} — Subject Teaching (Specialized Subject Teacher grading).`;
+                if (modeDesc) modeDesc.innerText = `Mode: ${selectedClass} — Subject Teaching (Specialized Subject Teacher grading).`;
             }
+
             renderGradingTable();
         }
 
         function renderGradingTable() {
-    const yearInput = document.getElementById('grading-year-filter');
-    const year = yearInput && yearInput.value.trim() ? yearInput.value.trim() : '2026';
-    const selectGrading = document.getElementById('grading-class-filter');
-    const selectedClass = selectGrading ? selectGrading.value : classesData[0];
-    const term = document.getElementById('grading-term-filter').value;
-    const subject = document.getElementById('grading-subject-filter').value;
-    
-    const filteredStudents = studentsData.filter(s => s.class === selectedClass && isClassAllowed(s.class));
-    
-    const tbody = document.getElementById('grading-table-body');
-    if(!tbody) return;
-    if(filteredStudents.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="12" class="p-6 text-center text-slate-400 italic">No students registered in ${selectedClass || 'this class'} yet.</td></tr>`;
-        return;
-    }
-    tbody.innerHTML = filteredStudents.map((s, idx) => {
-        const globalIdx = studentsData.findIndex(item => item.id === s.id);
-        if(!s.subjectsData[year]) s.subjectsData[year] = {};
-        if(!s.subjectsData[year][term]) s.subjectsData[year][term] = {};
-        if(!s.subjectsData[year][term][subject]) s.subjectsData[year][term][subject] = { indTest1: 0, groupTest: 0, indTest2: 0, homework: 0, exam: 0 };
-        const sub = s.subjectsData[year][term][subject];
-        const totalSba100 = (sub.indTest1 || 0) + (sub.groupTest || 0) + (sub.indTest2 || 0) + (sub.homework || 0);
-        const sba50 = (totalSba100 * 0.5).toFixed(1);
-        const exam50 = ((sub.exam || 0) * 0.5).toFixed(1);
-        const overallTotal = (parseFloat(sba50) + parseFloat(exam50)).toFixed(1);
-        const grade = computeGrade(overallTotal);
-        
-        const canEdit = isSubjectAllowed(subject);
-        const inputAttrs = canEdit ? '' : 'disabled style="opacity:0.5;cursor:not-allowed"';
-        
-        return `
-            <tr>
-                <td class="p-2.5 font-medium">${idx + 1}. ${s.name}</td>
-                <td class="p-2.5 text-center"><input type="number" value="${sub.indTest1}" onchange="updateAssessmentScore(${globalIdx}, '${year}', '${term}', '${subject}', 'indTest1', this.value, 30)" class="w-16 p-1 border rounded text-center font-semibold" placeholder="30" ${inputAttrs}></td>
-                <td class="p-2.5 text-center"><input type="number" value="${sub.groupTest}" onchange="updateAssessmentScore(${globalIdx}, '${year}', '${term}', '${subject}', 'groupTest', this.value, 20)" class="w-16 p-1 border rounded text-center font-semibold" placeholder="20" ${inputAttrs}></td>
-                <td class="p-2.5 text-center"><input type="number" value="${sub.indTest2}" onchange="updateAssessmentScore(${globalIdx}, '${year}', '${term}', '${subject}', 'indTest2', this.value, 30)" class="w-16 p-1 border rounded text-center font-semibold" placeholder="30" ${inputAttrs}></td>
-                <td class="p-2.5 text-center"><input type="number" value="${sub.homework}" onchange="updateAssessmentScore(${globalIdx}, '${year}', '${term}', '${subject}', 'homework', this.value, 20)" class="w-16 p-1 border rounded text-center font-semibold" placeholder="20" ${inputAttrs}></td>
-                <td class="p-2.5 text-center font-bold bg-blue-50">${totalSba100}</td>
-                <td class="p-2.5 text-center font-semibold bg-blue-100 text-blue-900">${sba50}</td>
-                <td class="p-2.5 text-center"><input type="number" value="${sub.exam}" onchange="updateAssessmentScore(${globalIdx}, '${year}', '${term}', '${subject}', 'exam', this.value, 100)" class="w-16 p-1 border rounded text-center font-semibold" placeholder="100" ${inputAttrs}></td>
-                <td class="p-2.5 text-center font-semibold bg-blue-100 text-blue-900">${exam50}</td>
-                <td class="p-2.5 text-center font-black bg-amber-50 text-amber-950">${overallTotal}</td>
-                <td class="p-2.5 text-center"><span class="px-2 py-0.5 bg-amber-100 text-amber-900 rounded font-bold text-xs">${grade}</span></td>
-                <td class="p-2.5 text-center"><span class="px-2 py-0.5 bg-blue-100 text-blue-900 rounded font-semibold text-xs">${s.position || 'Pending'}</span></td>
-            </tr>
-        `;
-    }).join('');
+            const yearInput = document.getElementById('grading-year-filter');
+            const year = yearInput && yearInput.value.trim() ? yearInput.value.trim() : '2026';
+            const selectGrading = document.getElementById('grading-class-filter');
+            const selectedClass = selectGrading ? selectGrading.value : classesData[0];
+            const term = document.getElementById('grading-term-filter') ? document.getElementById('grading-term-filter').value : 'Term 1';
+            const subject = document.getElementById('grading-subject-filter') ? document.getElementById('grading-subject-filter').value : 'Mathematics';
+
+            const filteredStudents = studentsData.filter(s => s.class === selectedClass && isClassAllowed(s.class));
+            const tbody = document.getElementById('grading-table-body');
+
+            if (!tbody) return;
+
+            if (filteredStudents.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="12" class="p-6 text-center text-slate-400 italic">No students registered in ${selectedClass || 'this class'} yet.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = filteredStudents.map((s, idx) => {
+                const globalIdx = studentsData.findIndex(item => item.id === s.id);
+
+                if (!s.subjectsData[year]) s.subjectsData[year] = {};
+                if (!s.subjectsData[year][term]) s.subjectsData[year][term] = {};
+                if (!s.subjectsData[year][term][subject]) s.subjectsData[year][term][subject] = { indTest1: 0, groupTest: 0, indTest2: 0, homework: 0, exam: 0 };
+
+                const sub = s.subjectsData[year][term][subject];
+                const totalSba100 = (sub.indTest1 || 0) + (sub.groupTest || 0) + (sub.indTest2 || 0) + (sub.homework || 0);
+                const sba50 = (totalSba100 * 0.5).toFixed(1);
+                const exam50 = ((sub.exam || 0) * 0.5).toFixed(1);
+                const overallTotal = (parseFloat(sba50) + parseFloat(exam50)).toFixed(1);
+                const grade = computeGrade(overallTotal);
+
+                const canEdit = isSubjectAllowed(subject);
+                const inputAttrs = canEdit ? '' : 'disabled style="opacity:0.5;cursor:not-allowed"';
+
+                return `
+                    <tr>
+                        <td class="p-2.5 font-medium">${idx + 1}. ${s.name}</td>
+                        <td class="p-2.5 text-center"><input type="number" value="${sub.indTest1}" onchange="updateAssessmentScore(${globalIdx}, '${year}', '${term}', '${subject}', 'indTest1', this.value, 30)" class="w-16 p-1 border rounded text-center font-semibold" placeholder="30" ${inputAttrs}></td>
+                        <td class="p-2.5 text-center"><input type="number" value="${sub.groupTest}" onchange="updateAssessmentScore(${globalIdx}, '${year}', '${term}', '${subject}', 'groupTest', this.value, 20)" class="w-16 p-1 border rounded text-center font-semibold" placeholder="20" ${inputAttrs}></td>
+                        <td class="p-2.5 text-center"><input type="number" value="${sub.indTest2}" onchange="updateAssessmentScore(${globalIdx}, '${year}', '${term}', '${subject}', 'indTest2', this.value, 30)" class="w-16 p-1 border rounded text-center font-semibold" placeholder="30" ${inputAttrs}></td>
+                        <td class="p-2.5 text-center"><input type="number" value="${sub.homework}" onchange="updateAssessmentScore(${globalIdx}, '${year}', '${term}', '${subject}', 'homework', this.value, 20)" class="w-16 p-1 border rounded text-center font-semibold" placeholder="20" ${inputAttrs}></td>
+                        <td class="p-2.5 text-center font-bold bg-blue-50">${totalSba100}</td>
+                        <td class="p-2.5 text-center font-semibold bg-blue-100 text-blue-900">${sba50}</td>
+                        <td class="p-2.5 text-center"><input type="number" value="${sub.exam}" onchange="updateAssessmentScore(${globalIdx}, '${year}', '${term}', '${subject}', 'exam', this.value, 100)" class="w-16 p-1 border rounded text-center font-semibold" placeholder="100" ${inputAttrs}></td>
+                        <td class="p-2.5 text-center font-semibold bg-blue-100 text-blue-900">${exam50}</td>
+                        <td class="p-2.5 text-center font-black bg-amber-50 text-amber-950">${overallTotal}</td>
+                        <td class="p-2.5 text-center"><span class="px-2 py-0.5 bg-amber-100 text-amber-900 rounded font-bold text-xs">${grade}</span></td>
+                        <td class="p-2.5 text-center"><span class="px-2 py-0.5 bg-blue-100 text-blue-900 rounded font-semibold text-xs">${s.position || 'Pending'}</span></td>
+                    </tr>
+                `;
+            }).join('');
         }
-        function updateAssessmentScore(idx, year, term, subject, field, value, max) {
-    if(!isSubjectAllowed(subject)) {
-        alert('You can only edit your assigned subjects.');
-        return;
-}
-            let num = parseFloat(val) || 0;
-            if(num > maxLimit) {
+
+        function updateAssessmentScore(index, year, term, subject, field, value, maxLimit) {
+            if (!studentsData[index]) return;
+
+            if (!isSubjectAllowed(subject)) {
+                alert('You can only edit your assigned subjects.');
+                return;
+            }
+
+            let num = parseFloat(value) || 0;
+            if (num > maxLimit) {
                 alert(`Maximum allowed score for this assessment is ${maxLimit}`);
                 num = maxLimit;
             }
-            if(!studentsData[index].subjectsData[year]) studentsData[index].subjectsData[year] = {};
-            if(!studentsData[index].subjectsData[year][term]) studentsData[index].subjectsData[year][term] = {};
-            if(!studentsData[index].subjectsData[year][term][subject]) studentsData[index].subjectsData[year][term][subject] = { indTest1: 0, groupTest: 0, indTest2: 0, homework: 0, exam: 0 };
-            
+
+            if (!studentsData[index].subjectsData[year]) studentsData[index].subjectsData[year] = {};
+            if (!studentsData[index].subjectsData[year][term]) studentsData[index].subjectsData[year][term] = {};
+            if (!studentsData[index].subjectsData[year][term][subject]) {
+                studentsData[index].subjectsData[year][term][subject] = {
+                    indTest1: 0,
+                    groupTest: 0,
+                    indTest2: 0,
+                    homework: 0,
+                    exam: 0
+                };
+            }
+
             studentsData[index].subjectsData[year][term][subject][field] = num;
             renderGradingTable();
         }
 
         function computeGrade(total) {
             const t = parseFloat(total);
-            if(t >= 80) return '1 (A)';
-            if(t >= 70) return '2 (B)';
-            if(t >= 60) return '3 (C)';
-            if(t >= 50) return '4 (D)';
-            if(t >= 40) return '5 (E)';
+            if (t >= 80) return '1 (A)';
+            if (t >= 70) return '2 (B)';
+            if (t >= 60) return '3 (C)';
+            if (t >= 50) return '4 (D)';
+            if (t >= 40) return '5 (E)';
             return '9 (F)';
         }
 
@@ -1742,13 +1840,19 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
         }
 
         function calculateGrades() {
-            if(studentsData.length === 0) { alert('No students to grade.'); return; }
+            if (studentsData.length === 0) {
+                alert('No students to grade.');
+                return;
+            }
+
             const yearInput = document.getElementById('grading-year-filter');
             const year = yearInput && yearInput.value.trim() ? yearInput.value.trim() : '2026';
-            const term = document.getElementById('grading-term-filter').value;
+            const term = document.getElementById('grading-term-filter') ? document.getElementById('grading-term-filter').value : 'Term 1';
+
             studentsData.forEach(s => {
                 let studentOverallTotal = 0;
-                if(s.subjectsData[year] && s.subjectsData[year][term]) {
+
+                if (s.subjectsData[year] && s.subjectsData[year][term]) {
                     Object.keys(s.subjectsData[year][term]).forEach(subName => {
                         const sub = s.subjectsData[year][term][subName];
                         const totalSba100 = (sub.indTest1 || 0) + (sub.groupTest || 0) + (sub.indTest2 || 0) + (sub.homework || 0);
@@ -1757,16 +1861,20 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
                         studentOverallTotal += (sba50 + exam50);
                     });
                 }
+
                 s.overallTotal = studentOverallTotal;
             });
-            studentsData.sort((a,b) => (b.overallTotal || 0) - (a.overallTotal || 0));
+
+            studentsData.sort((a, b) => (b.overallTotal || 0) - (a.overallTotal || 0));
             studentsData.forEach((s, idx) => s.position = `${idx + 1}${getOrdinal(idx + 1)}`);
+
             renderGradingTable();
             alert('Grades, totals, and ordinal positions successfully computed!');
         }
 
         function getOrdinal(n) {
-            const s = ["th","st","nd","rd"], v = n % 100;
+            const s = ["th", "st", "nd", "rd"];
+            const v = n % 100;
             return s[(v - 20) % 10] || s[v] || s[0];
         }
 
@@ -1777,106 +1885,117 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
             const term = document.getElementById('grading-term-filter').value;
             const className = document.getElementById('grading-class-filter').value;
             const assignedTeacher = getTeacherNameForDocument(className, subject);
-            
+
             let content = `${schoolProfile.name.toUpperCase()}\nSCHOOL BASED ASSESSMENT AT BASIC EDUCATIONAL LEVEL\nTERMELY SCORING FOR PRIMARY AND JUNIOR HIGH SCHOOLS\nYear: ${year} | Class: ${className} | Subject: ${subject} | Term: ${term} | Teacher: ${assignedTeacher}\n\n`;
             content += "No.\tNAME\tInd.Test 1(30)\tGroup Test(20)\tInd.Test 2(30)\tHomework(20)\tTotal SBA(100)\t50% SBA\tExams(100)\t50% Exam\tOverall Total\tGrade\n";
             content += "----------------------------------------------------------------------------------------------------------------------------------\n";
-            
+
             studentsData.filter(s => s.class === className).forEach((s, idx) => {
-                const sub = (s.subjectsData[year] && s.subjectsData[year][term] && s.subjectsData[year][term][subject]) ? s.subjectsData[year][term][subject] : { indTest1: 0, groupTest: 0, indTest2: 0, homework: 0, exam: 0 };
+                const sub = (s.subjectsData[year] && s.subjectsData[year][term] && s.subjectsData[year][term][subject])
+                    ? s.subjectsData[year][term][subject]
+                    : { indTest1: 0, groupTest: 0, indTest2: 0, homework: 0, exam: 0 };
+
                 const totalSba = (sub.indTest1 || 0) + (sub.groupTest || 0) + (sub.indTest2 || 0) + (sub.homework || 0);
                 const sba50 = totalSba * 0.5;
                 const exam50 = (sub.exam || 0) * 0.5;
                 const total = sba50 + exam50;
+
                 content += `${idx + 1}\t${s.name}\t${sub.indTest1}\t${sub.groupTest}\t${sub.indTest2}\t${sub.homework}\t${totalSba}\t${sba50}\t${sub.exam}\t${exam50}\t${total}\t${computeGrade(total)}\n`;
             });
+
             const blob = new Blob([content], { type: format === 'pdf' ? 'application/pdf' : 'application/msword' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
             a.download = `${year}_${className}_${subject}_${term}_Assessment_Sheet.${format === 'pdf' ? 'pdf' : 'doc'}`;
             a.click();
+
             alert(`Assessment sheet downloaded as ${format.toUpperCase()}!`);
         }
 
-                async function finalizeReports() {
-    if(studentsData.length === 0) { 
-        alert('No student reports to finalize.'); 
-        return; 
-    }
-    
-    let successCount = 0;
-    let failCount = 0;
-    let failErrors = [];
-    
-    try {
-        for (let s of studentsData) {
-            const parsedId = !isNaN(s.id) && s.id !== '' ? Number(s.id) : s.id;
-            const { error } = await supabaseClient.from('students').update({
-                subjectsData: s.subjectsData,
-                attendanceMade: s.attendanceMade,
-                attendanceTotal: s.attendanceTotal,
-                promotedTo: s.promotedTo,
-                conduct: s.conduct,
-                interest: s.interest,
-                teacherRemarks: s.teacherRemarks,
-                headRemarks: s.headRemarks,
-                reopeningDate: s.reopeningDate
-            }).eq('id', parsedId);
+        async function finalizeReports() {
+            if (studentsData.length === 0) {
+                alert('No student reports to finalize.');
+                return;
+            }
 
-            if (error) {
-                console.error('Error syncing student ID ' + s.id + ':', error.message);
-                failCount++;
-                failErrors.push(s.name + ': ' + error.message);
-            } else {
-                successCount++;
+            let successCount = 0;
+            let failCount = 0;
+            let failErrors = [];
+
+            try {
+                for (const s of studentsData) {
+                    const parsedId = !isNaN(s.id) && s.id !== '' ? Number(s.id) : s.id;
+
+                    const { error } = await supabaseClient.from('students').update({
+                        subjectsData: s.subjectsData,
+                        attendanceMade: s.attendanceMade,
+                        attendanceTotal: s.attendanceTotal,
+                        promotedTo: s.promotedTo,
+                        conduct: s.conduct,
+                        interest: s.interest,
+                        teacherRemarks: s.teacherRemarks,
+                        headRemarks: s.headRemarks,
+                        reopeningDate: s.reopeningDate
+                    }).eq('id', parsedId);
+
+                    if (error) {
+                        console.error('Error syncing student ID ' + s.id + ':', error.message);
+                        failCount++;
+                        failErrors.push(s.name + ': ' + error.message);
+                    } else {
+                        successCount++;
+                    }
+                }
+
+                if (failCount > 0 && successCount === 0) {
+                    alert('Failed to save all student reports. Errors:\n' + failErrors.join('\n'));
+                    return;
+                }
+
+                if (failCount > 0) {
+                    alert(successCount + ' student(s) saved.\n' + failCount + ' failed:\n' + failErrors.join('\n'));
+                } else {
+                    alert('All ' + successCount + ' student assessment sheets finalized, saved, and archived to Student History!');
+                }
+
+                await fetchStudentsFromSupabase();
+                switchTab('history');
+                renderHistoryView();
+            } catch (err) {
+                alert('Exception while saving: ' + err.message);
             }
         }
-
-        if (failCount > 0 && successCount === 0) {
-            alert('Failed to save all student reports. Errors:\n' + failErrors.join('\n'));
-            return;
-        }
-
-        if (failCount > 0) {
-            alert(successCount + ' student(s) saved.\n' + failCount + ' failed:\n' + failErrors.join('\n'));
-        } else {
-            alert('All ' + successCount + ' student assessment sheets finalized, saved, and archived to Student History!');
-        }
-
-        await fetchStudentsFromSupabase();
-        switchTab('history');
-        renderHistoryView();
-    } catch(err) {
-        alert('Exception while saving: ' + err.message);
-    }
-                }
 
         function renderHistoryView() {
             const histYearInput = document.getElementById('history-year-filter');
             const histYear = histYearInput && histYearInput.value.trim() ? histYearInput.value.trim() : '2026';
-            const histClass = document.getElementById('history-class-filter').value || classesData[0];
-            const histTerm = document.getElementById('history-term-filter').value || 'Term 1';
+            const histClass = document.getElementById('history-class-filter') ? document.getElementById('history-class-filter').value || classesData[0] : classesData[0];
+            const histTerm = document.getElementById('history-term-filter') ? document.getElementById('history-term-filter').value || 'Term 1' : 'Term 1';
             const includePhotos = document.getElementById('include-photos-toggle') ? document.getElementById('include-photos-toggle').checked : true;
             const container = document.getElementById('history-container');
             const filtered = studentsData.filter(s => s.class === histClass);
-            
-            if(filtered.length === 0) {
+
+            if (filtered.length === 0) {
                 container.innerHTML = `<p class="text-slate-500 italic p-4">No student records found for ${histClass} (${histYear} - ${histTerm}).</p>`;
                 return;
             }
-const subjectsToShow = (currentUser && currentUser.role === 'teacher' && currentUser.teacherSubjects && currentUser.teacherSubjects.length > 0) 
-    ? currentUser.teacherSubjects 
-    : standardSubjects;
-let masterAssessmentSheetsHtml = subjectsToShow.map(subject => {
-let subjectsHtml = standardtoshow.map(subName => {
-                const assignedTeacher = getTeacherNameForDocument(histClass, subject);
+
+            const subjectsToShow = (currentUser && currentUser.role === 'teacher' && currentUser.teacherSubjects && currentUser.teacherSubjects.length > 0)
+                ? currentUser.teacherSubjects
+                : standardSubjects;
+
+            let masterAssessmentSheetsHtml = subjectsToShow.map(subject => {
                 let rowsHtml = filtered.map((s, idx) => {
-                    const sub = (s.subjectsData[histYear] && s.subjectsData[histYear][histTerm] && s.subjectsData[histYear][histTerm][subject]) ? s.subjectsData[histYear][histTerm][subject] : { indTest1: 0, groupTest: 0, indTest2: 0, homework: 0, exam: 0 };
+                    const sub = (s.subjectsData[histYear] && s.subjectsData[histYear][histTerm] && s.subjectsData[histYear][histTerm][subject])
+                        ? s.subjectsData[histYear][histTerm][subject]
+                        : { indTest1: 0, groupTest: 0, indTest2: 0, homework: 0, exam: 0 };
+
                     const totalSba = (sub.indTest1 || 0) + (sub.groupTest || 0) + (sub.indTest2 || 0) + (sub.homework || 0);
                     const sba50 = totalSba * 0.5;
                     const exam50 = (sub.exam || 0) * 0.5;
                     const total100 = sba50 + exam50;
+
                     return `
                         <tr>
                             <td class="border border-black p-1 text-center font-bold">${idx + 1}</td>
@@ -1894,6 +2013,8 @@ let subjectsHtml = standardtoshow.map(subName => {
                         </tr>
                     `;
                 }).join('');
+
+                const assignedTeacher = getTeacherNameForDocument(histClass, subject);
 
                 return `
                     <div class="assessment-print-page bg-white p-8 rounded-xl shadow-lg border-2 border-slate-300 max-w-4xl mx-auto space-y-4 text-slate-900 font-sans">
@@ -1950,12 +2071,16 @@ let subjectsHtml = standardtoshow.map(subName => {
                 const totalFee = arrears + tuition + printing + pta + other;
 
                 let subjectsHtml = standardSubjects.map(subName => {
-                    const sub = (s.subjectsData[histYear] && s.subjectsData[histYear][histTerm] && s.subjectsData[histYear][histTerm][subName]) ? s.subjectsData[histYear][histTerm][subName] : { indTest1: 0, groupTest: 0, indTest2: 0, homework: 0, exam: 0 };
+                    const sub = (s.subjectsData[histYear] && s.subjectsData[histYear][histTerm] && s.subjectsData[histYear][histTerm][subName])
+                        ? s.subjectsData[histYear][histTerm][subName]
+                        : { indTest1: 0, groupTest: 0, indTest2: 0, homework: 0, exam: 0 };
+
                     const totalSba = (sub.indTest1 || 0) + (sub.groupTest || 0) + (sub.indTest2 || 0) + (sub.homework || 0);
                     const sba50 = totalSba * 0.5;
                     const exam50 = (sub.exam || 0) * 0.5;
                     const total100 = sba50 + exam50;
                     const grade = computeGrade(total100);
+
                     return `
                         <tr>
                             <td class="border border-black p-1 pl-2 font-medium">${subName}</td>
@@ -1970,7 +2095,11 @@ let subjectsHtml = standardtoshow.map(subName => {
                 }).join('');
 
                 const reportTeacherName = getTeacherNameForDocument(s.class, 'Mathematics');
-                const passportPhotoHtml = (includePhotos && s.photo) ? `<img src="${s.photo}" class="w-20 h-20 object-cover rounded border border-black shadow">` : (includePhotos ? `<div class="w-20 h-20 border border-dashed border-black flex items-center justify-center text-[10px] text-center font-bold text-slate-500 bg-slate-50">PASSPORT PHOTO</div>` : ``);
+                const passportPhotoHtml = (includePhotos && s.photo)
+                    ? `<img src="${s.photo}" class="w-20 h-20 object-cover rounded border border-black shadow">`
+                    : (includePhotos
+                        ? `<div class="w-20 h-20 border border-dashed border-black flex items-center justify-center text-[10px] text-center font-bold text-slate-500 bg-slate-50">PASSPORT PHOTO</div>`
+                        : ``);
 
                 return `
                     <div class="report-card-page bg-white p-8 rounded-xl shadow-lg border-2 border-slate-300 max-w-3xl mx-auto space-y-4 text-slate-900 font-sans relative">
@@ -2046,7 +2175,6 @@ let subjectsHtml = standardtoshow.map(subName => {
                                 <input type="text" value="${s.headRemarks}" onchange="updateStudentProp(${studentsData.findIndex(item => item.id === s.id)}, 'headRemarks', this.value)" class="flex-1 border-b border-black bg-transparent">
                             </div>
                         </div>
-                        <!-- PROFESSIONAL BILLING ACCOUNT SUMMARY TABLE -->
                         <table class="w-full text-xs border-collapse border border-black mt-3">
                             <thead>
                                 <tr class="bg-blue-50 font-bold">
@@ -2088,11 +2216,20 @@ let subjectsHtml = standardtoshow.map(subName => {
                 `;
             }).join('');
 
-            container.innerHTML = `<div class="mb-8"><h3 class="font-bold text-lg text-blue-950 mb-3 border-b pb-2">📋 Master Class Assessment Sheets (${histClass} - ${histYear} ${histTerm})</h3>${masterAssessmentSheetsHtml}</div><div><h3 class="font-bold text-lg text-blue-950 mb-3 border-b pb-2">🎓 Individual Report Cards & Billing Accounts</h3>${individualReportCardsHtml}</div>`;
+            container.innerHTML = `
+                <div class="mb-8">
+                    <h3 class="font-bold text-lg text-blue-950 mb-3 border-b pb-2">📋 Master Class Assessment Sheets (${histClass} - ${histYear} ${histTerm})</h3>
+                    ${masterAssessmentSheetsHtml}
+                </div>
+                <div>
+                    <h3 class="font-bold text-lg text-blue-950 mb-3 border-b pb-2">🎓 Individual Report Cards & Billing Accounts</h3>
+                    ${individualReportCardsHtml}
+                </div>
+            `;
         }
 
         function updateStudentProp(index, field, val) {
-            studentsData[index][field] = val;
+            if (studentsData[index]) studentsData[index][field] = val;
         }
 
         function renderFeesTable() {
@@ -2100,11 +2237,14 @@ let subjectsHtml = standardtoshow.map(subName => {
             const selectedClass = feeFilter ? feeFilter.value : classesData[0];
             const filteredStudents = studentsData.filter(s => s.class === selectedClass);
             const tbody = document.getElementById('fees-table-body');
-            if(!tbody) return;
-            if(filteredStudents.length === 0) {
+
+            if (!tbody) return;
+
+            if (filteredStudents.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="8" class="p-6 text-center text-slate-400 italic">No fee records found for ${selectedClass}.</td></tr>`;
                 return;
             }
+
             tbody.innerHTML = filteredStudents.map((s) => {
                 const globalIdx = studentsData.findIndex(item => item.id === s.id);
                 const arrears = parseFloat(s.arrearsFee) || 0;
@@ -2113,6 +2253,7 @@ let subjectsHtml = standardtoshow.map(subName => {
                 const pta = parseFloat(s.ptaFee) || 5;
                 const other = parseFloat(s.otherFee) || 20;
                 const total = arrears + tuition + printing + pta + other;
+
                 return `
                     <tr>
                         <td class="p-3 font-medium">${s.name}</td>
@@ -2131,19 +2272,21 @@ let subjectsHtml = standardtoshow.map(subName => {
         }
 
         function updateFeeProp(index, field, val) {
-            studentsData[index][field] = parseFloat(val) || 0;
+            if (studentsData[index]) studentsData[index][field] = parseFloat(val) || 0;
             renderFeesTable();
         }
 
         function viewReceipt(index) {
             const s = studentsData[index];
+            if (!s) return;
+
             const arrears = parseFloat(s.arrearsFee) || 0;
             const tuition = parseFloat(s.tuitionFee) || 250;
             const printing = parseFloat(s.printingFee) || 25;
             const pta = parseFloat(s.ptaFee) || 5;
             const other = parseFloat(s.otherFee) || 20;
             const totalFee = arrears + tuition + printing + pta + other;
-            
+
             const content = document.getElementById('receipt-content');
             content.innerHTML = `
                 <div class="text-center space-y-1 border-b pb-4">
@@ -2162,6 +2305,7 @@ let subjectsHtml = standardtoshow.map(subName => {
                     <div class="flex justify-between text-blue-900 border-t pt-2 font-black text-base"><span>Total Bill Balance Due:</span> <strong>₵ ${totalFee.toFixed(2)}</strong></div>
                 </div>
             `;
+
             document.getElementById('receipt-modal').classList.remove('hidden');
         }
 
@@ -2170,13 +2314,17 @@ let subjectsHtml = standardtoshow.map(subName => {
             const selectedClass = attFilter ? attFilter.value : classesData[0];
             const filteredStudents = studentsData.filter(s => s.class === selectedClass);
             const tbody = document.getElementById('attendance-table-body');
-            if(!tbody) return;
-            if(filteredStudents.length === 0) {
+
+            if (!tbody) return;
+
+            if (filteredStudents.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-slate-400 italic">No students found in ${selectedClass}.</td></tr>`;
                 return;
             }
+
             tbody.innerHTML = filteredStudents.map((s) => {
                 const globalIdx = studentsData.findIndex(item => item.id === s.id);
+
                 return `
                     <tr>
                         <td class="p-3 font-medium">${s.name}</td>
@@ -2190,7 +2338,7 @@ let subjectsHtml = standardtoshow.map(subName => {
         }
 
         function updateAttendanceProp(index, field, val) {
-            studentsData[index][field] = parseInt(val) || 0;
+            if (studentsData[index]) studentsData[index][field] = parseInt(val) || 0;
             renderAttendanceRegister();
         }
 
@@ -2201,24 +2349,28 @@ let subjectsHtml = standardtoshow.map(subName => {
         function exportAttendance(format) {
             const className = document.getElementById('attendance-class-filter').value;
             let content = `${schoolProfile.name.toUpperCase()}\nATTENDANCE REGISTER SUMMARY\nClass: ${className}\n\nStudent Name\tDays Present\tTotal Days\tRatio\n`;
+
             studentsData.filter(s => s.class === className).forEach(s => {
                 content += `${s.name}\t${s.attendanceMade || 65}\t${s.attendanceTotal || 70}\t${s.attendanceMade || 65} out of ${s.attendanceTotal || 70}\n`;
             });
+
             const blob = new Blob([content], { type: format === 'pdf' ? 'application/pdf' : 'application/msword' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
             a.download = `${className}_Attendance_Summary.${format === 'pdf' ? 'pdf' : 'doc'}`;
             a.click();
+
             alert(`Attendance summary downloaded as ${format.toUpperCase()}!`);
         }
 
         function renderCharts() {
             const maleCount = studentsData.filter(s => s.gender === 'Male').length;
             const femaleCount = studentsData.filter(s => s.gender === 'Female').length;
+
             const ctxGender = document.getElementById('genderChart');
-            if(ctxGender) {
-                if(window.myGenderChart) window.myGenderChart.destroy();
+            if (ctxGender) {
+                if (window.myGenderChart) window.myGenderChart.destroy();
                 window.myGenderChart = new Chart(ctxGender.getContext('2d'), {
                     type: 'doughnut',
                     data: {
@@ -2227,10 +2379,12 @@ let subjectsHtml = standardtoshow.map(subName => {
                     }
                 });
             }
+
             const classCounts = classesData.map(c => studentsData.filter(s => s.class === c).length);
             const ctxClass = document.getElementById('classChart');
-            if(ctxClass) {
-                if(window.myClassChart) window.myClassChart.destroy();
+
+            if (ctxClass) {
+                if (window.myClassChart) window.myClassChart.destroy();
                 window.myClassChart = new Chart(ctxClass.getContext('2d'), {
                     type: 'bar',
                     data: {
@@ -2243,101 +2397,147 @@ let subjectsHtml = standardtoshow.map(subName => {
 
         async function uploadMultiplePhotos() {
             const fileInput = document.getElementById('multi-photo-file');
-            if(!fileInput.files || fileInput.files.length === 0) {
+
+            if (!fileInput || !fileInput.files || fileInput.files.length === 0) {
                 alert('Please select at least one photo!');
                 return;
             }
+
             let loadedCount = 0;
             const totalFiles = fileInput.files.length;
+
             Array.from(fileInput.files).forEach(file => {
                 const reader = new FileReader();
                 reader.onload = async function(e) {
                     galleryPhotos.push({ url: e.target.result, name: file.name });
                     loadedCount++;
-                    if(loadedCount === totalFiles) {
+
+                    if (loadedCount === totalFiles) {
                         await saveCloudSettings();
                         renderGalleryGrids();
                         alert(`${totalFiles} photo(s) successfully uploaded to Supabase cloud and synced across all devices!`);
                     }
-                }
+                };
                 reader.readAsDataURL(file);
             });
+
             fileInput.value = '';
         }
 
         function renderGalleryGrids() {
             const grid = document.getElementById('gallery-grid');
             const tGrid = document.getElementById('teacher-gallery-grid');
-            if(galleryPhotos.length === 0) {
+
+            if (galleryPhotos.length === 0) {
                 const emptyMsg = `<p class="text-slate-400 italic text-sm">No photos uploaded yet.</p>`;
-                if(grid) grid.innerHTML = emptyMsg;
-                if(tGrid) tGrid.innerHTML = emptyMsg;
+                if (grid) grid.innerHTML = emptyMsg;
+                if (tGrid) tGrid.innerHTML = emptyMsg;
                 return;
             }
+
             const html = galleryPhotos.map((p) => `
                 <div class="bg-slate-50 rounded-xl p-3 text-center border space-y-2">
                     <img src="${p.url}" alt="School Activity" class="h-32 w-full object-cover rounded-lg shadow">
                     <a href="${p.url}" download="${p.name || 'school_photo.jpg'}" class="block text-xs bg-blue-900 text-white py-1.5 px-3 rounded-lg font-bold hover:bg-blue-800">Download JPG ⬇️</a>
                 </div>
             `).join('');
-            if(grid) grid.innerHTML = html;
-            if(tGrid) tGrid.innerHTML = html;
+
+            if (grid) grid.innerHTML = html;
+            if (tGrid) tGrid.innerHTML = html;
         }
 
         async function postAnnouncement() {
             const textInput = document.getElementById('announcement-text');
             const text = textInput ? textInput.value.trim() : '';
             const photoInput = document.getElementById('announcement-photo-input');
-            
-            if(!text && (!photoInput.files || photoInput.files.length === 0)) {
+
+            if (!text && (!photoInput || !photoInput.files || photoInput.files.length === 0)) {
                 alert('Please provide announcement text or a photo.');
                 return;
             }
-            
-            if(text) {
-                globalAnnouncementText = text;
-            }
-            
-            if(photoInput && photoInput.files && photoInput.files[0]) {
+
+            if (text) globalAnnouncementText = text;
+
+            if (photoInput && photoInput.files && photoInput.files[0]) {
                 const reader = new FileReader();
                 reader.onload = async function(e) {
                     globalAnnouncementImgUrl = e.target.result;
                     galleryPhotos.push({ url: globalAnnouncementImgUrl, name: photoInput.files[0].name || 'announcement_photo.jpg' });
                     await saveCloudSettings();
                     renderGalleryGrids();
-                    
+
                     const imgPrev = document.getElementById('teacher-announcement-img-preview');
-                    if(imgPrev) imgPrev.src = globalAnnouncementImgUrl;
+                    if (imgPrev) imgPrev.src = globalAnnouncementImgUrl;
+
                     const imgDisp = document.getElementById('teacher-announcement-image-display');
-                    if(imgDisp) imgDisp.classList.remove('hidden');
+                    if (imgDisp) imgDisp.classList.remove('hidden');
 
                     alert('Announcement and photo published to Supabase cloud successfully!');
-                }
+                };
                 reader.readAsDataURL(photoInput.files[0]);
             } else {
                 await saveCloudSettings();
                 alert('Announcement updated and synced to cloud successfully!');
             }
-            
+
             const teacherDisplay = document.getElementById('teacher-announcement-display');
-            if(teacherDisplay) teacherDisplay.innerText = globalAnnouncementText;
+            if (teacherDisplay) teacherDisplay.innerText = globalAnnouncementText;
         }
 
         function saveSchoolProfile() {
             const nameInput = document.getElementById('profile-school-name');
             const locInput = document.getElementById('profile-school-location');
             const mottoInput = document.getElementById('profile-school-motto');
-            
-            if(nameInput) schoolProfile.name = nameInput.value;
-            if(locInput) schoolProfile.location = locInput.value;
-            if(mottoInput) schoolProfile.motto = mottoInput.value;
+
+            if (nameInput) schoolProfile.name = nameInput.value;
+            if (locInput) schoolProfile.location = locInput.value;
+            if (mottoInput) schoolProfile.motto = mottoInput.value;
 
             document.getElementById('login-school-title').innerText = schoolProfile.name;
             document.getElementById('login-school-motto').innerText = schoolProfile.motto;
             document.getElementById('nav-school-name').innerText = schoolProfile.name;
             document.getElementById('nav-school-info').innerText = `${schoolProfile.location} • Default Tuition: GH₵ 250`;
             document.getElementById('dashboard-motto-display').innerText = `${schoolProfile.name}, ${schoolProfile.location} — ${schoolProfile.motto}.`;
+
             alert('School profile and branding updated successfully!');
+        }
+
+        function logout() {
+            currentUser = null;
+            document.getElementById('app-shell').classList.add('hidden');
+            document.getElementById('auth-screen').classList.remove('hidden');
+        }
+
+        function closeAnnouncementModal() {
+            document.getElementById('announcement-modal').classList.add('hidden');
+        }
+
+        function closeReceiptModal() {
+            document.getElementById('receipt-modal').classList.add('hidden');
+        }
+
+        function addClass() {
+            const input = document.getElementById('new-class-input');
+            const value = input ? input.value.trim() : '';
+            if (!value) {
+                alert('Please enter a class name.');
+                return;
+            }
+            if (!classesData.includes(value)) {
+                classesData.push(value);
+            }
+            if (input) input.value = '';
+            renderAll();
+            alert(`Class "${value}" added successfully.`);
+        }
+
+        function editTimetable() {
+            const newSchedule = prompt('Edit the timetable:', timetableText);
+            if (newSchedule !== null) {
+                timetableText = newSchedule;
+                const el = document.getElementById('timetable-display');
+                if (el) el.innerText = timetableText;
+            }
         }
     </script>
 </body>
