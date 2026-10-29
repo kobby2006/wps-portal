@@ -828,67 +828,66 @@
         }
 
         document.getElementById('login-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const role = document.getElementById('login-role').value;
-            const user = document.getElementById('login-user').value;
-            
-            await fetchCloudSettings();
+    e.preventDefault();
+    const role = document.getElementById('login-role').value;
+    const user = document.getElementById('login-user').value;
+    
+    await fetchCloudSettings();
 
-            if(role === 'teacher' && portalLocked) {
-                alert('🔒 Portal is currently locked by Administration for maintenance, edits, or grading updates. Teachers cannot log in at this moment. Please check back later.');
-                return;
-            }
-            currentUser = { role, name: user };
-            
-            document.getElementById('auth-screen').classList.add('hidden');
-            document.getElementById('app-shell').classList.remove('hidden');
-            document.getElementById('user-badge').innerText = role;
-            document.getElementById('welcome-name').innerText = user;
+    if(role === 'teacher' && portalLocked) {
+        alert('🔒 Portal is currently locked by Administration. Please check back later.');
+        return;
+    }
+    currentUser = { role, name: user };
+    
+    document.getElementById('auth-screen').classList.add('hidden');
+    document.getElementById('app-shell').classList.remove('hidden');
+    document.getElementById('user-badge').innerText = role;
+    document.getElementById('welcome-name').innerText = user;
 
-            const adminGeminiSection = document.getElementById('admin-gemini-section');
-            if(adminGeminiSection) {
-                if(role === 'admin') {
-                    adminGeminiSection.classList.remove('hidden');
-                } else {
-                    adminGeminiSection.classList.add('hidden');
-                }
-            }
+    const adminGeminiSection = document.getElementById('admin-gemini-section');
+    if(adminGeminiSection) {
+        if(role === 'admin') adminGeminiSection.classList.remove('hidden');
+        else adminGeminiSection.classList.add('hidden');
+    }
 
-            if(role === 'teacher') {
-                document.getElementById('admin-nav-section').classList.add('hidden');
-                document.getElementById('teacher-nav-section').classList.remove('hidden');
-                document.getElementById('admin-lms-upload-section').classList.add('hidden');
-                document.getElementById('lms-role-badge').innerText = "Teacher View (Download Handouts)";
-                switchTab('assessment');
-                
-                document.getElementById('modal-announcement-text').innerText = globalAnnouncementText;
-                if(globalAnnouncementImgUrl) {
-                    document.getElementById('modal-announcement-img').src = globalAnnouncementImgUrl;
-                    document.getElementById('modal-announcement-image-container').classList.remove('hidden');
-                } else {
-                    document.getElementById('modal-announcement-image-container').classList.add('hidden');
-                }
-                document.getElementById('announcement-modal').classList.remove('hidden');
+    // FETCH DATA FIRST — before any tab rendering
+    await fetchStudentsFromSupabase();
+    await fetchTeachersFromSupabase();
 
-                const teacherDisplay = document.getElementById('teacher-announcement-display');
-                if(teacherDisplay) teacherDisplay.innerText = globalAnnouncementText;
-                if(globalAnnouncementImgUrl) {
-                    const imgPrev = document.getElementById('teacher-announcement-img-preview');
-                    if(imgPrev) imgPrev.src = globalAnnouncementImgUrl;
-                    const imgDisp = document.getElementById('teacher-announcement-image-display');
-                    if(imgDisp) imgDisp.classList.remove('hidden');
-                }
-            } else {
-                document.getElementById('admin-nav-section').classList.remove('hidden');
-                document.getElementById('teacher-nav-section').classList.add('hidden');
-                document.getElementById('admin-lms-upload-section').classList.remove('hidden');
-                document.getElementById('lms-role-badge').innerText = "Admin Edit Mode Active";
-                switchTab('dashboard');
-            }
-            await fetchStudentsFromSupabase();
-            await fetchTeachersFromSupabase();
-            renderAll();
-        });
+    if(role === 'teacher') {
+        document.getElementById('admin-nav-section').classList.add('hidden');
+        document.getElementById('teacher-nav-section').classList.remove('hidden');
+        document.getElementById('admin-lms-upload-section').classList.add('hidden');
+        document.getElementById('lms-role-badge').innerText = "Teacher View (Download Handouts)";
+        switchTab('assessment');
+        
+        document.getElementById('modal-announcement-text').innerText = globalAnnouncementText;
+        if(globalAnnouncementImgUrl) {
+            document.getElementById('modal-announcement-img').src = globalAnnouncementImgUrl;
+            document.getElementById('modal-announcement-image-container').classList.remove('hidden');
+        } else {
+            document.getElementById('modal-announcement-image-container').classList.add('hidden');
+        }
+        document.getElementById('announcement-modal').classList.remove('hidden');
+
+        const teacherDisplay = document.getElementById('teacher-announcement-display');
+        if(teacherDisplay) teacherDisplay.innerText = globalAnnouncementText;
+        if(globalAnnouncementImgUrl) {
+            const imgPrev = document.getElementById('teacher-announcement-img-preview');
+            if(imgPrev) imgPrev.src = globalAnnouncementImgUrl;
+            const imgDisp = document.getElementById('teacher-announcement-image-display');
+            if(imgDisp) imgDisp.classList.remove('hidden');
+        }
+    } else {
+        document.getElementById('admin-nav-section').classList.remove('hidden');
+        document.getElementById('teacher-nav-section').classList.add('hidden');
+        document.getElementById('admin-lms-upload-section').classList.remove('hidden');
+        document.getElementById('lms-role-badge').innerText = "Admin Edit Mode Active";
+        switchTab('dashboard');
+    }
+    renderAll();
+});
 
         // STUDENT REGISTRATION SUBMIT HANDLER WITH PASSPORT PHOTO
         document.getElementById('student-form').addEventListener('submit', async (e) => {
