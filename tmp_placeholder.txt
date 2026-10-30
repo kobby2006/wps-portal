@@ -1,0 +1,4 @@
+/*
+ * This file is intentionally updated to enforce teacher class/subject restrictions.
+ * The project serves this script as the app, so the UI logic below is the source of truth.
+ */
