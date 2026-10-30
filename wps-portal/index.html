@@ -1924,6 +1924,11 @@
                 alert('No student reports to finalize.');
                 return;
             }
+            // Force any pending onchange events to fire before saving
+if(document.activeElement && document.activeElement.blur) {
+    document.activeElement.blur();
+}
+await new Promise(resolve => setTimeout(resolve, 200));
 
             let successCount = 0;
             let failCount = 0;
