@@ -242,13 +242,13 @@
                                 <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Select Subject</label>
                                 <select id="grading-subject-filter" onchange="renderGradingTable()" class="p-2.5 border rounded-xl w-full text-sm bg-slate-50 font-medium">
                                     <option value="Mathematics">Mathematics</option>
-                                    <option value="English">English</option>
+                                    <option value="English Language">English Language</option>
                                     <option value="Integrated Science">Integrated Science</option>
                                     <option value="History">History</option>
                                     <option value="Computing">Computing</option>
                                     <option value="Creative Arts">Creative Arts</option>
                                     <option value="Ghanaian Language">Ghanaian Language</option>
-                                    <option value="RME">RME</option>
+                                    <option value="R. M. E.">R. M. E.</option>
                                 </select>
                             </div>
                         </div>
@@ -648,34 +648,32 @@
 
                 <!-- TAB: TEACHER ACCOUNTS (Admin) -->
                 <section id="tab-teachers" class="hidden space-y-6">
-    <!-- NEW teacher registration form (KEEP) -->
-    <div class="bg-white rounded-2xl shadow p-6 mb-6 border border-slate-100">
-        <h3 class="font-bold text-lg text-blue-950 mb-4">Register New Teacher</h3>
-        <form id="teacher-form" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <input type="text" id="t-name" placeholder="Full Name *" required class="p-3 border rounded-xl">
-            <input type="email" id="t-email" placeholder="Email *" required class="p-3 border rounded-xl">
-            <input type="password" id="t-password" placeholder="Password / PIN *" required class="p-3 border rounded-xl">
-            <input type="text" id="t-phone" placeholder="Phone Number" class="p-3 border rounded-xl">
-            <div class="md:col-span-2">
-                <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Assigned Class(es)</label>
-                <div id="teacher-class-checkboxes" class="flex flex-wrap gap-3"></div>
-            </div>
-            <div class="md:col-span-2">
-                <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Subjects (leave empty if teacher handles ALL subjects)</label>
-                <div id="teacher-subject-checkboxes" class="flex flex-wrap gap-3"></div>
-            </div>
-            <button type="submit" class="md:col-span-2 py-3 bg-blue-900 text-white font-bold rounded-xl hover:bg-blue-800 transition">Register Teacher</button>
-        </form>
-    </div>
+                    <div class="bg-white rounded-2xl shadow p-6 mb-6 border border-slate-100">
+                        <h3 class="font-bold text-lg text-blue-950 mb-4">Register New Teacher</h3>
+                        <form id="teacher-form" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <input type="text" id="t-name" placeholder="Full Name *" required class="p-3 border rounded-xl">
+                            <input type="email" id="t-email" placeholder="Email *" required class="p-3 border rounded-xl">
+                            <input type="password" id="t-password" placeholder="Password / PIN *" required class="p-3 border rounded-xl">
+                            <input type="text" id="t-phone" placeholder="Phone Number" class="p-3 border rounded-xl">
+                            <div class="md:col-span-2">
+                                <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Assigned Class(es)</label>
+                                <div id="teacher-class-checkboxes" class="flex flex-wrap gap-3"></div>
+                            </div>
+                            <div class="md:col-span-2">
+                                <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Subjects (leave empty if teacher handles ALL subjects)</label>
+                                <div id="teacher-subject-checkboxes" class="flex flex-wrap gap-3"></div>
+                            </div>
+                            <button type="submit" class="md:col-span-2 py-3 bg-blue-900 text-white font-bold rounded-xl hover:bg-blue-800 transition">Register Teacher</button>
+                        </form>
+                    </div>
 
-    <!-- Teachers list (KEEP) -->
-    <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-6">
-        <div class="pt-4 border-t">
-            <h3 class="font-bold text-sm text-slate-900 mb-3">📋 Registered Teachers & Assignments List</h3>
-            <div id="teachers-list-container" class="space-y-2"></div>
-        </div>
-    </div> 
-</section>
+                    <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-6">
+                        <div class="pt-4 border-t">
+                            <h3 class="font-bold text-sm text-slate-900 mb-3">📋 Registered Teachers & Assignments List</h3>
+                            <div id="teachers-list-container" class="space-y-2"></div>
+                        </div>
+                    </div> 
+                </section>
 
                 <!-- TAB: ANNOUNCEMENTS & PORTAL LOCK (Admin) -->
                 <section id="tab-announcements" class="hidden space-y-6">
@@ -925,6 +923,7 @@
             }
 
             if (tabId === 'teachers') {
+                renderTeacherCheckboxes();
                 fetchTeachersFromSupabase();
             }
 
@@ -953,8 +952,16 @@
         };
 
         let timetableText = "📅 Current Schedule: Morning Devotion (07:30 - 08:00) | Core Subjects & Practical Sessions (08:00 - 14:00).";
-        
-        const standardSubjects = ['Mathematics', 'English', 'Integrated Science', 'History', 'RME', 'Ghanaian Language', 'Creative Arts', 'Computing'];
+        const standardSubjects = [
+            'ENGLISH LANGUAGE',
+            'MATHEMATICS',
+            'SCIENCE',
+            'R. M. E.',
+            'CREATIVE ARTS',
+            'HISTORY',
+            'COMPUTING',
+            'GHANAIAN LANGUAGE'
+        ];
 
         window.addEventListener('DOMContentLoaded', async () => {
             await fetchCloudSettings();
@@ -1282,6 +1289,7 @@
         }
 
         function renderAll() {
+            renderTeacherCheckboxes();
             renderClassesDropdown();
             renderFeeClassDropdown();
             renderAttendanceClassDropdown();
@@ -1620,6 +1628,26 @@
             }
         }
 
+        function renderTeacherCheckboxes() {
+            const classContainer = document.getElementById('teacher-class-checkboxes');
+            if (classContainer) {
+                classContainer.innerHTML = classesData.map(c => `
+                    <label class="inline-flex items-center text-xs font-semibold bg-slate-50 border p-2 rounded-lg cursor-pointer">
+                        <input type="checkbox" name="teacher-class" value="${c}" class="rounded text-blue-900 mr-2"> ${c}
+                    </label>
+                `).join('');
+            }
+
+            const subjectContainer = document.getElementById('teacher-subject-checkboxes');
+            if (subjectContainer) {
+                subjectContainer.innerHTML = standardSubjects.map(sub => `
+                    <label class="inline-flex items-center text-xs font-semibold bg-slate-50 border p-2 rounded-lg cursor-pointer">
+                        <input type="checkbox" name="teacher-subject" value="${sub}" class="rounded text-blue-900 mr-2"> ${sub}
+                    </label>
+                `).join('');
+            }
+        }
+
         function renderTeachersList() {
             const container = document.getElementById('teachers-list-container');
             if (!container) return;
@@ -1645,8 +1673,11 @@
             const name = document.getElementById('t-name').value.trim();
             const phone = document.getElementById('t-phone').value.trim();
             const email = document.getElementById('t-email').value.trim();
-            const pass = document.getElementById('t-pass').value.trim();
-            const assignment = document.getElementById('t-assignment').value.trim();
+            const pass = document.getElementById('t-password').value.trim();
+            
+            const selectedClasses = Array.from(document.querySelectorAll('input[name="teacher-class"]:checked')).map(el => el.value);
+            const selectedSubjects = Array.from(document.querySelectorAll('input[name="teacher-subject"]:checked')).map(el => el.value);
+            const assignmentStr = selectedClasses.length > 0 ? selectedClasses.join(', ') : 'General Teaching';
 
             try {
                 const { error } = await supabaseClient.from('teachers').insert([{
@@ -1654,8 +1685,10 @@
                     full_name: name,
                     phone_number: phone,
                     email: email,
-                    assignment: assignment,
-                    password: pass
+                    assignment: assignmentStr,
+                    password: pass,
+                    class: selectedClasses,
+                    subjects: selectedSubjects
                 }]);
 
                 if (error) {
@@ -1663,7 +1696,7 @@
                     return;
                 }
 
-                teachersList.push({ name, assignment, email, password: pass });
+                teachersList.push({ name, assignment: assignmentStr, email, password: pass });
             } catch (err) {
                 console.log(err);
             }
@@ -1672,8 +1705,7 @@
             document.getElementById('t-name').value = '';
             document.getElementById('t-phone').value = '';
             document.getElementById('t-email').value = '';
-            document.getElementById('t-pass').value = '';
-            document.getElementById('t-assignment').value = '';
+            document.getElementById('t-password').value = '';
             await fetchTeachersFromSupabase();
             renderTeachersList();
         });
@@ -1916,7 +1948,7 @@
                 alert('No student reports to finalize.');
                 return;
             }
-            if(document.activeElement && document.activeElement.blur) {
+            if (document.activeElement && document.activeElement.blur) {
                 document.activeElement.blur();
             }
             await new Promise(resolve => setTimeout(resolve, 200));
@@ -1983,8 +2015,8 @@
                 return;
             }
 
-            const subjectsToShow = (currentUser && currentUser.role === 'teacher' && currentUser.teacherSubjects && currentUser.teacherSubjects.length > 0) 
-                ? currentUser.teacherSubjects 
+            const subjectsToShow = (currentUser && currentUser.role === 'teacher' && currentUser.teacherSubjects && currentUser.teacherSubjects.length > 0)
+                ? currentUser.teacherSubjects
                 : standardSubjects;
 
             let masterAssessmentSheetsHtml = subjectsToShow.map(subject => {
@@ -2072,7 +2104,7 @@
                 const other = parseFloat(s.otherFee) || 20;
                 const totalFee = arrears + tuition + printing + pta + other;
 
-                let subjectsHtml = subjectsToShow.map(subName => {
+                let subjectsHtml = standardSubjects.map(subName => {
                     const sub = (s.subjectsData[histYear] && s.subjectsData[histYear][histTerm] && s.subjectsData[histYear][histTerm][subName])
                         ? s.subjectsData[histYear][histTerm][subName]
                         : { indTest1: 0, groupTest: 0, indTest2: 0, homework: 0, exam: 0 };
