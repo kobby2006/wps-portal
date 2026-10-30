@@ -241,13 +241,13 @@
                             <div>
                                 <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Select Subject</label>
                                 <select id="grading-subject-filter" onchange="renderGradingTable()" class="p-2.5 border rounded-xl w-full text-sm bg-slate-50 font-medium">
-                                    <option value="Mathematics">Mathematics</option>
-                                    <option value="English Language">English Language</option>
-                                    <option value="Integrated Science">Integrated Science</option>
-                                    <option value="History">History</option>
-                                    <option value="Computing">Computing</option>
-                                    <option value="Creative Arts">Creative Arts</option>
-                                    <option value="Ghanaian Language">Ghanaian Language</option>
+                                    <option value="MATHEMATICS">MATHEMATICS</option>
+                                    <option value="ENGLISH LANGUAGE">ENGLISH LANGUAGE</option>
+                                    <option value="SCIENCE">SCIENCE</option>
+                                    <option value="HISTORY">HISTORY</option>
+                                    <option value="COMPUTING">COMPUTING</option>
+                                    <option value="CREATIVE ARTS">CREATIVE ARTS</option>
+                                    <option value="GHANAIAN LANGUAGE">GHANAIAN LANGUAGE</option>
                                     <option value="R. M. E.">R. M. E.</option>
                                 </select>
                             </div>
@@ -1776,7 +1776,7 @@
             const selectGrading = document.getElementById('grading-class-filter');
             const selectedClass = selectGrading ? selectGrading.value : classesData[0];
             const term = document.getElementById('grading-term-filter') ? document.getElementById('grading-term-filter').value : 'Term 1';
-            const subject = document.getElementById('grading-subject-filter') ? document.getElementById('grading-subject-filter').value : 'Mathematics';
+            const subject = document.getElementById('grading-subject-filter') ? document.getElementById('grading-subject-filter').value : 'MATHEMATICS';
 
             const filteredStudents = studentsData.filter(s => s.class === selectedClass && isClassAllowed(s.class));
             const tbody = document.getElementById('grading-table-body');
@@ -2128,7 +2128,7 @@
                     `;
                 }).join('');
 
-                const reportTeacherName = getTeacherNameForDocument(s.class, 'Mathematics');
+                const reportTeacherName = getTeacherNameForDocument(s.class, 'MATHEMATICS');
                 const passportPhotoHtml = (includePhotos && s.photo)
                     ? `<img src="${s.photo}" class="w-20 h-20 object-cover rounded border border-black shadow">`
                     : (includePhotos
