@@ -1107,18 +1107,77 @@ export default {
         }
 
         function renderClassesDropdown() {
-            const selectEnroll = document.getElementById('s-class');
-            if(selectEnroll) {
-                const currentVal = selectEnroll.value;
-                selectEnroll.innerHTML = classesData.map(c => `<option value="${c}">${c}</option>`).join('');
-                if(currentVal) selectEnroll.value = currentVal;
-            }
-            const selectGrading = document.getElementById('grading-class-filter');
-            if(selectGrading) {
-                const currentGradVal = selectGrading.value;
-                selectGrading.innerHTML = classesData.map(c => `<option value="${c}">${c}</option>`).join('');
-                if(currentGradVal) selectGrading.value = currentGradVal;
-            }
+    const allowedClasses = getAllowedClasses();
+
+    const selectEnroll = document.getElementById('s-class');
+    if (selectEnroll) {
+        const currentVal = selectEnroll.value;
+        const options = classesData.filter(c => allowedClasses.length === 0 || allowedClasses.includes(c));
+        selectEnroll.innerHTML = options.map(c => `<option value="${c}">${c}</option>`).join('');
+        if (options.includes(currentVal)) selectEnroll.value = currentVal;
+    }
+
+    const selectGrading = document.getElementById('grading-class-filter');
+    if (selectGrading) {
+        const currentVal = selectGrading.value;
+        const options = classesData.filter(c => allowedClasses.length === 0 || allowedClasses.includes(c));
+        selectGrading.innerHTML = options.map(c => `<option value="${c}">${c}</option>`).join('');
+        if (options.includes(currentVal)) selectGrading.value = currentVal;
+    }
+}
+
+function renderFeeClassDropdown() {
+    const allowedClasses = getAllowedClasses();
+    const feeFilter = document.getElementById('fee-class-filter');
+    if (feeFilter) {
+        const currentFeeVal = feeFilter.value;
+        const options = classesData.filter(c => allowedClasses.length === 0 || allowedClasses.includes(c));
+        feeFilter.innerHTML = options.map(c => `<option value="${c}">${c}</option>`).join('');
+        if (options.includes(currentFeeVal)) feeFilter.value = currentFeeVal;
+    }
+}
+
+function renderAttendanceClassDropdown() {
+    const allowedClasses = getAllowedClasses();
+    const attFilter = document.getElementById('attendance-class-filter');
+    if (attFilter) {
+        const currentAttVal = attFilter.value;
+        const options = classesData.filter(c => allowedClasses.length === 0 || allowedClasses.includes(c));
+        attFilter.innerHTML = options.map(c => `<option value="${c}">${c}</option>`).join('');
+        if (options.includes(currentAttVal)) attFilter.value = currentAttVal;
+    }
+}
+
+function renderHistoryClassDropdown() {
+    const allowedClasses = getAllowedClasses();
+    const histFilter = document.getElementById('history-class-filter');
+    if (histFilter) {
+        const currentHistVal = histFilter.value;
+        const options = classesData.filter(c => allowedClasses.length === 0 || allowedClasses.includes(c));
+        histFilter.innerHTML = options.map(c => `<option value="${c}">${c}</option>`).join('');
+        if (options.includes(currentHistVal)) histFilter.value = currentHistVal;
+    }
+}
+
+function renderGradingSubjectOptions() {
+    const allowedSubjects = getAllowedSubjects();
+    const select = document.getElementById('grading-subject-filter');
+    if (!select) return;
+
+    const options = [
+        'MATHEMATICS',
+        'ENGLISH LANGUAGE',
+        'SCIENCE',
+        'HISTORY',
+        'COMPUTING',
+        'CREATIVE ARTS',
+        'GHANAIAN LANGUAGE',
+        'R. M. E.'
+    ].filter(s => allowedSubjects.length === 0 || allowedSubjects.includes(s));
+
+    select.innerHTML = options.map(s => `<option value="${s}">${s}</option>`).join('');
+    if (options.length) select.value = options[0];
+}
         }
         function renderFeeClassDropdown() {
             const feeFilter = document.getElementById('fee-class-filter');
