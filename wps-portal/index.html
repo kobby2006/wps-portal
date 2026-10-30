@@ -242,13 +242,13 @@
                                 <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Select Subject</label>
                                 <select id="grading-subject-filter" onchange="renderGradingTable()" class="p-2.5 border rounded-xl w-full text-sm bg-slate-50 font-medium">
                                     <option value="Mathematics">Mathematics</option>
-                                    <option value="English Language">English Language</option>
+                                    <option value="English">English</option>
                                     <option value="Integrated Science">Integrated Science</option>
                                     <option value="History">History</option>
                                     <option value="Computing">Computing</option>
                                     <option value="Creative Arts">Creative Arts</option>
                                     <option value="Ghanaian Language">Ghanaian Language</option>
-                                    <option value="R. M. E.">R. M. E.</option>
+                                    <option value="RME">RME</option>
                                 </select>
                             </div>
                         </div>
@@ -953,16 +953,8 @@
         };
 
         let timetableText = "📅 Current Schedule: Morning Devotion (07:30 - 08:00) | Core Subjects & Practical Sessions (08:00 - 14:00).";
-        const standardSubjects = [
-            'ENGLISH LANGUAGE',
-            'MATHEMATICS',
-            'SCIENCE',
-            'R. M. E.',
-            'CREATIVE ARTS',
-            'HISTORY',
-            'COMPUTING',
-            'GHANAIAN LANGUAGE'
-        ];
+        
+        const standardSubjects = ['Mathematics', 'English', 'Integrated Science', 'History', 'RME', 'Ghanaian Language', 'Creative Arts', 'Computing'];
 
         window.addEventListener('DOMContentLoaded', async () => {
             await fetchCloudSettings();
@@ -1924,11 +1916,10 @@
                 alert('No student reports to finalize.');
                 return;
             }
-            // Force any pending onchange events to fire before saving
-if(document.activeElement && document.activeElement.blur) {
-    document.activeElement.blur();
-}
-await new Promise(resolve => setTimeout(resolve, 200));
+            if(document.activeElement && document.activeElement.blur) {
+                document.activeElement.blur();
+            }
+            await new Promise(resolve => setTimeout(resolve, 200));
 
             let successCount = 0;
             let failCount = 0;
@@ -1992,8 +1983,8 @@ await new Promise(resolve => setTimeout(resolve, 200));
                 return;
             }
 
-            const subjectsToShow = (currentUser && currentUser.role === 'teacher' && currentUser.teacherSubjects && currentUser.teacherSubjects.length > 0)
-                ? currentUser.teacherSubjects
+            const subjectsToShow = (currentUser && currentUser.role === 'teacher' && currentUser.teacherSubjects && currentUser.teacherSubjects.length > 0) 
+                ? currentUser.teacherSubjects 
                 : standardSubjects;
 
             let masterAssessmentSheetsHtml = subjectsToShow.map(subject => {
@@ -2081,7 +2072,7 @@ await new Promise(resolve => setTimeout(resolve, 200));
                 const other = parseFloat(s.otherFee) || 20;
                 const totalFee = arrears + tuition + printing + pta + other;
 
-                let subjectsHtml = standardSubjects.map(subName => {
+                let subjectsHtml = subjectsToShow.map(subName => {
                     const sub = (s.subjectsData[histYear] && s.subjectsData[histYear][histTerm] && s.subjectsData[histYear][histTerm][subName])
                         ? s.subjectsData[histYear][histTerm][subName]
                         : { indTest1: 0, groupTest: 0, indTest2: 0, homework: 0, exam: 0 };
