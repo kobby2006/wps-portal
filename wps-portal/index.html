@@ -1216,116 +1216,84 @@
         }
 
         document.getElementById('login-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const roleSelection = document.getElementById('login-role').value;
-            const user = document.getElementById('login-user').value.trim();
-            const pass = document.getElementById('login-pass').value.trim();
+    e.preventDefault();
 
-            await fetchCloudSettings();
-            await fetchTeachersFromSupabase();
-            await fetchAdminsFromSupabase();
+    const role = document.getElementById('login-role').value;
+    const user = document.getElementById('login-user').value.trim();
+    const pass = document.getElementById('login-pass').value.trim();
 
-            // STRICT ROLE VALIDATION & SEPARATION
-            if (roleSelection === 'admin') {
-                const matchedAdmin = adminsList.find(a =>
-                    (a.email && a.email.toLowerCase() === user.toLowerCase()) ||
-                    (a.name && a.name.toLowerCase() === user.toLowerCase())
-                );
+    await fetchCloudSettings();
 
-                const isDefaultAdmin = ((user.toLowerCase() === 'admin' || user.toLowerCase() === 'headmaster' || user.toLowerCase() === 'head@wps.com' || user.toLowerCase() === 'pm309mensah@gmail.com') && (pass === 'HeadJ8303' || pass === 'admin123' || pass === 'admin' || pass === 'password'));
+    if (role === 'teacher') {
+        const { data, error } = await supabaseClient.from('teachers').select('*');
+        if (error) {
+            alert('Could not load teacher records.');
+            return;
+        }
 
-                if (isDefaultAdmin || (matchedAdmin && matchedAdmin.password === pass)) {
-                    currentUser = { role: 'admin', name: matchedAdmin ? matchedAdmin.name : 'Headmaster / Admin' };
-                } else {
-                    const isTeacherMatch = teachersList.find(t => (t.email && t.email.toLowerCase() === user.toLowerCase()) || (t.name && t.name.toLowerCase() === user.toLowerCase()));
-                    if (isTeacherMatch) {
-                        alert('⚠️ Access Denied: You selected "Headmaster / Admin", but your account is registered as a Teacher. Please switch the Role dropdown to "Teacher".');
-                        return;
-                    } else {
-                        alert('Invalid Admin credentials. Please check your email/username and password.');
-                        return;
-                    }
-                }
-            } else {
-                // Teacher Role Login
-                if (portalLocked) {
-                    alert('🔒 Portal is currently locked by Administration. Please check back later.');
-                    return;
-                }
+        const teacherRecord = (data || []).find(t =>
+            (t.email && t.email.toLowerCase() === user.toLowerCase()) ||
+            (t.name && t.name.toLowerCase() === user.toLowerCase()) ||
+            (t.full_name && t.full_name.toLowerCase() === user.toLowerCase())
+        );
 
-                const teacherRecord = teachersList.find(t =>
-                    (t.email && t.email.toLowerCase() === user.toLowerCase()) ||
-                    (t.name && t.name.toLowerCase() === user.toLowerCase())
-                );
+        if (!teacherRecord) {
+            alert('Teacher account not found.');
+            return;
+        }
 
-                if (!teacherRecord) {
-                    alert('Teacher account not found. Please check your email or username.');
-                    return;
-                }
+        if (teacherRecord.password && teacherRecord.password !== pass) {
+            alert('Incorrect password / PIN.');
+            return;
+        }
 
-                if (teacherRecord.password && teacherRecord.password !== pass) {
-                    alert('Incorrect password / PIN. Please try again.');
-                    return;
-                }
+        const assignments = normalizeTeacherAssignments(teacherRecord);
 
-                currentUser = {
-                    role: 'teacher',
-                    name: teacherRecord.name,
-                    teacherClass: teacherRecord.class || [],
-                    teacherSubjects: teacherRecord.subjects || []
-                };
-            }
+        currentUser = {
+            role: 'teacher',
+            name: teacherRecord.full_name || teacherRecord.name || user,
+            teacherClass: assignments.class || [],
+            teacherSubjects: assignments.subjects || []
+        };
+    } else {
+        const matchedAdmin = adminsList.find(a =>
+            (a.email && a.email.toLowerCase() === user.toLowerCase()) ||
+            (a.name && a.name.toLowerCase() === user.toLowerCase())
+        );
 
-            document.getElementById('auth-screen').classList.add('hidden');
-            document.getElementById('app-shell').classList.remove('hidden');
-            document.getElementById('user-badge').innerText = currentUser.role.toUpperCase();
-            document.getElementById('welcome-name').innerText = currentUser.name;
+        const isDefaultAdmin =
+            (user.toLowerCase() === 'admin' ||
+             user.toLowerCase() === 'headmaster' ||
+             user.toLowerCase() === 'head@wps.com' ||
+             user.toLowerCase() === 'pm309mensah@gmail.com') &&
+            (pass === 'HeadJ8303' || pass === 'admin123' || pass === 'admin' || pass === 'password');
 
-            const adminGeminiSection = document.getElementById('admin-gemini-section');
-            if (adminGeminiSection) {
-                if (currentUser.role === 'admin') adminGeminiSection.classList.remove('hidden');
-                else adminGeminiSection.classList.add('hidden');
-            }
+        if (!isDefaultAdmin && !(matchedAdmin && matchedAdmin.password === pass)) {
+            alert('Invalid admin credentials.');
+            return;
+        }
 
-            await fetchStudentsFromSupabase();
+        currentUser = { role: 'admin', name: matchedAdmin ? matchedAdmin.name : 'Headmaster / Admin' };
+    }
 
-            if (currentUser.role === 'teacher') {
-                document.getElementById('admin-nav-section').classList.add('hidden');
-                document.getElementById('teacher-nav-section').classList.remove('hidden');
-                document.getElementById('admin-lms-upload-section').classList.add('hidden');
-                document.getElementById('lms-role-badge').innerText = "Teacher View (Download Handouts)";
-                switchTab('assessment');
+    document.getElementById('auth-screen').classList.add('hidden');
+    document.getElementById('app-shell').classList.remove('hidden');
+    document.getElementById('user-badge').innerText = currentUser.role.toUpperCase();
+    document.getElementById('welcome-name').innerText = currentUser.name;
 
-                document.getElementById('modal-announcement-text').innerText = globalAnnouncementText;
-                if (globalAnnouncementImgUrl) {
-                    document.getElementById('modal-announcement-img').src = globalAnnouncementImgUrl;
-                    document.getElementById('modal-announcement-image-container').classList.remove('hidden');
-                } else {
-                    document.getElementById('modal-announcement-image-container').classList.add('hidden');
-                }
-                document.getElementById('announcement-modal').classList.remove('hidden');
+    if (currentUser.role === 'teacher') {
+        document.getElementById('admin-nav-section').classList.add('hidden');
+        document.getElementById('teacher-nav-section').classList.remove('hidden');
+        document.getElementById('lms-role-badge').innerText = "Teacher View";
+        switchTab('assessment');
+    } else {
+        document.getElementById('admin-nav-section').classList.remove('hidden');
+        document.getElementById('teacher-nav-section').classList.add('hidden');
+        switchTab('dashboard');
+    }
 
-                const teacherDisplay = document.getElementById('teacher-announcement-display');
-                if (teacherDisplay) teacherDisplay.innerText = globalAnnouncementText;
-
-                if (globalAnnouncementImgUrl) {
-                    const imgPrev = document.getElementById('teacher-announcement-img-preview');
-                    if (imgPrev) imgPrev.src = globalAnnouncementImgUrl;
-
-                    const imgDisp = document.getElementById('teacher-announcement-image-display');
-                    if (imgDisp) imgDisp.classList.remove('hidden');
-                }
-            } else {
-                document.getElementById('admin-nav-section').classList.remove('hidden');
-                document.getElementById('teacher-nav-section').classList.add('hidden');
-                document.getElementById('admin-lms-upload-section').classList.remove('hidden');
-                document.getElementById('lms-role-badge').innerText = "Admin Edit Mode Active";
-                switchTab('dashboard');
-            }
-
-            renderAll();
-            restrictTeacherDropdowns();
-        });
+    renderAll();
+});
 
         document.getElementById('student-form').addEventListener('submit', async (e) => {
             e.preventDefault();
