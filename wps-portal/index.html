@@ -48,7 +48,7 @@
                 </div>
                 <div>
                     <label class="block text-xs font-semibold uppercase text-slate-600 mb-1">Email or Username</label>
-                    <input type="text" id="login-user" required class="w-full p-3 border rounded-xl bg-slate-50 focus:ring-2 focus:ring-blue-900" placeholder="e.g. head@wps.com or teacher@wps.com">
+                    <input type="text" id="login-user" required class="w-full p-3 border rounded-xl bg-slate-50 focus:ring-2 focus:ring-blue-900" placeholder="e.g. head@wps.com or pm309mensah@gmail.com">
                 </div>
                 <div>
                     <label class="block text-xs font-semibold uppercase text-slate-600 mb-1">Access PIN / Password</label>
@@ -155,6 +155,7 @@
                     <button onclick="switchTab('fees')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">💰 <span>Billing Account & Fees</span></button>
                     <button onclick="switchTab('students')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🎓 <span>Student Enrollment & Edit</span></button>
                     <button onclick="switchTab('teachers')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">👨‍🏫 <span>Teacher Accounts</span></button>
+                    <button onclick="switchTab('admins')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🛡️ <span>Admin Accounts</span></button>
                     <button onclick="switchTab('classes')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🏫 <span>Manage Classes (1-6 & JHS)</span></button>
                     <button onclick="switchTab('announcements')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📢 <span>Announcements & Portal Lock</span></button>
                     <button onclick="switchTab('gallery')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🖼️ <span>Photo Gallery & JPG Uploads</span></button>
@@ -720,6 +721,27 @@
                     </div> 
                 </section>
 
+                <!-- TAB: ADMIN ACCOUNTS (Admin) -->
+                <section id="tab-admins" class="hidden space-y-6">
+                    <div class="bg-white rounded-2xl shadow p-6 mb-6 border border-slate-100">
+                        <h3 class="font-bold text-lg text-blue-950 mb-4">Register New Administrator / Headmaster Account</h3>
+                        <form id="admin-reg-form" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <input type="text" id="a-name" placeholder="Full Name *" required class="p-3 border rounded-xl">
+                            <input type="email" id="a-email" placeholder="Admin Email *" required class="p-3 border rounded-xl">
+                            <input type="password" id="a-password" placeholder="Admin Password / PIN *" required class="p-3 border rounded-xl">
+                            <input type="text" id="a-phone" placeholder="Phone Number" class="p-3 border rounded-xl">
+                            <button type="submit" class="md:col-span-2 py-3 bg-blue-900 text-white font-bold rounded-xl hover:bg-blue-800 transition">Register Administrator</button>
+                        </form>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-6">
+                        <div class="pt-4 border-t">
+                            <h3 class="font-bold text-sm text-slate-900 mb-3">🛡️ Registered Administrators List</h3>
+                            <div id="admins-list-container" class="space-y-2"></div>
+                        </div>
+                    </div>
+                </section>
+
                 <!-- TAB: ANNOUNCEMENTS & PORTAL LOCK (Admin) -->
                 <section id="tab-announcements" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-6">
@@ -882,6 +904,10 @@
         let classesData = ['Basic 1', 'Basic 2', 'Basic 3', 'Basic 4', 'Basic 5', 'Basic 6', 'JHS 1', 'JHS 2', 'JHS 3'];
         let studentsData = [];
         let teachersList = [];
+        let adminsList = [
+            { id: 1, name: "Headmaster", email: "head@wps.com", password: "HeadJ8303" },
+            { id: 2, name: "Prince Mensah", email: "pm309mensah@gmail.com", password: "admin123" }
+        ];
         let galleryPhotos = [];
         let storedGeminiKey = "";
         let lmsDocuments = [];
@@ -959,7 +985,7 @@
         function switchTab(tabId) {
             const tabs = [
                 'dashboard', 'assessment', 'strengths', 'history', 'lms', 'ai-copilot', 'attendance',
-                'timetable', 'fees', 'classes', 'students', 'teachers', 'announcements',
+                'timetable', 'fees', 'classes', 'students', 'teachers', 'admins', 'announcements',
                 'gallery', 'admin-themes', 'teacher-gallery', 'teacher-announcements', 'profile'
             ];
 
@@ -1022,6 +1048,10 @@
                 fetchTeachersFromSupabase();
             }
 
+            if (tabId === 'admins') {
+                fetchAdminsFromSupabase();
+            }
+
             if (tabId === 'gallery' || tabId === 'teacher-gallery') {
                 renderGalleryGrids();
             }
@@ -1060,6 +1090,7 @@
 
         window.addEventListener('DOMContentLoaded', async () => {
             await fetchCloudSettings();
+            await fetchAdminsFromSupabase();
             renderGalleryGrids();
             renderLMSDocuments();
             updateLockStatusUI();
@@ -1192,20 +1223,26 @@
 
             await fetchCloudSettings();
             await fetchTeachersFromSupabase();
+            await fetchAdminsFromSupabase();
 
             // STRICT ROLE VALIDATION & SEPARATION
             if (roleSelection === 'admin') {
-                // Check if admin credentials match default admin or secure admin password
-                if ((user.toLowerCase() === 'admin' || user.toLowerCase() === 'headmaster' || user.toLowerCase() === 'pm309mensah@gmail.com') && (pass === 'admin123' || pass === 'admin' || pass === 'password')) {
-                    currentUser = { role: 'admin', name: 'Headmaster / Admin' };
+                const matchedAdmin = adminsList.find(a =>
+                    (a.email && a.email.toLowerCase() === user.toLowerCase()) ||
+                    (a.name && a.name.toLowerCase() === user.toLowerCase())
+                );
+
+                const isDefaultAdmin = ((user.toLowerCase() === 'admin' || user.toLowerCase() === 'headmaster' || user.toLowerCase() === 'head@wps.com' || user.toLowerCase() === 'pm309mensah@gmail.com') && (pass === 'HeadJ8303' || pass === 'admin123' || pass === 'admin' || pass === 'password'));
+
+                if (isDefaultAdmin || (matchedAdmin && matchedAdmin.password === pass)) {
+                    currentUser = { role: 'admin', name: matchedAdmin ? matchedAdmin.name : 'Headmaster / Admin' };
                 } else {
-                    // Check if it's a teacher trying to log in as admin
                     const isTeacherMatch = teachersList.find(t => (t.email && t.email.toLowerCase() === user.toLowerCase()) || (t.name && t.name.toLowerCase() === user.toLowerCase()));
                     if (isTeacherMatch) {
                         alert('⚠️ Access Denied: You selected "Headmaster / Admin", but your account is registered as a Teacher. Please switch the Role dropdown to "Teacher".');
                         return;
                     } else {
-                        alert('Invalid Admin credentials. Please check your username and password.');
+                        alert('Invalid Admin credentials. Please check your email/username and password.');
                         return;
                     }
                 }
@@ -1463,6 +1500,23 @@
             }
         }
 
+        async function fetchAdminsFromSupabase() {
+            try {
+                const { data, error } = await supabaseClient.from('admins').select('*');
+                if (data && !error && data.length > 0) {
+                    adminsList = data.map(a => ({
+                        id: a.id,
+                        name: a.name || a.full_name || 'Admin',
+                        email: a.email || a.username || '',
+                        password: a.password || a.pin || ''
+                    }));
+                }
+            } catch (err) {
+                console.log('Supabase admins fetch note:', err);
+            }
+            renderAdminsList();
+        }
+
         function renderAll() {
             renderTeacherCheckboxes();
             renderClassesDropdown();
@@ -1472,6 +1526,7 @@
             renderEditStudentClassDropdown();
             renderEditStudentsTable();
             renderTeachersList();
+            renderAdminsList();
             onGradingClassChange();
             renderGradingTable();
             renderFeesTable();
@@ -1904,6 +1959,25 @@
             `).join('');
         }
 
+        function renderAdminsList() {
+            const container = document.getElementById('admins-list-container');
+            if (!container) return;
+
+            if (adminsList.length === 0) {
+                container.innerHTML = `<p class="text-slate-400 italic text-xs">No administrators registered yet.</p>`;
+                return;
+            }
+
+            container.innerHTML = adminsList.map(a => `
+                <div class="p-3 bg-slate-50 border rounded-xl flex justify-between items-center text-xs">
+                    <div>
+                        <strong class="text-blue-950 text-sm">${a.name}</strong>
+                        <p class="text-slate-600 font-medium mt-0.5">Email / Username: <span class="text-blue-900 font-bold">${a.email}</span></p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
         document.getElementById('teacher-form').addEventListener('submit', async (e) => {
             e.preventDefault();
 
@@ -1945,6 +2019,39 @@
             document.getElementById('t-password').value = '';
             await fetchTeachersFromSupabase();
             renderTeachersList();
+        });
+
+        document.getElementById('admin-reg-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('a-name').value.trim();
+            const email = document.getElementById('a-email').value.trim();
+            const pass = document.getElementById('a-password').value.trim();
+            const phone = document.getElementById('a-phone').value.trim();
+
+            try {
+                const { error } = await supabaseClient.from('admins').insert([{
+                    name: name,
+                    full_name: name,
+                    email: email,
+                    password: pass,
+                    phone_number: phone
+                }]);
+
+                if (error) {
+                    alert('Error saving administrator account: ' + error.message);
+                    return;
+                }
+
+                adminsList.push({ name, email, password: pass });
+                alert(`Administrator account successfully created for ${name}!`);
+                document.getElementById('a-name').value = '';
+                document.getElementById('a-email').value = '';
+                document.getElementById('a-password').value = '';
+                document.getElementById('a-phone').value = '';
+                await fetchAdminsFromSupabase();
+            } catch (err) {
+                alert('Exception saving admin: ' + err.message);
+            }
         });
 
         function getTeacherNameForDocument(className, subjectName) {
