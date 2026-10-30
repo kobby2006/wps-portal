@@ -759,7 +759,9 @@ export default {
             await fetchCloudSettings();
             renderGalleryGrids();
             updateLockStatusUI();
-            
+            if (currentUser.role === 'teacher') {
+    applyTeacherScope();
+}
             const announcementTextarea = document.getElementById('announcement-text');
             if(announcementTextarea) announcementTextarea.value = globalAnnouncementText;
         });
