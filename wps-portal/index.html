@@ -1616,54 +1616,65 @@
         }
 
         function renderClassesDropdown() {
+            const allowed = getAllowedClasses();
             const selectEnroll = document.getElementById('s-class');
             if (selectEnroll) {
                 const currentVal = selectEnroll.value;
-                selectEnroll.innerHTML = classesData.map(c => `<option value="${c}">${c}</option>`).join('');
-                if (currentVal) selectEnroll.value = currentVal;
+                selectEnroll.innerHTML = classesData.map(c => `<option value="${c}" ${!isClassAllowed(c) ? 'disabled style="display:none"' : ''}>${c}</option>`).join('');
+                if (currentVal && isClassAllowed(currentVal)) selectEnroll.value = currentVal;
+                else if (allowed.length > 0) selectEnroll.value = allowed[0];
             }
 
             const selectGrading = document.getElementById('grading-class-filter');
             if (selectGrading) {
                 const currentGradVal = selectGrading.value;
-                selectGrading.innerHTML = classesData.map(c => `<option value="${c}">${c}</option>`).join('');
-                if (currentGradVal) selectGrading.value = currentGradVal;
+                selectGrading.innerHTML = classesData.map(c => `<option value="${c}" ${!isClassAllowed(c) ? 'disabled style="display:none"' : ''}>${c}</option>`).join('');
+                if (currentGradVal && isClassAllowed(currentGradVal)) selectGrading.value = currentGradVal;
+                else if (allowed.length > 0) selectGrading.value = allowed[0];
             }
         }
 
         function renderFeeClassDropdown() {
+            const allowed = getAllowedClasses();
             const feeFilter = document.getElementById('fee-class-filter');
             if (feeFilter) {
                 const currentFeeVal = feeFilter.value;
-                feeFilter.innerHTML = classesData.map(c => `<option value="${c}">${c}</option>`).join('');
-                if (currentFeeVal) feeFilter.value = currentFeeVal;
+                feeFilter.innerHTML = classesData.map(c => `<option value="${c}" ${!isClassAllowed(c) ? 'disabled style="display:none"' : ''}>${c}</option>`).join('');
+                if (currentFeeVal && isClassAllowed(currentFeeVal)) feeFilter.value = currentFeeVal;
+                else if (allowed.length > 0) feeFilter.value = allowed[0];
             }
         }
 
         function renderAttendanceClassDropdown() {
+            const allowed = getAllowedClasses();
             const attFilter = document.getElementById('attendance-class-filter');
             if (attFilter) {
                 const currentAttVal = attFilter.value;
-                attFilter.innerHTML = classesData.map(c => `<option value="${c}">${c}</option>`).join('');
-                if (currentAttVal) attFilter.value = currentAttVal;
+                attFilter.innerHTML = classesData.map(c => `<option value="${c}" ${!isClassAllowed(c) ? 'disabled style="display:none"' : ''}>${c}</option>`).join('');
+                if (currentAttVal && isClassAllowed(currentAttVal)) attFilter.value = currentAttVal;
+                else if (allowed.length > 0) attFilter.value = allowed[0];
             }
         }
 
         function renderHistoryClassDropdown() {
+            const allowed = getAllowedClasses();
             const histFilter = document.getElementById('history-class-filter');
             if (histFilter) {
                 const currentHistVal = histFilter.value;
-                histFilter.innerHTML = classesData.map(c => `<option value="${c}">${c}</option>`).join('');
-                if (currentHistVal) histFilter.value = currentHistVal;
+                histFilter.innerHTML = classesData.map(c => `<option value="${c}" ${!isClassAllowed(c) ? 'disabled style="display:none"' : ''}>${c}</option>`).join('');
+                if (currentHistVal && isClassAllowed(currentHistVal)) histFilter.value = currentHistVal;
+                else if (allowed.length > 0) histFilter.value = allowed[0];
             }
         }
 
         function renderEditStudentClassDropdown() {
+            const allowed = getAllowedClasses();
             const editFilter = document.getElementById('edit-student-class-filter');
             if (editFilter) {
                 const currentVal = editFilter.value;
-                editFilter.innerHTML = classesData.map(c => `<option value="${c}">${c}</option>`).join('');
-                if (currentVal) editFilter.value = currentVal;
+                editFilter.innerHTML = classesData.map(c => `<option value="${c}" ${!isClassAllowed(c) ? 'disabled style="display:none"' : ''}>${c}</option>`).join('');
+                if (currentVal && isClassAllowed(currentVal)) editFilter.value = currentVal;
+                else if (allowed.length > 0) editFilter.value = allowed[0];
             }
         }
 
@@ -1671,7 +1682,8 @@
             const sel = document.getElementById('strengths-student-select');
             if (!sel) return;
             const currentVal = sel.value;
-            sel.innerHTML = studentsData.map(s => `<option value="${s.id}">${s.name} (${s.class})</option>`).join('');
+            const allowedStudents = studentsData.filter(s => isClassAllowed(s.class));
+            sel.innerHTML = allowedStudents.map(s => `<option value="${s.id}">${s.name} (${s.class})</option>`).join('');
             if (currentVal) sel.value = currentVal;
             renderStudentStrengthsView();
         }
@@ -1689,12 +1701,12 @@
             const lblStrengths = document.getElementById('str-academic-strengths');
             const lblRec = document.getElementById('str-recommendation');
 
-            if (!s) {
+            if (!s || !isClassAllowed(s.class)) {
                 if (lblT1) lblT1.innerText = '--';
                 if (lblT2) lblT2.innerText = '--';
                 if (lblT3) lblT3.innerText = '--';
                 if (lblCum) lblCum.innerText = '--';
-                if (lblStrengths) lblStrengths.innerText = 'No student selected.';
+                if (lblStrengths) lblStrengths.innerText = 'No student selected or access restricted.';
                 if (lblRec) lblRec.innerText = '--';
                 return;
             }
@@ -1718,7 +1730,7 @@
         function renderEditStudentsTable() {
             const editFilter = document.getElementById('edit-student-class-filter');
             const selectedClass = editFilter ? editFilter.value : classesData[0];
-            const filteredStudents = studentsData.filter(s => s.class === selectedClass);
+            const filteredStudents = studentsData.filter(s => s.class === selectedClass && isClassAllowed(s.class));
             const tbody = document.getElementById('edit-students-table-body');
 
             if (!tbody) return;
@@ -1989,6 +2001,12 @@
             const term = document.getElementById('grading-term-filter') ? document.getElementById('grading-term-filter').value : 'Term 1';
             const subject = document.getElementById('grading-subject-filter') ? document.getElementById('grading-subject-filter').value : 'MATHEMATICS';
 
+            if (!isClassAllowed(selectedClass)) {
+                const tbody = document.getElementById('grading-table-body');
+                if (tbody) tbody.innerHTML = `<tr><td colspan="12" class="p-6 text-center text-red-500 font-bold">Access restricted: You are not assigned to teach ${selectedClass}.</td></tr>`;
+                return;
+            }
+
             const filteredStudents = studentsData.filter(s => s.class === selectedClass && isClassAllowed(s.class));
             const tbody = document.getElementById('grading-table-body');
 
@@ -2091,6 +2109,7 @@
             const term = document.getElementById('grading-term-filter') ? document.getElementById('grading-term-filter').value : 'Term 1';
 
             studentsData.forEach(s => {
+                if (!isClassAllowed(s.class)) return;
                 let studentOverallTotal = 0;
 
                 if (s.subjectsData[year] && s.subjectsData[year][term]) {
@@ -2125,13 +2144,19 @@
             const subject = document.getElementById('grading-subject-filter').value;
             const term = document.getElementById('grading-term-filter').value;
             const className = document.getElementById('grading-class-filter').value;
+
+            if (!isClassAllowed(className)) {
+                alert('You are not permitted to export data for this class.');
+                return;
+            }
+
             const assignedTeacher = getTeacherNameForDocument(className, subject);
 
             let content = `${schoolProfile.name.toUpperCase()}\nSCHOOL BASED ASSESSMENT AT BASIC EDUCATIONAL LEVEL\nTERMELY SCORING FOR PRIMARY AND JUNIOR HIGH SCHOOLS\nYear: ${year} | Class: ${className} | Subject: ${subject} | Term: ${term} | Teacher: ${assignedTeacher}\n\n`;
             content += "No.\tNAME\tInd.Test 1(30)\tGroup Test(20)\tInd.Test 2(30)\tHomework(20)\tTotal SBA(100)\t50% SBA\tExams(100)\t50% Exam\tOverall Total\tGrade\n";
             content += "----------------------------------------------------------------------------------------------------------------------------------\n";
 
-            studentsData.filter(s => s.class === className).forEach((s, idx) => {
+            studentsData.filter(s => s.class === className && isClassAllowed(s.class)).forEach((s, idx) => {
                 const sub = (s.subjectsData[year] && s.subjectsData[year][term] && s.subjectsData[year][term][subject])
                     ? s.subjectsData[year][term][subject]
                     : { indTest1: 0, groupTest: 0, indTest2: 0, homework: 0, exam: 0 };
@@ -2170,6 +2195,7 @@
 
             try {
                 for (const s of studentsData) {
+                    if (!isClassAllowed(s.class)) continue;
                     const parsedId = !isNaN(s.id) && s.id !== '' ? Number(s.id) : s.id;
 
                     const { error } = await supabaseClient.from('students').update({
@@ -2219,7 +2245,13 @@
             const histTerm = document.getElementById('history-term-filter') ? document.getElementById('history-term-filter').value || 'Term 1' : 'Term 1';
             const includePhotos = document.getElementById('include-photos-toggle') ? document.getElementById('include-photos-toggle').checked : true;
             const container = document.getElementById('history-container');
-            const filtered = studentsData.filter(s => s.class === histClass);
+
+            if (!isClassAllowed(histClass)) {
+                container.innerHTML = `<p class="text-red-500 font-bold p-4">Access restricted: You are not assigned to view history for ${histClass}.</p>`;
+                return;
+            }
+
+            const filtered = studentsData.filter(s => s.class === histClass && isClassAllowed(s.class));
 
             if (filtered.length === 0) {
                 container.innerHTML = `<p class="text-slate-500 italic p-4">No student records found for ${histClass} (${histYear} - ${histTerm}).</p>`;
@@ -2494,7 +2526,7 @@
         function renderFeesTable() {
             const feeFilter = document.getElementById('fee-class-filter');
             const selectedClass = feeFilter ? feeFilter.value : classesData[0];
-            const filteredStudents = studentsData.filter(s => s.class === selectedClass);
+            const filteredStudents = studentsData.filter(s => s.class === selectedClass && isClassAllowed(s.class));
             const tbody = document.getElementById('fees-table-body');
 
             if (!tbody) return;
@@ -2571,7 +2603,7 @@
         function renderAttendanceRegister() {
             const attFilter = document.getElementById('attendance-class-filter');
             const selectedClass = attFilter ? attFilter.value : classesData[0];
-            const filteredStudents = studentsData.filter(s => s.class === selectedClass);
+            const filteredStudents = studentsData.filter(s => s.class === selectedClass && isClassAllowed(s.class));
             const tbody = document.getElementById('attendance-table-body');
 
             if (!tbody) return;
@@ -2607,9 +2639,14 @@
 
         function exportAttendance(format) {
             const className = document.getElementById('attendance-class-filter').value;
+            if (!isClassAllowed(className)) {
+                alert('You are not permitted to export attendance for this class.');
+                return;
+            }
+
             let content = `${schoolProfile.name.toUpperCase()}\nATTENDANCE REGISTER SUMMARY\nClass: ${className}\n\nStudent Name\tDays Present\tTotal Days\tRatio\n`;
 
-            studentsData.filter(s => s.class === className).forEach(s => {
+            studentsData.filter(s => s.class === className && isClassAllowed(s.class)).forEach(s => {
                 content += `${s.name}\t${s.attendanceMade || 65}\t${s.attendanceTotal || 70}\t${s.attendanceMade || 65} out of ${s.attendanceTotal || 70}\n`;
             });
 
