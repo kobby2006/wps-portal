@@ -2121,17 +2121,21 @@
             const selectedClass = selectGrading ? selectGrading.value : classesData[0];
             const term = document.getElementById('grading-term-filter') ? document.getElementById('grading-term-filter').value : 'Term 1';
             const subject = document.getElementById('grading-subject-filter') ? document.getElementById('grading-subject-filter').value : 'MATHEMATICS';
-
-            if (!isClassAllowed(selectedClass)) {
-                const tbody = document.getElementById('grading-table-body');
-                if (tbody) tbody.innerHTML = `<tr><td colspan="12" class="p-6 text-center text-red-500 font-bold">Access restricted: You are not assigned to teach ${selectedClass}.</td></tr>`;
-                return;
-            }
-
-            const filteredStudents = studentsData.filter(s => s.class === selectedClass && isClassAllowed(s.class));
             const tbody = document.getElementById('grading-table-body');
 
             if (!tbody) return;
+
+            if (!isClassAllowed(selectedClass)) {
+                tbody.innerHTML = `<tr><td colspan="12" class="p-6 text-center text-red-600 font-bold">⚠️ Access Restricted: You are not assigned to teach ${selectedClass}.</td></tr>`;
+                return;
+            }
+
+            if (!isSubjectAllowed(subject)) {
+                tbody.innerHTML = `<tr><td colspan="12" class="p-6 text-center text-red-600 font-bold">⚠️ Access Restricted: You are not assigned to teach ${subject}.</td></tr>`;
+                return;
+            }
+
+            const filteredStudents = studentsData.filter(s => s.class === selectedClass);
 
             if (filteredStudents.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="12" class="p-6 text-center text-slate-400 italic">No students registered in ${selectedClass || 'this class'} yet.</td></tr>`;
@@ -2266,8 +2270,8 @@
             const term = document.getElementById('grading-term-filter').value;
             const className = document.getElementById('grading-class-filter').value;
 
-            if (!isClassAllowed(className)) {
-                alert('You are not permitted to export data for this class.');
+            if (!isClassAllowed(className) || !isSubjectAllowed(subject)) {
+                alert('You are not permitted to export data for this class/subject.');
                 return;
             }
 
@@ -2277,7 +2281,7 @@
             content += "No.\tNAME\tInd.Test 1(30)\tGroup Test(20)\tInd.Test 2(30)\tHomework(20)\tTotal SBA(100)\t50% SBA\tExams(100)\t50% Exam\tOverall Total\tGrade\n";
             content += "----------------------------------------------------------------------------------------------------------------------------------\n";
 
-            studentsData.filter(s => s.class === className && isClassAllowed(s.class)).forEach((s, idx) => {
+            studentsData.filter(s => s.class === className).forEach((s, idx) => {
                 const sub = (s.subjectsData[year] && s.subjectsData[year][term] && s.subjectsData[year][term][subject])
                     ? s.subjectsData[year][term][subject]
                     : { indTest1: 0, groupTest: 0, indTest2: 0, homework: 0, exam: 0 };
@@ -2362,17 +2366,17 @@
         function renderHistoryView() {
             const histYearInput = document.getElementById('history-year-filter');
             const histYear = histYearInput && histYearInput.value.trim() ? histYearInput.value.trim() : '2026';
-            const histClass = document.getElementById('history-class-filter') ? document.getElementById('history-class-filter').value || classesData[0] : classesData[0];
+            const histClass = document.getElementById('history-class-filter') ? document.getElementById('history-class-filter'].value || classesData[0] : classesData[0];
             const histTerm = document.getElementById('history-term-filter') ? document.getElementById('history-term-filter').value || 'Term 1' : 'Term 1';
             const includePhotos = document.getElementById('include-photos-toggle') ? document.getElementById('include-photos-toggle').checked : true;
             const container = document.getElementById('history-container');
 
             if (!isClassAllowed(histClass)) {
-                container.innerHTML = `<p class="text-red-500 font-bold p-4">Access restricted: You are not assigned to view history for ${histClass}.</p>`;
+                container.innerHTML = `<p class="text-red-600 font-bold p-4">⚠️ Access Restricted: You are not assigned to view history for ${histClass}.</p>`;
                 return;
             }
 
-            const filtered = studentsData.filter(s => s.class === histClass && isClassAllowed(s.class));
+            const filtered = studentsData.filter(s => s.class === histClass);
 
             if (filtered.length === 0) {
                 container.innerHTML = `<p class="text-slate-500 italic p-4">No student records found for ${histClass} (${histYear} - ${histTerm}).</p>`;
