@@ -1294,7 +1294,21 @@
 
     renderAll();
 });
+function normalizeTeacherAssignments(record) {
+    const classes = Array.isArray(record.assigned_classes)
+        ? record.assigned_classes
+        : Array.isArray(record.class)
+            ? record.class
+            : (record.assigned_classes || record.class ? [record.assigned_classes || record.class] : []);
 
+    const subjects = Array.isArray(record.assigned_subjects)
+        ? record.assigned_subjects
+        : Array.isArray(record.subjects)
+            ? record.subjects
+            : (record.assigned_subjects || record.subjects ? [record.assigned_subjects || record.subjects] : []);
+
+    return { class: classes, subjects: subjects };
+}
         document.getElementById('student-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const name = document.getElementById('s-name').value.trim();
