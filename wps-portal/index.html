@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -914,13 +913,79 @@
         let lmsDocuments = [];
         let activeThemeColor = 'navy';
 
+        const standardSubjects = [
+            'ENGLISH LANGUAGE',
+            'MATHEMATICS',
+            'SCIENCE',
+            'R. M. E.',
+            'CREATIVE ARTS',
+            'HISTORY',
+            'COMPUTING',
+            'GHANAIAN LANGUAGE'
+        ];
+
+        function parseTeacherClassesAndSubjects(t) {
+            let classes = [];
+            let subjects = [];
+
+            if (t.class) {
+                if (Array.isArray(t.class)) classes = t.class;
+                else if (typeof t.class === 'string') {
+                    try { const parsed = JSON.parse(t.class); if (Array.isArray(parsed)) classes = parsed; } catch(e){}
+                }
+            }
+
+            if (t.subjects) {
+                if (Array.isArray(t.subjects)) subjects = t.subjects;
+                else if (typeof t.subjects === 'string') {
+                    try { const parsed = JSON.parse(t.subjects); if (Array.isArray(parsed)) subjects = parsed; } catch(e){}
+                }
+            }
+
+            const assignmentStr = (t.assignment || '').toLowerCase();
+
+            if (classes.length === 0) {
+                classesData.forEach(c => {
+                    if (assignmentStr.includes(c.toLowerCase())) classes.push(c);
+                });
+
+                if (assignmentStr.includes('basic 4, 5 & 6') || assignmentStr.includes('4, 5 & 6') || assignmentStr.includes('4, 5, 6')) {
+                    ['Basic 4', 'Basic 5', 'Basic 6'].forEach(c => { if (!classes.includes(c)) classes.push(c); });
+                }
+                if (assignmentStr.includes('basic 1-3') || (assignmentStr.includes('basic 1') && assignmentStr.includes('basic 3'))) {
+                    ['Basic 1', 'Basic 2', 'Basic 3'].forEach(c => { if (!classes.includes(c)) classes.push(c); });
+                }
+            }
+
+            if (subjects.length === 0) {
+                standardSubjects.forEach(sub => {
+                    if (assignmentStr.includes(sub.toLowerCase())) subjects.push(sub);
+                });
+                if (assignmentStr.includes('math') && !subjects.includes('MATHEMATICS')) subjects.push('MATHEMATICS');
+                if (assignmentStr.includes('science') && !subjects.includes('SCIENCE')) subjects.push('SCIENCE');
+                if (assignmentStr.includes('english') && !subjects.includes('ENGLISH LANGUAGE')) subjects.push('ENGLISH LANGUAGE');
+                if (assignmentStr.includes('ghanaian language') && !subjects.includes('GHANAIAN LANGUAGE')) subjects.push('GHANAIAN LANGUAGE');
+                if (assignmentStr.includes('computing') && !subjects.includes('COMPUTING')) subjects.push('COMPUTING');
+                if (assignmentStr.includes('creative art') && !subjects.includes('CREATIVE ARTS')) subjects.push('CREATIVE ARTS');
+                if ((assignmentStr.includes('r.m.e') || assignmentStr.includes('rme')) && !subjects.includes('R. M. E.')) subjects.push('R. M. E.');
+                if (assignmentStr.includes('history') && !subjects.includes('HISTORY')) subjects.push('HISTORY');
+            }
+
+            // If still empty (e.g. general teaching), fallback to all classes/subjects or default
+            if (classes.length === 0 && assignmentStr.includes('general teaching')) {
+                classes = [...classesData];
+            }
+
+            return { classes, subjects };
+        }
+
         function getAllowedClasses() {
             if (!currentUser || currentUser.role === 'admin') return classesData;
             return currentUser.teacherClass || [];
         }
 
         function getAllowedSubjects() {
-            if (!currentUser || currentUser.role === 'admin') return [];
+            if (!currentUser || currentUser.role === 'admin') return standardSubjects;
             return currentUser.teacherSubjects || [];
         }
 
@@ -953,13 +1018,11 @@
             }
 
             const gradingSubject = document.getElementById('grading-subject-filter');
-            if (gradingSubject && allowedSubjects.length > 0) {
+            if (gradingSubject) {
                 Array.from(gradingSubject.options).forEach(opt => {
-                    if (!allowedSubjects.includes(opt.value)) opt.remove();
+                    if (allowedSubjects.length > 0 && !allowedSubjects.includes(opt.value)) opt.remove();
                 });
-                if (gradingSubject.options.length > 0 && !allowedSubjects.includes(gradingSubject.value)) {
-                    gradingSubject.value = gradingSubject.options[0].value;
-                }
+                if (gradingSubject.options.length > 0) gradingSubject.value = gradingSubject.options[0].value;
             }
 
             const historyClass = document.getElementById('history-class-filter');
@@ -1088,20 +1151,11 @@
         };
 
         let timetableText = "📅 Current Schedule: Morning Devotion (07:30 - 08:00) | Core Subjects & Practical Sessions (08:00 - 14:00).";
-        const standardSubjects = [
-            'ENGLISH LANGUAGE',
-            'MATHEMATICS',
-            'SCIENCE',
-            'R. M. E.',
-            'CREATIVE ARTS',
-            'HISTORY',
-            'COMPUTING',
-            'GHANAIAN LANGUAGE'
-        ];
 
         window.addEventListener('DOMContentLoaded', async () => {
             await fetchCloudSettings();
             await fetchAdminsFromSupabase();
+            await fetchTeachersFromSupabase();
             renderGalleryGrids();
             renderLMSDocuments();
             updateLockStatusUI();
@@ -1282,8 +1336,8 @@
                 currentUser = {
                     role: 'teacher',
                     name: teacherRecord.name,
-                    teacherClass: teacherRecord.class || [],
-                    teacherSubjects: teacherRecord.subjects || []
+                    teacherClass: teacherRecord.teacherClass || [],
+                    teacherSubjects: teacherRecord.teacherSubjects || []
                 };
             }
 
@@ -1496,19 +1550,23 @@
             try {
                 const { data, error } = await supabaseClient.from('teachers').select('*');
                 if (data && !error) {
-                    teachersList = data.map(t => ({
-                        id: t.id,
-                        name: t.name || t.full_name || 'Teacher',
-                        email: t.email || t.gmail || t.username || '',
-                        password: t.password || t.pin || t.access_pin || '',
-                        assignment: t.assignment || t.phone_number || 'General Teaching',
-                        class: t.class || [],
-                        subjects: t.subjects || []
-                    }));
+                    teachersList = data.map(t => {
+                        const parsed = parseTeacherClassesAndSubjects(t);
+                        return {
+                            id: t.id,
+                            name: t.name || t.full_name || 'Teacher',
+                            email: t.email || t.gmail || t.username || '',
+                            password: t.password || t.pin || t.access_pin || '',
+                            assignment: t.assignment || t.phone_number || 'General Teaching',
+                            teacherClass: parsed.classes,
+                            teacherSubjects: parsed.subjects
+                        };
+                    });
                 }
             } catch (err) {
                 console.log('Supabase teachers fetch error:', err);
             }
+            renderTeachersList();
         }
 
         async function fetchAdminsFromSupabase() {
@@ -1964,29 +2022,39 @@
                 <div class="p-3 bg-slate-50 border rounded-xl flex justify-between items-center text-xs">
                     <div>
                         <strong class="text-blue-950 text-sm">${t.name}</strong>
+                        <p class="text-slate-600 font-medium mt-0.5">Email: <span class="text-blue-900">${t.email || 'N/A'}</span></p>
                         <p class="text-slate-600 font-medium mt-0.5">Assigned: <span class="text-amber-800 font-bold">${t.assignment}</span></p>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="discardTeacher('${t.id}')" class="px-3 py-1.5 bg-red-700 text-white font-bold rounded-lg text-xs hover:bg-red-800 transition">Discard / Deactivate 🗑️</button>
                     </div>
                 </div>
             `).join('');
         }
 
-        function renderAdminsList() {
-            const container = document.getElementById('admins-list-container');
-            if (!container) return;
+        async function discardTeacher(teacherId) {
+            const parsedId = !isNaN(teacherId) && teacherId !== '' ? Number(teacherId) : teacherId;
+            const teacher = teachersList.find(t => String(t.id) === String(teacherId));
 
-            if (adminsList.length === 0) {
-                container.innerHTML = `<p class="text-slate-400 italic text-xs">No administrators registered yet.</p>`;
+            if (!teacher) {
+                alert('Teacher record not found.');
                 return;
             }
 
-            container.innerHTML = adminsList.map(a => `
-                <div class="p-3 bg-slate-50 border rounded-xl flex justify-between items-center text-xs">
-                    <div>
-                        <strong class="text-blue-950 text-sm">${a.name}</strong>
-                        <p class="text-slate-600 font-medium mt-0.5">Email / Username: <span class="text-blue-900 font-bold">${a.email}</span></p>
-                    </div>
-                </div>
-            `).join('');
+            if (confirm(`Are you sure you want to permanently discard/deactivate teacher "${teacher.name}" from Supabase?`)) {
+                try {
+                    const { error } = await supabaseClient.from('teachers').delete().eq('id', parsedId);
+                    if (error) {
+                        alert('Error removing teacher from Supabase: ' + error.message);
+                        return;
+                    }
+
+                    await fetchTeachersFromSupabase();
+                    alert(`Teacher "${teacher.name}" has been successfully discarded and deactivated.`);
+                } catch (err) {
+                    alert('Exception removing teacher: ' + err.message);
+                }
+            }
         }
 
         document.getElementById('teacher-form').addEventListener('submit', async (e) => {
@@ -1999,7 +2067,7 @@
             
             const selectedClasses = Array.from(document.querySelectorAll('input[name="teacher-class"]:checked')).map(el => el.value);
             const selectedSubjects = Array.from(document.querySelectorAll('input[name="teacher-subject"]:checked')).map(el => el.value);
-            const assignmentStr = selectedClasses.length > 0 ? selectedClasses.join(', ') : 'General Teaching';
+            const assignmentStr = selectedClasses.length > 0 ? `${selectedClasses.join(', ')} (${selectedSubjects.length > 0 ? selectedSubjects.join(', ') : 'All Subjects'})` : 'General Teaching';
 
             try {
                 const { error } = await supabaseClient.from('teachers').insert([{
@@ -2017,8 +2085,6 @@
                     alert('Error saving teacher: ' + error.message);
                     return;
                 }
-
-                teachersList.push({ name, assignment: assignmentStr, email, password: pass, class: selectedClasses, subjects: selectedSubjects });
             } catch (err) {
                 console.log(err);
             }
@@ -2029,7 +2095,6 @@
             document.getElementById('t-email').value = '';
             document.getElementById('t-password').value = '';
             await fetchTeachersFromSupabase();
-            renderTeachersList();
         });
 
         document.getElementById('admin-reg-form').addEventListener('submit', async (e) => {
@@ -2053,7 +2118,6 @@
                     return;
                 }
 
-                adminsList.push({ name, email, password: pass });
                 alert(`Administrator account successfully created for ${name}!`);
                 document.getElementById('a-name').value = '';
                 document.getElementById('a-email').value = '';
@@ -2970,5 +3034,3 @@
     </script>
 </body>
 </html>
-
-```
