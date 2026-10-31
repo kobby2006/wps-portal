@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -942,43 +943,53 @@
             const allowedSubjects = getAllowedSubjects();
 
             const gradingClass = document.getElementById('grading-class-filter');
-            if (gradingClass && allowedClasses.length > 0) {
+            if (gradingClass) {
                 Array.from(gradingClass.options).forEach(opt => {
-                    opt.hidden = !allowedClasses.includes(opt.value);
+                    if (!allowedClasses.includes(opt.value)) opt.remove();
                 });
-                if (!allowedClasses.includes(gradingClass.value)) gradingClass.value = allowedClasses[0];
+                if (gradingClass.options.length > 0 && !allowedClasses.includes(gradingClass.value)) {
+                    gradingClass.value = gradingClass.options[0].value;
+                }
             }
 
             const gradingSubject = document.getElementById('grading-subject-filter');
             if (gradingSubject && allowedSubjects.length > 0) {
                 Array.from(gradingSubject.options).forEach(opt => {
-                    opt.hidden = !allowedSubjects.includes(opt.value);
+                    if (!allowedSubjects.includes(opt.value)) opt.remove();
                 });
-                if (!allowedSubjects.includes(gradingSubject.value)) gradingSubject.value = allowedSubjects[0];
+                if (gradingSubject.options.length > 0 && !allowedSubjects.includes(gradingSubject.value)) {
+                    gradingSubject.value = gradingSubject.options[0].value;
+                }
             }
 
             const historyClass = document.getElementById('history-class-filter');
-            if (historyClass && allowedClasses.length > 0) {
+            if (historyClass) {
                 Array.from(historyClass.options).forEach(opt => {
-                    opt.hidden = !allowedClasses.includes(opt.value);
+                    if (!allowedClasses.includes(opt.value)) opt.remove();
                 });
-                if (!allowedClasses.includes(historyClass.value)) historyClass.value = allowedClasses[0];
+                if (historyClass.options.length > 0 && !allowedClasses.includes(historyClass.value)) {
+                    historyClass.value = historyClass.options[0].value;
+                }
             }
 
             const attendanceClass = document.getElementById('attendance-class-filter');
-            if (attendanceClass && allowedClasses.length > 0) {
+            if (attendanceClass) {
                 Array.from(attendanceClass.options).forEach(opt => {
-                    opt.hidden = !allowedClasses.includes(opt.value);
+                    if (!allowedClasses.includes(opt.value)) opt.remove();
                 });
-                if (!allowedClasses.includes(attendanceClass.value)) attendanceClass.value = allowedClasses[0];
+                if (attendanceClass.options.length > 0 && !allowedClasses.includes(attendanceClass.value)) {
+                    attendanceClass.value = attendanceClass.options[0].value;
+                }
             }
 
             const feesClass = document.getElementById('fee-class-filter');
-            if (feesClass && allowedClasses.length > 0) {
+            if (feesClass) {
                 Array.from(feesClass.options).forEach(opt => {
-                    opt.hidden = !allowedClasses.includes(opt.value);
+                    if (!allowedClasses.includes(opt.value)) opt.remove();
                 });
-                if (!allowedClasses.includes(feesClass.value)) feesClass.value = allowedClasses[0];
+                if (feesClass.options.length > 0 && !allowedClasses.includes(feesClass.value)) {
+                    feesClass.value = feesClass.options[0].value;
+                }
             }
         }
 
@@ -2959,3 +2970,5 @@
     </script>
 </body>
 </html>
+
+```
