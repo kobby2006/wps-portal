@@ -903,7 +903,14 @@
         let globalAnnouncementImgUrl = "";
         let classesData = ['Basic 1', 'Basic 2', 'Basic 3', 'Basic 4', 'Basic 5', 'Basic 6', 'JHS 1', 'JHS 2', 'JHS 3'];
         let studentsData = [];
-        let teachersList = [];
+        let teachersList = [
+            { id: 1, name: "Prince Mensah", email: "pm309mensah@gmail.com", password: "teacher123", assignment: "Mathematics & Science (Basic 4, 5 & 6)", teacherClass: ["Basic 4", "Basic 5", "Basic 6"], teacherSubjects: ["MATHEMATICS", "SCIENCE"] },
+            { id: 2, name: "Charity Mensah", email: "charity@wps.com", password: "teacher123", assignment: "Basic 1 Class Teacher", teacherClass: ["Basic 1"], teacherSubjects: ["ENGLISH LANGUAGE", "MATHEMATICS", "SCIENCE", "R. M. E.", "CREATIVE ARTS", "HISTORY", "COMPUTING", "GHANAIAN LANGUAGE"] },
+            { id: 3, name: "Naa Lateley", email: "naa@wps.com", password: "teacher123", assignment: "Ghanaian Language & English Language (Basic 4, 5 & 6)", teacherClass: ["Basic 4", "Basic 5", "Basic 6"], teacherSubjects: ["ENGLISH LANGUAGE", "GHANAIAN LANGUAGE"] },
+            { id: 4, name: "Priscilla Annan", email: "priscilla@wps.com", password: "teacher123", assignment: "Computing & Creative Art (Basic 4, 5 & 6)", teacherClass: ["Basic 4", "Basic 5", "Basic 6"], teacherSubjects: ["COMPUTING", "CREATIVE ARTS"] },
+            { id: 5, name: "Margaret Aidoo", email: "margaret@wps.com", password: "teacher123", assignment: "R.M.E & History (Basic 4, 5 & 6)", teacherClass: ["Basic 4", "Basic 5", "Basic 6"], teacherSubjects: ["R. M. E.", "HISTORY"] },
+            { id: 6, name: "Idris Munierah", email: "idris@wps.com", password: "teacher123", assignment: "Basic 3 Class Teacher", teacherClass: ["Basic 3"], teacherSubjects: ["ENGLISH LANGUAGE", "MATHEMATICS", "SCIENCE", "R. M. E.", "CREATIVE ARTS", "HISTORY", "COMPUTING", "GHANAIAN LANGUAGE"] }
+        ];
         let adminsList = [
             { id: 1, name: "Headmaster", email: "head@wps.com", password: "HeadJ8303" },
             { id: 2, name: "Prince Mensah", email: "pm309mensah@gmail.com", password: "admin123" }
@@ -925,17 +932,17 @@
         ];
 
         function parseTeacherClassesAndSubjects(t) {
-            let classes = [];
-            let subjects = [];
+            let classes = t.teacherClass || [];
+            let subjects = t.teacherSubjects || [];
 
-            if (t.class) {
+            if (classes.length === 0 && t.class) {
                 if (Array.isArray(t.class)) classes = t.class;
                 else if (typeof t.class === 'string') {
                     try { const parsed = JSON.parse(t.class); if (Array.isArray(parsed)) classes = parsed; } catch(e){}
                 }
             }
 
-            if (t.subjects) {
+            if (subjects.length === 0 && t.subjects) {
                 if (Array.isArray(t.subjects)) subjects = t.subjects;
                 else if (typeof t.subjects === 'string') {
                     try { const parsed = JSON.parse(t.subjects); if (Array.isArray(parsed)) subjects = parsed; } catch(e){}
@@ -971,10 +978,8 @@
                 if (assignmentStr.includes('history') && !subjects.includes('HISTORY')) subjects.push('HISTORY');
             }
 
-            // If still empty (e.g. general teaching), fallback to all classes/subjects or default
-            if (classes.length === 0 && assignmentStr.includes('general teaching')) {
-                classes = [...classesData];
-            }
+            if (classes.length === 0) classes = [...classesData];
+            if (subjects.length === 0) subjects = [...standardSubjects];
 
             return { classes, subjects };
         }
@@ -1286,9 +1291,13 @@
             const user = document.getElementById('login-user').value.trim();
             const pass = document.getElementById('login-pass').value.trim();
 
-            await fetchCloudSettings();
-            await fetchTeachersFromSupabase();
-            await fetchAdminsFromSupabase();
+            try {
+                await fetchCloudSettings();
+                await fetchTeachersFromSupabase();
+                await fetchAdminsFromSupabase();
+            } catch (err) {
+                console.log("Login fetch sync note (using local cache):", err);
+            }
 
             // STRICT ROLE VALIDATION & SEPARATION
             if (roleSelection === 'admin') {
@@ -1352,7 +1361,11 @@
                 else adminGeminiSection.classList.add('hidden');
             }
 
-            await fetchStudentsFromSupabase();
+            try {
+                await fetchStudentsFromSupabase();
+            } catch (err) {
+                console.log("Students fetch note:", err);
+            }
 
             if (currentUser.role === 'teacher') {
                 document.getElementById('admin-nav-section').classList.add('hidden');
@@ -1549,14 +1562,14 @@
         async function fetchTeachersFromSupabase() {
             try {
                 const { data, error } = await supabaseClient.from('teachers').select('*');
-                if (data && !error) {
+                if (data && !error && data.length > 0) {
                     teachersList = data.map(t => {
                         const parsed = parseTeacherClassesAndSubjects(t);
                         return {
                             id: t.id,
                             name: t.name || t.full_name || 'Teacher',
                             email: t.email || t.gmail || t.username || '',
-                            password: t.password || t.pin || t.access_pin || '',
+                            password: t.password || t.pin || t.access_pin || 'teacher123',
                             assignment: t.assignment || t.phone_number || 'General Teaching',
                             teacherClass: parsed.classes,
                             teacherSubjects: parsed.subjects
@@ -1564,7 +1577,7 @@
                     });
                 }
             } catch (err) {
-                console.log('Supabase teachers fetch error:', err);
+                console.log('Supabase teachers fetch note (retaining default list):', err);
             }
             renderTeachersList();
         }
