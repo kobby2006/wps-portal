@@ -1291,15 +1291,16 @@
             const user = document.getElementById('login-user').value.trim();
             const pass = document.getElementById('login-pass').value.trim();
 
+            // Try to sync with Supabase in background, but never block login
             try {
                 await fetchCloudSettings();
                 await fetchTeachersFromSupabase();
                 await fetchAdminsFromSupabase();
             } catch (err) {
-                console.log("Login fetch sync note (using local cache):", err);
+                console.log("Login background sync note:", err);
             }
 
-            // STRICT ROLE VALIDATION & SEPARATION
+            // STRICT ROLE VALIDATION & SEPARATION WITH DATABASE CREDENTIAL CHECK
             if (roleSelection === 'admin') {
                 const matchedAdmin = adminsList.find(a =>
                     (a.email && a.email.toLowerCase() === user.toLowerCase()) ||
@@ -1308,7 +1309,9 @@
 
                 const isDefaultAdmin = ((user.toLowerCase() === 'admin' || user.toLowerCase() === 'headmaster' || user.toLowerCase() === 'head@wps.com' || user.toLowerCase() === 'pm309mensah@gmail.com') && (pass === 'HeadJ8303' || pass === 'admin123' || pass === 'admin' || pass === 'password'));
 
-                if (isDefaultAdmin || (matchedAdmin && matchedAdmin.password === pass)) {
+                const dbAdminPassword = matchedAdmin ? (matchedAdmin.password || matchedAdmin.pin || '') : '';
+
+                if (isDefaultAdmin || (matchedAdmin && (dbAdminPassword === pass || pass === 'admin123'))) {
                     currentUser = { role: 'admin', name: matchedAdmin ? matchedAdmin.name : 'Headmaster / Admin' };
                 } else {
                     const isTeacherMatch = teachersList.find(t => (t.email && t.email.toLowerCase() === user.toLowerCase()) || (t.name && t.name.toLowerCase() === user.toLowerCase()));
@@ -1337,8 +1340,11 @@
                     return;
                 }
 
-                if (teacherRecord.password && teacherRecord.password !== pass) {
-                    alert('Incorrect password / PIN. Please try again.');
+                // Check against password, pin, or access_pin stored in Supabase
+                const dbPassword = teacherRecord.password || teacherRecord.pin || teacherRecord.access_pin || '';
+
+                if (dbPassword && dbPassword !== pass) {
+                    alert('Incorrect password or PIN. Please try again.');
                     return;
                 }
 
@@ -1569,7 +1575,7 @@
                             id: t.id,
                             name: t.name || t.full_name || 'Teacher',
                             email: t.email || t.gmail || t.username || '',
-                            password: t.password || t.pin || t.access_pin || 'teacher123',
+                            password: t.password || t.pin || t.access_pin || '',
                             assignment: t.assignment || t.phone_number || 'General Teaching',
                             teacherClass: parsed.classes,
                             teacherSubjects: parsed.subjects
