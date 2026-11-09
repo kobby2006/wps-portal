@@ -1558,6 +1558,7 @@
                             id: t.id,
                             name: name,
                             email: t.email || t.gmail || t.username || '',
+                            phone_number: t.phone_number || t.phone || '',
                             password: t.password || t.pin || t.access_pin || 'teacher123',
                             assignment: t.assignment || 'Assigned Subjects',
                             teacherClass: assignedClasses,
@@ -2025,7 +2026,7 @@
                 <div class="p-3 bg-slate-50 border rounded-xl flex justify-between items-center text-xs">
                     <div>
                         <strong class="text-blue-950 text-sm">${t.name}</strong>
-                        <p class="text-slate-600 font-medium mt-0.5">Email: <span class="text-blue-900">${t.email || 'N/A'}</span></p>
+                        <p class="text-slate-600 font-medium mt-0.5">Email: <span class="text-blue-900">${t.email || 'N/A'}</span> | Phone: <span class="text-blue-900">${t.phone_number || 'N/A'}</span></p>
                         <p class="text-slate-600 font-medium mt-0.5">Assigned: <span class="text-amber-800 font-bold">${t.assignment}</span></p>
                     </div>
                     <div class="flex gap-2">
@@ -2926,6 +2927,25 @@
 
             if (text) globalAnnouncementText = text;
 
+            // 1. Save announcement to Supabase cloud settings as usual
+            await saveCloudSettings();
+
+            // 2. Automatically send SMS broadcast to all registered teachers via mNotify
+            try {
+                if (teachersList && teachersList.length > 0) {
+                    const messageBody = `WesleyPrep Notice: ${globalAnnouncementText}`;
+                    
+                    for (const teacher of teachersList) {
+                        if (teacher.phone_number) {
+                            await sendMNotifySMS(teacher.phone_number, messageBody);
+                        }
+                    }
+                    console.log("Announcement SMS broadcast sent to all teachers.");
+                }
+            } catch (err) {
+                console.error("SMS broadcast exception:", err);
+            }
+
             if (photoInput && photoInput.files && photoInput.files[0]) {
                 const reader = new FileReader();
                 reader.onload = async function(e) {
@@ -2940,16 +2960,49 @@
                     const imgDisp = document.getElementById('teacher-announcement-image-display');
                     if (imgDisp) imgDisp.classList.remove('hidden');
 
-                    alert('Announcement and photo published to Supabase cloud successfully!');
+                    alert('Announcement published, photo synced, and SMS broadcast sent to teachers successfully!');
                 };
                 reader.readAsDataURL(photoInput.files[0]);
             } else {
-                await saveCloudSettings();
-                alert('Announcement updated and synced to cloud successfully!');
+                alert('Announcement published and SMS broadcast sent to teachers successfully!');
             }
 
             const teacherDisplay = document.getElementById('teacher-announcement-display');
             if (teacherDisplay) teacherDisplay.innerText = globalAnnouncementText;
+        }
+
+        async function sendMNotifySMS(recipientPhone, messageBody) {
+            const apiKey = "HYE0Up95h7mpXrEJRn31mdbAJ"; 
+            const senderId = "WPS";                   // Your approved Sender ID
+            
+            const url = `https://api.mnotify.com/api/sms/quick?key=${apiKey}`;
+
+            const payload = {
+                recipient: [recipientPhone],
+                sender: senderId,
+                message: messageBody,
+                is_schedule: 0,
+                schedule_date: ""
+            };
+
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await response.json();
+                if (data.status === 'success' || data.code === 200) {
+                    console.log("SMS sent successfully to:", recipientPhone);
+                } else {
+                    console.error("Failed to send SMS:", data.message);
+                }
+            } catch (error) {
+                console.error("Network or API error:", error);
+            }
         }
 
         function saveSchoolProfile() {
