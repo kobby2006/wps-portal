@@ -1136,22 +1136,29 @@
             if (announcementTextarea) announcementTextarea.value = globalAnnouncementText;
         });
 
-        async function fetchCloudSettings() {
-            try {
-                const { data, error } = await supabaseClient.from('school_settings').select('*').eq('id', 1).single();
+        async function saveCloudSettings() {
+    const payload = {
+        id: 1,
+        portal_locked: portalLocked,
+        announcement_text: globalAnnouncementText,
+        announcement_img: globalAnnouncementImgUrl,
+        gemini_api_key: storedGeminiKey,
+        gallery_photos: galleryPhotos,
+        lms_documents: lmsDocuments,
+        active_theme: activeThemeColor
+    };
 
-                if (data && !error) {
-                    portalLocked = data.portal_locked || false;
-                    if (data.announcement_text) globalAnnouncementText = data.announcement_text;
-                    if (data.announcement_img) globalAnnouncementImgUrl = data.announcement_img;
-                    if (data.gemini_api_key) storedGeminiKey = data.gemini_api_key;
-                    if (data.gallery_photos && Array.isArray(data.gallery_photos)) galleryPhotos = data.gallery_photos;
-                    if (data.lms_documents && Array.isArray(data.lms_documents)) lmsDocuments = data.lms_documents;
-                    if (data.active_theme) {
-                        activeThemeColor = data.active_theme;
-                        applyThemeColor(activeThemeColor);
-                    }
-                }
+    const { data, error } = await supabaseClient
+        .from('school_settings')
+        .upsert([payload], { onConflict: 'id' });
+
+    if (error) {
+        console.error('Error saving settings to Supabase:', error);
+    } else {
+        console.log('Successfully saved to Supabase:', data);
+    }
+        }
+        
             } catch (err) {
                 console.log('Cloud settings fetch note:', err);
             }
