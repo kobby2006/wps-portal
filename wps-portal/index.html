@@ -2997,40 +2997,40 @@
             if (teacherDisplay) teacherDisplay.innerText = globalAnnouncementText;
         }
 
-        async function sendMNotifySMS(recipientPhone, messageBody) {
-            const apiKey = "HYE0Up95h7mpXrEJRn31mdbAJ"; 
-            const senderId = "WPS";                   // Your approved Sender ID
-            
-            const url = `https://api.mnotify.com/api/sms/quick?key=${apiKey}`;
+        async function sendMNotifySMS(recipientPhone, messageText) {
+    const apiKey = 'HYE0Up95h7mpXrEJRn31mdbAJ';
+    const senderId = 'WPS'; // Make sure this matches your approved Sender ID on BMS
 
-            const payload = {
-                recipient: [recipientPhone],
-                sender: senderId,
-                message: messageBody,
-                is_schedule: 0,
-                schedule_date: ""
-            };
+    const url = `https://api.mnotify.com/api/sms/quick?key=${apiKey}`;
 
-            try {
-                const response = await fetch(url, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(payload)
-                });
+    const payload = {
+        recipient: [recipientPhone],
+        sender: senderId,
+        message: messageText,
+        is_schedule: false
+    };
 
-                const data = await response.json();
-                if (data.status === 'success' || data.code === 200) {
-                    console.log("SMS sent successfully to:", recipientPhone);
-                } else {
-                    console.error("Failed to send SMS:", data.message);
-                }
-            } catch (error) {
-                console.error("Network or API error:", error);
-            }
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+
+        const data = await response.json();
+        if (!response.ok) {
+            console.error(`mNotify returned HTTP ${response.status}:`, data);
+            return false;
         }
 
+        console.log('SMS sent successfully:', data);
+        return true;
+    } catch (err) {
+        console.error('Network failure sending SMS via mNotify:', err);
+        return false;
+    }
+        }
+        
         function saveSchoolProfile() {
             const nameInput = document.getElementById('profile-school-name');
             const locInput = document.getElementById('profile-school-location');
