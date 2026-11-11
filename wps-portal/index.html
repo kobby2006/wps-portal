@@ -20,14 +20,14 @@
             .report-card-page { page-break-after: always; border: 2px solid black !important; padding: 15px !important; margin: 0 !important; }
         }
 
-                        /* Truly Watery Liquid Glass Card Styling */
+                                /* Enhanced Watery Liquid Glass Card Styling */
         .watery-card {
-            background: rgba(255, 255, 255, 0.35);
-            backdrop-filter: blur(16px) saturate(200%);
-            -webkit-backdrop-filter: blur(16px) saturate(200%);
-            border: 1px solid rgba(255, 255, 255, 0.6);
+            background: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(20px) saturate(200%);
+            -webkit-backdrop-filter: blur(20px) saturate(200%);
+            border: 1.5px solid rgba(255, 255, 255, 0.85);
             border-radius: 20px;
-            box-shadow: 0 10px 30px 0 rgba(31, 38, 135, 0.12);
+            box-shadow: 0 12px 40px 0 rgba(30, 58, 138, 0.18);
             position: relative;
             overflow: hidden;
             z-index: 1;
@@ -35,18 +35,18 @@
         }
         .watery-card:hover {
             transform: translateY(-3px);
-            box-shadow: 0 16px 36px 0 rgba(31, 38, 135, 0.22);
+            box-shadow: 0 18px 45px 0 rgba(30, 58, 138, 0.28);
         }
         .watery-card::before {
             content: '';
             position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(59, 130, 246, 0.35) 0%, rgba(147, 197, 253, 0.15) 50%, transparent 80%);
+            top: -60%;
+            left: -60%;
+            width: 220%;
+            height: 220%;
+            background: radial-gradient(circle, rgba(37, 99, 235, 0.28) 0%, rgba(96, 165, 250, 0.12) 45%, rgba(219, 234, 254, 0.05) 70%, transparent 85%);
             border-radius: 40%;
-            animation: liquidWave 10s infinite linear;
+            animation: liquidWave 12s infinite linear;
             z-index: -1;
             pointer-events: none;
         }
@@ -57,7 +57,8 @@
         .watery-card-content {
             position: relative;
             z-index: 2;
-                }
+        }
+        
                 
     </style>
 </head>
@@ -176,10 +177,10 @@
             </div>
         </header>
 
-        <!-- DASHBOARD CONTAINER -->
-        <div class="flex-1 flex flex-col md:flex-row">
+                <!-- DASHBOARD CONTAINER -->
+        <div class="flex-1 flex flex-col md:flex-row bg-gradient-to-br from-blue-100/70 via-slate-50 to-indigo-100/60">
             <!-- SIDEBAR NAVIGATION -->
-            <aside class="w-full md:w-64 bg-white border-r border-slate-200 p-4 space-y-2 no-print">
+            <aside class="w-full md:w-64 bg-white/90 backdrop-blur-md border-r border-slate-200 p-4 space-y-2 no-print">
                 <button onclick="switchTab('dashboard')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📊 <span>Dashboard & Charts</span></button>
                 <button onclick="switchTab('assessment')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📝 <span>SBA & Exam Grading</span></button>
                 <button onclick="switchTab('strengths')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">⚡ <span>Student Strengths & Performance</span></button>
@@ -202,6 +203,42 @@
                     <button onclick="switchTab('admin-themes')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🎨 <span>Holiday & Event Themes</span></button>
                     <button onclick="switchTab('profile')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">⚙️ <span>School Profile & Branding</span></button>
                 </div>
+            </aside>
+
+            <!-- MAIN CONTENT AREA -->
+            <main class="flex-1 p-6 overflow-y-auto">
+                <!-- TAB: DASHBOARD & CHARTS (Watery Liquid Glass Effect Applied) -->
+                <section id="tab-dashboard" class="space-y-6">
+                    <div class="bg-gradient-to-r from-blue-950 to-blue-900 text-white p-6 rounded-2xl shadow-lg flex justify-between items-center border-l-4 border-amber-500">
+                        <div>
+                            <h2 class="text-2xl font-bold">Welcome Back, <span id="welcome-name">User</span>!</h2>
+                            <p id="dashboard-motto-display" class="text-blue-200 text-sm mt-1">Wesley Preparatory School, Assorko-Essaman — Knowledge and Integrity.</p>
+                        </div>
+                        <div class="hidden md:block text-right">
+                            <span class="px-3 py-1 bg-amber-500 text-slate-950 text-xs font-bold rounded-full">Default Tuition: GH₵ 250</span>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="watery-card p-6">
+                            <div class="watery-card-content">
+                                <h3 class="font-bold text-slate-800 mb-4">Student Gender Distribution (Active Registry)</h3>
+                                <div class="h-64 flex items-center justify-center relative">
+                                    <canvas id="genderChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="watery-card p-6">
+                            <div class="watery-card-content">
+                                <h3 class="font-bold text-slate-800 mb-4">Class Enrollment Quantity</h3>
+                                <div class="h-64 flex items-center justify-center relative">
+                                    <canvas id="classChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
 
                 <!-- Teacher Nav -->
                 <div id="teacher-nav-section" class="hidden pt-4 border-t border-slate-200 space-y-2">
