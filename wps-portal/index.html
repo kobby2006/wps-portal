@@ -20,33 +20,34 @@
             .report-card-page { page-break-after: always; border: 2px solid black !important; padding: 15px !important; margin: 0 !important; }
         }
 
-        /* Watery Liquid Glass Card Styling */
+                /* Updated Watery Liquid Glass Card Styling */
         .watery-card {
-            background: rgba(255, 255, 255, 0.65);
-            backdrop-filter: blur(12px) saturate(180%);
-            -webkit-backdrop-filter: blur(12px) saturate(180%);
-            border: 1px solid rgba(255, 255, 255, 0.8);
-            border-radius: 16px;
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(16px) saturate(200%);
+            -webkit-backdrop-filter: blur(16px) saturate(200%);
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px 0 rgba(31, 38, 135, 0.12);
             position: relative;
             overflow: hidden;
+            z-index: 1;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
         .watery-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.25);
+            transform: translateY(-3px);
+            box-shadow: 0 16px 36px 0 rgba(31, 38, 135, 0.22);
         }
         .watery-card::before {
             content: '';
             position: absolute;
-            top: 60%;
+            top: -50%;
             left: -50%;
             width: 200%;
             height: 200%;
-            background: radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, rgba(147, 197, 253, 0.02) 70%);
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.2) 0%, rgba(147, 197, 253, 0.05) 60%, transparent 80%);
             border-radius: 40%;
-            animation: liquidWave 8s infinite linear;
-            z-index: 0;
+            animation: liquidWave 10s infinite linear;
+            z-index: -1;
             pointer-events: none;
         }
         @keyframes liquidWave {
@@ -55,8 +56,9 @@
         }
         .watery-card-content {
             position: relative;
-            z-index: 1;
+            z-index: 2;
         }
+        
     </style>
 </head>
 <body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col">
