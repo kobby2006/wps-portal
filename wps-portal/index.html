@@ -2933,70 +2933,75 @@
         }
 
         async function postAnnouncement() {
-            const textInput = document.getElementById('announcement-text');
-            const text = textInput ? textInput.value.trim() : '';
-            const photoInput = document.getElementById('announcement-photo-input');
+    const textInput = document.getElementById('announcement-text');
+    const text = textInput ? textInput.value.trim() : '';
+    const photoInput = document.getElementById('announcement-photo-input');
 
-            if (!text && (!photoInput || !photoInput.files || photoInput.files.length === 0)) {
-                alert('Please provide announcement text or a photo.');
-                return;
-            }
+    if (!text && (!photoInput || !photoInput.files || photoInput.files.length === 0)) {
+        alert('Please provide announcement text or a photo.');
+        return;
+    }
 
-            if (text) globalAnnouncementText = text;
+    if (text) globalAnnouncementText = text;
 
-            const processAndPublish = async () => {
-                await saveCloudSettings();
+    const processAndPublish = async () => {
+        await saveCloudSettings();
 
-                const teacherDisplay = document.getElementById('teacher-announcement-display');
-                if (teacherDisplay) teacherDisplay.innerText = globalAnnouncementText;
+        // --- INSTANT UI UPDATE FIX ---
+        document.getElementById('modal-announcement-text').innerText = globalAnnouncementText;
+        const teacherDisplay = document.getElementById('teacher-announcement-display');
+        if (teacherDisplay) teacherDisplay.innerText = globalAnnouncementText;
 
-                if (globalAnnouncementImgUrl) {
-                    const imgPrev = document.getElementById('teacher-announcement-img-preview');
-                    if (imgPrev) imgPrev.src = globalAnnouncementImgUrl;
+        if (globalAnnouncementImgUrl) {
+            document.getElementById('modal-announcement-img').src = globalAnnouncementImgUrl;
+            document.getElementById('modal-announcement-image-container').classList.remove('hidden');
 
-                    const imgDisp = document.getElementById('teacher-announcement-image-display');
-                    if (imgDisp) imgDisp.classList.remove('hidden');
-                }
+            const imgPrev = document.getElementById('teacher-announcement-img-preview');
+            if (imgPrev) imgPrev.src = globalAnnouncementImgUrl;
 
-                try {
-                    if (teachersList && teachersList.length > 0) {
-                        const messageBody = `WesleyPrep Notice: ${globalAnnouncementText}`;
-                        
-                        for (const teacher of teachersList) {
-                            if (teacher.phone_number) {
-                                await sendMNotifySMS(teacher.phone_number, messageBody);
-                            }
-                        }
-                        console.log("Announcement SMS broadcast sent to all teachers.");
+            const imgDisp = document.getElementById('teacher-announcement-image-display');
+            if (imgDisp) imgDisp.classList.remove('hidden');
+        }
+        // -----------------------------
+
+        try {
+            if (teachersList && teachersList.length > 0) {
+                const messageBody = `WesleyPrep Notice: ${globalAnnouncementText}`;
+                
+                for (const teacher of teachersList) {
+                    if (teacher.phone_number) {
+                        await sendMNotifySMS(teacher.phone_number, messageBody);
                     }
-                } catch (err) {
-                    console.error("SMS broadcast exception:", err);
                 }
-
-                alert('Announcement published and synced successfully!');
-            };
-
-            if (photoInput && photoInput.files && photoInput.files[0]) {
-                const reader = new FileReader();
-                reader.onload = async function(e) {
-                    globalAnnouncementImgUrl = e.target.result;
-                    galleryPhotos.push({ 
-                        url: globalAnnouncementImgUrl, 
-                        name: photoInput.files[0].name || 'announcement_photo.jpg' 
-                    });
-                    
-                    if (typeof renderGalleryGrids === 'function') {
-                        renderGalleryGrids();
-                    }
-
-                    await processAndPublish();
-                };
-                reader.readAsDataURL(photoInput.files[0]);
-            } else {
-                await processAndPublish();
             }
+        } catch (err) {
+            console.error("SMS broadcast exception:", err);
         }
 
+        alert('Announcement published and synced successfully!');
+    };
+
+    if (photoInput && photoInput.files && photoInput.files[0]) {
+        const reader = new FileReader();
+        reader.onload = async function(e) {
+            globalAnnouncementImgUrl = e.target.result;
+            galleryPhotos.push({ 
+                url: globalAnnouncementImgUrl, 
+                name: photoInput.files[0].name || 'announcement_photo.jpg' 
+            });
+            
+            if (typeof renderGalleryGrids === 'function') {
+                renderGalleryGrids();
+            }
+
+            await processAndPublish();
+        };
+        reader.readAsDataURL(photoInput.files[0]);
+    } else {
+        await processAndPublish();
+    }
+            }
+                
         async function sendMNotifySMS(recipientPhone, messageText) {
             const apiKey = 'HYE0Up95h7mpXrEJRn31mdbAJ';
             const senderId = 'wps-portal'; // Verified active Sender ID
