@@ -1257,22 +1257,25 @@
                     if (data.location) schoolProfile.location = data.location;
                     if (data.motto) schoolProfile.motto = data.motto;
 
-                    await saveCloudSettings();
-                    alert('Theme configuration successfully imported and applied!');
-                } catch (err) {
-                    alert('Invalid JSON theme file: ' + err.message);
+                                    await saveCloudSettings();
+
+                document.getElementById('modal-announcement-text').innerText = globalAnnouncementText;
+                const teacherDisplay = document.getElementById('teacher-announcement-display');
+                if (teacherDisplay) teacherDisplay.innerText = globalAnnouncementText;
+
+                if (globalAnnouncementImgUrl) {
+                    document.getElementById('modal-announcement-img').src = globalAnnouncementImgUrl;
+                    document.getElementById('modal-announcement-image-container').classList.remove('hidden');
+
+                    const imgPrev = document.getElementById('teacher-announcement-img-preview');
+                    if (imgPrev) imgPrev.src = globalAnnouncementImgUrl;
+
+                    const imgDisp = document.getElementById('teacher-announcement-image-display');
+                    if (imgDisp) imgDisp.classList.remove('hidden');
                 }
-            };
-            reader.readAsText(file);
-        }
 
-        document.getElementById('login-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const roleSelection = document.getElementById('login-role').value;
-            const user = document.getElementById('login-user').value.trim();
-            const pass = document.getElementById('login-pass').value.trim();
-
-            try {
+                try {
+                    
                 await fetchCloudSettings();
                 await fetchTeachersFromSupabase();
                 await fetchAdminsFromSupabase();
