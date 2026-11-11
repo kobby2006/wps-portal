@@ -19,6 +19,44 @@
             .assessment-print-page { page-break-after: always; border: 2px solid black !important; padding: 20px !important; margin: 0 !important; }
             .report-card-page { page-break-after: always; border: 2px solid black !important; padding: 15px !important; margin: 0 !important; }
         }
+
+        /* Watery Liquid Glass Card Styling */
+        .watery-card {
+            background: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(12px) saturate(180%);
+            -webkit-backdrop-filter: blur(12px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .watery-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.25);
+        }
+        .watery-card::before {
+            content: '';
+            position: absolute;
+            top: 60%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, rgba(147, 197, 253, 0.02) 70%);
+            border-radius: 40%;
+            animation: liquidWave 8s infinite linear;
+            z-index: 0;
+            pointer-events: none;
+        }
+        @keyframes liquidWave {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .watery-card-content {
+            position: relative;
+            z-index: 1;
+        }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col">
@@ -180,7 +218,7 @@
 
             <!-- MAIN CONTENT AREA -->
             <main class="flex-1 p-6 overflow-y-auto">
-                <!-- TAB: DASHBOARD & CHARTS -->
+                <!-- TAB: DASHBOARD & CHARTS (Watery Liquid Glass Effect Applied) -->
                 <section id="tab-dashboard" class="space-y-6">
                     <div class="bg-gradient-to-r from-blue-950 to-blue-900 text-white p-6 rounded-2xl shadow-lg flex justify-between items-center border-l-4 border-amber-500">
                         <div>
@@ -193,16 +231,20 @@
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div class="bg-white p-6 rounded-2xl shadow border border-slate-100">
-                            <h3 class="font-bold text-slate-800 mb-4">Student Gender Distribution (Active Registry)</h3>
-                            <div class="h-64 flex items-center justify-center relative">
-                                <canvas id="genderChart"></canvas>
+                        <div class="watery-card p-6">
+                            <div class="watery-card-content">
+                                <h3 class="font-bold text-slate-800 mb-4">Student Gender Distribution (Active Registry)</h3>
+                                <div class="h-64 flex items-center justify-center relative">
+                                    <canvas id="genderChart"></canvas>
+                                </div>
                             </div>
                         </div>
-                        <div class="bg-white p-6 rounded-2xl shadow border border-slate-100">
-                            <h3 class="font-bold text-slate-800 mb-4">Class Enrollment Quantity</h3>
-                            <div class="h-64 flex items-center justify-center relative">
-                                <canvas id="classChart"></canvas>
+                        <div class="watery-card p-6">
+                            <div class="watery-card-content">
+                                <h3 class="font-bold text-slate-800 mb-4">Class Enrollment Quantity</h3>
+                                <div class="h-64 flex items-center justify-center relative">
+                                    <canvas id="classChart"></canvas>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -1104,12 +1146,13 @@
                 const td = document.getElementById('teacher-announcement-display');
                 if (td) td.innerText = globalAnnouncementText;
 
+                const imgPrev = document.getElementById('teacher-announcement-img-preview');
+                const imgDisp = document.getElementById('teacher-announcement-image-display');
                 if (globalAnnouncementImgUrl) {
-                    const imgPrev = document.getElementById('teacher-announcement-img-preview');
                     if (imgPrev) imgPrev.src = globalAnnouncementImgUrl;
-
-                    const imgDisp = document.getElementById('teacher-announcement-image-display');
                     if (imgDisp) imgDisp.classList.remove('hidden');
+                } else {
+                    if (imgDisp) imgDisp.classList.add('hidden');
                 }
             }
         }
@@ -1257,25 +1300,22 @@
                     if (data.location) schoolProfile.location = data.location;
                     if (data.motto) schoolProfile.motto = data.motto;
 
-                                    await saveCloudSettings();
-
-                document.getElementById('modal-announcement-text').innerText = globalAnnouncementText;
-                const teacherDisplay = document.getElementById('teacher-announcement-display');
-                if (teacherDisplay) teacherDisplay.innerText = globalAnnouncementText;
-
-                if (globalAnnouncementImgUrl) {
-                    document.getElementById('modal-announcement-img').src = globalAnnouncementImgUrl;
-                    document.getElementById('modal-announcement-image-container').classList.remove('hidden');
-
-                    const imgPrev = document.getElementById('teacher-announcement-img-preview');
-                    if (imgPrev) imgPrev.src = globalAnnouncementImgUrl;
-
-                    const imgDisp = document.getElementById('teacher-announcement-image-display');
-                    if (imgDisp) imgDisp.classList.remove('hidden');
+                    await saveCloudSettings();
+                    alert('Theme configuration successfully imported!');
+                } catch (err) {
+                    alert('Invalid JSON file format.');
                 }
+            };
+            reader.readAsText(file);
+        }
 
-                try {
-                    
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const roleSelection = document.getElementById('login-role').value;
+            const user = document.getElementById('login-user').value.trim();
+            const pass = document.getElementById('login-pass').value.trim();
+
+            try {
                 await fetchCloudSettings();
                 await fetchTeachersFromSupabase();
                 await fetchAdminsFromSupabase();
@@ -1372,12 +1412,13 @@
                 const teacherDisplay = document.getElementById('teacher-announcement-display');
                 if (teacherDisplay) teacherDisplay.innerText = globalAnnouncementText;
 
+                const imgPrev = document.getElementById('teacher-announcement-img-preview');
+                const imgDisp = document.getElementById('teacher-announcement-image-display');
                 if (globalAnnouncementImgUrl) {
-                    const imgPrev = document.getElementById('teacher-announcement-img-preview');
                     if (imgPrev) imgPrev.src = globalAnnouncementImgUrl;
-
-                    const imgDisp = document.getElementById('teacher-announcement-image-display');
                     if (imgDisp) imgDisp.classList.remove('hidden');
+                } else {
+                    if (imgDisp) imgDisp.classList.add('hidden');
                 }
             } else {
                 document.getElementById('admin-nav-section').classList.remove('hidden');
@@ -2933,83 +2974,83 @@
         }
 
         async function postAnnouncement() {
-    const textInput = document.getElementById('announcement-text');
-    const text = textInput ? textInput.value.trim() : '';
-    const photoInput = document.getElementById('announcement-photo-input');
+            const textInput = document.getElementById('announcement-text');
+            const text = textInput ? textInput.value.trim() : '';
+            const photoInput = document.getElementById('announcement-photo-input');
 
-    if (!text && (!photoInput || !photoInput.files || !photoInput.files.length === 0)) {
-        alert('Please provide announcement text or a photo.');
-        return;
-    }
+            if (!text && (!photoInput || !photoInput.files || !photoInput.files.length === 0)) {
+                alert('Please provide announcement text or a photo.');
+                return;
+            }
 
-    if (text) globalAnnouncementText = text;
+            if (text) globalAnnouncementText = text;
 
-    const processAndPublish = async () => {
-        await saveCloudSettings();
+            const processAndPublish = async () => {
+                await saveCloudSettings();
 
-        // Update announcement text instantly on screen
-        const modalText = document.getElementById('modal-announcement-text');
-        if (modalText) modalText.innerText = globalAnnouncementText;
+                // Update announcement text instantly on screen
+                const modalText = document.getElementById('modal-announcement-text');
+                if (modalText) modalText.innerText = globalAnnouncementText;
 
-        const teacherDisplay = document.getElementById('teacher-announcement-display');
-        if (teacherDisplay) teacherDisplay.innerText = globalAnnouncementText;
+                const teacherDisplay = document.getElementById('teacher-announcement-display');
+                if (teacherDisplay) teacherDisplay.innerText = globalAnnouncementText;
 
-        if (globalAnnouncementImgUrl) {
-            const modalImg = document.getElementById('modal-announcement-img');
-            if (modalImg) modalImg.src = globalAnnouncementImgUrl;
-            
-            const modalImgContainer = document.getElementById('modal-announcement-image-container');
-            if (modalImgContainer) modalImgContainer.classList.remove('hidden');
+                if (globalAnnouncementImgUrl) {
+                    const modalImg = document.getElementById('modal-announcement-img');
+                    if (modalImg) modalImg.src = globalAnnouncementImgUrl;
+                    
+                    const modalImgContainer = document.getElementById('modal-announcement-image-container');
+                    if (modalImgContainer) modalImgContainer.classList.remove('hidden');
 
-            const imgPrev = document.getElementById('teacher-announcement-img-preview');
-            if (imgPrev) imgPrev.src = globalAnnouncementImgUrl;
+                    const imgPrev = document.getElementById('teacher-announcement-img-preview');
+                    if (imgPrev) imgPrev.src = globalAnnouncementImgUrl;
 
-            const imgDisp = document.getElementById('teacher-announcement-image-display');
-            if (imgDisp) imgDisp.classList.remove('hidden');
-        }
-
-        try {
-            if (typeof teachersList !== 'undefined' && teachersList.length > 0) {
-                const messageBody = `WesleyPrep Notice: ${globalAnnouncementText}`;
-                for (const teacher of teachersList) {
-                    if (teacher.phone_number) {
-                        await sendMNotifySMS(teacher.phone_number, messageBody);
-                    }
+                    const imgDisp = document.getElementById('teacher-announcement-image-display');
+                    if (imgDisp) imgDisp.classList.remove('hidden');
                 }
-            }
-        } catch (err) {
-            console.error("SMS broadcast exception:", err);
-        }
 
-        alert('Announcement published and synced successfully!');
-    };
+                try {
+                    if (typeof teachersList !== 'undefined' && teachersList.length > 0) {
+                        const messageBody = `WesleyPrep Notice: ${globalAnnouncementText}`;
+                        for (const teacher of teachersList) {
+                            if (teacher.phone_number) {
+                                await sendMNotifySMS(teacher.phone_number, messageBody);
+                            }
+                        }
+                    }
+                } catch (err) {
+                    console.error("SMS broadcast exception:", err);
+                }
 
-    if (photoInput && photoInput.files && photoInput.files[0]) {
-        const reader = new FileReader();
-        reader.onload = async function(e) {
-            globalAnnouncementImgUrl = e.target.result;
-            if (typeof galleryPhotos !== 'undefined') {
-                galleryPhotos.push({ 
-                    url: globalAnnouncementImgUrl, 
-                    name: photoInput.files[0].name || 'announcement_photo.jpg' 
-                });
-            }
-            
-            if (typeof renderGalleryGrids === 'function') {
-                renderGalleryGrids();
-            }
+                alert('Announcement published and synced successfully!');
+            };
 
-            await processAndPublish();
-        };
-        reader.readAsDataURL(photoInput.files[0]);
-    } else {
-        await processAndPublish();
-    }
+            if (photoInput && photoInput.files && photoInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = async function(e) {
+                    globalAnnouncementImgUrl = e.target.result;
+                    if (typeof galleryPhotos !== 'undefined') {
+                        galleryPhotos.push({ 
+                            url: globalAnnouncementImgUrl, 
+                            name: photoInput.files[0].name || 'announcement_photo.jpg' 
+                        });
+                    }
+                    
+                    if (typeof renderGalleryGrids === 'function') {
+                        renderGalleryGrids();
+                    }
+
+                    await processAndPublish();
+                };
+                reader.readAsDataURL(photoInput.files[0]);
+            } else {
+                await processAndPublish();
+            }
         }
                                                       
         async function sendMNotifySMS(recipientPhone, messageText) {
             const apiKey = 'HYE0Up95h7mpXrEJRn31mdbAJ';
-            const senderId = 'wps-portal'; // Verified active Sender ID
+            const senderId = 'wps-portal';
 
             const url = `https://api.mnotify.com/api/sms/quick?key=${apiKey}`;
 
