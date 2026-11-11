@@ -2923,56 +2923,75 @@
         }
 
         async function postAnnouncement() {
-            const textInput = document.getElementById('announcement-text');
-            const text = textInput ? textInput.value.trim() : '';
-            const photoInput = document.getElementById('announcement-photo-input');
+    const textInput = document.getElementById('announcement-text');
+    const text = textInput ? textInput.value.trim() : '';
+    const photoInput = document.getElementById('announcement-photo-input');
 
-            if (!text && (!photoInput || !photoInput.files || photoInput.files.length === 0)) {
-                alert('Please provide announcement text or a photo.');
-                return;
-            }
+    if (!text && (!photoInput || !photoInput.files || photoInput.files.length === 0)) {
+        alert('Please provide announcement text or a photo.');
+        return;
+    }
 
-            if (text) globalAnnouncementText = text;
+    if (text) globalAnnouncementText = text;
 
-            // 1. Save announcement to Supabase cloud settings as usual
-            await saveCloudSettings();
+    // Helper function to handle saving, UI updates, and SMS broadcast
+    const processAndPublish = async () => {
+        // 1. Save all updated settings (text & photo URL) to Supabase in one request
+        await saveCloudSettings();
 
-            // 2. Automatically send SMS broadcast to all registered teachers via mNotify
-            try {
-                if (teachersList && teachersList.length > 0) {
-                    const messageBody = `WesleyPrep Notice: ${globalAnnouncementText}`;
-                    
-                    for (const teacher of teachersList) {
-                        if (teacher.phone_number) {
-                            await sendMNotifySMS(teacher.phone_number, messageBody);
-                        }
+        // 2. Update local UI elements immediately
+        const teacherDisplay = document.getElementById('teacher-announcement-display');
+        if (teacherDisplay) teacherDisplay.innerText = globalAnnouncementText;
+
+        if (globalAnnouncementImgUrl) {
+            const imgPrev = document.getElementById('teacher-announcement-img-preview');
+            if (imgPrev) imgPrev.src = globalAnnouncementImgUrl;
+
+            const imgDisp = document.getElementById('teacher-announcement-image-display');
+            if (imgDisp) imgDisp.classList.remove('hidden');
+        }
+
+        // 3. Send SMS broadcast to registered teachers via mNotify
+        try {
+            if (teachersList && teachersList.length > 0) {
+                const messageBody = `WesleyPrep Notice: ${globalAnnouncementText}`;
+                
+                for (const teacher of teachersList) {
+                    if (teacher.phone_number) {
+                        await sendMNotifySMS(teacher.phone_number, messageBody);
                     }
-                    console.log("Announcement SMS broadcast sent to all teachers.");
                 }
-            } catch (err) {
-                console.error("SMS broadcast exception:", err);
+                console.log("Announcement SMS broadcast sent to all teachers.");
+            }
+        } catch (err) {
+            console.error("SMS broadcast exception:", err);
+        }
+
+        alert('Announcement published and synced successfully!');
+    };
+
+    // If an image is selected, read it FIRST before saving and sending SMS
+    if (photoInput && photoInput.files && photoInput.files[0]) {
+        const reader = new FileReader();
+        reader.onload = async function(e) {
+            globalAnnouncementImgUrl = e.target.result;
+            galleryPhotos.push({ 
+                url: globalAnnouncementImgUrl, 
+                name: photoInput.files[0].name || 'announcement_photo.jpg' 
+            });
+            
+            if (typeof renderGalleryGrids === 'function') {
+                renderGalleryGrids();
             }
 
-            if (photoInput && photoInput.files && photoInput.files[0]) {
-                const reader = new FileReader();
-                reader.onload = async function(e) {
-                    globalAnnouncementImgUrl = e.target.result;
-                    galleryPhotos.push({ url: globalAnnouncementImgUrl, name: photoInput.files[0].name || 'announcement_photo.jpg' });
-                    await saveCloudSettings();
-                    renderGalleryGrids();
-
-                    const imgPrev = document.getElementById('teacher-announcement-img-preview');
-                    if (imgPrev) imgPrev.src = globalAnnouncementImgUrl;
-
-                    const imgDisp = document.getElementById('teacher-announcement-image-display');
-                    if (imgDisp) imgDisp.classList.remove('hidden');
-
-                    alert('Announcement published, photo synced, and SMS broadcast sent to teachers successfully!');
-                };
-                reader.readAsDataURL(photoInput.files[0]);
-            } else {
-                alert('Announcement published and SMS broadcast sent to teachers successfully!');
-            }
+            await processAndPublish();
+        };
+        reader.readAsDataURL(photoInput.files[0]);
+    } else {
+        await processAndPublish();
+    }
+        }
+        
 
             const teacherDisplay = document.getElementById('teacher-announcement-display');
             if (teacherDisplay) teacherDisplay.innerText = globalAnnouncementText;
