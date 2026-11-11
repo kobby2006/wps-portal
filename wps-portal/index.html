@@ -1136,29 +1136,26 @@
             if (announcementTextarea) announcementTextarea.value = globalAnnouncementText;
         });
 
-        async function saveCloudSettings() {
-    const payload = {
-        id: 1,
-        portal_locked: portalLocked,
-        announcement_text: globalAnnouncementText,
-        announcement_img: globalAnnouncementImgUrl,
-        gemini_api_key: storedGeminiKey,
-        gallery_photos: galleryPhotos,
-        lms_documents: lmsDocuments,
-        active_theme: activeThemeColor
-    };
+        async function fetchCloudSettings() {
+            try {
+                const { data, error } = await supabaseClient
+                    .from('school_settings')
+                    .select('*')
+                    .eq('id', 1)
+                    .single();
 
-    const { data, error } = await supabaseClient
-        .from('school_settings')
-        .upsert([payload], { onConflict: 'id' });
+                if (error) throw error;
 
-    if (error) {
-        console.error('Error saving settings to Supabase:', error);
-    } else {
-        console.log('Successfully saved to Supabase:', data);
-    }
-        }
-        
+                if (data) {
+                    portalLocked = data.portal_locked ?? false;
+                    globalAnnouncementText = data.announcement_text || globalAnnouncementText;
+                    globalAnnouncementImgUrl = data.announcement_img || '';
+                    storedGeminiKey = data.gemini_api_key || '';
+                    galleryPhotos = data.gallery_photos || [];
+                    lmsDocuments = data.lms_documents || [];
+                    activeThemeColor = data.active_theme || 'navy';
+                    applyThemeColor(activeThemeColor);
+                }
             } catch (err) {
                 console.log('Cloud settings fetch note:', err);
             }
@@ -1176,7 +1173,7 @@
 
         async function saveCloudSettings() {
             try {
-                await supabaseClient.from('school_settings').upsert({
+                const payload = {
                     id: 1,
                     portal_locked: portalLocked,
                     announcement_text: globalAnnouncementText,
@@ -1185,7 +1182,17 @@
                     gallery_photos: galleryPhotos,
                     lms_documents: lmsDocuments,
                     active_theme: activeThemeColor
-                });
+                };
+
+                const { data, error } = await supabaseClient
+                    .from('school_settings')
+                    .upsert([payload], { onConflict: 'id' });
+
+                if (error) {
+                    console.error('Error saving settings to Supabase:', error);
+                } else {
+                    console.log('Successfully saved to Supabase:', data);
+                }
             } catch (err) {
                 console.error('Cloud save exception:', err);
             }
@@ -2923,112 +2930,102 @@
         }
 
         async function postAnnouncement() {
-    const textInput = document.getElementById('announcement-text');
-    const text = textInput ? textInput.value.trim() : '';
-    const photoInput = document.getElementById('announcement-photo-input');
+            const textInput = document.getElementById('announcement-text');
+            const text = textInput ? textInput.value.trim() : '';
+            const photoInput = document.getElementById('announcement-photo-input');
 
-    if (!text && (!photoInput || !photoInput.files || photoInput.files.length === 0)) {
-        alert('Please provide announcement text or a photo.');
-        return;
-    }
+            if (!text && (!photoInput || !photoInput.files || photoInput.files.length === 0)) {
+                alert('Please provide announcement text or a photo.');
+                return;
+            }
 
-    if (text) globalAnnouncementText = text;
+            if (text) globalAnnouncementText = text;
 
-    // Helper function to handle saving, UI updates, and SMS broadcast
-    const processAndPublish = async () => {
-        // 1. Save all updated settings (text & photo URL) to Supabase in one request
-        await saveCloudSettings();
+            const processAndPublish = async () => {
+                await saveCloudSettings();
 
-        // 2. Update local UI elements immediately
-        const teacherDisplay = document.getElementById('teacher-announcement-display');
-        if (teacherDisplay) teacherDisplay.innerText = globalAnnouncementText;
+                const teacherDisplay = document.getElementById('teacher-announcement-display');
+                if (teacherDisplay) teacherDisplay.innerText = globalAnnouncementText;
 
-        if (globalAnnouncementImgUrl) {
-            const imgPrev = document.getElementById('teacher-announcement-img-preview');
-            if (imgPrev) imgPrev.src = globalAnnouncementImgUrl;
+                if (globalAnnouncementImgUrl) {
+                    const imgPrev = document.getElementById('teacher-announcement-img-preview');
+                    if (imgPrev) imgPrev.src = globalAnnouncementImgUrl;
 
-            const imgDisp = document.getElementById('teacher-announcement-image-display');
-            if (imgDisp) imgDisp.classList.remove('hidden');
-        }
-
-        // 3. Send SMS broadcast to registered teachers via mNotify
-        try {
-            if (teachersList && teachersList.length > 0) {
-                const messageBody = `WesleyPrep Notice: ${globalAnnouncementText}`;
-                
-                for (const teacher of teachersList) {
-                    if (teacher.phone_number) {
-                        await sendMNotifySMS(teacher.phone_number, messageBody);
-                    }
+                    const imgDisp = document.getElementById('teacher-announcement-image-display');
+                    if (imgDisp) imgDisp.classList.remove('hidden');
                 }
-                console.log("Announcement SMS broadcast sent to all teachers.");
+
+                try {
+                    if (teachersList && teachersList.length > 0) {
+                        const messageBody = `WesleyPrep Notice: ${globalAnnouncementText}`;
+                        
+                        for (const teacher of teachersList) {
+                            if (teacher.phone_number) {
+                                await sendMNotifySMS(teacher.phone_number, messageBody);
+                            }
+                        }
+                        console.log("Announcement SMS broadcast sent to all teachers.");
+                    }
+                } catch (err) {
+                    console.error("SMS broadcast exception:", err);
+                }
+
+                alert('Announcement published and synced successfully!');
+            };
+
+            if (photoInput && photoInput.files && photoInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = async function(e) {
+                    globalAnnouncementImgUrl = e.target.result;
+                    galleryPhotos.push({ 
+                        url: globalAnnouncementImgUrl, 
+                        name: photoInput.files[0].name || 'announcement_photo.jpg' 
+                    });
+                    
+                    if (typeof renderGalleryGrids === 'function') {
+                        renderGalleryGrids();
+                    }
+
+                    await processAndPublish();
+                };
+                reader.readAsDataURL(photoInput.files[0]);
+            } else {
+                await processAndPublish();
             }
-        } catch (err) {
-            console.error("SMS broadcast exception:", err);
-        }
-
-        alert('Announcement published and synced successfully!');
-    };
-
-    // If an image is selected, read it FIRST before saving and sending SMS
-    if (photoInput && photoInput.files && photoInput.files[0]) {
-        const reader = new FileReader();
-        reader.onload = async function(e) {
-            globalAnnouncementImgUrl = e.target.result;
-            galleryPhotos.push({ 
-                url: globalAnnouncementImgUrl, 
-                name: photoInput.files[0].name || 'announcement_photo.jpg' 
-            });
-            
-            if (typeof renderGalleryGrids === 'function') {
-                renderGalleryGrids();
-            }
-
-            await processAndPublish();
-        };
-        reader.readAsDataURL(photoInput.files[0]);
-    } else {
-        await processAndPublish();
-    }
-        }
-        
-
-            const teacherDisplay = document.getElementById('teacher-announcement-display');
-            if (teacherDisplay) teacherDisplay.innerText = globalAnnouncementText;
         }
 
         async function sendMNotifySMS(recipientPhone, messageText) {
-    const apiKey = 'HYE0Up95h7mpXrEJRn31mdbAJ';
-    const senderId = 'WPS'; // Make sure this matches your approved Sender ID on BMS
+            const apiKey = 'HYE0Up95h7mpXrEJRn31mdbAJ';
+            const senderId = 'wps-portal'; // Verified active Sender ID
 
-    const url = `https://api.mnotify.com/api/sms/quick?key=${apiKey}`;
+            const url = `https://api.mnotify.com/api/sms/quick?key=${apiKey}`;
 
-    const payload = {
-        recipient: [recipientPhone],
-        sender: senderId,
-        message: messageText,
-        is_schedule: false
-    };
+            const payload = {
+                recipient: [recipientPhone],
+                sender: senderId,
+                message: messageText,
+                is_schedule: false
+            };
 
-    try {
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-        });
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
 
-        const data = await response.json();
-        if (!response.ok) {
-            console.error(`mNotify returned HTTP ${response.status}:`, data);
-            return false;
-        }
+                const data = await response.json();
+                if (!response.ok) {
+                    console.error(`mNotify returned HTTP ${response.status}:`, data);
+                    return false;
+                }
 
-        console.log('SMS sent successfully:', data);
-        return true;
-    } catch (err) {
-        console.error('Network failure sending SMS via mNotify:', err);
-        return false;
-    }
+                console.log('SMS sent successfully:', data);
+                return true;
+            } catch (err) {
+                console.error('Network failure sending SMS via mNotify:', err);
+                return false;
+            }
         }
         
         function saveSchoolProfile() {
