@@ -20,44 +20,59 @@
             .report-card-page { page-break-after: always; border: 2px solid black !important; padding: 15px !important; margin: 0 !important; }
         }
 
-                                /* Enhanced Watery Liquid Glass Card Styling */
+                                        /* True Liquid Wave Fill Card Styling */
         .watery-card {
-            background: rgba(255, 255, 255, 0.65);
-            backdrop-filter: blur(20px) saturate(200%);
-            -webkit-backdrop-filter: blur(20px) saturate(200%);
-            border: 1.5px solid rgba(255, 255, 255, 0.85);
-            border-radius: 20px;
-            box-shadow: 0 12px 40px 0 rgba(30, 58, 138, 0.18);
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1.5px solid rgba(59, 130, 246, 0.25);
+            border-radius: 24px;
+            box-shadow: 0 10px 30px rgba(30, 58, 138, 0.12);
             position: relative;
             overflow: hidden;
             z-index: 1;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-        .watery-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 18px 45px 0 rgba(30, 58, 138, 0.28);
-        }
+
+        /* Back Liquid Wave Layer */
         .watery-card::before {
             content: '';
             position: absolute;
-            top: -60%;
-            left: -60%;
             width: 220%;
             height: 220%;
-            background: radial-gradient(circle, rgba(37, 99, 235, 0.28) 0%, rgba(96, 165, 250, 0.12) 45%, rgba(219, 234, 254, 0.05) 70%, transparent 85%);
-            border-radius: 40%;
-            animation: liquidWave 12s infinite linear;
-            z-index: -1;
+            top: 42%; /* Adjusts the water level height (lower % = higher water level) */
+            left: -60%;
+            background: linear-gradient(180deg, rgba(59, 130, 246, 0.22) 0%, rgba(30, 58, 138, 0.35) 100%);
+            border-radius: 43%;
+            animation: waterSlosh 9s infinite linear;
+            z-index: 0;
             pointer-events: none;
         }
-        @keyframes liquidWave {
+
+        /* Front Rippling Wave Layer */
+        .watery-card::after {
+            content: '';
+            position: absolute;
+            width: 220%;
+            height: 220%;
+            top: 45%;
+            left: -60%;
+            background: linear-gradient(180deg, rgba(147, 197, 253, 0.35) 0%, rgba(37, 99, 235, 0.25) 100%);
+            border-radius: 46%;
+            animation: waterSlosh 13s infinite linear reverse;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        @keyframes waterSlosh {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+
         .watery-card-content {
             position: relative;
             z-index: 2;
         }
+        
         
                 
     </style>
