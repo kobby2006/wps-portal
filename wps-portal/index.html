@@ -20,9 +20,9 @@
             .report-card-page { page-break-after: always; border: 2px solid black !important; padding: 15px !important; margin: 0 !important; }
         }
 
-                                        /* True Liquid Wave Fill Card Styling */
+        /* Dynamic Liquid Wave Fill Card Styling */
         .watery-card {
-            background: rgba(255, 255, 255, 0.7);
+            background: rgba(255, 255, 255, 0.75);
             backdrop-filter: blur(14px);
             -webkit-backdrop-filter: blur(14px);
             border: 1.5px solid rgba(59, 130, 246, 0.25);
@@ -33,34 +33,36 @@
             z-index: 1;
         }
 
-        /* Back Liquid Wave Layer */
+        /* Dynamic Back Wave Layer */
         .watery-card::before {
             content: '';
             position: absolute;
             width: 220%;
             height: 220%;
-            top: 42%; /* Adjusts the water level height (lower % = higher water level) */
+            top: calc(100% - var(--fill-pct, 50%));
             left: -60%;
-            background: linear-gradient(180deg, rgba(59, 130, 246, 0.22) 0%, rgba(30, 58, 138, 0.35) 100%);
+            background: linear-gradient(180deg, rgba(59, 130, 246, 0.18) 0%, rgba(30, 58, 138, 0.3) 100%);
             border-radius: 43%;
             animation: waterSlosh 9s infinite linear;
             z-index: 0;
             pointer-events: none;
+            transition: top 1s ease-in-out;
         }
 
-        /* Front Rippling Wave Layer */
+        /* Dynamic Front Wave Layer */
         .watery-card::after {
             content: '';
             position: absolute;
             width: 220%;
             height: 220%;
-            top: 45%;
+            top: calc(100% - var(--fill-pct, 50%) + 3%);
             left: -60%;
-            background: linear-gradient(180deg, rgba(147, 197, 253, 0.35) 0%, rgba(37, 99, 235, 0.25) 100%);
+            background: linear-gradient(180deg, rgba(147, 197, 253, 0.3) 0%, rgba(37, 99, 235, 0.22) 100%);
             border-radius: 46%;
             animation: waterSlosh 13s infinite linear reverse;
             z-index: 0;
             pointer-events: none;
+            transition: top 1s ease-in-out;
         }
 
         @keyframes waterSlosh {
@@ -72,9 +74,6 @@
             position: relative;
             z-index: 2;
         }
-        
-        
-                
     </style>
 </head>
 <body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col">
@@ -192,7 +191,7 @@
             </div>
         </header>
 
-                <!-- DASHBOARD CONTAINER -->
+        <!-- DASHBOARD CONTAINER -->
         <div class="flex-1 flex flex-col md:flex-row bg-gradient-to-br from-blue-100/70 via-slate-50 to-indigo-100/60">
             <!-- SIDEBAR NAVIGATION -->
             <aside class="w-full md:w-64 bg-white/90 backdrop-blur-md border-r border-slate-200 p-4 space-y-2 no-print">
@@ -218,42 +217,6 @@
                     <button onclick="switchTab('admin-themes')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🎨 <span>Holiday & Event Themes</span></button>
                     <button onclick="switchTab('profile')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">⚙️ <span>School Profile & Branding</span></button>
                 </div>
-            </aside>
-
-            <!-- MAIN CONTENT AREA -->
-            <main class="flex-1 p-6 overflow-y-auto">
-                <!-- TAB: DASHBOARD & CHARTS (Watery Liquid Glass Effect Applied) -->
-                <section id="tab-dashboard" class="space-y-6">
-                    <div class="bg-gradient-to-r from-blue-950 to-blue-900 text-white p-6 rounded-2xl shadow-lg flex justify-between items-center border-l-4 border-amber-500">
-                        <div>
-                            <h2 class="text-2xl font-bold">Welcome Back, <span id="welcome-name">User</span>!</h2>
-                            <p id="dashboard-motto-display" class="text-blue-200 text-sm mt-1">Wesley Preparatory School, Assorko-Essaman — Knowledge and Integrity.</p>
-                        </div>
-                        <div class="hidden md:block text-right">
-                            <span class="px-3 py-1 bg-amber-500 text-slate-950 text-xs font-bold rounded-full">Default Tuition: GH₵ 250</span>
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div class="watery-card p-6">
-                            <div class="watery-card-content">
-                                <h3 class="font-bold text-slate-800 mb-4">Student Gender Distribution (Active Registry)</h3>
-                                <div class="h-64 flex items-center justify-center relative">
-                                    <canvas id="genderChart"></canvas>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="watery-card p-6">
-                            <div class="watery-card-content">
-                                <h3 class="font-bold text-slate-800 mb-4">Class Enrollment Quantity</h3>
-                                <div class="h-64 flex items-center justify-center relative">
-                                    <canvas id="classChart"></canvas>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-                
 
                 <!-- Teacher Nav -->
                 <div id="teacher-nav-section" class="hidden pt-4 border-t border-slate-200 space-y-2">
@@ -285,7 +248,7 @@
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div class="watery-card p-6">
+                        <div id="card-gender" class="watery-card p-6" style="--fill-pct: 50%;">
                             <div class="watery-card-content">
                                 <h3 class="font-bold text-slate-800 mb-4">Student Gender Distribution (Active Registry)</h3>
                                 <div class="h-64 flex items-center justify-center relative">
@@ -293,7 +256,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="watery-card p-6">
+                        <div id="card-class" class="watery-card p-6" style="--fill-pct: 50%;">
                             <div class="watery-card-content">
                                 <h3 class="font-bold text-slate-800 mb-4">Class Enrollment Quantity</h3>
                                 <div class="h-64 flex items-center justify-center relative">
@@ -2946,6 +2909,14 @@
         function renderCharts() {
             const maleCount = studentsData.filter(s => s.gender === 'Male').length;
             const femaleCount = studentsData.filter(s => s.gender === 'Female').length;
+            const totalStudents = studentsData.length || 1;
+
+            // Auto-detect gender ratio percentage for Card 1 wave fill
+            const femalePct = Math.round((femaleCount / totalStudents) * 100);
+            const cardGender = document.getElementById('card-gender');
+            if (cardGender) {
+                cardGender.style.setProperty('--fill-pct', `${Math.max(25, Math.min(85, femalePct))}%`);
+            }
 
             const ctxGender = document.getElementById('genderChart');
             if (ctxGender) {
@@ -2961,8 +2932,17 @@
             }
 
             const classCounts = classesData.map(c => studentsData.filter(s => s.class === c).length);
-            const ctxClass = document.getElementById('classChart');
+            const maxClassCount = Math.max(...classCounts, 1);
+            const activeClassesCount = studentsData.length > 0 ? Math.max(...classCounts) : 0;
+            
+            // Auto-detect peak enrollment level for Card 2 wave fill
+            const enrollmentPct = Math.round((activeClassesCount / Math.max(maxClassCount, 25)) * 100);
+            const cardClass = document.getElementById('card-class');
+            if (cardClass) {
+                cardClass.style.setProperty('--fill-pct', `${Math.max(30, Math.min(90, enrollmentPct))}%`);
+            }
 
+            const ctxClass = document.getElementById('classChart');
             if (ctxClass) {
                 if (window.myClassChart) window.myClassChart.destroy();
                 window.myClassChart = new Chart(ctxClass.getContext('2d'), {
