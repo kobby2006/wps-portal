@@ -1798,14 +1798,22 @@
                 return;
             }
 
-            const model = 'gemini-3.8-flash';
-            const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(apiKey)}`;
-            const maxAttempts = 3;
-            let attempts = 0;
+                        const models = [
+                'gemini-3.8-flash',
+                'gemini-2.5-flash',
+                'gemini-2.5-flash-lite'
+            ];
             let data = null;
 
             try {
-                while (attempts < maxAttempts) {
+                for (let i = 0; i < models.length; i++) {
+                    const currentModel = models[i];
+                    const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${currentModel}:generateContent?key=${encodeURIComponent(apiKey)}`;
+
+                    if (i > 0) {
+                        responseContent.innerHTML = `<p class="italic text-slate-500 animate-pulse">Primary model busy, switching to backup (${i}/${models.length - 1})...</p>`;
+                    }
+
                     const response = await fetch(endpoint, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -1824,15 +1832,14 @@
                     const isRateLimitedOrBusy =
                         response.status === 429 ||
                         response.status === 503 ||
+                        response.status === 404 ||
                         errorMessage.toLowerCase().includes('high demand') ||
                         errorMessage.toLowerCase().includes('overloaded') ||
                         data?.error?.status === 'RESOURCE_EXHAUSTED' ||
                         data?.error?.status === 'UNAVAILABLE';
 
-                    if (isRateLimitedOrBusy && attempts < maxAttempts - 1) {
-                        attempts++;
-                        responseContent.innerHTML = `<p class="italic text-slate-500 animate-pulse">Model busy, retrying (${attempts}/${maxAttempts - 1})...</p>`;
-                        await new Promise(resolve => setTimeout(resolve, attempts * 2000));
+                    if (isRateLimitedOrBusy && i < models.length - 1) {
+                        await new Promise(resolve => setTimeout(resolve, 1000));
                         continue;
                     }
 
@@ -1856,7 +1863,7 @@
                 responseContent.innerHTML = `<span class="text-red-700 font-bold">Network / Connection Error: ${escapeHtml(message)} Please check your internet connection.</span>`;
             }
         }
-
+        
         function escapeHtml(str) {
             const div = document.createElement('div');
             div.textContent = String(str ?? '');
