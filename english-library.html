@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English Library Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-50 p-4 md:p-8">
+    <div class="max-w-6xl mx-auto space-y-6">
+        <header class="bg-white p-6 rounded-3xl shadow-sm border border-slate-200 flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div>
+                <h1 class="text-3xl font-black text-slate-900">English Library Hub</h1>
+                <p class="text-slate-500 text-sm mt-1">Curated reading passages, vocabulary builders, and phonics guides.</p>
+            </div>
+            <div class="bg-amber-50 border border-amber-200 p-4 rounded-2xl max-w-sm">
+                <span class="text-xs font-bold text-amber-800 uppercase tracking-wider block">Word of the Day</span>
+                <p id="word-of-the-day" class="font-extrabold text-amber-950 text-lg mt-0.5">loading...</p>
+                <p id="wotd-definition" class="text-xs text-amber-800 mt-1"></p>
+            </div>
+        </header>
+
+        <!-- Filter Controls -->
+        <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-200">
+            <label class="block text-sm font-bold text-slate-700 mb-1">Filter by Grade Level</label>
+            <select id="filter-grade" onchange="filterLibrary()" class="w-full md:w-1/3 p-3 border border-slate-300 rounded-xl bg-slate-50 focus:ring-2 focus:ring-blue-500 outline-none font-medium">
+                <option value="">All Grade Levels</option>
+                <option value="Lower Primary">Lower Primary (Class 1-3)</option>
+                <option value="Upper Primary">Upper Primary (Class 4-6)</option>
+                <option value="JHS">Junior High School (JHS 1)</option>
+            </select>
+        </div>
+
+        <!-- Library Content Grid -->
+        <div id="library-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Dynamic Content Injected Here -->
+        </div>
+    </div>
+
+    <script>
+        const libraryData = {
+            "wordOfTheDay": {
+                "word": "Diligent",
+                "definition": "Showing steady, earnest, and energetic effort in one's work or duties."
+            },
+            "items": [
+                {
+                    "id": "lib-001",
+                    "title": "Kofi and the Magic Mango Tree",
+                    "type": "Reading Passage",
+                    "grade": "Lower Primary",
+                    "readingLevel": "Beginner",
+                    "description": "A delightful story about a young boy in the village who learns the value of patience and sharing.",
+                    "contentPreview": "Once upon a time in a sunny village...",
+                    "actionLabel": "Read Full Story"
+                },
+                {
+                    "id": "lib-002",
+                    "title": "Mastering Vowel Sounds & Blends",
+                    "type": "Phonics Guide",
+                    "grade": "Lower Primary",
+                    "readingLevel": "Basic",
+                    "description": "Essential practice for blending consonant sounds with short vowels.",
+                    "contentPreview": "/a/ as in apple, /e/ as in egg, /i/ as in igloo...",
+                    "actionLabel": "Open Phonics Guide"
+                },
+                {
+                    "id": "lib-003",
+                    "title": "The Golden Stool: A Symbol of Unity",
+                    "type": "Reading Passage",
+                    "grade": "Upper Primary",
+                    "readingLevel": "Intermediate",
+                    "description": "Explore the historical significance of the Sika Dwa Kofi in Asante history.",
+                    "contentPreview": "The Golden Stool is the royal and divine throne of the Asante people...",
+                    "actionLabel": "Read Passage"
+                },
+                {
+                    "id": "lib-004",
+                    "title": "Essential Literary Devices",
+                    "type": "Vocabulary Builder",
+                    "grade": "Upper Primary",
+                    "readingLevel": "Intermediate",
+                    "description": "Learn to identify similes, metaphors, and personification in your reading.",
+                    "contentPreview": "A simile compares two things using 'like' or 'as'. Example: Brave as a lion...",
+                    "actionLabel": "Launch Guide"
+                },
+                {
+                    "id": "lib-005",
+                    "title": "Environmental Conservation in Ghana",
+                    "type": "Reading Passage",
+                    "grade": "JHS",
+                    "readingLevel": "Advanced",
+                    "description": "An analytical text discussing deforestation, illegal mining, and sustainable practices.",
+                    "contentPreview": "Environmental degradation poses a significant threat to sustainable development...",
+                    "actionLabel": "Read Article"
+                },
+                {
+                    "id": "lib-006",
+                    "title": "Advanced Vocabulary & Synonyms",
+                    "type": "Vocabulary Builder",
+                    "grade": "JHS",
+                    "readingLevel": "Advanced",
+                    "description": "Expand your essay writing skills with powerful descriptive adjectives.",
+                    "contentPreview": "Instead of saying 'very good', use 'exceptional' or 'exemplary'...",
+                    "actionLabel": "View Vocabulary List"
+                }
+            ]
+        };
+
+        function filterLibrary() {
+            const selectedGrade = document.getElementById('filter-grade').value;
+            const grid = document.getElementById('library-grid');
+
+            // Set Word of the Day
+            document.getElementById('word-of-the-day').textContent = libraryData.wordOfTheDay.word;
+            document.getElementById('wotd-definition').textContent = libraryData.wordOfTheDay.definition;
+
+            const filtered = libraryData.items.filter(item => {
+                return !selectedGrade || item.grade === selectedGrade;
+            });
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full bg-white p-12 rounded-3xl text-center border border-slate-200">
+                        <p class="text-slate-400 font-medium">No materials available for this selection.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = filtered.map(item => `
+                <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-200 flex flex-col justify-between hover:shadow-md transition">
+                    <div class="space-y-3">
+                        <div class="flex items-center gap-2">
+                            <span class="bg-indigo-50 text-indigo-700 text-xs font-bold px-3 py-1 rounded-full">${item.type}</span>
+                            <span class="bg-slate-100 text-slate-600 text-xs font-bold px-3 py-1 rounded-full">${item.readingLevel}</span>
+                        </div>
+                        <h3 class="font-extrabold text-slate-900 text-xl">${item.title}</h3>
+                        <p class="text-slate-600 text-sm leading-relaxed">${item.description}</p>
+                        <div class="bg-slate-50 p-4 rounded-2xl text-xs text-slate-500 font-mono border border-slate-100">
+                            ${item.contentPreview}
+                        </div>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between">
+                        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">${item.grade}</span>
+                        <button onclick="alert('Opening: ${item.title}')" class="bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold px-4 py-2.5 rounded-xl transition cursor-pointer">
+                            ${item.actionLabel}
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Initialize on load
+        filterLibrary();
+    </script>
+</body>
+</html>
