@@ -3254,38 +3254,46 @@
     </script>
 
     <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200 space-y-4 max-w-lg mx-auto">
-        <h3 class="text-lg font-bold text-slate-800">AI Prompt Builder</h3>
+  <h3 class="text-lg font-bold text-slate-800">AI Prompt Builder</h3>
+  
+  <div>
+    <label class="block text-sm font-medium text-slate-700 mb-1">Grade Level</label>
+    <select id="prompt-grade" class="w-full p-3 border border-slate-300 rounded-xl bg-white focus:ring-2 focus:ring-amber-500 outline-none">
+      <option value="">Select Class...</option>
+      <option value="Class 1">Class 1</option>
+      <option value="Class 2">Class 2</option>
+      <option value="Class 3">Class 3</option>
+      <option value="Class 4">Class 4</option>
+      <option value="Class 5">Class 5</option>
+      <option value="Class 6">Class 6</option>
+      <option value="JHS 1">JHS 1</option>
+    </select>
+  </div>
 
-        <div>
-            <label class="block text-sm font-medium text-slate-700 mb-1">Grade Level</label>
-            <select id="prompt-grade" class="w-full p-3 border border-slate-300 rounded-xl bg-white focus:ring-2 focus:ring-amber-500 outline-none">
-                <option value="">Select Grade Level...</option>
-                <option value="Basic 4">Basic 4</option>
-                <option value="Basic 5">Basic 5</option>
-                <option value="Basic 6">Basic 6</option>
-                <option value="JHS 1">JHS 1</option>
-            </select>
-        </div>
+  <div>
+    <label class="block text-sm font-medium text-slate-700 mb-1">Subject</label>
+    <select id="prompt-subject" class="w-full p-3 border border-slate-300 rounded-xl bg-white focus:ring-2 focus:ring-amber-500 outline-none">
+      <option value="">Select Subject...</option>
+      <option value="Mathematics">Mathematics</option>
+      <option value="Science">Science</option>
+      <option value="English">English</option>
+      <option value="Religious and Moral Education">Religious and Moral Education</option>
+      <option value="Computing">Computing</option>
+      <option value="Creative Arts">Creative Arts</option>
+      <option value="Ghanaian Language">Ghanaian Language</option>
+      <option value="History">History</option>
+    </select>
+  </div>
 
-        <div>
-            <label class="block text-sm font-medium text-slate-700 mb-1">Subject</label>
-            <select id="prompt-subject" class="w-full p-3 border border-slate-300 rounded-xl bg-white focus:ring-2 focus:ring-amber-500 outline-none">
-                <option value="">Select Subject...</option>
-                <option value="Mathematics">Mathematics</option>
-                <option value="Integrated Science">Integrated Science</option>
-                <option value="English Language">English Language</option>
-                <option value="Computing">Computing</option>
-            </select>
-        </div>
+  <div>
+    <label class="block text-sm font-medium text-slate-700 mb-1">Lesson Goal or Topic</label>
+    <input type="text" id="prompt-goal" placeholder="e.g., Fraction concepts" class="w-full p-3 border border-slate-300 rounded-xl bg-white focus:ring-2 focus:ring-amber-500 outline-none">
+  </div>
 
-        <div>
-            <label class="block text-sm font-medium text-slate-700 mb-1">Lesson Goal or Topic</label>
-            <input type="text" id="prompt-goal" placeholder="e.g., Explain fractions" class="w-full p-3 border border-slate-300 rounded-xl bg-white focus:ring-2 focus:ring-amber-500 outline-none">
-        </div>
-
-        <button onclick="generateCustomPrompt()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold p-3 rounded-xl transition shadow-md cursor-pointer">
-            Generate Custom Lesson Plan
-        </button>
+  <button onclick="generateCustomPrompt()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold p-3 rounded-xl transition shadow-md cursor-pointer">
+    Generate Custom Lesson Plan
+  </button>
     </div>
+    
 </body>
 </html>
