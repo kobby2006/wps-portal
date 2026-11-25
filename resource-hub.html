@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GES Teaching Resource Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-100 p-4 md:p-8">
+    <div class="max-w-6xl mx-auto space-y-6">
+        <header class="bg-white p-6 rounded-3xl shadow-sm border border-slate-200">
+            <h1 class="text-2xl font-black text-slate-800">GES Teaching Resource Hub</h1>
+            <p class="text-slate-500 text-sm mt-1">Access curriculum-aligned flashcards, passages, and visual aids.</p>
+        </header>
+
+        <!-- Filter Controls -->
+        <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-200 grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+                <label class="block text-sm font-bold text-slate-700 mb-1">Select Class / Grade</label>
+                <select id="filter-grade" onchange="filterResources()" class="w-full p-3 border border-slate-300 rounded-xl bg-slate-50 focus:ring-2 focus:ring-blue-500 outline-none">
+                    <option value="">All Classes (Class 1 - JHS 1)</option>
+                    <option value="Class 1">Class 1</option>
+                    <option value="Class 2">Class 2</option>
+                    <option value="Class 3">Class 3</option>
+                    <option value="Class 4">Class 4</option>
+                    <option value="Class 5">Class 5</option>
+                    <option value="Class 6">Class 6</option>
+                    <option value="JHS 1">JHS 1</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-sm font-bold text-slate-700 mb-1">Select Subject</label>
+                <select id="filter-subject" onchange="filterResources()" class="w-full p-3 border border-slate-300 rounded-xl bg-slate-50 focus:ring-2 focus:ring-blue-500 outline-none">
+                    <option value="">All Eight Subjects</option>
+                    <option value="English">English</option>
+                    <option value="Mathematics">Mathematics</option>
+                    <option value="Science">Science</option>
+                    <option value="Religious and Moral Education">Religious and Moral Education</option>
+                    <option value="Computing">Computing</option>
+                    <option value="Creative Arts">Creative Arts</option>
+                    <option value="Ghanaian Language">Ghanaian Language</option>
+                    <option value="History">History</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Resource Grid Display -->
+        <div id="resource-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Dynamic Content Injected Here -->
+        </div>
+    </div>
+
+    <script>
+        // Centralized GES Curriculum Data Store
+        const resourceData = {
+            "resources": [
+                {
+                    "id": "res-001",
+                    "title": "Basic Parts of a Computer",
+                    "type": "Flashcard",
+                    "grade": "Class 4",
+                    "subject": "Computing",
+                    "strand": "Hardware and Software",
+                    "indicator": "B4.1.1.1.1",
+                    "imageUrl": "https://images.unsplash.com/photo-1587202372775-e229f172b9d7?auto=format&fit=crop&w=600&q=80",
+                    "description": "Visual flashcard identifying the monitor, system unit, keyboard, and mouse."
+                },
+                {
+                    "id": "res-002",
+                    "title": "Fractions: Parts of a Whole",
+                    "type": "Diagram",
+                    "grade": "Basic 5",
+                    "subject": "Mathematics",
+                    "strand": "Number",
+                    "indicator": "B5.1.2.1.2",
+                    "imageUrl": "https://images.unsplash.com/photo-1555529669-e69e7a0aaea8?auto=format&fit=crop&w=600&q=80",
+                    "description": "Visual representation of halves, quarters, and thirds using shapes."
+                },
+                {
+                    "id": "res-003",
+                    "title": "Cleanliness and Health Habits",
+                    "type": "Reading Passage",
+                    "grade": "Class 2",
+                    "subject": "Religious and Moral Education",
+                    "trap": "Environment",
+                    "indicator": "B2.3.1.1.1",
+                    "imageUrl": "https://images.unsplash.com/photo-1578849278619-e73505c29169?auto=format&fit=crop&w=600&q=80",
+                    "description": "Short reading passage on the moral and physical benefits of keeping surroundings clean."
+                },
+                {
+                    "id": "res-004",
+                    "title": "The Golden Stool of Asante",
+                    "type": "Reading Passage",
+                    "grade": "JHS 1",
+                    "subject": "History",
+                    "strand": "Colonization and Events",
+                    "indicator": "B9.2.1.1.3",
+                    "imageUrl": "https://images.unsplash.com/photo-1599687351704-3e6f9391b12a?auto=format&fit=crop&w=600&q=80",
+                    "description": "Historical passage detailing the significance of the Sika Dwa Kofi in Asante history."
+                }
+            ]
+        };
+
+        function filterResources() {
+            const selectedGrade = document.getElementById('filter-grade').value;
+            const selectedSubject = document.getElementById('filter-subject').value;
+            const grid = document.getElementById('resource-grid');
+
+            const filtered = resourceData.resources.filter(item => {
+                const matchesGrade = !selectedGrade || item.grade === selectedGrade;
+                const matchesSubject = !selectedSubject || item.subject === selectedSubject;
+                return matchesGrade && matchesSubject;
+            });
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full bg-white p-12 rounded-3xl text-center border border-slate-200">
+                        <p class="text-slate-400 font-medium">No resources found matching this specific filter combination.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = filtered.map(item => `
+                <div class="bg-white rounded-3xl overflow-hidden shadow-sm border border-slate-200 flex flex-col justify-between hover:shadow-md transition">
+                    <div>
+                        <img src="${item.imageUrl}" alt="${item.title}" class="w-full h-48 object-cover">
+                        <div class="p-6 space-y-3">
+                            <div class="flex items-center gap-2">
+                                <span class="bg-blue-50 text-blue-700 text-xs font-bold px-3 py-1 rounded-full">${item.type}</span>
+                                <span class="bg-slate-100 text-slate-600 text-xs font-bold px-3 py-1 rounded-full">${item.grade}</span>
+                            </div>
+                            <h3 class="font-extrabold text-slate-800 text-lg">${item.title}</h3>
+                            <p class="text-slate-600 text-sm leading-relaxed">${item.description}</p>
+                        </div>
+                    </div>
+                    <div class="px-6 py-4 bg-slate-50 border-t border-slate-100 flex justify-between items-center text-xs text-slate-500 font-medium">
+                        <span>Subject: <strong class="text-slate-700">${item.subject}</strong></span>
+                        <span class="bg-amber-100 text-amber-800 font-bold px-2 py-0.5 rounded">Indicator: ${item.indicator}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Initialize on load
+        filterResources();
+    </script>
+</body>
+                                                             </html>
+                                                             
