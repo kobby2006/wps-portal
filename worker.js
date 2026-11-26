@@ -1325,6 +1325,7 @@ export default {
             }
             if(tabId === 'assessment') {
                 renderClassesDropdown();
+                renderClassesList();
                 onGradingClassChange();
                 renderGradingTable();
             }
@@ -1367,8 +1368,51 @@ export default {
             }
         }
 
+        function renderAdminsList() {
+            // Safe fallback if admin list container is not present on this build
+        }
+
+        function renderClassesList() {
+            const container = document.getElementById('classes-list-container');
+            if (!container) return;
+            container.innerHTML = classesData.map(c => \`
+                <span class="px-3 py-1.5 bg-blue-50 border border-blue-200 text-blue-900 rounded-xl text-xs font-bold flex items-center gap-2">
+                    \${c}
+                </span>
+            \`).join('');
+        }
+
+        function addClass() {
+            const input = document.getElementById('new-class-input');
+            const val = input ? input.value.trim() : '';
+            if (!val) { alert('Please enter a class name.'); return; }
+            if (!classesData.includes(val)) {
+                classesData.push(val);
+            }
+            input.value = '';
+            renderAll();
+            alert(\`Class "\${val}" added successfully!\`);
+        }
+
+        async function discardStudent() {
+            const select = document.getElementById('discard-student-select');
+            if (!select || !select.value) { alert('Please select a student to discard.'); return; }
+            await discardStudentDirect(select.value);
+        }
+
+        function editTimetable() {
+            const updated = prompt('Edit Timetable Schedule:', timetableText);
+            if (updated !== null && updated.trim() !== '') {
+                timetableText = updated.trim();
+                const display = document.getElementById('timetable-display');
+                if (display) display.innerText = timetableText;
+                alert('Timetable schedule updated!');
+            }
+        }
+
         function renderAll() {
             renderClassesDropdown();
+            renderClassesList();
             renderFeeClassDropdown();
             renderAttendanceClassDropdown();
             renderHistoryClassDropdown();
@@ -1689,16 +1733,23 @@ export default {
 
         document.getElementById('student-form').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const name = document.getElementById('s-name').value;
+            const name = document.getElementById('s-name').value.trim();
             const className = document.getElementById('s-class').value;
             const gender = document.getElementById('s-gender').value;
+            if (!name) return;
             try {
-                await supabaseClient.from('students').insert([{ name: name, class: className, gender: gender }]);
-            } catch(err) { console.log(err); }
-            alert(\`Student \${name} successfully enrolled to \${className} and saved to Supabase!\`);
-            document.getElementById('s-name').value = '';
-            await fetchStudentsFromSupabase();
-            renderAll();
+                const { error } = await supabaseClient.from('students').insert([{ name: name, class: className, gender: gender }]);
+                if (error) {
+                    alert(\`Error saving student: \${error.message}\`);
+                    return;
+                }
+                alert(\`Student \${name} successfully enrolled to \${className} and saved to Supabase!\`);
+                document.getElementById('s-name').value = '';
+                await fetchStudentsFromSupabase();
+                renderAll();
+            } catch(err) {
+                alert(\`Exception saving student: \${err.message}\`);
+            }
         });
 
         document.getElementById('teacher-form').addEventListener('submit', async (e) => {
