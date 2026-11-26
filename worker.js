@@ -1,5 +1,5 @@
 export default {
-  async fetch(request, env, ctx) { 
+  async fetch(request, env, ctx) {
     const html = `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -65,6 +65,7 @@ export default {
             </div>
         </div>
     </div>
+
     <!-- PASSWORD RESET MODAL -->
     <div id="password-reset-modal" class="hidden fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-6 border-t-4 border-blue-900 space-y-4">
@@ -77,6 +78,7 @@ export default {
             </div>
         </div>
     </div>
+
     <!-- ACCOUNT RECOVERY MODAL -->
     <div id="account-recovery-modal" class="hidden fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-6 border-t-4 border-amber-500 space-y-4">
@@ -87,6 +89,7 @@ export default {
             </div>
         </div>
     </div>
+
     <!-- ANNOUNCEMENT & BIRTHDAY POPUP MODAL -->
     <div id="announcement-modal" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full p-6 border-t-4 border-amber-500 space-y-4">
@@ -105,6 +108,51 @@ export default {
             </div>
         </div>
     </div>
+
+    <!-- FULL STORY & ARTICLE READER MODAL WITH AUDIO + QUIZ + NEXT/PREV -->
+    <div id="story-reader-modal" class="hidden fixed inset-0 bg-slate-950/80 z-50 flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full p-6 space-y-5 my-8 max-h-[90vh] overflow-y-auto border-t-4 border-blue-900">
+            <div class="flex justify-between items-start border-b pb-3">
+                <div>
+                    <span id="modal-story-meta" class="text-xs font-bold uppercase text-blue-900 bg-blue-50 px-2.5 py-1 rounded-full"></span>
+                    <h2 id="modal-story-title" class="text-xl font-bold text-slate-900 mt-2"></h2>
+                </div>
+                <button type="button" onclick="closeStoryModal()" class="text-slate-500 hover:text-slate-900 font-bold text-lg px-2">✕</button>
+            </div>
+
+            <!-- Pleasant Speech Controls -->
+            <div class="flex flex-wrap items-center gap-2 bg-slate-100 p-3 rounded-xl border">
+                <label class="text-xs font-bold text-slate-700">Speed:</label>
+                <select id="speech-speed" onchange="applySpeechSpeed()" class="text-xs p-1.5 rounded border bg-white font-semibold">
+                    <option value="0.75">0.75x</option>
+                    <option value="0.95" selected>0.95x (Pleasant)</option>
+                    <option value="1">1.0x (Normal)</option>
+                    <option value="1.25">1.25x</option>
+                    <option value="1.5">1.5x</option>
+                </select>
+                <button type="button" id="speak-btn" onclick="toggleSpeech('modal-story-body')" class="px-3 py-1.5 bg-blue-900 text-white text-xs font-bold rounded-lg hover:bg-blue-800">🔊 Listen to Story</button>
+                <button type="button" onclick="stopSpeech()" class="px-3 py-1.5 bg-slate-200 text-slate-800 text-xs font-bold rounded-lg hover:bg-slate-300">⏹ Stop</button>
+            </div>
+
+            <!-- Full Story / Article Body -->
+            <div id="modal-story-body" class="text-sm leading-relaxed text-slate-700 space-y-3 bg-slate-50 p-4 rounded-xl border"></div>
+
+            <!-- Comprehension Quiz -->
+            <div id="modal-quiz-section" class="space-y-3 border-t pt-4">
+                <h3 class="font-bold text-sm uppercase tracking-wider text-blue-950">📝 Comprehension Quiz</h3>
+                <div id="modal-quiz-questions" class="space-y-3 text-sm"></div>
+                <button type="button" onclick="gradeStoryQuiz()" class="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold rounded-xl">Check Quiz Answers</button>
+                <p id="modal-quiz-result" class="text-xs font-bold text-blue-900"></p>
+            </div>
+
+            <!-- Story Navigation -->
+            <div class="flex justify-between items-center border-t pt-4">
+                <button type="button" onclick="prevStory()" class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-800 text-xs font-bold rounded-xl">← Previous Story</button>
+                <button type="button" onclick="nextStory()" class="px-5 py-2 bg-blue-900 hover:bg-blue-800 text-white text-xs font-bold rounded-xl">Next Story →</button>
+            </div>
+        </div>
+    </div>
+
     <!-- RECEIPT MODAL POPUP -->
     <div id="receipt-modal" class="hidden fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 border-t-4 border-blue-900 space-y-4 relative">
@@ -115,6 +163,7 @@ export default {
             </div>
         </div>
     </div>
+
     <!-- MAIN APP SHELL -->
     <div id="app-shell" class="hidden flex-1 flex flex-col">
         <!-- TOP NAVBAR -->
@@ -133,6 +182,7 @@ export default {
                 <button onclick="logout()" class="text-xs bg-red-700 hover:bg-red-800 px-3 py-2 rounded-lg font-semibold transition">Logout</button>
             </div>
         </header>
+
         <!-- DASHBOARD CONTAINER -->
         <div class="flex-1 flex flex-col md:flex-row">
             <!-- SIDEBAR NAVIGATION -->
@@ -141,6 +191,8 @@ export default {
                 <button onclick="switchTab('assessment')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📝 <span>SBA & Exam Grading</span></button>
                 <button onclick="switchTab('history')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📁 <span>Student History & Reports</span></button>
                 <button onclick="switchTab('lms')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📚 <span>LMS & Teacher Training Hub</span></button>
+                <a href="resource-hub.html" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🗂️ <span>GES Teaching Resource Hub</span></a>
+                <a href="english-library.html" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📖 <span>English Library Hub</span></a>
                 <button onclick="switchTab('ai-copilot')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🤖 <span>Live Gemini AI Assistant</span></button>
                 <button onclick="switchTab('attendance')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📅 <span>Attendance Register</span></button>
                 <button onclick="switchTab('timetable')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">⏰ <span>Timetable & Time Mgmt</span></button>
@@ -156,16 +208,20 @@ export default {
                     <button onclick="switchTab('gallery')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🖼️ <span>Photo Gallery & JPG Uploads</span></button>
                     <button onclick="switchTab('profile')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">⚙️ <span>School Profile & Branding</span></button>
                 </div>
+
                 <!-- Teacher Nav -->
                 <div id="teacher-nav-section" class="hidden pt-4 border-t border-slate-200 space-y-2">
                     <p class="px-4 text-xs font-bold uppercase tracking-wider text-slate-400">Staff Portal</p>
                     <button onclick="switchTab('lms')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📚 <span>Teaching Hub & Resources</span></button>
+                    <a href="resource-hub.html" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🗂️ <span>GES Teaching Resource Hub</span></a>
+                    <a href="english-library.html" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📖 <span>English Library Hub</span></a>
                     <button onclick="switchTab('ai-copilot')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🤖 <span>Live Gemini AI Assistant</span></button>
                     <button onclick="switchTab('timetable')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">⏰ <span>Manage Timetable</span></button>
                     <button onclick="switchTab('teacher-gallery')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🖼️ <span>School Photo Gallery</span></button>
                     <button onclick="switchTab('teacher-announcements')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📢 <span>View Announcements</span></button>
                 </div>
             </aside>
+
             <!-- MAIN CONTENT AREA -->
             <main class="flex-1 p-6 overflow-y-auto">
                 <!-- TAB: DASHBOARD & CHARTS -->
@@ -194,6 +250,7 @@ export default {
                         </div>
                     </div>
                 </section>
+
                 <!-- TAB: SBA & EXAM GRADING -->
                 <section id="tab-assessment" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-4">
@@ -280,6 +337,7 @@ export default {
                         <button onclick="finalizeReports()" class="px-6 py-3 bg-amber-600 hover:bg-amber-700 text-white font-bold rounded-xl shadow-lg transition">Finalize & Save Assessment Sheet to Site ➔</button>
                     </div>
                 </section>
+
                 <!-- TAB: STUDENT HISTORY & SUBMITTED ASSESSMENT SHEETS -->
                 <section id="tab-history" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-4">
@@ -290,7 +348,6 @@ export default {
                             </div>
                             <button onclick="window.print()" class="px-4 py-2 bg-slate-800 text-white text-xs font-semibold rounded-lg hover:bg-slate-700 no-print">Print All Records</button>
                         </div>
-                        <!-- Year, Class & Term Selector for History -->
                         <div class="flex flex-wrap gap-4 pt-2 border-t items-center">
                             <div>
                                 <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Choose Academic Year</label>
@@ -319,16 +376,60 @@ export default {
                         <p class="text-slate-500 italic p-4">No finalized assessment sheets or reports found. Click "Finalize & Save Assessment Sheet" from the SBA grading tab.</p>
                     </div>
                 </section>
-                <!-- TAB: LMS & TEACHER TRAINING HUB -->
+
+                <!-- TAB: LMS & TEACHER TRAINING HUB + STORIES/ARTICLES + CLASS/SUBJECT RESOURCES -->
                 <section id="tab-lms" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-6">
                         <div class="border-b pb-4 flex justify-between items-center">
                             <div>
-                                <h2 class="text-xl font-bold text-slate-900">📚 LMS & Professional Teacher Training Hub</h2>
-                                <p class="text-xs text-slate-500 mt-1">Curriculum resources, classroom control methodologies, student behavioral analysis, and problem-solving strategies.</p>
+                                <h2 class="text-xl font-bold text-slate-900">📚 LMS, Reading Stories & Learning Resources Hub</h2>
+                                <p class="text-xs text-slate-500 mt-1">Read full stories/articles with audio narration & quizzes, filter learning resources by class and subject, and access teacher training guides.</p>
                             </div>
                             <span id="lms-role-badge" class="px-3 py-1 bg-amber-100 text-amber-900 text-xs font-bold rounded-full">Admin Edit Mode Active</span>
                         </div>
+
+                        <!-- READING STORIES & ARTICLES WITH FULL VIEW + QUIZ + AUDIO -->
+                        <div class="space-y-3">
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                                <h3 class="font-bold text-base text-blue-950">📖 Reading Stories & Articles (Audio + Quiz + Next Story)</h3>
+                                <select id="story-level-filter" onchange="renderStoriesList()" class="p-2 border rounded-xl text-xs bg-slate-50 font-semibold w-48">
+                                    <option value="ALL">All Levels</option>
+                                    <option value="LOWER PRIMARY">Lower Primary</option>
+                                    <option value="UPPER PRIMARY">Upper Primary</option>
+                                </select>
+                            </div>
+                            <div id="stories-cards-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+                        </div>
+
+                        <!-- CLASS & SUBJECT LEARNING RESOURCES -->
+                        <div class="pt-4 border-t space-y-4">
+                            <div>
+                                <h3 class="font-bold text-base text-blue-950">🗂️ Learning Resources by Class & Subject</h3>
+                                <p class="text-xs text-slate-500">Select a class and subject below to view matching learning resources and listen to their summary.</p>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Select Class</label>
+                                    <select id="resource-class-select" onchange="renderFilteredResources()" class="p-2.5 border rounded-xl w-full text-sm bg-slate-50 font-medium"></select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Select Subject</label>
+                                    <select id="resource-subject-select" onchange="renderFilteredResources()" class="p-2.5 border rounded-xl w-full text-sm bg-slate-50 font-medium">
+                                        <option value="ALL">All Subjects</option>
+                                        <option value="Mathematics">Mathematics</option>
+                                        <option value="English Language">English Language</option>
+                                        <option value="Science">Science</option>
+                                        <option value="History">History</option>
+                                        <option value="Computing">Computing</option>
+                                        <option value="Creative Arts">Creative Arts</option>
+                                        <option value="Ghanaian Language">Ghanaian Language</option>
+                                        <option value="R. M. E.">R. M. E.</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div id="filtered-resources-list" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+                        </div>
+
                         <!-- ADMIN ONLY: ADD NEW RESOURCE OR TRAINING GUIDE -->
                         <div id="admin-lms-upload-section" class="bg-blue-50/60 p-4 rounded-xl border border-blue-200 space-y-3">
                             <h3 class="font-bold text-sm text-blue-950">➕ Upload Teaching Resource / Embed Video / Update Training Guide (Admin Only)</h3>
@@ -341,9 +442,9 @@ export default {
                                 <button onclick="saveLMSResource()" class="px-5 py-2 bg-blue-900 text-white font-bold rounded-xl text-xs">Publish LMS Resource</button>
                             </div>
                         </div>
-                        <!-- LMS CONTENT TABS / SECTIONS -->
+
+                        <!-- TEACHER TRAINING PILLARS -->
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2">
-                            <!-- Section 1: How to Control a Class -->
                             <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-3 shadow-sm">
                                 <div class="flex items-center space-x-2 text-blue-900 font-bold text-sm">
                                     <span>🛡️</span> <h4>Classroom Control & Discipline</h4>
@@ -355,7 +456,6 @@ export default {
                                     <li><strong>Positive Reinforcement:</strong> Praise focused students publicly to encourage compliance across the room.</li>
                                 </ul>
                             </div>
-                            <!-- Section 2: Types of Students & Identification -->
                             <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-3 shadow-sm">
                                 <div class="flex items-center space-x-2 text-blue-900 font-bold text-sm">
                                     <span>🧠</span> <h4>Types of Students & Profiles</h4>
@@ -367,7 +467,6 @@ export default {
                                     <li><strong>The Withdrawn / Quiet Student:</strong> Shy or anxious; requires gentle 1-on-1 encouragement and low-pressure participation.</li>
                                 </ul>
                             </div>
-                            <!-- Section 3: Solving Student Problems -->
                             <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-3 shadow-sm">
                                 <div class="flex items-center space-x-2 text-blue-900 font-bold text-sm">
                                     <span>💡</span> <h4>Problem-Solving Strategies</h4>
@@ -380,21 +479,15 @@ export default {
                                 </ul>
                             </div>
                         </div>
+
                         <!-- DYNAMIC LMS RESOURCES & EMBEDDED VIDEOS CONTAINER -->
                         <div class="pt-4 border-t space-y-4">
                             <h3 class="font-bold text-sm text-slate-900">📂 Uploaded Teaching Materials & Embedded Media</h3>
-                            <div id="lms-resources-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div class="bg-slate-50 p-4 rounded-xl border space-y-2">
-                                    <h4 class="font-bold text-xs text-blue-950">Sample Curriculum Guide: Basic Mathematics & Literacy</h4>
-                                    <p class="text-xs text-slate-600">Official syllabus breakdown for Term 1 core topics.</p>
-                                    <div class="aspect-w-16 aspect-h-9 pt-2">
-                                        <iframe class="w-full h-40 rounded-lg shadow border" src="https://www.youtube.com/embed/dQw4w9WgXcQ" allowfullscreen></iframe>
-                                    </div>
-                                </div>
-                            </div>
+                            <div id="lms-resources-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
                         </div>
                     </div>
                 </section>
+
                 <!-- TAB: LIVE GEMINI AI ASSISTANT -->
                 <section id="tab-ai-copilot" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-4">
@@ -405,7 +498,6 @@ export default {
                             </div>
                             <span class="px-3 py-1 bg-emerald-100 text-emerald-900 text-xs font-bold rounded-full">Gemini AI Active</span>
                         </div>
-                        <!-- ADMIN ONLY: GEMINI API KEY INPUT -->
                         <div id="admin-gemini-section" class="hidden bg-amber-50 p-4 rounded-xl border border-amber-200 space-y-2">
                             <label class="block text-xs font-bold uppercase text-amber-900">Admin: Enter School Gemini API Key:</label>
                             <div class="flex gap-2">
@@ -431,7 +523,6 @@ export default {
                                 </button>
                             </div>
                         </div>
-                        <!-- AI RESPONSE BOX WITH DOWNLOAD & PRINT BUTTONS -->
                         <div id="ai-response-box" class="hidden mt-6 p-5 bg-blue-50/70 border border-blue-200 rounded-2xl space-y-3 text-slate-800">
                             <div class="flex justify-between items-center border-b pb-2">
                                 <div class="flex items-center space-x-2 text-blue-900 font-bold text-sm">
@@ -446,6 +537,7 @@ export default {
                         </div>
                     </div>
                 </section>
+
                 <!-- TAB: ATTENDANCE REGISTER -->
                 <section id="tab-attendance" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-4">
@@ -486,6 +578,7 @@ export default {
                         </div>
                     </div>
                 </section>
+
                 <!-- TAB: TIMETABLE & TIME MANAGEMENT -->
                 <section id="tab-timetable" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-4">
@@ -501,6 +594,7 @@ export default {
                         </div>
                     </div>
                 </section>
+
                 <!-- TAB: FEE MANAGEMENT / PROFESSIONAL BILLING ACCOUNT (Admin Only) -->
                 <section id="tab-fees" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-4">
@@ -535,6 +629,7 @@ export default {
                         </div>
                     </div>
                 </section>
+
                 <!-- TAB: MANAGE CLASSES (Admin) -->
                 <section id="tab-classes" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-4">
@@ -550,6 +645,7 @@ export default {
                         </div>
                     </div>
                 </section>
+
                 <!-- TAB: STUDENT ENROLLMENT & EDIT / DISCARD (Admin) -->
                 <section id="tab-students" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-6">
@@ -567,12 +663,11 @@ export default {
                             </form>
                         </div>
 
-                        <!-- EDIT STUDENT ROSTER & SPELLING SECTION -->
                         <div class="pt-6 border-t space-y-4">
                             <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                                 <div>
                                     <h3 class="text-lg font-bold text-slate-900">✏️ Edit Student Roster & Fix Spelling Mistakes</h3>
-                                    <p class="text-xs text-slate-500">Edit student names, classes, or gender directly and click "Save Changes" to update Supabase.</p>
+                                    <p class="text-xs text-slate-500">Edit student names, classes, or gender directly and click "Save" to update Supabase.</p>
                                 </div>
                                 <div>
                                     <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Filter Class to Edit</label>
@@ -596,7 +691,6 @@ export default {
                             </div>
                         </div>
 
-                        <!-- DISCARD SECTION -->
                         <div class="pt-6 border-t">
                             <h3 class="text-lg font-bold text-slate-900 mb-2">Discard / Remove Withdrawn Student</h3>
                             <p class="text-xs text-slate-500 mb-4">Select a student who has stopped school to permanently discard their enrollment.</p>
@@ -607,6 +701,7 @@ export default {
                         </div>
                     </div>
                 </section>
+
                 <!-- TAB: TEACHER ACCOUNTS (Admin) -->
                 <section id="tab-teachers" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl shadow border border-slate-100">
@@ -621,6 +716,7 @@ export default {
                         </form>
                     </div>
                 </section>
+
                 <!-- TAB: ANNOUNCEMENTS & PORTAL LOCK (Admin) -->
                 <section id="tab-announcements" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-6">
@@ -639,7 +735,6 @@ export default {
                                 <button onclick="postAnnouncement()" class="px-6 py-2.5 bg-blue-900 text-white font-bold rounded-xl">Publish Announcement & Photo to Cloud</button>
                             </div>
                         </div>
-                        <!-- PORTAL LOCK CONTROL PANEL -->
                         <div class="pt-6 border-t space-y-3">
                             <h3 class="text-lg font-bold text-slate-900">🔒 Teacher Portal Access Restriction</h3>
                             <p class="text-xs text-slate-500">Lock the portal to restrict teachers from logging in while you perform system edits, grade updates, or maintenance.</p>
@@ -652,6 +747,7 @@ export default {
                         </div>
                     </div>
                 </section>
+
                 <!-- TAB: PHOTO GALLERY & MULTIPLE JPG UPLOADS -->
                 <section id="tab-gallery" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-4">
@@ -666,6 +762,7 @@ export default {
                         </div>
                     </div>
                 </section>
+
                 <!-- TAB: TEACHER PHOTO GALLERY (Teacher View) -->
                 <section id="tab-teacher-gallery" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl shadow border border-slate-100">
@@ -676,6 +773,7 @@ export default {
                         </div>
                     </div>
                 </section>
+
                 <!-- TAB: TEACHER ANNOUNCEMENTS VIEW -->
                 <section id="tab-teacher-announcements" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-4">
@@ -690,6 +788,7 @@ export default {
                         </div>
                     </div>
                 </section>
+
                 <!-- TAB: SCHOOL PROFILE & BRANDING SETTINGS -->
                 <section id="tab-profile" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-4">
@@ -715,11 +814,13 @@ export default {
             </main>
         </div>
     </div>
+
     <!-- JAVASCRIPT APPLICATION CORE -->
     <script>
         const SUPABASE_URL = 'https://lhqacoxyfyklxjhabzfe.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxocWFjb3h5ZnlrbHhqaGFiemZlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI1MTA2NTksImV4cCI6MjEwODA4NjY1OX0.w7eqLoS5uKKCGpTxGunl2iD3oDEzRxPaUQ2EbhsGSDA';
         const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
         let currentUser = null;
         let portalLocked = false;
         let globalAnnouncementText = "Welcome to Wesley Preparatory School. Please ensure all student records and SBA scores are updated promptly.";
@@ -729,7 +830,7 @@ export default {
         let teachersList = [];
         let galleryPhotos = [];
         let storedGeminiKey = "";
-        
+
         let lmsResources = [
             {
                 title: "Curriculum Teaching Guide & Instructional Framework",
@@ -737,12 +838,15 @@ export default {
                 description: "Official teaching manual for managing primary and junior high core subjects effectively."
             }
         ];
+
         let schoolProfile = {
             name: "Wesley Preparatory School",
             location: "Assorko-Essaman",
             motto: "Knowledge and Integrity"
         };
+
         let timetableText = "📅 Current Schedule: Morning Devotion (07:30 - 08:00) | Core Subjects & Practical Sessions (08:00 - 14:00).";
+
         const standardSubjects = [
             'ENGLISH LANGUAGE',
             'MATHEMATICS',
@@ -753,15 +857,270 @@ export default {
             'COMPUTING',
             'GHANAIAN LANGUAGE'
         ];
-        
+
+        // Stories & Articles with Comprehension Quizzes
+        const storiesData = [
+            {
+                title: "Kofi and the Magic Mango Tree",
+                level: "LOWER PRIMARY",
+                summary: "A delightful story about a young boy in the village who learns the value of patience and sharing.",
+                body: "Once upon a time in a sunny village, Kofi planted a small mango seed and watered it every morning. Even when his friends rushed off to play, Kofi stayed patient and cared for the young shoot. Years later, the tree grew tall and heavy with sweet mangoes, and Kofi happily shared the harvest with everyone in the village.",
+                quiz: [
+                    { q: "What did Kofi do every morning for the mango seed?", options: ["Watered it", "Cut it down", "Hid it"], answer: 0 },
+                    { q: "What lesson does Kofi learn in the story?", options: ["Being greedy", "Patience and sharing", "Ignoring chores"], answer: 1 }
+                ]
+            },
+            {
+                title: "Ama's Science Notebook",
+                level: "UPPER PRIMARY",
+                summary: "An article on how careful observation and record-keeping help young learners discover patterns in nature.",
+                body: "Ama kept a neat notebook whenever she observed plants, rain, and shadows around her school compound. By comparing what she wrote each week, she noticed how sunlight changed the length of shadows at different times of day. Her careful notes helped the whole class understand how light travels.",
+                quiz: [
+                    { q: "What did Ama record in her notebook?", options: ["Football scores", "Observations around the compound", "Bus timetables"], answer: 1 },
+                    { q: "What changed at different times of day?", options: ["Shadow lengths", "Stone colors", "Classroom walls"], answer: 0 }
+                ]
+            },
+            {
+                title: "The Market Day Teamwork",
+                level: "UPPER PRIMARY",
+                summary: "How four classmates organized a school reading corner using teamwork and clear planning.",
+                body: "Before the new term began, four pupils planned a cozy reading corner in their classroom. Each learner took a clear role: sorting storybooks, labeling shelves, making reading posters, and sweeping the floor. By working together calmly, they finished ahead of schedule and inspired their classmates to read daily.",
+                quiz: [
+                    { q: "What were the four pupils preparing?", options: ["A classroom reading corner", "A football pitch", "A school bus"], answer: 0 },
+                    { q: "How did they finish ahead of schedule?", options: ["By working together with clear roles", "By skipping tasks", "By waiting for the holidays"], answer: 0 }
+                ]
+            }
+        ];
+
+        // Class + Subject Learning Resources
+        const learningResources = [
+            { className: "Basic 4", subject: "Mathematics", title: "Place Value & Expanded Form Guide", type: "Lesson Note", summary: "Break numbers into thousands, hundreds, tens, and ones using place-value charts and counting sticks." },
+            { className: "Basic 4", subject: "Science", title: "Parts of a Flowering Plant", type: "Activity Sheet", summary: "Identify roots, stem, leaves, and flowers and explain how each part supports plant growth." },
+            { className: "Basic 5", subject: "Mathematics", title: "Fractions & Equivalent Fractions", type: "Practice Set", summary: "Compare proper fractions and find equivalent fractions using visual strips and number lines." },
+            { className: "Basic 5", subject: "Science", title: "Ecosystems & Food Chains", type: "Lesson Note", summary: "Trace energy flow from producers to consumers and decomposers in local habitats." },
+            { className: "Basic 6", subject: "English Language", title: "Reading Comprehension & Summary", type: "Reading Guide", summary: "Identify main ideas, supporting details, and context clues in short passages." },
+            { className: "Basic 6", subject: "Mathematics", title: "Ratios, Percentages & Decimals", type: "Workbook", summary: "Convert between fractions, decimals, and percentages and solve everyday word problems." }
+        ];
+
+        let activeStoryIndex = 0;
+        let currentUtterance = null;
+        let isPaused = false;
+
+        function getAllowedClasses() {
+            return [];
+        }
+        function getAllowedSubjects() {
+            return [];
+        }
+
+        // Speech Synthesis Controls (Listen / Pause / Resume / Stop / Speed)
+        function getSelectedSpeechRate() {
+            const el = document.getElementById('speech-speed');
+            const rate = el ? parseFloat(el.value) : 0.95;
+            return Number.isNaN(rate) ? 0.95 : rate;
+        }
+
+        function speakPlainText(text, buttonId = null) {
+            if (!window.speechSynthesis) {
+                alert("Speech synthesis is not supported in this browser.");
+                return;
+            }
+            window.speechSynthesis.cancel();
+            isPaused = false;
+            currentUtterance = new SpeechSynthesisUtterance(text);
+            currentUtterance.rate = getSelectedSpeechRate();
+            currentUtterance.pitch = 1.02;
+
+            const voices = window.speechSynthesis.getVoices();
+            const preferredVoice = voices.find(v => /en/i.test(v.lang) && /natural|google|samantha|daniel|aria/i.test(v.name)) || voices.find(v => /en/i.test(v.lang));
+            if (preferredVoice) currentUtterance.voice = preferredVoice;
+
+            currentUtterance.onend = () => {
+                isPaused = false;
+                const btn = document.getElementById(buttonId || 'speak-btn');
+                if (btn) btn.textContent = buttonId ? "🔊 Listen" : "🔊 Listen to Story";
+            };
+
+            window.speechSynthesis.speak(currentUtterance);
+            const btn = document.getElementById(buttonId || 'speak-btn');
+            if (btn) btn.textContent = "⏸ Pause Reading";
+        }
+
+        function toggleSpeech(textElementId) {
+            const el = document.getElementById(textElementId);
+            const btn = document.getElementById('speak-btn');
+            if (!el) return;
+
+            if (!window.speechSynthesis) {
+                alert("Speech synthesis is not supported in this browser.");
+                return;
+            }
+
+            if (window.speechSynthesis.speaking && currentUtterance) {
+                if (isPaused) {
+                    window.speechSynthesis.resume();
+                    isPaused = false;
+                    if (btn) btn.textContent = "⏸ Pause Reading";
+                } else {
+                    window.speechSynthesis.pause();
+                    isPaused = true;
+                    if (btn) btn.textContent = "▶ Resume Reading";
+                }
+                return;
+            }
+
+            speakPlainText(el.innerText, 'speak-btn');
+        }
+
+        function applySpeechSpeed() {
+            if (window.speechSynthesis && (window.speechSynthesis.speaking || isPaused)) {
+                const bodyEl = document.getElementById('modal-story-body');
+                if (bodyEl && bodyEl.innerText.trim()) {
+                    speakPlainText(bodyEl.innerText, 'speak-btn');
+                }
+            }
+        }
+
+        function stopSpeech() {
+            if (window.speechSynthesis) {
+                window.speechSynthesis.cancel();
+            }
+            isPaused = false;
+            currentUtterance = null;
+            const btn = document.getElementById('speak-btn');
+            if (btn) btn.textContent = "🔊 Listen to Story";
+        }
+
+        // Story Modal & Quiz Functions
+        function renderStoriesList() {
+            const grid = document.getElementById('stories-cards-grid');
+            const filterVal = document.getElementById('story-level-filter')?.value || 'ALL';
+            if (!grid) return;
+
+            const list = storiesData.filter(s => filterVal === 'ALL' || s.level === filterVal);
+            grid.innerHTML = list.map((story) => {
+                const realIdx = storiesData.indexOf(story);
+                return `
+                    <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 flex flex-col justify-between space-y-3 shadow-sm">
+                        <div class="space-y-1.5">
+                            <span class="text-[10px] font-bold uppercase px-2.5 py-0.5 rounded-full bg-blue-100 text-blue-900">${story.level}</span>
+                            <h4 class="font-bold text-sm text-slate-900">${story.title}</h4>
+                            <p class="text-xs text-slate-600">${story.summary}</p>
+                        </div>
+                        <div class="flex items-center justify-between pt-2 border-t gap-2">
+                            <button type="button" onclick="speakPlainText(${JSON.stringify(story.title + '. ' + story.body)})" class="px-3 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-800 text-xs font-bold rounded-lg">🔊 Audio</button>
+                            <button type="button" onclick="openStoryModal(${realIdx})" class="px-4 py-1.5 bg-blue-900 hover:bg-blue-800 text-white text-xs font-bold rounded-lg">Read Full Story & Quiz</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function openStoryModal(index) {
+            stopSpeech();
+            activeStoryIndex = index;
+            renderStoryModal();
+            document.getElementById('story-reader-modal').classList.remove('hidden');
+        }
+
+        function closeStoryModal() {
+            stopSpeech();
+            document.getElementById('story-reader-modal').classList.add('hidden');
+        }
+
+        function renderStoryModal() {
+            const story = storiesData[activeStoryIndex];
+            if (!story) return;
+
+            document.getElementById('modal-story-meta').textContent = story.level;
+            document.getElementById('modal-story-title').textContent = story.title;
+            document.getElementById('modal-story-body').innerHTML = `<p>${story.body}</p>`;
+            document.getElementById('modal-quiz-result').textContent = '';
+
+            const quizContainer = document.getElementById('modal-quiz-questions');
+            quizContainer.innerHTML = story.quiz.map((item, qIdx) => `
+                <div class="p-3 rounded-xl bg-slate-50 border space-y-1.5">
+                    <p class="font-semibold text-slate-800">${qIdx + 1}. ${item.q}</p>
+                    ${item.options.map((opt, oIdx) => `
+                        <label class="flex items-center space-x-2 text-xs text-slate-700 cursor-pointer">
+                            <input type="radio" name="story-q-${qIdx}" value="${oIdx}">
+                            <span>${opt}</span>
+                        </label>
+                    `).join('')}
+                </div>
+            `).join('');
+        }
+
+        function gradeStoryQuiz() {
+            const story = storiesData[activeStoryIndex];
+            if (!story) return;
+            let score = 0;
+            story.quiz.forEach((item, qIdx) => {
+                const selected = document.querySelector(\`input[name="story-q-\${qIdx}"]:checked\`);
+                if (selected && Number(selected.value) === item.answer) score++;
+            });
+            document.getElementById('modal-quiz-result').textContent = \`Score: \${score} out of \${story.quiz.length}\`;
+        }
+
+        function nextStory() {
+            stopSpeech();
+            activeStoryIndex = (activeStoryIndex + 1) % storiesData.length;
+            renderStoryModal();
+        }
+
+        function prevStory() {
+            stopSpeech();
+            activeStoryIndex = (activeStoryIndex - 1 + storiesData.length) % storiesData.length;
+            renderStoryModal();
+        }
+
+        // Class + Subject Learning Resources Filter
+        function renderResourceClassDropdown() {
+            const select = document.getElementById('resource-class-select');
+            if (!select) return;
+            const prev = select.value;
+            select.innerHTML = ['ALL', ...classesData].map(c => `<option value="${c}">${c === 'ALL' ? 'All Classes' : c}</option>`).join('');
+            if (prev) select.value = prev;
+        }
+
+        function renderFilteredResources() {
+            const selectedClass = document.getElementById('resource-class-select')?.value || 'ALL';
+            const selectedSubject = document.getElementById('resource-subject-select')?.value || 'ALL';
+            const container = document.getElementById('filtered-resources-list');
+            if (!container) return;
+
+            const matches = learningResources.filter(item => {
+                const classMatch = selectedClass === 'ALL' || item.className === selectedClass;
+                const subjectMatch = selectedSubject === 'ALL' || item.subject === selectedSubject;
+                return classMatch && subjectMatch;
+            });
+
+            if (matches.length === 0) {
+                container.innerHTML = \`<p class="text-sm text-slate-500 italic col-span-2">No resources found for \${selectedClass} — \${selectedSubject}.</p>\`;
+                return;
+            }
+
+            container.innerHTML = matches.map(res => `
+                <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 shadow-sm space-y-2">
+                    <div class="flex justify-between items-center text-xs font-bold text-blue-900">
+                        <span>${res.className} • ${res.subject}</span>
+                        <span class="bg-blue-100 px-2 py-0.5 rounded">${res.type}</span>
+                    </div>
+                    <h4 class="font-bold text-sm text-slate-900">${res.title}</h4>
+                    <p class="text-xs text-slate-600">${res.summary}</p>
+                    <button type="button" onclick="speakPlainText(${JSON.stringify(res.className + ' ' + res.subject + ': ' + res.title + '. ' + res.summary)})" class="px-3 py-1 bg-blue-900 text-white text-xs font-bold rounded-lg hover:bg-blue-800">🔊 Listen to Summary</button>
+                </div>
+            `).join('');
+        }
+
         // Load cloud settings instantly on startup
         window.addEventListener('DOMContentLoaded', async () => {
             await fetchCloudSettings();
             renderGalleryGrids();
             updateLockStatusUI();
-            if (currentUser.role === 'teacher') {
-    applyTeacherScope();
-}
+            renderStoriesList();
+            renderResourceClassDropdown();
+            renderFilteredResources();
             const announcementTextarea = document.getElementById('announcement-text');
             if(announcementTextarea) announcementTextarea.value = globalAnnouncementText;
         });
@@ -827,7 +1186,6 @@ export default {
             document.getElementById('user-badge').innerText = role;
             document.getElementById('welcome-name').innerText = user;
 
-            // Restrict API Key section to Admin only
             const adminGeminiSection = document.getElementById('admin-gemini-section');
             if(adminGeminiSection) {
                 if(role === 'admin') {
@@ -878,7 +1236,7 @@ export default {
         function submitPasswordResetRequest() {
             const val = document.getElementById('reset-email-input').value.trim();
             if(!val) { alert('Please enter your email or username.'); return; }
-            alert(`Password / PIN reset request successfully submitted for "${val}". The Administrator has been notified.`);
+            alert(\`Password / PIN reset request successfully submitted for "\${val}". The Administrator has been notified.\`);
             document.getElementById('reset-email-input').value = '';
             closePasswordResetModal();
         }
@@ -951,14 +1309,14 @@ export default {
         }
         function closeAnnouncementModal() { document.getElementById('announcement-modal').classList.add('hidden'); }
         function closeReceiptModal() { document.getElementById('receipt-modal').classList.add('hidden'); }
-        function logout() { location.reload(); }
+        function logout() { stopSpeech(); location.reload(); }
 
         async function switchTab(tabId) {
             ['dashboard', 'assessment', 'history', 'lms', 'ai-copilot', 'attendance', 'timetable', 'fees', 'classes', 'students', 'teachers', 'announcements', 'gallery', 'teacher-gallery', 'teacher-announcements', 'profile'].forEach(t => {
-                const el = document.getElementById(`tab-${t}`);
+                const el = document.getElementById(\`tab-\${t}\`);
                 if(el) el.classList.add('hidden');
             });
-            const active = document.getElementById(`tab-${tabId}`);
+            const active = document.getElementById(\`tab-\${tabId}\`);
             if(active) active.classList.remove('hidden');
 
             if(tabId === 'announcements') {
@@ -989,6 +1347,9 @@ export default {
                 renderHistoryView();
             }
             if(tabId === 'lms') {
+                renderStoriesList();
+                renderResourceClassDropdown();
+                renderFilteredResources();
                 renderLMSResources();
             }
             if(tabId === 'gallery' || tabId === 'teacher-gallery') {
@@ -1011,7 +1372,6 @@ export default {
             renderFeeClassDropdown();
             renderAttendanceClassDropdown();
             renderHistoryClassDropdown();
-            renderClassesList();
             renderDiscardDropdown();
             renderEditStudentClassDropdown();
             renderEditStudentsTable();
@@ -1020,12 +1380,14 @@ export default {
             renderFeesTable();
             renderAttendanceRegister();
             renderHistoryView();
+            renderStoriesList();
+            renderResourceClassDropdown();
+            renderFilteredResources();
             renderLMSResources();
             renderGalleryGrids();
             renderCharts();
         }
 
-        // Direct Gemini API Integration (Smart Dual-Support for AIza keys & AQ tokens)
         function setAiPrompt(promptText) {
             const queryBox = document.getElementById('ai-user-query');
             if(queryBox) queryBox.value = promptText;
@@ -1054,21 +1416,21 @@ export default {
             }
 
             responseBox.classList.remove('hidden');
-            responseContent.innerHTML = `<p class="italic text-slate-500 animate-pulse">Contacting Gemini AI...</p>`;
+            responseContent.innerHTML = \`<p class="italic text-slate-500 animate-pulse">Contacting Gemini AI...</p>\`;
 
             if(!storedGeminiKey) {
-                responseContent.innerHTML = `<span class="text-red-700 font-bold">⚠️ Error: No Gemini API Key configured. Please have the Admin enter and save a valid key in the AI Assistant tab.</span>`;
+                responseContent.innerHTML = \`<span class="text-red-700 font-bold">⚠️ Error: No Gemini API Key configured. Please have the Admin enter and save a valid key in the AI Assistant tab.</span>\`;
                 return;
             }
 
             const isOAuth = storedGeminiKey.startsWith('AQ.');
             const url = isOAuth 
                 ? 'https://generativelanguage.googleapis.com/v1/models/gemini-2.0-flash:generateContent'
-                : `https://generativelanguage.googleapis.com/v1/models/gemini-2.0-flash:generateContent?key=${storedGeminiKey}`;
+                : \`https://generativelanguage.googleapis.com/v1/models/gemini-2.0-flash:generateContent?key=\${storedGeminiKey}\`;
 
             const headers = { 'Content-Type': 'application/json' };
             if (isOAuth) {
-                headers['Authorization'] = `Bearer ${storedGeminiKey}`;
+                headers['Authorization'] = \`Bearer \${storedGeminiKey}\`;
             }
 
             try {
@@ -1083,12 +1445,12 @@ export default {
                 if(data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts[0].text) {
                     responseContent.innerHTML = data.candidates[0].content.parts[0].text;
                 } else if(data.error) {
-                    responseContent.innerHTML = `<span class="text-red-700 font-bold">API Error: ${data.error.message || 'Invalid API Key or quota exceeded.'}</span>`;
+                    responseContent.innerHTML = \`<span class="text-red-700 font-bold">API Error: \${data.error.message || 'Invalid API Key or quota exceeded.'}</span>\`;
                 } else {
-                    responseContent.innerHTML = `<span class="text-red-700 font-bold">Unexpected response from Gemini API. Please check your API key.</span>`;
+                    responseContent.innerHTML = \`<span class="text-red-700 font-bold">Unexpected response from Gemini API. Please check your API key.</span>\`;
                 }
             } catch(err) {
-                responseContent.innerHTML = `<span class="text-red-700 font-bold">Network / Connection Error: ${err.message}. Please check your internet connection.</span>`;
+                responseContent.innerHTML = \`<span class="text-red-700 font-bold">Network / Connection Error: \${err.message}. Please check your internet connection.</span>\`;
             }
         }
 
@@ -1098,223 +1460,201 @@ export default {
                 alert('No valid AI response to download yet.');
                 return;
             }
-            let fileContent = `${schoolProfile.name.toUpperCase()}\nOFFICIAL GEMINI AI ASSISTANT OUTPUT\n--------------------------------------------------\n\n${content}`;
+            let fileContent = \`\${schoolProfile.name.toUpperCase()}\\nOFFICIAL GEMINI AI ASSISTANT OUTPUT\\n--------------------------------------------------\\n\\n\${content}\`;
             const blob = new Blob([fileContent], { type: 'application/msword' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `Gemini_AI_Output_${Date.now()}.doc`;
+            a.download = \`Gemini_AI_Output_\${Date.now()}.doc\`;
             a.click();
             alert('AI response downloaded successfully as document!');
         }
 
         function renderClassesDropdown() {
-    const allowedClasses = getAllowedClasses();
+            const allowedClasses = getAllowedClasses();
 
-    const selectEnroll = document.getElementById('s-class');
-    if (selectEnroll) {
-        const currentVal = selectEnroll.value;
-        const options = classesData.filter(c => allowedClasses.length === 0 || allowedClasses.includes(c));
-        selectEnroll.innerHTML = options.map(c => `<option value="${c}">${c}</option>`).join('');
-        if (options.includes(currentVal)) selectEnroll.value = currentVal;
-    }
+            const selectEnroll = document.getElementById('s-class');
+            if (selectEnroll) {
+                const currentVal = selectEnroll.value;
+                const options = classesData.filter(c => allowedClasses.length === 0 || allowedClasses.includes(c));
+                selectEnroll.innerHTML = options.map(c => \`<option value="\${c}">\${c}</option>\`).join('');
+                if (options.includes(currentVal)) selectEnroll.value = currentVal;
+            }
 
-    const selectGrading = document.getElementById('grading-class-filter');
-    if (selectGrading) {
-        const currentVal = selectGrading.value;
-        const options = classesData.filter(c => allowedClasses.length === 0 || allowedClasses.includes(c));
-        selectGrading.innerHTML = options.map(c => `<option value="${c}">${c}</option>`).join('');
-        if (options.includes(currentVal)) selectGrading.value = currentVal;
-    }
-}
-
-function renderFeeClassDropdown() {
-    const allowedClasses = getAllowedClasses();
-    const feeFilter = document.getElementById('fee-class-filter');
-    if (feeFilter) {
-        const currentFeeVal = feeFilter.value;
-        const options = classesData.filter(c => allowedClasses.length === 0 || allowedClasses.includes(c));
-        feeFilter.innerHTML = options.map(c => `<option value="${c}">${c}</option>`).join('');
-        if (options.includes(currentFeeVal)) feeFilter.value = currentFeeVal;
-    }
-}
-
-function renderAttendanceClassDropdown() {
-    const allowedClasses = getAllowedClasses();
-    const attFilter = document.getElementById('attendance-class-filter');
-    if (attFilter) {
-        const currentAttVal = attFilter.value;
-        const options = classesData.filter(c => allowedClasses.length === 0 || allowedClasses.includes(c));
-        attFilter.innerHTML = options.map(c => `<option value="${c}">${c}</option>`).join('');
-        if (options.includes(currentAttVal)) attFilter.value = currentAttVal;
-    }
-}
-
-function renderHistoryClassDropdown() {
-    const allowedClasses = getAllowedClasses();
-    const histFilter = document.getElementById('history-class-filter');
-    if (histFilter) {
-        const currentHistVal = histFilter.value;
-        const options = classesData.filter(c => allowedClasses.length === 0 || allowedClasses.includes(c));
-        histFilter.innerHTML = options.map(c => `<option value="${c}">${c}</option>`).join('');
-        if (options.includes(currentHistVal)) histFilter.value = currentHistVal;
-    }
-}
-
-function renderGradingSubjectOptions() {
-    const allowedSubjects = getAllowedSubjects();
-    const select = document.getElementById('grading-subject-filter');
-    if (!select) return;
-
-    const options = [
-        'MATHEMATICS',
-        'ENGLISH LANGUAGE',
-        'SCIENCE',
-        'HISTORY',
-        'COMPUTING',
-        'CREATIVE ARTS',
-        'GHANAIAN LANGUAGE',
-        'R. M. E.'
-    ].filter(s => allowedSubjects.length === 0 || allowedSubjects.includes(s));
-
-    select.innerHTML = options.map(s => `<option value="${s}">${s}</option>`).join('');
-    if (options.length) select.value = options[0];
-}
+            const selectGrading = document.getElementById('grading-class-filter');
+            if (selectGrading) {
+                const currentVal = selectGrading.value;
+                const options = classesData.filter(c => allowedClasses.length === 0 || allowedClasses.includes(c));
+                selectGrading.innerHTML = options.map(c => \`<option value="\${c}">\${c}</option>\`).join('');
+                if (options.includes(currentVal)) selectGrading.value = currentVal;
+            }
         }
+
         function renderFeeClassDropdown() {
+            const allowedClasses = getAllowedClasses();
             const feeFilter = document.getElementById('fee-class-filter');
-            if(feeFilter) {
+            if (feeFilter) {
                 const currentFeeVal = feeFilter.value;
-                feeFilter.innerHTML = classesData.map(c => `<option value="${c}">${c}</option>`).join('');
-                if(currentFeeVal) feeFilter.value = currentFeeVal;
+                const options = classesData.filter(c => allowedClasses.length === 0 || allowedClasses.includes(c));
+                feeFilter.innerHTML = options.map(c => \`<option value="\${c}">\${c}</option>\`).join('');
+                if (options.includes(currentFeeVal)) feeFilter.value = currentFeeVal;
             }
         }
+
         function renderAttendanceClassDropdown() {
+            const allowedClasses = getAllowedClasses();
             const attFilter = document.getElementById('attendance-class-filter');
-            if(attFilter) {
+            if (attFilter) {
                 const currentAttVal = attFilter.value;
-                attFilter.innerHTML = classesData.map(c => `<option value="${c}">${c}</option>`).join('');
-                if(currentAttVal) attFilter.value = currentAttVal;
+                const options = classesData.filter(c => allowedClasses.length === 0 || allowedClasses.includes(c));
+                attFilter.innerHTML = options.map(c => \`<option value="\${c}">\${c}</option>\`).join('');
+                if (options.includes(currentAttVal)) attFilter.value = currentAttVal;
             }
         }
+
         function renderHistoryClassDropdown() {
+            const allowedClasses = getAllowedClasses();
             const histFilter = document.getElementById('history-class-filter');
-            if(histFilter) {
+            if (histFilter) {
                 const currentHistVal = histFilter.value;
-                histFilter.innerHTML = classesData.map(c => `<option value="${c}">${c}</option>`).join('');
-                if(currentHistVal) histFilter.value = currentHistVal;
+                const options = classesData.filter(c => allowedClasses.length === 0 || allowedClasses.includes(c));
+                histFilter.innerHTML = options.map(c => \`<option value="\${c}">\${c}</option>\`).join('');
+                if (options.includes(currentHistVal)) histFilter.value = currentHistVal;
             }
         }
+
+        function renderGradingSubjectOptions() {
+            const allowedSubjects = getAllowedSubjects();
+            const select = document.getElementById('grading-subject-filter');
+            if (!select) return;
+
+            const options = [
+                'Mathematics',
+                'English Language',
+                'Integrated Science',
+                'History',
+                'Computing',
+                'Creative Arts',
+                'Ghanaian Language',
+                'RME'
+            ].filter(s => allowedSubjects.length === 0 || allowedSubjects.includes(s));
+
+            select.innerHTML = options.map(s => \`<option value="\${s}">\${s}</option>\`).join('');
+            if (options.length) select.value = options[0];
+        }
+
         function renderEditStudentClassDropdown() {
             const editFilter = document.getElementById('edit-student-class-filter');
             if(editFilter) {
                 const currentVal = editFilter.value;
-                editFilter.innerHTML = classesData.map(c => `<option value="${c}">${c}</option>`).join('');
+                editFilter.innerHTML = classesData.map(c => \`<option value="\${c}">\${c}</option>\`).join('');
                 if(currentVal) editFilter.value = currentVal;
             }
         }
+
         function renderDiscardDropdown() {
             const discardSelect = document.getElementById('discard-student-select');
             if(discardSelect) {
-                discardSelect.innerHTML = studentsData.map(s => `<option value="${s.id}">${s.name} (${s.class})</option>`).join('');
+                discardSelect.innerHTML = studentsData.map(s => \`<option value="\${s.id}">\${s.name} (\${s.class})</option>\`).join('');
             }
         }
 
         function renderEditStudentsTable() {
-    const editFilter = document.getElementById('edit-student-class-filter');
-    const selectedClass = editFilter ? editFilter.value : classesData[0];
-    const filteredStudents = studentsData.filter(s => s.class === selectedClass);
-    const tbody = document.getElementById('edit-students-table-body');
-    if(!tbody) return;
-    
-    if(filteredStudents.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="4" class="p-6 text-center text-slate-400 italic">No students registered in ${selectedClass}.</td></tr>`;
-        return;
-    }
-    
-    tbody.innerHTML = filteredStudents.map((s) => {
-        return `
-            <tr>
-                <td class="p-3">
-                    <input type="text" id="edit-name-${s.id}" value="${s.name}" class="w-full p-2 border rounded font-semibold text-slate-800 bg-white">
-                </td>
-                <td class="p-3">
-                    <select id="edit-class-${s.id}" class="p-2 border rounded font-medium bg-white">
-                        ${classesData.map(c => `<option value="${c}" ${c === s.class ? 'selected' : ''}>${c}</option>`).join('')}
-                    </select>
-                </td>
-                <td class="p-3">
-                    <select id="edit-gender-${s.id}" class="p-2 border rounded font-medium bg-white">
-                        <option value="Male" ${s.gender === 'Male' ? 'selected' : ''}>Male</option>
-                        <option value="Female" ${s.gender === 'Female' ? 'selected' : ''}>Female</option>
-                    </select>
-                </td>
-                <td class="p-3 text-center space-x-1">
-                    <button onclick="saveStudentEdits('${s.id}')" class="px-3 py-1.5 bg-blue-900 text-white font-bold rounded-lg text-xs hover:bg-blue-800">Save</button>
-                    <button onclick="discardStudentDirect('${s.id}')" class="px-3 py-1.5 bg-red-700 text-white font-bold rounded-lg text-xs hover:bg-red-800">Discard</button>
-                </td>
-            </tr>
-        `;
-    }).join('');
-}
-
-async function saveStudentEdits(studentId) {
-    const nameInput = document.getElementById(`edit-name-${studentId}`);
-    const classSelect = document.getElementById(`edit-class-${studentId}`);
-    const genderSelect = document.getElementById(`edit-gender-${studentId}`);
-    
-    const newName = nameInput ? nameInput.value.trim() : '';
-    const newClass = classSelect ? classSelect.value : 'Basic 4';
-    const newGender = genderSelect ? genderSelect.value : 'Male';
-
-    if(!newName) {
-        alert('Student name cannot be empty.');
-        return;
-    }
-
-    try {
-        const { error } = await supabaseClient.from('students').update({
-            name: newName,
-            class: newClass,
-            gender: newGender
-        }).eq('id', studentId);
-
-        if(error) {
-            alert('Error updating student: ' + error.message);
-            return;
-        }
-
-        await fetchStudentsFromSupabase();
-        alert(`Student record for "${newName}" successfully updated!`);
-        renderAll();
-    } catch(err) {
-        alert('Exception updating student: ' + err.message);
-    }
-}
-
-async function discardStudentDirect(studentId) {
-    const student = studentsData.find(s => String(s.id) === String(studentId));
-    if(!student) {
-        alert('Student not found.');
-        return;
-    }
-    
-    if(confirm(`Are you sure you want to permanently discard/remove ${student.name} from school records and Supabase?`)) {
-        try {
-            const { error } = await supabaseClient.from('students').delete().eq('id', studentId);
-            if(error) {
-                alert('Error removing student from cloud: ' + error.message);
+            const editFilter = document.getElementById('edit-student-class-filter');
+            const selectedClass = editFilter ? editFilter.value : classesData[0];
+            const filteredStudents = studentsData.filter(s => s.class === selectedClass);
+            const tbody = document.getElementById('edit-students-table-body');
+            if(!tbody) return;
+            
+            if(filteredStudents.length === 0) {
+                tbody.innerHTML = \`<tr><td colspan="4" class="p-6 text-center text-slate-400 italic">No students registered in \${selectedClass}.</td></tr>\`;
                 return;
             }
             
-            await fetchStudentsFromSupabase();
-            renderAll();
-            alert(`Student ${student.name} has been successfully and permanently discarded.`);
-        } catch(err) {
-            alert('Exception removing student: ' + err.message);
+            tbody.innerHTML = filteredStudents.map((s) => {
+                return \`
+                    <tr>
+                        <td class="p-3">
+                            <input type="text" id="edit-name-\${s.id}" value="\${s.name}" class="w-full p-2 border rounded font-semibold text-slate-800 bg-white">
+                        </td>
+                        <td class="p-3">
+                            <select id="edit-class-\${s.id}" class="p-2 border rounded font-medium bg-white">
+                                \${classesData.map(c => \`<option value="\${c}" \${c === s.class ? 'selected' : ''}>\${c}</option>\`).join('')}
+                            </select>
+                        </td>
+                        <td class="p-3">
+                            <select id="edit-gender-\${s.id}" class="p-2 border rounded font-medium bg-white">
+                                <option value="Male" \${s.gender === 'Male' ? 'selected' : ''}>Male</option>
+                                <option value="Female" \${s.gender === 'Female' ? 'selected' : ''}>Female</option>
+                            </select>
+                        </td>
+                        <td class="p-3 text-center space-x-1">
+                            <button onclick="saveStudentEdits('\${s.id}')" class="px-3 py-1.5 bg-blue-900 text-white font-bold rounded-lg text-xs hover:bg-blue-800">Save</button>
+                            <button onclick="discardStudentDirect('\${s.id}')" class="px-3 py-1.5 bg-red-700 text-white font-bold rounded-lg text-xs hover:bg-red-800">Discard</button>
+                        </td>
+                    </tr>
+                \`;
+            }).join('');
         }
-    }
-}
+
+        async function saveStudentEdits(studentId) {
+            const nameInput = document.getElementById(\`edit-name-\${studentId}\`);
+            const classSelect = document.getElementById(\`edit-class-\${studentId}\`);
+            const genderSelect = document.getElementById(\`edit-gender-\${studentId}\`);
+            
+            const newName = nameInput ? nameInput.value.trim() : '';
+            const newClass = classSelect ? classSelect.value : 'Basic 4';
+            const newGender = genderSelect ? genderSelect.value : 'Male';
+
+            if(!newName) {
+                alert('Student name cannot be empty.');
+                return;
+            }
+
+            try {
+                const { error } = await supabaseClient.from('students').update({
+                    name: newName,
+                    class: newClass,
+                    gender: newGender
+                }).eq('id', studentId);
+
+                if(error) {
+                    alert('Error updating student: ' + error.message);
+                    return;
+                }
+
+                await fetchStudentsFromSupabase();
+                alert(\`Student record for "\${newName}" successfully updated!\`);
+                renderAll();
+            } catch(err) {
+                alert('Exception updating student: ' + err.message);
+            }
+        }
+
+        async function discardStudentDirect(studentId) {
+            const student = studentsData.find(s => String(s.id) === String(studentId));
+            if(!student) {
+                alert('Student not found.');
+                return;
+            }
+            
+            if(confirm(\`Are you sure you want to permanently discard/remove \${student.name} from school records and Supabase?\`)) {
+                try {
+                    const { error } = await supabaseClient.from('students').delete().eq('id', studentId);
+                    if(error) {
+                        alert('Error removing student from cloud: ' + error.message);
+                        return;
+                    }
+                    
+                    await fetchStudentsFromSupabase();
+                    renderAll();
+                    alert(\`Student \${student.name} has been successfully and permanently discarded.\`);
+                } catch(err) {
+                    alert('Exception removing student: ' + err.message);
+                }
+            }
+        }
+
         function saveLMSResource() {
             const title = document.getElementById('lms-title').value.trim();
             const url = document.getElementById('lms-embed-url').value.trim();
@@ -1328,22 +1668,23 @@ async function discardStudentDirect(studentId) {
             renderLMSResources();
             alert('LMS teaching resource published successfully!');
         }
+
         function renderLMSResources() {
             const grid = document.getElementById('lms-resources-grid');
             if(!grid) return;
             if(lmsResources.length === 0) {
-                grid.innerHTML = `<p class="text-slate-400 italic text-sm">No teaching materials uploaded yet.</p>`;
+                grid.innerHTML = \`<p class="text-slate-400 italic text-sm">No teaching materials uploaded yet.</p>\`;
                 return;
             }
-            grid.innerHTML = lmsResources.map(r => `
+            grid.innerHTML = lmsResources.map(r => \`
                 <div class="bg-slate-50 p-4 rounded-xl border space-y-2 shadow-sm">
-                    <h4 class="font-bold text-xs text-blue-950">${r.title}</h4>
-                    <p class="text-xs text-slate-600">${r.description}</p>
+                    <h4 class="font-bold text-xs text-blue-950">\${r.title}</h4>
+                    <p class="text-xs text-slate-600">\${r.description}</p>
                     <div class="pt-1">
-                        <iframe class="w-full h-40 rounded-lg shadow border" src="${r.url}" allowfullscreen></iframe>
+                        <iframe class="w-full h-40 rounded-lg shadow border" src="\${r.url}" allowfullscreen></iframe>
                     </div>
                 </div>
-            `).join('');
+            \`).join('');
         }
 
         document.getElementById('student-form').addEventListener('submit', async (e) => {
@@ -1354,7 +1695,7 @@ async function discardStudentDirect(studentId) {
             try {
                 await supabaseClient.from('students').insert([{ name: name, class: className, gender: gender }]);
             } catch(err) { console.log(err); }
-            alert(`Student ${name} successfully enrolled to ${className} and saved to Supabase!`);
+            alert(\`Student \${name} successfully enrolled to \${className} and saved to Supabase!\`);
             document.getElementById('s-name').value = '';
             await fetchStudentsFromSupabase();
             renderAll();
@@ -1370,7 +1711,7 @@ async function discardStudentDirect(studentId) {
                 await supabaseClient.from('teachers').insert([{ full_name: name, phone_number: phone, email }]);
                 teachersList.push(name);
             } catch(err) { console.log(err); }
-            alert(`Teacher account created successfully for ${name}!`);
+            alert(\`Teacher account created successfully for \${name}!\`);
             document.getElementById('t-name').value = '';
             document.getElementById('t-phone').value = '';
             document.getElementById('t-email').value = '';
@@ -1384,9 +1725,9 @@ async function discardStudentDirect(studentId) {
             const modeDesc = document.getElementById('assessment-mode-description');
             
             if(selectedClass === 'Basic 1' || selectedClass === 'Basic 2' || selectedClass === 'Basic 3') {
-                if(modeDesc) modeDesc.innerText = `Mode: ${selectedClass} — One Class Teacher (Class Teacher handles all subjects for this class).`;
+                if(modeDesc) modeDesc.innerText = \`Mode: \${selectedClass} — One Class Teacher (Class Teacher handles all subjects for this class).\`;
             } else {
-                if(modeDesc) modeDesc.innerText = `Mode: ${selectedClass} — Subject Teaching (Specialized Subject Teacher grading).`;
+                if(modeDesc) modeDesc.innerText = \`Mode: \${selectedClass} — Subject Teaching (Specialized Subject Teacher grading).\`;
             }
             renderGradingTable();
         }
@@ -1401,7 +1742,7 @@ async function discardStudentDirect(studentId) {
             const tbody = document.getElementById('grading-table-body');
             if(!tbody) return;
             if(filteredStudents.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="12" class="p-6 text-center text-slate-400 italic">No students registered in ${selectedClass || 'this class'} yet.</td></tr>`;
+                tbody.innerHTML = \`<tr><td colspan="12" class="p-6 text-center text-slate-400 italic">No students registered in \${selectedClass || 'this class'} yet.</td></tr>\`;
                 return;
             }
             tbody.innerHTML = filteredStudents.map((s, idx) => {
@@ -1415,29 +1756,29 @@ async function discardStudentDirect(studentId) {
                 const exam50 = ((sub.exam || 0) * 0.5).toFixed(1);
                 const overallTotal = (parseFloat(sba50) + parseFloat(exam50)).toFixed(1);
                 const grade = computeGrade(overallTotal);
-                return `
+                return \`
                     <tr>
-                        <td class="p-2.5 font-medium">${idx + 1}. ${s.name}</td>
-                        <td class="p-2.5 text-center"><input type="number" value="${sub.indTest1}" onchange="updateAssessmentScore(${globalIdx}, '${year}', '${term}', '${subject}', 'indTest1', this.value, 30)" class="w-16 p-1 border rounded text-center font-semibold" placeholder="30"></td>
-                        <td class="p-2.5 text-center"><input type="number" value="${sub.groupTest}" onchange="updateAssessmentScore(${globalIdx}, '${year}', '${term}', '${subject}', 'groupTest', this.value, 20)" class="w-16 p-1 border rounded text-center font-semibold" placeholder="20"></td>
-                        <td class="p-2.5 text-center"><input type="number" value="${sub.indTest2}" onchange="updateAssessmentScore(${globalIdx}, '${year}', '${term}', '${subject}', 'indTest2', this.value, 30)" class="w-16 p-1 border rounded text-center font-semibold" placeholder="30"></td>
-                        <td class="p-2.5 text-center"><input type="number" value="${sub.homework}" onchange="updateAssessmentScore(${globalIdx}, '${year}', '${term}', '${subject}', 'homework', this.value, 20)" class="w-16 p-1 border rounded text-center font-semibold" placeholder="20"></td>
-                        <td class="p-2.5 text-center font-bold bg-blue-50">${totalSba100}</td>
-                        <td class="p-2.5 text-center font-semibold bg-blue-100 text-blue-900">${sba50}</td>
-                        <td class="p-2.5 text-center"><input type="number" value="${sub.exam}" onchange="updateAssessmentScore(${globalIdx}, '${year}', '${term}', '${subject}', 'exam', this.value, 100)" class="w-16 p-1 border rounded text-center font-semibold" placeholder="100"></td>
-                        <td class="p-2.5 text-center font-semibold bg-blue-100 text-blue-900">${exam50}</td>
-                        <td class="p-2.5 text-center font-black bg-amber-50 text-amber-950">${overallTotal}</td>
-                        <td class="p-2.5 text-center"><span class="px-2 py-0.5 bg-amber-100 text-amber-900 rounded font-bold text-xs">${grade}</span></td>
-                        <td class="p-2.5 text-center"><span class="px-2 py-0.5 bg-blue-100 text-blue-900 rounded font-semibold text-xs">${s.position || 'Pending'}</span></td>
+                        <td class="p-2.5 font-medium">\${idx + 1}. \${s.name}</td>
+                        <td class="p-2.5 text-center"><input type="number" value="\${sub.indTest1}" onchange="updateAssessmentScore(\${globalIdx}, '\${year}', '\${term}', '\${subject}', 'indTest1', this.value, 30)" class="w-16 p-1 border rounded text-center font-semibold" placeholder="30"></td>
+                        <td class="p-2.5 text-center"><input type="number" value="\${sub.groupTest}" onchange="updateAssessmentScore(\${globalIdx}, '\${year}', '\${term}', '\${subject}', 'groupTest', this.value, 20)" class="w-16 p-1 border rounded text-center font-semibold" placeholder="20"></td>
+                        <td class="p-2.5 text-center"><input type="number" value="\${sub.indTest2}" onchange="updateAssessmentScore(\${globalIdx}, '\${year}', '\${term}', '\${subject}', 'indTest2', this.value, 30)" class="w-16 p-1 border rounded text-center font-semibold" placeholder="30"></td>
+                        <td class="p-2.5 text-center"><input type="number" value="\${sub.homework}" onchange="updateAssessmentScore(\${globalIdx}, '\${year}', '\${term}', '\${subject}', 'homework', this.value, 20)" class="w-16 p-1 border rounded text-center font-semibold" placeholder="20"></td>
+                        <td class="p-2.5 text-center font-bold bg-blue-50">\${totalSba100}</td>
+                        <td class="p-2.5 text-center font-semibold bg-blue-100 text-blue-900">\${sba50}</td>
+                        <td class="p-2.5 text-center"><input type="number" value="\${sub.exam}" onchange="updateAssessmentScore(\${globalIdx}, '\${year}', '\${term}', '\${subject}', 'exam', this.value, 100)" class="w-16 p-1 border rounded text-center font-semibold" placeholder="100"></td>
+                        <td class="p-2.5 text-center font-semibold bg-blue-100 text-blue-900">\${exam50}</td>
+                        <td class="p-2.5 text-center font-black bg-amber-50 text-amber-950">\${overallTotal}</td>
+                        <td class="p-2.5 text-center"><span class="px-2 py-0.5 bg-amber-100 text-amber-900 rounded font-bold text-xs">\${grade}</span></td>
+                        <td class="p-2.5 text-center"><span class="px-2 py-0.5 bg-blue-100 text-blue-900 rounded font-semibold text-xs">\${s.position || 'Pending'}</span></td>
                     </tr>
-                `;
+                \`;
             }).join('');
         }
 
         function updateAssessmentScore(index, year, term, subject, field, val, maxLimit) {
             let num = parseFloat(val) || 0;
             if(num > maxLimit) {
-                alert(`Maximum allowed score for this assessment is ${maxLimit}`);
+                alert(\`Maximum allowed score for this assessment is \${maxLimit}\`);
                 num = maxLimit;
             }
             if(!studentsData[index].subjectsData[year]) studentsData[index].subjectsData[year] = {};
@@ -1481,7 +1822,7 @@ async function discardStudentDirect(studentId) {
                 s.overallTotal = studentOverallTotal;
             });
             studentsData.sort((a,b) => (b.overallTotal || 0) - (a.overallTotal || 0));
-            studentsData.forEach((s, idx) => s.position = `${idx + 1}${getOrdinal(idx + 1)}`);
+            studentsData.forEach((s, idx) => s.position = \`\${idx + 1}\${getOrdinal(idx + 1)}\`);
             renderGradingTable();
             alert('Grades, totals, and ordinal positions successfully computed!');
         }
@@ -1498,9 +1839,9 @@ async function discardStudentDirect(studentId) {
             const className = document.getElementById('grading-class-filter').value;
             const registeredTeacherName = teachersList.length > 0 ? teachersList[0] : (currentUser ? currentUser.name : 'Assigned Teacher');
             
-            let content = `${schoolProfile.name.toUpperCase()}\nSCHOOL BASED ASSESSMENT AT BASIC EDUCATIONAL LEVEL\nTERMELY SCORING FOR PRIMARY AND JUNIOR HIGH SCHOOLS\nYear: ${year} | Class: ${className} | Subject: ${subject} | Term: ${term} | Teacher: ${registeredTeacherName}\n\n`;
-            content += "No.\tNAME\tInd.Test 1(30)\tGroup Test(20)\tInd.Test 2(30)\tHomework(20)\tTotal SBA(100)\t50% SBA\tExams(100)\t50% Exam\tOverall Total\tGrade\n";
-            content += "----------------------------------------------------------------------------------------------------------------------------------\n";
+            let content = \`\${schoolProfile.name.toUpperCase()}\\nSCHOOL BASED ASSESSMENT AT BASIC EDUCATIONAL LEVEL\\nTERMELY SCORING FOR PRIMARY AND JUNIOR HIGH SCHOOLS\\nYear: \${year} | Class: \${className} | Subject: \${subject} | Term: \${term} | Teacher: \${registeredTeacherName}\\n\\n\`;
+            content += "No.\\tNAME\\tInd.Test 1(30)\\tGroup Test(20)\\tInd.Test 2(30)\\tHomework(20)\\tTotal SBA(100)\\t50% SBA\\tExams(100)\\t50% Exam\\tOverall Total\\tGrade\\n";
+            content += "----------------------------------------------------------------------------------------------------------------------------------\\n";
             
             studentsData.filter(s => s.class === className).forEach((s, idx) => {
                 const sub = (s.subjectsData[year] && s.subjectsData[year][term] && s.subjectsData[year][term][subject]) ? s.subjectsData[year][term][subject] : { indTest1: 0, groupTest: 0, indTest2: 0, homework: 0, exam: 0 };
@@ -1508,15 +1849,15 @@ async function discardStudentDirect(studentId) {
                 const sba50 = totalSba * 0.5;
                 const exam50 = (sub.exam || 0) * 0.5;
                 const total = sba50 + exam50;
-                content += `${idx + 1}\t${s.name}\t${sub.indTest1}\t${sub.groupTest}\t${sub.indTest2}\t${sub.homework}\t${totalSba}\t${sba50}\t${sub.exam}\t${exam50}\t${total}\t${computeGrade(total)}\n`;
+                content += \`\${idx + 1}\\t\${s.name}\\t\${sub.indTest1}\\t\${sub.groupTest}\\t\${sub.indTest2}\\t\${sub.homework}\\t\${totalSba}\\t\${sba50}\\t\${sub.exam}\\t\${exam50}\\t\${total}\\t\${computeGrade(total)}\\n\`;
             });
             const blob = new Blob([content], { type: format === 'pdf' ? 'application/pdf' : 'application/msword' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `${year}_${className}_${subject}_${term}_Assessment_Sheet.${format === 'pdf' ? 'pdf' : 'doc'}`;
+            a.download = \`\${year}_\${className}_\${subject}_\${term}_Assessment_Sheet.\${format === 'pdf' ? 'pdf' : 'doc'}\`;
             a.click();
-            alert(`Assessment sheet downloaded as ${format.toUpperCase()}!`);
+            alert(\`Assessment sheet downloaded as \${format.toUpperCase()}!\`);
         }
 
         function finalizeReports() {
@@ -1535,7 +1876,7 @@ async function discardStudentDirect(studentId) {
             const filtered = studentsData.filter(s => s.class === histClass);
             
             if(filtered.length === 0) {
-                container.innerHTML = `<p class="text-slate-500 italic p-4">No student records found for ${histClass} (${histYear} - ${histTerm}).</p>`;
+                container.innerHTML = \`<p class="text-slate-500 italic p-4">No student records found for \${histClass} (\${histYear} - \${histTerm}).</p>\`;
                 return;
             }
 
@@ -1546,43 +1887,43 @@ async function discardStudentDirect(studentId) {
                     const sba50 = totalSba * 0.5;
                     const exam50 = (sub.exam || 0) * 0.5;
                     const total100 = sba50 + exam50;
-                    return `
+                    return \`
                         <tr>
-                            <td class="border border-black p-1 text-center font-bold">${idx + 1}</td>
-                            <td class="border border-black p-1 pl-2 font-medium">${s.name}</td>
-                            <td class="border border-black p-1 text-center">${sub.indTest1 || 0}</td>
-                            <td class="border border-black p-1 text-center">${sub.groupTest || 0}</td>
-                            <td class="border border-black p-1 text-center">${sub.indTest2 || 0}</td>
-                            <td class="border border-black p-1 text-center">${sub.homework || 0}</td>
-                            <td class="border border-black p-1 text-center font-bold bg-slate-50">${totalSba}</td>
-                            <td class="border border-black p-1 text-center font-semibold bg-blue-50">${sba50}</td>
-                            <td class="border border-black p-1 text-center">${sub.exam || 0}</td>
-                            <td class="border border-black p-1 text-center font-semibold bg-blue-50">${exam50}</td>
-                            <td class="border border-black p-1 text-center font-black bg-amber-50">${total100}</td>
-                            <td class="border border-black p-1 text-center font-bold">${computeGrade(total100)}</td>
+                            <td class="border border-black p-1 text-center font-bold">\${idx + 1}</td>
+                            <td class="border border-black p-1 pl-2 font-medium">\${s.name}</td>
+                            <td class="border border-black p-1 text-center">\${sub.indTest1 || 0}</td>
+                            <td class="border border-black p-1 text-center">\${sub.groupTest || 0}</td>
+                            <td class="border border-black p-1 text-center">\${sub.indTest2 || 0}</td>
+                            <td class="border border-black p-1 text-center">\${sub.homework || 0}</td>
+                            <td class="border border-black p-1 text-center font-bold bg-slate-50">\${totalSba}</td>
+                            <td class="border border-black p-1 text-center font-semibold bg-blue-50">\${sba50}</td>
+                            <td class="border border-black p-1 text-center">\${sub.exam || 0}</td>
+                            <td class="border border-black p-1 text-center font-semibold bg-blue-50">\${exam50}</td>
+                            <td class="border border-black p-1 text-center font-black bg-amber-50">\${total100}</td>
+                            <td class="border border-black p-1 text-center font-bold">\${computeGrade(total100)}</td>
                         </tr>
-                    `;
+                    \`;
                 }).join('');
 
-                return `
+                return \`
                     <div class="assessment-print-page bg-white p-8 rounded-xl shadow-lg border-2 border-slate-300 max-w-4xl mx-auto space-y-4 text-slate-900 font-sans">
                         <div class="text-center space-y-1 border-b-2 border-black pb-3">
-                            <h2 class="font-black text-xl tracking-wide">${schoolProfile.name.toUpperCase()}</h2>
+                            <h2 class="font-black text-xl tracking-wide">\${schoolProfile.name.toUpperCase()}</h2>
                             <p class="text-xs font-bold text-slate-700">SCHOOL BASED ASSESSMENT AT BASIC EDUCATIONAL LEVEL</p>
                             <p class="text-xs font-bold text-slate-700 uppercase">TERMELY RECORDINGS FOR PRIMARY AND JUNIOR HIGH SCHOOLS</p>
                         </div>
                         <div class="text-xs space-y-1 font-bold flex justify-between">
                             <div>
-                                <p>CLASS: <span class="underline uppercase">${histClass}</span></p>
-                                <p>TERM: <span class="underline uppercase">${histTerm}</span></p>
+                                <p>CLASS: <span class="underline uppercase">\${histClass}</span></p>
+                                <p>TERM: <span class="underline uppercase">\${histTerm}</span></p>
                             </div>
                             <div>
-                                <p>YEAR: <span class="underline text-blue-900">${histYear}</span></p>
-                                <p>SUBJECT: <span class="underline uppercase text-blue-900">${subject}</span></p>
+                                <p>YEAR: <span class="underline text-blue-900">\${histYear}</span></p>
+                                <p>SUBJECT: <span class="underline uppercase text-blue-900">\${subject}</span></p>
                             </div>
                             <div>
-                                <p>NO. ON ROLL: <span class="underline">${filtered.length}</span></p>
-                                <p>NAME OF TEACHER: <span class="underline uppercase">${registeredTeacherName}</span></p>
+                                <p>NO. ON ROLL: <span class="underline">\${filtered.length}</span></p>
+                                <p>NAME OF TEACHER: <span class="underline uppercase">\${registeredTeacherName}</span></p>
                             </div>
                         </div>
                         <table class="w-full text-xs border-collapse border border-black mt-2">
@@ -1603,11 +1944,11 @@ async function discardStudentDirect(studentId) {
                                 </tr>
                             </thead>
                             <tbody>
-                                ${rowsHtml}
+                                \${rowsHtml}
                             </tbody>
                         </table>
                     </div>
-                `;
+                \`;
             }).join('');
 
             let individualReportCardsHtml = filtered.map((s) => {
@@ -1625,43 +1966,43 @@ async function discardStudentDirect(studentId) {
                     const exam50 = (sub.exam || 0) * 0.5;
                     const total100 = sba50 + exam50;
                     const grade = computeGrade(total100);
-                    return `
+                    return \`
                         <tr>
-                            <td class="border border-black p-1 pl-2 font-medium">${subName}</td>
-                            <td class="border border-black p-1 text-center">${sba50}</td>
-                            <td class="border border-black p-1 text-center">${sub.exam || 0}</td>
-                            <td class="border border-black p-1 text-center font-bold">${total100}</td>
-                            <td class="border border-black p-1 text-center">${s.position || '1st'}</td>
-                            <td class="border border-black p-1 text-center">${grade}</td>
+                            <td class="border border-black p-1 pl-2 font-medium">\${subName}</td>
+                            <td class="border border-black p-1 text-center">\${sba50}</td>
+                            <td class="border border-black p-1 text-center">\${sub.exam || 0}</td>
+                            <td class="border border-black p-1 text-center font-bold">\${total100}</td>
+                            <td class="border border-black p-1 text-center">\${s.position || '1st'}</td>
+                            <td class="border border-black p-1 text-center">\${grade}</td>
                             <td class="border border-black p-1 pl-2">Satisfactory</td>
                         </tr>
-                    `;
+                    \`;
                 }).join('');
 
-                return `
+                return \`
                     <div class="report-card-page bg-white p-8 rounded-xl shadow-lg border-2 border-slate-300 max-w-3xl mx-auto space-y-4 text-slate-900 font-sans">
                         <div class="text-center space-y-1 border-b-2 border-black pb-3">
-                            <h2 class="font-black text-xl tracking-wide">${schoolProfile.name.toUpperCase()}</h2>
+                            <h2 class="font-black text-xl tracking-wide">\${schoolProfile.name.toUpperCase()}</h2>
                             <p class="text-xs font-bold text-slate-700">P. O. BOX 18 16, SHAMA</p>
                             <p class="text-xs font-bold text-slate-700">ASSORKO - ESSAMAN</p>
-                            <h3 class="font-extrabold text-sm tracking-widest pt-1 uppercase underline">END OF TERM REPORT CARD (${histYear})</h3>
+                            <h3 class="font-extrabold text-sm tracking-widest pt-1 uppercase underline">END OF TERM REPORT CARD (\${histYear})</h3>
                         </div>
                         <div class="text-xs space-y-1.5 font-bold">
                             <div class="flex border-b border-black pb-1">
                                 <span class="w-32">NAME OF PUPIL:</span>
-                                <span class="flex-1 underline uppercase">${s.name}</span>
+                                <span class="flex-1 underline uppercase">\${s.name}</span>
                             </div>
                             <div class="flex justify-between border-b border-black pb-1">
-                                <div class="flex flex-1"><span class="w-16">CLASS:</span><span class="underline uppercase">${s.class}</span></div>
-                                <div class="flex flex-1"><span class="w-28">NO. ON ROLL:</span><span class="underline">${filtered.length}</span></div>
+                                <div class="flex flex-1"><span class="w-16">CLASS:</span><span class="underline uppercase">\${s.class}</span></div>
+                                <div class="flex flex-1"><span class="w-28">NO. ON ROLL:</span><span class="underline">\${filtered.length}</span></div>
                             </div>
                             <div class="flex justify-between border-b border-black pb-1">
-                                <div class="flex flex-1"><span class="w-16">YEAR:</span><span class="underline text-blue-900">${histYear}</span></div>
-                                <div class="flex flex-1"><span class="w-28">TERM:</span><span class="underline uppercase">${histTerm}</span></div>
+                                <div class="flex flex-1"><span class="w-16">YEAR:</span><span class="underline text-blue-900">\${histYear}</span></div>
+                                <div class="flex flex-1"><span class="w-28">TERM:</span><span class="underline uppercase">\${histTerm}</span></div>
                             </div>
                             <div class="flex justify-between border-b border-black pb-1">
-                                <div class="flex flex-1"><span class="w-32">POSITION IN CLASS:</span><span class="underline">${s.position || '1st'}</span></div>
-                                <div class="flex flex-1"><span class="w-32">RE-OPENING DATE:</span><span class="underline"><input type="text" value="${s.reopeningDate}" onchange="updateStudentProp(${studentsData.findIndex(item => item.id === s.id)}, 'reopeningDate', this.value)" class="border-none w-32 bg-transparent text-xs font-bold"></span></div>
+                                <div class="flex flex-1"><span class="w-32">POSITION IN CLASS:</span><span class="underline">\${s.position || '1st'}</span></div>
+                                <div class="flex flex-1"><span class="w-32">RE-OPENING DATE:</span><span class="underline"><input type="text" value="\${s.reopeningDate}" onchange="updateStudentProp(\${studentsData.findIndex(item => item.id === s.id)}, 'reopeningDate', this.value)" class="border-none w-32 bg-transparent text-xs font-bold"></span></div>
                             </div>
                         </div>
                         <table class="w-full text-xs border-collapse border border-black mt-2">
@@ -1677,36 +2018,35 @@ async function discardStudentDirect(studentId) {
                                 </tr>
                             </thead>
                             <tbody>
-                                ${subjectsHtml}
+                                \${subjectsHtml}
                             </tbody>
                         </table>
                         <div class="text-xs space-y-1.5 pt-1 font-semibold">
                             <div class="flex border-b border-black pb-1">
                                 <span class="w-36">ATTENDANCE MADE:</span>
-                                <span class="font-bold text-blue-900 underline">${s.attendanceMade || 65}</span>
+                                <span class="font-bold text-blue-900 underline">\${s.attendanceMade || 65}</span>
                                 <span class="mx-4">OUT OF TOTAL OF:</span>
-                                <span class="font-bold text-blue-900 underline">${s.attendanceTotal || 70}</span>
+                                <span class="font-bold text-blue-900 underline">\${s.attendanceTotal || 70}</span>
                                 <span class="mx-4">PROMOTED TO:</span>
-                                <input type="text" value="${s.promotedTo}" onchange="updateStudentProp(${studentsData.findIndex(item => item.id === s.id)}, 'promotedTo', this.value)" class="flex-1 border-b border-black bg-transparent">
+                                <input type="text" value="\${s.promotedTo}" onchange="updateStudentProp(\${studentsData.findIndex(item => item.id === s.id)}, 'promotedTo', this.value)" class="flex-1 border-b border-black bg-transparent">
                             </div>
                             <div class="flex border-b border-black pb-1">
                                 <span class="w-24">CONDUCT:</span>
-                                <input type="text" value="${s.conduct}" onchange="updateStudentProp(${studentsData.findIndex(item => item.id === s.id)}, 'conduct', this.value)" class="flex-1 border-b border-black bg-transparent">
+                                <input type="text" value="\${s.conduct}" onchange="updateStudentProp(\${studentsData.findIndex(item => item.id === s.id)}, 'conduct', this.value)" class="flex-1 border-b border-black bg-transparent">
                             </div>
                             <div class="flex border-b border-black pb-1">
                                 <span class="w-24">INTEREST:</span>
-                                <input type="text" value="${s.interest}" onchange="updateStudentProp(${studentsData.findIndex(item => item.id === s.id)}, 'interest', this.value)" class="flex-1 border-b border-black bg-transparent">
+                                <input type="text" value="\${s.interest}" onchange="updateStudentProp(\${studentsData.findIndex(item => item.id === s.id)}, 'interest', this.value)" class="flex-1 border-b border-black bg-transparent">
                             </div>
                             <div class="flex border-b border-black pb-1">
                                 <span class="w-48">CLASS TEACHER'S REMARKS:</span>
-                                <input type="text" value="${s.teacherRemarks}" onchange="updateStudentProp(${studentsData.findIndex(item => item.id === s.id)}, 'teacherRemarks', this.value)" class="flex-1 border-b border-black bg-transparent">
+                                <input type="text" value="\${s.teacherRemarks}" onchange="updateStudentProp(\${studentsData.findIndex(item => item.id === s.id)}, 'teacherRemarks', this.value)" class="flex-1 border-b border-black bg-transparent">
                             </div>
                             <div class="flex border-b border-black pb-1">
                                 <span class="w-48">HEAD TEACHER'S REMARKS:</span>
-                                <input type="text" value="${s.headRemarks}" onchange="updateStudentProp(${studentsData.findIndex(item => item.id === s.id)}, 'headRemarks', this.value)" class="flex-1 border-b border-black bg-transparent">
+                                <input type="text" value="\${s.headRemarks}" onchange="updateStudentProp(\${studentsData.findIndex(item => item.id === s.id)}, 'headRemarks', this.value)" class="flex-1 border-b border-black bg-transparent">
                             </div>
                         </div>
-                        <!-- PROFESSIONAL BILLING ACCOUNT SUMMARY TABLE -->
                         <table class="w-full text-xs border-collapse border border-black mt-3">
                             <thead>
                                 <tr class="bg-blue-50 font-bold">
@@ -1717,27 +2057,27 @@ async function discardStudentDirect(studentId) {
                             <tbody>
                                 <tr>
                                     <td class="border border-black p-1.5 pl-2 font-bold text-red-700">ARREARS (OLD UNPAID BALANCE):</td>
-                                    <td class="border border-black p-1.5 text-right pr-3 font-semibold text-red-700">${arrears.toFixed(2)}</td>
+                                    <td class="border border-black p-1.5 text-right pr-3 font-semibold text-red-700">\${arrears.toFixed(2)}</td>
                                 </tr>
                                 <tr>
                                     <td class="border border-black p-1.5 pl-2 font-bold">TUITION FEE FOR NEXT TERM:</td>
-                                    <td class="border border-black p-1.5 text-right pr-3 font-semibold">${tuition.toFixed(2)}</td>
+                                    <td class="border border-black p-1.5 text-right pr-3 font-semibold">\${tuition.toFixed(2)}</td>
                                 </tr>
                                 <tr>
                                     <td class="border border-black p-1.5 pl-2 font-bold">PRINTING FEE FOR NEXT TERM:</td>
-                                    <td class="border border-black p-1.5 text-right pr-3 font-semibold">${printing.toFixed(2)}</td>
+                                    <td class="border border-black p-1.5 text-right pr-3 font-semibold">\${printing.toFixed(2)}</td>
                                 </tr>
                                 <tr>
                                     <td class="border border-black p-1.5 pl-2 font-bold">P.T.A. DUES FOR NEXT TERM:</td>
-                                    <td class="border border-black p-1.5 text-right pr-3 font-semibold">${pta.toFixed(2)}</td>
+                                    <td class="border border-black p-1.5 text-right pr-3 font-semibold">\${pta.toFixed(2)}</td>
                                 </tr>
                                 <tr>
                                     <td class="border border-black p-1.5 pl-2 font-bold">OTHER FEES FOR NEXT TERM:</td>
-                                    <td class="border border-black p-1.5 text-right pr-3 font-semibold">${other.toFixed(2)}</td>
+                                    <td class="border border-black p-1.5 text-right pr-3 font-semibold">\${other.toFixed(2)}</td>
                                 </tr>
                                 <tr class="bg-slate-100 font-black">
                                     <td class="border border-black p-1.5 pl-2 uppercase">TOTAL BILL BALANCE DUE:</td>
-                                    <td class="border border-black p-1.5 text-right pr-3 text-blue-900">GH₵ ${totalFee.toFixed(2)}</td>
+                                    <td class="border border-black p-1.5 text-right pr-3 text-blue-900">GH₵ \${totalFee.toFixed(2)}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -1745,10 +2085,10 @@ async function discardStudentDirect(studentId) {
                             <button onclick="window.print()" class="px-4 py-2 bg-blue-900 text-white text-xs font-semibold rounded-lg">Print Report Card & Bill 🖨️</button>
                         </div>
                     </div>
-                `;
+                \`;
             }).join('');
 
-            container.innerHTML = `<div class="mb-8"><h3 class="font-bold text-lg text-blue-950 mb-3 border-b pb-2">📋 Master Class Assessment Sheets (${histClass} - ${histYear} ${histTerm})</h3>${masterAssessmentSheetsHtml}</div><div><h3 class="font-bold text-lg text-blue-950 mb-3 border-b pb-2">🎓 Individual Report Cards & Billing Accounts</h3>${individualReportCardsHtml}</div>`;
+            container.innerHTML = \`<div class="mb-8"><h3 class="font-bold text-lg text-blue-950 mb-3 border-b pb-2">📋 Master Class Assessment Sheets (\${histClass} - \${histYear} \${histTerm})</h3>\${masterAssessmentSheetsHtml}</div><div><h3 class="font-bold text-lg text-blue-950 mb-3 border-b pb-2">🎓 Individual Report Cards & Billing Accounts</h3>\${individualReportCardsHtml}</div>\`;
         }
 
         function updateStudentProp(index, field, val) {
@@ -1762,7 +2102,7 @@ async function discardStudentDirect(studentId) {
             const tbody = document.getElementById('fees-table-body');
             if(!tbody) return;
             if(filteredStudents.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="8" class="p-6 text-center text-slate-400 italic">No fee records found for ${selectedClass}.</td></tr>`;
+                tbody.innerHTML = \`<tr><td colspan="8" class="p-6 text-center text-slate-400 italic">No fee records found for \${selectedClass}.</td></tr>\`;
                 return;
             }
             tbody.innerHTML = filteredStudents.map((s) => {
@@ -1773,20 +2113,20 @@ async function discardStudentDirect(studentId) {
                 const pta = parseFloat(s.ptaFee) || 5;
                 const other = parseFloat(s.otherFee) || 20;
                 const total = arrears + tuition + printing + pta + other;
-                return `
+                return \`
                     <tr>
-                        <td class="p-3 font-medium">${s.name}</td>
-                        <td class="p-3"><input type="number" value="${s.arrearsFee || 0}" onchange="updateFeeProp(${globalIdx}, 'arrearsFee', this.value)" class="w-16 p-1 border rounded text-red-700 font-bold"></td>
-                        <td class="p-3"><input type="number" value="${s.tuitionFee}" onchange="updateFeeProp(${globalIdx}, 'tuitionFee', this.value)" class="w-16 p-1 border rounded"></td>
-                        <td class="p-3"><input type="number" value="${s.printingFee}" onchange="updateFeeProp(${globalIdx}, 'printingFee', this.value)" class="w-16 p-1 border rounded"></td>
-                        <td class="p-3"><input type="number" value="${s.ptaFee}" onchange="updateFeeProp(${globalIdx}, 'ptaFee', this.value)" class="w-16 p-1 border rounded"></td>
-                        <td class="p-3"><input type="number" value="${s.otherFee}" onchange="updateFeeProp(${globalIdx}, 'otherFee', this.value)" class="w-16 p-1 border rounded"></td>
-                        <td class="p-3 font-black text-blue-900 bg-blue-50">₵ ${total.toFixed(2)}</td>
+                        <td class="p-3 font-medium">\${s.name}</td>
+                        <td class="p-3"><input type="number" value="\${s.arrearsFee || 0}" onchange="updateFeeProp(\${globalIdx}, 'arrearsFee', this.value)" class="w-16 p-1 border rounded text-red-700 font-bold"></td>
+                        <td class="p-3"><input type="number" value="\${s.tuitionFee}" onchange="updateFeeProp(\${globalIdx}, 'tuitionFee', this.value)" class="w-16 p-1 border rounded"></td>
+                        <td class="p-3"><input type="number" value="\${s.printingFee}" onchange="updateFeeProp(\${globalIdx}, 'printingFee', this.value)" class="w-16 p-1 border rounded"></td>
+                        <td class="p-3"><input type="number" value="\${s.ptaFee}" onchange="updateFeeProp(\${globalIdx}, 'ptaFee', this.value)" class="w-16 p-1 border rounded"></td>
+                        <td class="p-3"><input type="number" value="\${s.otherFee}" onchange="updateFeeProp(\${globalIdx}, 'otherFee', this.value)" class="w-16 p-1 border rounded"></td>
+                        <td class="p-3 font-black text-blue-900 bg-blue-50">₵ \${total.toFixed(2)}</td>
                         <td class="p-3 no-print">
-                            <button onclick="viewReceipt(${globalIdx})" class="px-2 py-1 bg-blue-900 text-white text-xs rounded font-semibold">Receipt</button>
+                            <button onclick="viewReceipt(\${globalIdx})" class="px-2 py-1 bg-blue-900 text-white text-xs rounded font-semibold">Receipt</button>
                         </td>
                     </tr>
-                `;
+                \`;
             }).join('');
         }
 
@@ -1805,23 +2145,23 @@ async function discardStudentDirect(studentId) {
             const totalFee = arrears + tuition + printing + pta + other;
             
             const content = document.getElementById('receipt-content');
-            content.innerHTML = `
+            content.innerHTML = \`
                 <div class="text-center space-y-1 border-b pb-4">
-                    <h3 class="font-bold text-lg text-blue-950">${schoolProfile.name}</h3>
-                    <p class="text-[11px] text-slate-500 font-medium">${schoolProfile.location} • Professional Billing Account Statement</p>
+                    <h3 class="font-bold text-lg text-blue-950">\${schoolProfile.name}</h3>
+                    <p class="text-[11px] text-slate-500 font-medium">\${schoolProfile.location} • Professional Billing Account Statement</p>
                 </div>
                 <div class="text-sm space-y-2 pt-2">
-                    <p><strong>Student Name:</strong> ${s.name}</p>
-                    <p><strong>Class:</strong> ${s.class}</p>
+                    <p><strong>Student Name:</strong> \${s.name}</p>
+                    <p><strong>Class:</strong> \${s.class}</p>
                     <hr class="my-2">
-                    <div class="flex justify-between text-red-700 font-bold"><span>Arrears (Old Balance):</span> <strong>₵ ${arrears.toFixed(2)}</strong></div>
-                    <div class="flex justify-between"><span>Tuition Fee:</span> <strong>₵ ${tuition.toFixed(2)}</strong></div>
-                    <div class="flex justify-between"><span>Printing Fee:</span> <strong>₵ ${printing.toFixed(2)}</strong></div>
-                    <div class="flex justify-between"><span>P.T.A Dues:</span> <strong>₵ ${pta.toFixed(2)}</strong></div>
-                    <div class="flex justify-between"><span>Other Fees:</span> <strong>₵ ${other.toFixed(2)}</strong></div>
-                    <div class="flex justify-between text-blue-900 border-t pt-2 font-black text-base"><span>Total Bill Balance Due:</span> <strong>₵ ${totalFee.toFixed(2)}</strong></div>
+                    <div class="flex justify-between text-red-700 font-bold"><span>Arrears (Old Balance):</span> <strong>₵ \${arrears.toFixed(2)}</strong></div>
+                    <div class="flex justify-between"><span>Tuition Fee:</span> <strong>₵ \${tuition.toFixed(2)}</strong></div>
+                    <div class="flex justify-between"><span>Printing Fee:</span> <strong>₵ \${printing.toFixed(2)}</strong></div>
+                    <div class="flex justify-between"><span>P.T.A Dues:</span> <strong>₵ \${pta.toFixed(2)}</strong></div>
+                    <div class="flex justify-between"><span>Other Fees:</span> <strong>₵ \${other.toFixed(2)}</strong></div>
+                    <div class="flex justify-between text-blue-900 border-t pt-2 font-black text-base"><span>Total Bill Balance Due:</span> <strong>₵ \${totalFee.toFixed(2)}</strong></div>
                 </div>
-            `;
+            \`;
             document.getElementById('receipt-modal').classList.remove('hidden');
         }
 
@@ -1832,20 +2172,20 @@ async function discardStudentDirect(studentId) {
             const tbody = document.getElementById('attendance-table-body');
             if(!tbody) return;
             if(filteredStudents.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-slate-400 italic">No students found in ${selectedClass}.</td></tr>`;
+                tbody.innerHTML = \`<tr><td colspan="5" class="p-6 text-center text-slate-400 italic">No students found in \${selectedClass}.</td></tr>\`;
                 return;
             }
             tbody.innerHTML = filteredStudents.map((s) => {
                 const globalIdx = studentsData.findIndex(item => item.id === s.id);
-                return `
+                return \`
                     <tr>
-                        <td class="p-3 font-medium">${s.name}</td>
-                        <td class="p-3">${s.class}</td>
-                        <td class="p-3 text-center"><input type="number" value="${s.attendanceMade || 65}" onchange="updateAttendanceProp(${globalIdx}, 'attendanceMade', this.value)" class="w-20 p-1.5 border rounded text-center font-bold text-blue-900 bg-slate-50"></td>
-                        <td class="p-3 text-center"><input type="number" value="${s.attendanceTotal || 70}" onchange="updateAttendanceProp(${globalIdx}, 'attendanceTotal', this.value)" class="w-20 p-1.5 border rounded text-center font-bold text-slate-800 bg-slate-50"></td>
-                        <td class="p-3 text-center font-bold text-amber-900 bg-amber-50">${s.attendanceMade || 65} out of ${s.attendanceTotal || 70}</td>
+                        <td class="p-3 font-medium">\${s.name}</td>
+                        <td class="p-3">\${s.class}</td>
+                        <td class="p-3 text-center"><input type="number" value="\${s.attendanceMade || 65}" onchange="updateAttendanceProp(\${globalIdx}, 'attendanceMade', this.value)" class="w-20 p-1.5 border rounded text-center font-bold text-blue-900 bg-slate-50"></td>
+                        <td class="p-3 text-center"><input type="number" value="\${s.attendanceTotal || 70}" onchange="updateAttendanceProp(\${globalIdx}, 'attendanceTotal', this.value)" class="w-20 p-1.5 border rounded text-center font-bold text-slate-800 bg-slate-50"></td>
+                        <td class="p-3 text-center font-bold text-amber-900 bg-amber-50">\${s.attendanceMade || 65} out of \${s.attendanceTotal || 70}</td>
                     </tr>
-                `;
+                \`;
             }).join('');
         }
 
@@ -1860,17 +2200,17 @@ async function discardStudentDirect(studentId) {
 
         function exportAttendance(format) {
             const className = document.getElementById('attendance-class-filter').value;
-            let content = `${schoolProfile.name.toUpperCase()}\nATTENDANCE REGISTER SUMMARY\nClass: ${className}\n\nStudent Name\tDays Present\tTotal Days\tRatio\n`;
+            let content = \`\${schoolProfile.name.toUpperCase()}\\nATTENDANCE REGISTER SUMMARY\\nClass: \${className}\\n\\nStudent Name\\tDays Present\\tTotal Days\\tRatio\\n\`;
             studentsData.filter(s => s.class === className).forEach(s => {
-                content += `${s.name}\t${s.attendanceMade || 65}\t${s.attendanceTotal || 70}\t${s.attendanceMade || 65} out of ${s.attendanceTotal || 70}\n`;
+                content += \`\${s.name}\\t\${s.attendanceMade || 65}\\t\${s.attendanceTotal || 70}\\t\${s.attendanceMade || 65} out of \${s.attendanceTotal || 70}\\n\`;
             });
             const blob = new Blob([content], { type: format === 'pdf' ? 'application/pdf' : 'application/msword' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `${className}_Attendance_Summary.${format === 'pdf' ? 'pdf' : 'doc'}`;
+            a.download = \`\${className}_Attendance_Summary.\${format === 'pdf' ? 'pdf' : 'doc'}\`;
             a.click();
-            alert(`Attendance summary downloaded as ${format.toUpperCase()}!`);
+            alert(\`Attendance summary downloaded as \${format.toUpperCase()}!\`);
         }
 
         function renderCharts() {
@@ -1917,7 +2257,7 @@ async function discardStudentDirect(studentId) {
                     if(loadedCount === totalFiles) {
                         await saveCloudSettings();
                         renderGalleryGrids();
-                        alert(`${totalFiles} photo(s) successfully uploaded to Supabase cloud and synced across all devices!`);
+                        alert(\`\${totalFiles} photo(s) successfully uploaded to Supabase cloud and synced across all devices!\`);
                     }
                 }
                 reader.readAsDataURL(file);
@@ -1929,17 +2269,17 @@ async function discardStudentDirect(studentId) {
             const grid = document.getElementById('gallery-grid');
             const tGrid = document.getElementById('teacher-gallery-grid');
             if(galleryPhotos.length === 0) {
-                const emptyMsg = `<p class="text-slate-400 italic text-sm">No photos uploaded yet.</p>`;
+                const emptyMsg = \`<p class="text-slate-400 italic text-sm">No photos uploaded yet.</p>\`;
                 if(grid) grid.innerHTML = emptyMsg;
                 if(tGrid) tGrid.innerHTML = emptyMsg;
                 return;
             }
-            const html = galleryPhotos.map((p) => `
+            const html = galleryPhotos.map((p) => \`
                 <div class="bg-slate-50 rounded-xl p-3 text-center border space-y-2">
-                    <img src="${p.url}" alt="School Activity" class="h-32 w-full object-cover rounded-lg shadow">
-                    <a href="${p.url}" download="${p.name || 'school_photo.jpg'}" class="block text-xs bg-blue-900 text-white py-1.5 px-3 rounded-lg font-bold hover:bg-blue-800">Download JPG ⬇️</a>
+                    <img src="\${p.url}" alt="School Activity" class="h-32 w-full object-cover rounded-lg shadow">
+                    <a href="\${p.url}" download="\${p.name || 'school_photo.jpg'}" class="block text-xs bg-blue-900 text-white py-1.5 px-3 rounded-lg font-bold hover:bg-blue-800">Download JPG ⬇️</a>
                 </div>
-            `).join('');
+            \`).join('');
             if(grid) grid.innerHTML = html;
             if(tGrid) tGrid.innerHTML = html;
         }
@@ -1995,8 +2335,8 @@ async function discardStudentDirect(studentId) {
             document.getElementById('login-school-title').innerText = schoolProfile.name;
             document.getElementById('login-school-motto').innerText = schoolProfile.motto;
             document.getElementById('nav-school-name').innerText = schoolProfile.name;
-            document.getElementById('nav-school-info').innerText = `${schoolProfile.location} • Default Tuition: GH₵ 250`;
-            document.getElementById('dashboard-motto-display').innerText = `${schoolProfile.name}, ${schoolProfile.location} — ${schoolProfile.motto}.`;
+            document.getElementById('nav-school-info').innerText = \`\${schoolProfile.location} • Default Tuition: GH₵ 250\`;
+            document.getElementById('dashboard-motto-display').innerText = \`\${schoolProfile.name}, \${schoolProfile.location} — \${schoolProfile.motto}.\`;
             alert('School profile and branding updated successfully!');
         }
     </script>
@@ -2010,5 +2350,3 @@ async function discardStudentDirect(studentId) {
     });
   },
 };
-
-```
