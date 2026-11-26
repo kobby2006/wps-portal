@@ -1136,10 +1136,24 @@ export default {
                     if(data.gallery_photos && Array.isArray(data.gallery_photos)) {
                         galleryPhotos = data.gallery_photos;
                     }
+                    if(data.classes_list && Array.isArray(data.classes_list) && data.classes_list.length > 0) {
+                        classesData = data.classes_list;
+                    }
                 }
             } catch(err) {
                 console.log('Cloud settings fetch note:', err);
             }
+            try {
+                const savedClasses = localStorage.getItem('wps_classes_data');
+                if (savedClasses) {
+                    const parsed = JSON.parse(savedClasses);
+                    if (Array.isArray(parsed) && parsed.length > 0) {
+                        parsed.forEach(c => {
+                            if (!classesData.includes(c)) classesData.push(c);
+                        });
+                    }
+                }
+            } catch (e) {}
             updateLockStatusUI();
             renderGalleryGrids();
             
@@ -1152,16 +1166,29 @@ export default {
 
         async function saveCloudSettings() {
             try {
+                localStorage.setItem('wps_classes_data', JSON.stringify(classesData));
+            } catch (e) {}
+            try {
                 const { error } = await supabaseClient.from('school_settings').upsert({
                     id: 1,
                     portal_locked: portalLocked,
                     announcement_text: globalAnnouncementText,
                     announcement_img: globalAnnouncementImgUrl,
                     gemini_api_key: storedGeminiKey,
-                    gallery_photos: galleryPhotos
+                    gallery_photos: galleryPhotos,
+                    classes_list: classesData
                 });
                 if(error) {
-                    console.error('Supabase sync error:', error.message);
+                    // Fallback if classes_list column does not exist yet in Supabase table
+                    const { error: fallbackErr } = await supabaseClient.from('school_settings').upsert({
+                        id: 1,
+                        portal_locked: portalLocked,
+                        announcement_text: globalAnnouncementText,
+                        announcement_img: globalAnnouncementImgUrl,
+                        gemini_api_key: storedGeminiKey,
+                        gallery_photos: galleryPhotos
+                    });
+                    if (fallbackErr) console.error('Supabase sync error:', fallbackErr.message);
                 }
             } catch(err) {
                 console.error('Cloud save exception:', err);
@@ -1272,6 +1299,10 @@ export default {
             try {
                 const { data, error } = await supabaseClient.from('students').select('*');
                 if(data && !error) {
+                    data.forEach(s => {
+                        const c = s.class || s.class_name;
+                        if (c && !classesData.includes(c)) classesData.push(c);
+                    });
                     studentsData = data.map(s => ({
                         id: s.id || Date.now(),
                         name: s.name || s.student_name || 'Unknown Student',
@@ -1325,7 +1356,7 @@ export default {
             }
             if(tabId === 'assessment') {
                 renderClassesDropdown();
-                renderClassesList();
+            renderClassesList();
                 onGradingClassChange();
                 renderGradingTable();
             }
@@ -1382,16 +1413,20 @@ export default {
             \`).join('');
         }
 
-        function addClass() {
+        async function addClass() {
             const input = document.getElementById('new-class-input');
             const val = input ? input.value.trim() : '';
             if (!val) { alert('Please enter a class name.'); return; }
             if (!classesData.includes(val)) {
                 classesData.push(val);
             }
+            try {
+                localStorage.setItem('wps_classes_data', JSON.stringify(classesData));
+            } catch (e) {}
+            await saveCloudSettings();
             input.value = '';
             renderAll();
-            alert(\`Class "\${val}" added successfully!\`);
+            alert(\`Class "\${val}" added and saved successfully!\`);
         }
 
         async function discardStudent() {
