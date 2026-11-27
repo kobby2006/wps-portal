@@ -399,6 +399,10 @@
                                 <h3 class="font-bold text-xs uppercase text-slate-500 tracking-wider">Competency & Academic Strengths Evaluation</h3>
                                 <div class="space-y-3">
                                     <div>
+                                        <label class="block text-xs font-bold text-slate-700">Assigned Class / Subject Teacher</label>
+                                        <p id="str-assigned-teacher" class="text-sm font-bold text-blue-900 bg-white p-3 rounded-xl border mt-1">Select a student above to view assigned teacher.</p>
+                                    </div>
+                                    <div>
                                         <label class="block text-xs font-bold text-slate-700">Primary Academic Strengths</label>
                                         <p id="str-academic-strengths" class="text-sm font-medium text-slate-900 bg-white p-3 rounded-xl border mt-1">Select a student above to generate strengths analysis.</p>
                                     </div>
@@ -1715,29 +1719,68 @@
             renderCharts();
         }
 
+        function normalizeClassLabel(val) {
+            return (val || '').toString().trim().toLowerCase().replace(/\s+/g, ' ');
+        }
+
+        function parseListField(val) {
+            if (Array.isArray(val)) return val.filter(Boolean);
+            if (typeof val === 'string' && val.trim()) {
+                try {
+                    const parsed = JSON.parse(val);
+                    if (Array.isArray(parsed)) return parsed.filter(Boolean);
+                } catch (e) {}
+                return val.split(',').map(s => s.trim()).filter(Boolean);
+            }
+            return [];
+        }
+
         async function fetchTeachersFromSupabase() {
             try {
                 const { data, error } = await supabaseClient.from('teachers').select('*');
                 if (data && !error && data.length > 0) {
                     const dbTeachers = data.map(t => {
                         const name = t.name || t.full_name || 'Teacher';
-                        let assignedClasses = t.assigned_classes || t.class || ["Basic 4", "Basic 5", "Basic 6"];
-                        let assignedSubjects = t.assigned_subjects || t.subjects || standardSubjects;
+                        let rawClasses = parseListField(t.assigned_classes || t.teacherClass || t.class);
+                        let rawSubjects = parseListField(t.assigned_subjects || t.teacherSubjects || t.subjects);
 
-                        if (name.toLowerCase().includes('prince')) {
-                            assignedSubjects = ["MATHEMATICS", "SCIENCE"];
-                        } else if (name.toLowerCase().includes('margaret')) {
-                            assignedSubjects = ["R. M. E.", "HISTORY"];
-                        } else if (name.toLowerCase().includes('priscilla')) {
-                            assignedSubjects = ["COMPUTING", "CREATIVE ARTS"];
-                        } else if (name.toLowerCase().includes('naa')) {
-                            assignedSubjects = ["GHANAIAN LANGUAGE", "ENGLISH LANGUAGE"];
-                        } else if (name.toLowerCase().includes('charity')) {
-                            assignedClasses = ["Basic 1"];
-                        } else if (name.toLowerCase().includes('idris')) {
-                            assignedClasses = ["Basic 2"];
-                        } else if (name.toLowerCase().includes('elisha')) {
-                            assignedClasses = ["Basic 3"];
+                        const assignText = (t.assignment || '').toLowerCase();
+                        if (rawClasses.length === 0) {
+                            const inferred = [];
+                            classesData.forEach(c => {
+                                if (assignText.includes(c.toLowerCase())) inferred.push(c);
+                            });
+                            if (inferred.length > 0) rawClasses = inferred;
+                        }
+
+                        let assignedClasses = rawClasses.length > 0 ? rawClasses : ["Basic 4", "Basic 5", "Basic 6"];
+                        let assignedSubjects = rawSubjects.length > 0 ? rawSubjects : standardSubjects;
+
+                        const hasExplicitEarlyClass = assignedClasses.some(c => {
+                            const cl = normalizeClassLabel(c);
+                            return cl.includes('nursery') || cl.startsWith('kg') || cl.includes('kindergarten');
+                        });
+
+                        if (!hasExplicitEarlyClass) {
+                            if (name.toLowerCase().includes('prince')) {
+                                assignedSubjects = ["MATHEMATICS", "SCIENCE"];
+                            } else if (name.toLowerCase().includes('margaret')) {
+                                assignedSubjects = ["R. M. E.", "HISTORY"];
+                            } else if (name.toLowerCase().includes('priscilla')) {
+                                assignedSubjects = ["COMPUTING", "CREATIVE ARTS"];
+                            } else if (name.toLowerCase().includes('naa')) {
+                                assignedSubjects = ["GHANAIAN LANGUAGE", "ENGLISH LANGUAGE"];
+                            } else if (name.toLowerCase().includes('charity')) {
+                                assignedClasses = ["Basic 1"];
+                            } else if (name.toLowerCase().includes('idris')) {
+                                assignedClasses = ["Basic 2"];
+                            } else if (name.toLowerCase().includes('elisha')) {
+                                assignedClasses = ["Basic 3"];
+                            }
+                        } else if (rawSubjects.length === 0) {
+                            const mergedSubs = new Set();
+                            assignedClasses.forEach(c => getSubjectsForClass(c).forEach(sub => mergedSubs.add(sub)));
+                            if (mergedSubs.size > 0) assignedSubjects = Array.from(mergedSubs);
                         }
 
                         return {
@@ -1757,6 +1800,8 @@
                 console.log('Supabase teachers fetch note:', err);
             }
             renderTeachersList();
+            renderHistoryView();
+            renderStudentStrengthsView();
         }
 
         async function fetchAdminsFromSupabase() {
@@ -2119,6 +2164,7 @@
             const lblT2 = document.getElementById('str-t2');
             const lblT3 = document.getElementById('str-t3');
             const lblCum = document.getElementById('str-cum');
+            const lblTeacher = document.getElementById('str-assigned-teacher');
             const lblStrengths = document.getElementById('str-academic-strengths');
             const lblRec = document.getElementById('str-recommendation');
 
@@ -2127,9 +2173,15 @@
                 if (lblT2) lblT2.innerText = '--';
                 if (lblT3) lblT3.innerText = '--';
                 if (lblCum) lblCum.innerText = '--';
+                if (lblTeacher) lblTeacher.innerText = 'No student selected or access restricted.';
                 if (lblStrengths) lblStrengths.innerText = 'No student selected or access restricted.';
                 if (lblRec) lblRec.innerText = '--';
                 return;
+            }
+
+            const assignedClassTeacher = getTeacherNameForDocument(s.class, '');
+            if (lblTeacher) {
+                lblTeacher.innerText = `${assignedClassTeacher} (${s.class})`;
             }
 
             let t1Avg = 78.5, t2Avg = 82.0, t3Avg = 84.5;
@@ -2141,10 +2193,10 @@
             if (lblCum) lblCum.innerText = `${cumAvg}% (Distinction)`;
 
             if (lblStrengths) {
-                lblStrengths.innerText = `${s.name} demonstrates exceptional analytical aptitude and problem-solving skills in Mathematics and Science. Shows consistent upward trajectory in homework and terminal examinations.`;
+                lblStrengths.innerText = `${s.name} (${s.class}, Class Teacher: ${assignedClassTeacher}) demonstrates consistent classroom engagement and steady progress in core learning areas and terminal assessments.`;
             }
             if (lblRec) {
-                lblRec.innerText = `Encourage continued active participation in group science projects and reading comprehension. Ready for advanced enrichment tasks.`;
+                lblRec.innerText = `Recorded by ${assignedClassTeacher} for ${s.class}: Encourage continued active participation in guided activities, literacy/numeracy practice, and group exercises.`;
             }
         }
 
@@ -2432,13 +2484,60 @@
         }
 
         function getTeacherNameForDocument(className, subjectName) {
+            const targetClass = normalizeClassLabel(className);
             const subRaw = (subjectName || '').toLowerCase();
             const subClean = subRaw.replace(/[\.\s]/g, '');
-            const classLower = (className || '').toLowerCase();
 
-            if (classLower.includes('basic 1')) return 'Charity Mensah';
-            if (classLower.includes('basic 2')) return 'Idris Munierah';
-            if (classLower.includes('basic 3')) return 'Elisha Quansah';
+            const isStrictEarlyClass =
+                targetClass.includes('nursery') ||
+                targetClass === 'kg 1' ||
+                targetClass === 'kg1' ||
+                targetClass.includes('kindergarten 1') ||
+                targetClass === 'kg 2' ||
+                targetClass === 'kg2' ||
+                targetClass.includes('kindergarten 2') ||
+                targetClass.startsWith('kg') ||
+                targetClass.includes('kindergarten');
+
+            if (typeof teachersList !== 'undefined' && Array.isArray(teachersList) && targetClass) {
+                const exactClassMatches = teachersList.filter(t => {
+                    const classes = parseListField(t.teacherClass || t.assigned_classes);
+                    return classes.some(c => normalizeClassLabel(c) === targetClass);
+                });
+
+                if (exactClassMatches.length > 0) {
+                    if (isStrictEarlyClass || ['basic 1', 'basic 2', 'basic 3'].includes(targetClass)) {
+                        return exactClassMatches[0].name;
+                    }
+
+                    if (subClean) {
+                        const subMatch = exactClassMatches.find(t => {
+                            const subs = parseListField(t.teacherSubjects || t.assigned_subjects);
+                            return subs.some(s => s.toLowerCase().replace(/[\.\s]/g, '').includes(subClean));
+                        });
+                        if (subMatch) return subMatch.name;
+                    }
+
+                    return exactClassMatches.map(t => t.name).join(' / ');
+                }
+
+                if (isStrictEarlyClass) {
+                    const assignmentMatch = teachersList.find(t => {
+                        const a = (t.assignment || '').toLowerCase();
+                        return targetClass && a.includes(targetClass);
+                    });
+                    if (assignmentMatch) return assignmentMatch.name;
+                    return `${className || 'Class'} Teacher`;
+                }
+            }
+
+            if (isStrictEarlyClass) {
+                return `${className || 'Class'} Teacher`;
+            }
+
+            if (targetClass === 'basic 1') return 'Charity Mensah';
+            if (targetClass === 'basic 2') return 'Idris Munierah';
+            if (targetClass === 'basic 3') return 'Elisha Quansah';
 
             if (subClean.includes('math') || subClean.includes('science')) return 'Prince Mensah';
             if (subClean.includes('rme') || subClean.includes('history')) return 'Margaret Aidoo';
@@ -2867,7 +2966,15 @@
                     `;
                 }).join('');
 
-                const reportTeacherName = getTeacherNameForDocument(s.class, 'MATHEMATICS');
+                const normStudentClass = normalizeClassLabel(s.class);
+                const useClassTeacherDirectly =
+                    normStudentClass.includes('nursery') ||
+                    normStudentClass.startsWith('kg') ||
+                    normStudentClass.includes('kindergarten') ||
+                    ['basic 1', 'basic 2', 'basic 3'].includes(normStudentClass);
+                const reportTeacherName = useClassTeacherDirectly
+                    ? getTeacherNameForDocument(s.class, '')
+                    : getTeacherNameForDocument(s.class, 'MATHEMATICS');
                 const passportPhotoHtml = (includePhotos && s.photo)
                     ? `<img src="${s.photo}" class="w-20 h-20 object-cover rounded border border-black shadow">`
                     : (includePhotos
@@ -3153,7 +3260,6 @@
             const femaleCount = studentsData.filter(s => s.gender === 'Female').length;
             const totalStudents = studentsData.length || 1;
 
-            // Auto-detect gender ratio percentage for Card 1 wave fill
             const femalePct = Math.round((femaleCount / totalStudents) * 100);
             const cardGender = document.getElementById('card-gender');
             if (cardGender) {
@@ -3177,7 +3283,6 @@
             const maxClassCount = Math.max(...classCounts, 1);
             const activeClassesCount = studentsData.length > 0 ? Math.max(...classCounts) : 0;
             
-            // Auto-detect peak enrollment level for Card 2 wave fill
             const enrollmentPct = Math.round((activeClassesCount / Math.max(maxClassCount, 25)) * 100);
             const cardClass = document.getElementById('card-class');
             if (cardClass) {
