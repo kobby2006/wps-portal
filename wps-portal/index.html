@@ -18,6 +18,64 @@
             body { background: white; color: black; }
             .assessment-print-page { page-break-after: always; border: 2px solid black !important; padding: 20px !important; margin: 0 !important; }
             .report-card-page { page-break-after: always; border: 2px solid black !important; padding: 15px !important; margin: 0 !important; }
+            body.printing-flashcards * { visibility: hidden; }
+            body.printing-flashcards #flashcards-print-sheet,
+            body.printing-flashcards #flashcards-print-sheet * { visibility: visible; }
+            body.printing-flashcards #flashcards-print-sheet {
+                position: fixed;
+                left: 0;
+                top: 0;
+                width: 100%;
+                display: grid !important;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 16px;
+                padding: 15mm;
+                background: white;
+            }
+            .flashcard-print-box {
+                border: 2px dashed #1e3a8a;
+                border-radius: 12px;
+                padding: 16px;
+                page-break-inside: avoid;
+                min-height: 180px;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+            }
+        }
+
+        /* 3D Flip Card Styling */
+        .flashcard-scene {
+            perspective: 1000px;
+        }
+        .flashcard-inner {
+            position: relative;
+            width: 100%;
+            height: 260px;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            cursor: pointer;
+        }
+        .flashcard-inner.is-flipped {
+            transform: rotateY(180deg);
+        }
+        .flashcard-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
+        }
+        .flashcard-back {
+            transform: rotateY(180deg);
         }
 
         /* Dynamic Liquid Wave Fill Card Styling */
@@ -33,7 +91,6 @@
             z-index: 1;
         }
 
-        /* Dynamic Back Wave Layer */
         .watery-card::before {
             content: '';
             position: absolute;
@@ -49,7 +106,6 @@
             transition: top 1s ease-in-out;
         }
 
-        /* Dynamic Front Wave Layer */
         .watery-card::after {
             content: '';
             position: absolute;
@@ -172,6 +228,9 @@
         </div>
     </div>
 
+    <!-- HIDDEN PRINT SHEET FOR FLASHCARDS -->
+    <div id="flashcards-print-sheet" class="hidden"></div>
+
     <!-- MAIN APP SHELL -->
     <div id="app-shell" class="hidden flex-1 flex flex-col">
         <!-- TOP NAVBAR -->
@@ -200,8 +259,8 @@
                 <button onclick="switchTab('strengths')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">⚡ <span>Student Strengths & Performance</span></button>
                 <button onclick="switchTab('history')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📁 <span>Student History & Reports</span></button>
                 <button onclick="switchTab('lms')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📚 <span>LMS & Teacher Training Hub</span></button>
-                <a href="resource-hub.html" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🗂️ <span>GES Teaching Resource Hub</span></a>
-                <a href="english-library.html" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📖 <span>English Library Hub</span></a>
+                <button onclick="switchTab('resource-hub')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🗂️ <span>Teachers' Resources Hub (GES)</span></button>
+                <button onclick="switchTab('english-library')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📖 <span>English Library Hub</span></button>
                 <button onclick="switchTab('ai-copilot')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🤖 <span>Live Gemini AI Assistant</span></button>
                 <button onclick="switchTab('attendance')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📅 <span>Attendance Register</span></button>
                 <button onclick="switchTab('timetable')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">⏰ <span>Timetable & Time Mgmt</span></button>
@@ -213,7 +272,7 @@
                     <button onclick="switchTab('students')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🎓 <span>Student Enrollment & Edit</span></button>
                     <button onclick="switchTab('teachers')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">👨‍🏫 <span>Teacher Accounts</span></button>
                     <button onclick="switchTab('admins')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🛡️ <span>Admin Accounts</span></button>
-                    <button onclick="switchTab('classes')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🏫 <span>Manage Classes (1-6 & JHS)</span></button>
+                    <button onclick="switchTab('classes')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🏫 <span>Manage Classes (Nursery - JHS)</span></button>
                     <button onclick="switchTab('announcements')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📢 <span>Announcements & Portal Lock</span></button>
                     <button onclick="switchTab('gallery')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🖼️ <span>Photo Gallery & JPG Uploads</span></button>
                     <button onclick="switchTab('admin-themes')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🎨 <span>Holiday & Event Themes</span></button>
@@ -228,8 +287,8 @@
                     <button onclick="switchTab('history')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📁 <span>Student History & Reports</span></button>
                     <button onclick="switchTab('attendance')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📅 <span>Attendance Register</span></button>
                     <button onclick="switchTab('lms')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📚 <span>Teaching Hub & Resources</span></button>
-                    <a href="resource-hub.html" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🗂️ <span>GES Teaching Resource Hub</span></a>
-                    <a href="english-library.html" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📖 <span>English Library Hub</span></a>
+                    <button onclick="switchTab('resource-hub')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🗂️ <span>Teachers' Resources Hub (GES)</span></button>
+                    <button onclick="switchTab('english-library')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📖 <span>English Library Hub</span></button>
                     <button onclick="switchTab('ai-copilot')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🤖 <span>Live Gemini AI Assistant</span></button>
                     <button onclick="switchTab('timetable')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">⏰ <span>Manage Timetable</span></button>
                     <button onclick="switchTab('teacher-gallery')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🖼️ <span>School Photo Gallery</span></button>
@@ -239,7 +298,7 @@
 
             <!-- MAIN CONTENT AREA -->
             <main class="flex-1 p-6 overflow-y-auto">
-                <!-- TAB: DASHBOARD & CHARTS (Watery Liquid Glass Effect Applied) -->
+                <!-- TAB: DASHBOARD & CHARTS -->
                 <section id="tab-dashboard" class="space-y-6">
                     <div class="bg-gradient-to-r from-blue-950 to-blue-900 text-white p-6 rounded-2xl shadow-lg flex justify-between items-center border-l-4 border-amber-500">
                         <div>
@@ -265,6 +324,220 @@
                                 <h3 class="font-bold text-slate-800 mb-4">Class Enrollment Quantity</h3>
                                 <div class="h-64 flex items-center justify-center relative">
                                     <canvas id="classChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- TAB: ENGLISH LIBRARY HUB -->
+                <section id="tab-english-library" class="hidden space-y-6">
+                    <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-4">
+                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b pb-4">
+                            <div>
+                                <h2 class="text-xl font-bold text-slate-900">📖 English Library Hub (GES Reading & Audio Reader)</h2>
+                                <p class="text-xs text-slate-500 mt-1">Interactive storybooks with GES reading level tags, font controls, Web Audio / Speech Synthesis narration, and post-reading comprehension checks.</p>
+                            </div>
+                            <div class="flex flex-wrap gap-2 items-center">
+                                <label class="text-xs font-bold uppercase text-slate-600">Select Story:</label>
+                                <select id="library-story-select" onchange="loadLibraryStory()" class="p-2.5 border rounded-xl text-xs bg-slate-50 font-bold text-blue-950"></select>
+                            </div>
+                        </div>
+
+                        <!-- Story Metadata & Font-Size Controls -->
+                        <div class="flex flex-wrap justify-between items-center gap-3 bg-slate-50 p-4 rounded-xl border">
+                            <div class="flex flex-wrap items-center gap-2">
+                                <span id="story-ges-level-badge" class="px-3 py-1 bg-blue-900 text-white text-xs font-bold rounded-full">GES Level: Basic 4 - 6</span>
+                                <span id="story-strand-badge" class="px-3 py-1 bg-amber-100 text-amber-900 text-xs font-bold rounded-full">Strand: Reading & Comprehension</span>
+                                <span id="story-duration-badge" class="px-3 py-1 bg-emerald-100 text-emerald-900 text-xs font-bold rounded-full">~2 mins read</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="text-xs font-bold text-slate-600">Font Size:</span>
+                                <button type="button" onclick="changeReaderFontSize(-2)" class="px-3 py-1 bg-white border rounded-lg text-xs font-bold hover:bg-slate-100">A-</button>
+                                <button type="button" onclick="resetReaderFontSize()" class="px-3 py-1 bg-white border rounded-lg text-xs font-bold hover:bg-slate-100">Reset</button>
+                                <button type="button" onclick="changeReaderFontSize(2)" class="px-3 py-1 bg-white border rounded-lg text-xs font-bold hover:bg-slate-100">A+</button>
+                            </div>
+                        </div>
+
+                        <!-- Audio / Web Speech Synthesis Player Bar -->
+                        <div class="bg-blue-950 text-white p-4 rounded-2xl shadow-md space-y-3">
+                            <div class="flex flex-wrap justify-between items-center gap-3">
+                                <div class="flex items-center gap-3">
+                                    <button type="button" id="audio-play-pause-btn" onclick="toggleStoryAudio()" class="px-4 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs rounded-xl shadow transition flex items-center gap-2">
+                                        ▶ Play Narration
+                                    </button>
+                                    <button type="button" onclick="stopStoryAudio()" class="px-3 py-2 bg-blue-800 hover:bg-blue-700 text-white font-bold text-xs rounded-xl transition">
+                                        ⏹ Stop
+                                    </button>
+                                    <span id="audio-engine-status" class="text-[11px] text-amber-200 font-medium">Web Speech Synthesis Ready (Attach .mp3 anytime)</span>
+                                </div>
+
+                                <div class="flex items-center gap-2">
+                                    <label for="audio-speed-select" class="text-xs font-bold text-blue-200">Speed:</label>
+                                    <select id="audio-speed-select" onchange="changeAudioSpeed()" class="p-1.5 rounded-lg bg-blue-900 border border-blue-700 text-white text-xs font-bold">
+                                        <option value="0.75">0.75x</option>
+                                        <option value="1.0" selected>1.0x</option>
+                                        <option value="1.25">1.25x</option>
+                                        <option value="1.5">1.5x</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Interactive Progress Scrubber -->
+                            <div class="flex items-center gap-3">
+                                <span id="audio-current-pct" class="text-[11px] font-mono text-blue-200 w-10">0%</span>
+                                <input type="range" id="audio-progress-scrubber" min="0" max="100" value="0" oninput="scrubStoryAudio(this.value)" class="flex-1 accent-amber-500 cursor-pointer h-2 bg-blue-800 rounded-lg">
+                                <span class="text-[11px] font-mono text-blue-200 w-10 text-right">100%</span>
+                            </div>
+                        </div>
+
+                        <!-- Full Story Reader Pane -->
+                        <div class="bg-amber-50/40 border border-amber-200/80 rounded-2xl p-6 space-y-4">
+                            <div class="border-b border-amber-200 pb-3">
+                                <h3 id="story-title" class="text-2xl font-black text-blue-950">Story Title</h3>
+                                <p id="story-author" class="text-xs font-semibold text-slate-500 mt-1">Author / GES Adapted Reader</p>
+                            </div>
+                            <div id="story-content-body" style="font-size: 16px;" class="leading-relaxed text-slate-800 space-y-4 font-serif"></div>
+                        </div>
+
+                        <!-- GES-Style Post-Reading Comprehension Check -->
+                        <div class="bg-slate-50 border border-slate-200 rounded-2xl p-6 space-y-4">
+                            <div class="flex justify-between items-center border-b pb-3">
+                                <div>
+                                    <h3 class="font-bold text-base text-blue-950">📝 GES Post-Reading Comprehension Check</h3>
+                                    <p class="text-xs text-slate-500">Answer the questions below based on the passage and click Submit to check your score.</p>
+                                </div>
+                                <span id="comprehension-score-badge" class="hidden px-3 py-1 bg-emerald-100 text-emerald-900 font-bold text-xs rounded-full">Score: 0/0</span>
+                            </div>
+                            <div id="comprehension-questions-container" class="space-y-4"></div>
+                            <div class="flex gap-3 pt-2">
+                                <button type="button" onclick="gradeComprehensionQuiz()" class="px-5 py-2.5 bg-blue-900 hover:bg-blue-800 text-white font-bold text-xs rounded-xl shadow">Submit & Check Answers</button>
+                                <button type="button" onclick="resetComprehensionQuiz()" class="px-4 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold text-xs rounded-xl">Reset Quiz</button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- TAB: TEACHERS' RESOURCES HUB (GES STANDARD) -->
+                <section id="tab-resource-hub" class="hidden space-y-6">
+                    <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-5">
+                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b pb-4">
+                            <div>
+                                <h2 class="text-xl font-bold text-slate-900">🗂️ Teachers' Resources Hub (GES Standard Curriculum)</h2>
+                                <p class="text-xs text-slate-500 mt-1">Cascading filters from Nursery to JHS 1 with class-assigned subjects, TLM lesson delivery guides, and printable A4/manila flashcards.</p>
+                            </div>
+                            <div class="flex gap-2 bg-slate-100 p-1 rounded-xl">
+                                <button type="button" id="btn-view-tlm" onclick="switchResourceHubView('tlm')" class="px-4 py-2 rounded-lg text-xs font-bold bg-blue-900 text-white shadow">📋 TLMs Guide View</button>
+                                <button type="button" id="btn-view-flashcards" onclick="switchResourceHubView('flashcards')" class="px-4 py-2 rounded-lg text-xs font-bold text-slate-700 hover:bg-white">🃏 Interactive Flashcards</button>
+                            </div>
+                        </div>
+
+                        <!-- Cascading Filters: Class -> Subject -> Topic -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 bg-slate-50 p-4 rounded-2xl border">
+                            <div>
+                                <label class="block text-xs font-bold uppercase text-slate-600 mb-1">1. Select Class (Nursery – JHS 1)</label>
+                                <select id="ges-class-filter" onchange="onGesClassChange()" class="w-full p-2.5 border rounded-xl text-xs bg-white font-bold text-blue-950">
+                                    <option value="Nursery 1">Nursery 1</option>
+                                    <option value="Nursery 2">Nursery 2</option>
+                                    <option value="KG 1">KG 1</option>
+                                    <option value="KG 2">KG 2</option>
+                                    <option value="Basic 1">Basic 1</option>
+                                    <option value="Basic 2">Basic 2</option>
+                                    <option value="Basic 3">Basic 3</option>
+                                    <option value="Basic 4" selected>Basic 4</option>
+                                    <option value="Basic 5">Basic 5</option>
+                                    <option value="Basic 6">Basic 6</option>
+                                    <option value="JHS 1">JHS 1</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold uppercase text-slate-600 mb-1">2. Select Subject (Class Assigned)</label>
+                                <select id="ges-subject-filter" onchange="onGesSubjectChange()" class="w-full p-2.5 border rounded-xl text-xs bg-white font-bold text-blue-950"></select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold uppercase text-slate-600 mb-1">3. Select Curriculum Topic</label>
+                                <select id="ges-topic-filter" onchange="renderGesResourceContent()" class="w-full p-2.5 border rounded-xl text-xs bg-white font-bold text-blue-950"></select>
+                            </div>
+                        </div>
+
+                        <!-- Strand & Sub-strand Metadata Banner -->
+                        <div class="bg-blue-50 border border-blue-200 rounded-xl p-4 flex flex-wrap justify-between items-center gap-3 text-xs">
+                            <div>
+                                <span class="font-bold text-blue-950 uppercase">Strand:</span>
+                                <span id="ges-meta-strand" class="text-slate-800 font-semibold ml-1">--</span>
+                            </div>
+                            <div>
+                                <span class="font-bold text-blue-950 uppercase">Sub-Strand:</span>
+                                <span id="ges-meta-substrand" class="text-slate-800 font-semibold ml-1">--</span>
+                            </div>
+                            <div>
+                                <span class="px-3 py-1 bg-amber-200 text-amber-950 font-bold rounded-full" id="ges-meta-code">GES Standard</span>
+                            </div>
+                        </div>
+
+                        <!-- VIEW 1: TLMs GUIDE VIEW -->
+                        <div id="ges-tlm-view" class="space-y-4">
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div class="bg-slate-50 p-4 rounded-xl border space-y-2">
+                                    <h4 class="font-bold text-xs uppercase text-blue-950">🎯 Performance Objective</h4>
+                                    <p id="tlm-objective" class="text-xs text-slate-700 leading-relaxed">--</p>
+                                </div>
+                                <div class="bg-amber-50/70 p-4 rounded-xl border border-amber-200 space-y-2">
+                                    <h4 class="font-bold text-xs uppercase text-amber-950">🛠️ Low-Cost / Local Materials Needed</h4>
+                                    <ul id="tlm-materials" class="text-xs text-slate-700 list-disc pl-4 space-y-1"></ul>
+                                </div>
+                                <div class="bg-emerald-50/70 p-4 rounded-xl border border-emerald-200 space-y-2">
+                                    <h4 class="font-bold text-xs uppercase text-emerald-950">📐 Teacher Preparation</h4>
+                                    <p id="tlm-preparation" class="text-xs text-slate-700 leading-relaxed">--</p>
+                                </div>
+                            </div>
+
+                            <div class="bg-white border border-slate-200 rounded-2xl p-5 space-y-4">
+                                <h4 class="font-bold text-sm text-blue-950 border-b pb-2">🏫 GES Lesson Delivery Steps</h4>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    <div class="p-4 rounded-xl bg-blue-50/50 border border-blue-100 space-y-1.5">
+                                        <span class="px-2.5 py-0.5 bg-blue-900 text-white text-[10px] font-bold rounded-full uppercase">Phase 1: Starter (10 mins)</span>
+                                        <p id="tlm-step-starter" class="text-xs text-slate-700 leading-relaxed pt-1">--</p>
+                                    </div>
+                                    <div class="p-4 rounded-xl bg-indigo-50/50 border border-indigo-100 space-y-1.5">
+                                        <span class="px-2.5 py-0.5 bg-indigo-900 text-white text-[10px] font-bold rounded-full uppercase">Phase 2: Main Activity (35 mins)</span>
+                                        <p id="tlm-step-main" class="text-xs text-slate-700 leading-relaxed pt-1">--</p>
+                                    </div>
+                                    <div class="p-4 rounded-xl bg-amber-50/50 border border-amber-100 space-y-1.5">
+                                        <span class="px-2.5 py-0.5 bg-amber-700 text-white text-[10px] font-bold rounded-full uppercase">Phase 3: Plenary / Reflection (15 mins)</span>
+                                        <p id="tlm-step-plenary" class="text-xs text-slate-700 leading-relaxed pt-1">--</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- VIEW 2: INTERACTIVE FLASHCARDS VIEW -->
+                        <div id="ges-flashcards-view" class="hidden space-y-5">
+                            <div class="flex flex-wrap justify-between items-center gap-3">
+                                <p class="text-xs font-semibold text-slate-600">Click the flashcard below to flip between Prompt/Term (Front) and Explanation/Answer (Back).</p>
+                                <button type="button" onclick="printFlashcardsSheet()" class="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-xl shadow flex items-center gap-2">
+                                    🖨️ Print Flashcards (A4 / Manila Sheet)
+                                </button>
+                            </div>
+
+                            <div class="max-w-xl mx-auto space-y-4">
+                                <div class="flashcard-scene" onclick="flipCurrentFlashcard()">
+                                    <div id="flashcard-inner" class="flashcard-inner">
+                                        <div class="flashcard-face bg-gradient-to-br from-blue-950 to-blue-800 text-white border-2 border-amber-400">
+                                            <span class="text-[10px] uppercase tracking-widest text-amber-300 font-bold mb-2">FRONT • CLICK TO FLIP</span>
+                                            <h3 id="flashcard-front-text" class="text-xl font-black leading-snug">--</h3>
+                                        </div>
+                                        <div class="flashcard-face flashcard-back bg-amber-50 text-slate-900 border-2 border-blue-900">
+                                            <span class="text-[10px] uppercase tracking-widest text-blue-900 font-bold mb-2">BACK • ANSWER / TLM NOTE</span>
+                                            <p id="flashcard-back-text" class="text-base font-semibold leading-relaxed">--</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="flex justify-between items-center bg-slate-100 p-3 rounded-xl">
+                                    <button type="button" onclick="prevFlashcard()" class="px-4 py-2 bg-white border hover:bg-slate-50 text-slate-800 font-bold text-xs rounded-lg shadow-sm">⬅ Previous</button>
+                                    <span id="flashcard-counter" class="text-xs font-black text-blue-950">Card 1 of 4</span>
+                                    <button type="button" onclick="nextFlashcard()" class="px-4 py-2 bg-blue-900 hover:bg-blue-800 text-white font-bold text-xs rounded-lg shadow-sm">Next ➡</button>
                                 </div>
                             </div>
                         </div>
@@ -308,24 +581,7 @@
                             </div>
                             <div>
                                 <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Select Subject</label>
-                                <select id="grading-subject-filter" onchange="renderGradingTable()" class="p-2.5 border rounded-xl w-full text-sm bg-slate-50 font-medium">
-                                    <option value="MATHEMATICS">MATHEMATICS</option>
-                                    <option value="ENGLISH LANGUAGE">ENGLISH LANGUAGE</option>
-                                    <option value="SCIENCE">SCIENCE</option>
-                                    <option value="HISTORY">HISTORY</option>
-                                    <option value="COMPUTING">COMPUTING</option>
-                                    <option value="CREATIVE ARTS">CREATIVE ARTS</option>
-                                    <option value="GHANAIAN LANGUAGE">GHANAIAN LANGUAGE</option>
-                                    <option value="R. M. E.">R. M. E.</option>
-                                    <option value="LANGUAGE AND LITERACY">LANGUAGE AND LITERACY</option>
-                                    <option value="LITERACY">LITERACY</option>
-                                    <option value="NUMERACY">NUMERACY</option>
-                                    <option value="PHONICS">PHONICS</option>
-                                    <option value="O.W.O.P">O.W.O.P</option>
-                                    <option value="PICTURE READING AND COLORING">PICTURE READING AND COLORING</option>
-                                    <option value="WRITING">WRITING</option>
-                                    <option value="COLOR FUN">COLOR FUN</option>
-                                </select>
+                                <select id="grading-subject-filter" onchange="renderGradingTable()" class="p-2.5 border rounded-xl w-full text-sm bg-slate-50 font-medium"></select>
                             </div>
                         </div>
                     </div>
@@ -427,7 +683,6 @@
                             <button onclick="window.print()" class="px-4 py-2 bg-slate-800 text-white text-xs font-semibold rounded-lg hover:bg-slate-700 no-print">Print All Records</button>
                         </div>
 
-                        <!-- Year, Class & Term Selector for History -->
                         <div class="flex flex-wrap gap-4 pt-2 border-t items-center justify-between">
                             <div class="flex flex-wrap gap-4 items-center">
                                 <div>
@@ -448,7 +703,6 @@
                                 </div>
                             </div>
 
-                            <!-- PASSPORT PHOTO TOGGLE -->
                             <div class="bg-amber-50 p-3 rounded-xl border border-amber-200 flex items-center space-x-2">
                                 <input type="checkbox" id="include-photos-toggle" checked onchange="renderHistoryView()" class="w-4 h-4 text-blue-900 rounded">
                                 <label for="include-photos-toggle" class="text-xs font-bold text-amber-950 cursor-pointer">Include Passport Photos on Report Cards</label>
@@ -472,7 +726,6 @@
                             <span id="lms-role-badge" class="px-3 py-1 bg-amber-100 text-amber-900 text-xs font-bold rounded-full">Admin Edit Mode Active</span>
                         </div>
 
-                        <!-- ADMIN ONLY: UPLOAD PDF / WORD / MATERIALS -->
                         <div id="admin-lms-upload-section" class="bg-blue-50/60 p-5 rounded-xl border border-blue-200 space-y-4">
                             <h3 class="font-bold text-sm text-blue-950">➕ Upload PDF, Word Handout, or Teaching Document (Admin Only)</h3>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -494,7 +747,6 @@
                             </div>
                         </div>
 
-                        <!-- DOWNLOADABLE DOCUMENTS VAULT CONTAINER -->
                         <div class="space-y-4 pt-2">
                             <h3 class="font-bold text-sm text-slate-900 border-b pb-2">📥 Downloadable PDF & Word Document Vault for Teachers</h3>
                             <div id="lms-documents-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -508,7 +760,6 @@
                             </div>
                         </div>
 
-                        <!-- LMS CONTENT TABS / SECTIONS -->
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4 border-t">
                             <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-3 shadow-sm">
                                 <div class="flex items-center space-x-2 text-blue-900 font-bold text-sm">
@@ -555,7 +806,6 @@
                             <span class="px-3 py-1 bg-emerald-100 text-emerald-900 text-xs font-bold rounded-full">Gemini AI Active</span>
                         </div>
 
-                        <!-- ADMIN ONLY: GEMINI API KEY INPUT -->
                         <div id="admin-gemini-section" class="hidden bg-amber-50 p-4 rounded-xl border border-amber-200 space-y-2">
                             <label class="block text-xs font-bold uppercase text-amber-900">Admin: Enter School Gemini API Key:</label>
                             <div class="flex gap-2">
@@ -581,6 +831,10 @@
                                     <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Grade Level</label>
                                     <select id="prompt-grade" class="w-full p-2.5 border border-slate-300 rounded-xl bg-white text-xs font-medium">
                                         <option value="">Select Class...</option>
+                                        <option value="Nursery 1">Nursery 1</option>
+                                        <option value="Nursery 2">Nursery 2</option>
+                                        <option value="KG 1">KG 1</option>
+                                        <option value="KG 2">KG 2</option>
                                         <option value="Basic 1">Basic 1</option>
                                         <option value="Basic 2">Basic 2</option>
                                         <option value="Basic 3">Basic 3</option>
@@ -588,8 +842,6 @@
                                         <option value="Basic 5">Basic 5</option>
                                         <option value="Basic 6">Basic 6</option>
                                         <option value="JHS 1">JHS 1</option>
-                                        <option value="JHS 2">JHS 2</option>
-                                        <option value="JHS 3">JHS 3</option>
                                     </select>
                                 </div>
                                 <div>
@@ -604,6 +856,8 @@
                                         <option value="Creative Arts">Creative Arts</option>
                                         <option value="Ghanaian Language">Ghanaian Language</option>
                                         <option value="History">History</option>
+                                        <option value="Social Studies">Social Studies</option>
+                                        <option value="Career Technology">Career Technology</option>
                                     </select>
                                 </div>
                                 <div>
@@ -628,7 +882,6 @@
                             </div>
                         </div>
 
-                        <!-- AI RESPONSE BOX WITH DOWNLOAD & PRINT BUTTONS -->
                         <div id="ai-response-box" class="hidden mt-6 p-5 bg-blue-50/70 border border-blue-200 rounded-2xl space-y-3 text-slate-800">
                             <div class="flex justify-between items-center border-b pb-2">
                                 <div class="flex items-center space-x-2 text-blue-900 font-bold text-sm">
@@ -742,10 +995,10 @@
                 <!-- TAB: MANAGE CLASSES (Admin) -->
                 <section id="tab-classes" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-4">
-                        <h2 class="text-xl font-bold text-slate-900">Manage School Classes (Basic 1 - 6 & JHS)</h2>
+                        <h2 class="text-xl font-bold text-slate-900">Manage School Classes (Nursery - JHS)</h2>
                         <p class="text-xs text-slate-500">Add new classes or modify existing class levels in the system.</p>
                         <div class="flex gap-3">
-                            <input type="text" id="new-class-input" placeholder="e.g. Basic 1 or Nursery" class="p-3 border rounded-xl flex-1">
+                            <input type="text" id="new-class-input" placeholder="e.g. Nursery 1, KG 1, Basic 1, JHS 1" class="p-3 border rounded-xl flex-1">
                             <button onclick="addClass()" class="px-6 py-3 bg-blue-900 text-white font-bold rounded-xl hover:bg-blue-800">Add Class</button>
                         </div>
                         <div class="mt-4">
@@ -777,7 +1030,6 @@
                             </form>
                         </div>
 
-                        <!-- EDIT STUDENT ROSTER & SPELLING SECTION -->
                         <div class="pt-6 border-t space-y-4">
                             <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                                 <div>
@@ -881,7 +1133,6 @@
                             </div>
                         </div>
 
-                        <!-- PORTAL LOCK CONTROL PANEL -->
                         <div class="pt-6 border-t space-y-3">
                             <h3 class="text-lg font-bold text-slate-900">🔒 Teacher Portal Access Restriction</h3>
                             <p class="text-xs text-slate-500">Lock the portal to restrict teachers from logging in while you perform system edits, grade updates, or maintenance.</p>
@@ -1020,7 +1271,7 @@
         let portalLocked = false;
         let globalAnnouncementText = "Welcome to Wesley Preparatory School. Please ensure all student records and SBA scores are updated promptly.";
         let globalAnnouncementImgUrl = "";
-        const defaultClassesData = ['Basic 1', 'Basic 2', 'Basic 3', 'Basic 4', 'Basic 5', 'Basic 6', 'JHS 1', 'JHS 2', 'JHS 3'];
+        const defaultClassesData = ['Nursery 1', 'Nursery 2', 'KG 1', 'KG 2', 'Basic 1', 'Basic 2', 'Basic 3', 'Basic 4', 'Basic 5', 'Basic 6', 'JHS 1'];
         let classesData = (() => {
             try {
                 const saved = JSON.parse(localStorage.getItem('wps_classes_data'));
@@ -1088,7 +1339,7 @@
             'CREATIVE ARTS'
         ];
 
-        const primaryJhsSubjects = [
+        const primarySubjects = [
             'ENGLISH LANGUAGE',
             'MATHEMATICS',
             'SCIENCE',
@@ -1099,8 +1350,21 @@
             'GHANAIAN LANGUAGE'
         ];
 
+        const jhsSubjects = [
+            'ENGLISH LANGUAGE',
+            'MATHEMATICS',
+            'INTEGRATED SCIENCE',
+            'SOCIAL STUDIES',
+            'R. M. E.',
+            'CAREER TECHNOLOGY',
+            'CREATIVE ARTS & DESIGN',
+            'COMPUTING',
+            'GHANAIAN LANGUAGE'
+        ];
+
         const standardSubjects = Array.from(new Set([
-            ...primaryJhsSubjects,
+            ...primarySubjects,
+            ...jhsSubjects,
             ...nurserySubjects,
             ...kg1Subjects,
             ...kg2Subjects
@@ -1111,7 +1375,864 @@
             if (c.includes('nursery')) return nurserySubjects;
             if (c === 'kg 1' || c === 'kg1' || c.includes('kindergarten 1')) return kg1Subjects;
             if (c === 'kg 2' || c === 'kg2' || c.includes('kindergarten 2')) return kg2Subjects;
-            return primaryJhsSubjects;
+            if (c.startsWith('jhs')) return jhsSubjects;
+            return primarySubjects;
+        }
+
+        /* =========================================================================
+           1. ENGLISH LIBRARY HUB DATA & ENGINE (Web Speech API + Comprehension)
+        ========================================================================= */
+        const englishLibraryStories = [
+            {
+                id: 'ananse-wisdom',
+                title: 'Kweku Ananse and the Pot of Wisdom',
+                author: 'Ghanaian Folktale • GES Adapted Reader',
+                level: 'GES Level: Basic 4 – Basic 6',
+                strand: 'Strand 2: Reading & Comprehension',
+                duration: '~2 mins audio',
+                mp3Url: '', // Attach .mp3 URL here when ready
+                paragraphs: [
+                    'Long ago in a quiet village surrounded by tall silk-cotton trees, Kweku Ananse decided that he wanted to own all the wisdom in the world. He carefully gathered every piece of advice, clever trick, and wise proverb into a large earthenware pot.',
+                    'To keep the pot safe from everyone else, Ananse tied a strong raffia rope around its neck and hung it right in front of his chest. He planned to climb to the very top of the tallest tree in the forest so that no human or animal could ever reach it.',
+                    'As Ananse began climbing with the bulky pot banging against his belly, he slipped and struggled again and again. His young son, Ntikuma, watched from below and called out, "Father, why do you not tie the pot onto your back so your hands and knees are free to climb?"',
+                    'Ananse paused in astonishment. He realized that despite collecting a whole pot of wisdom, his little son still possessed common sense that was not inside the pot. Embarrassed, Ananse let go of the pot, and it shattered on the ground, scattering wisdom freely for everyone in the world to share.'
+                ],
+                questions: [
+                    {
+                        q: '1. Where did Kweku Ananse store all the wisdom he collected?',
+                        options: ['In a woven basket', 'In a large earthenware pot', 'Inside a hollow tree trunk'],
+                        answer: 1
+                    },
+                    {
+                        q: '2. Why was Ananse unable to climb the tall tree easily?',
+                        options: ['The pot was tied in front of his chest and blocked him', 'The tree branches were wet from rain', 'He was carrying too many fruits'],
+                        answer: 0
+                    },
+                    {
+                        q: '3. What moral lesson does this GES story teach learners?',
+                        options: ['Wisdom belongs to only one person', 'No single person knows everything; wisdom is shared by all', 'Climbing tall trees is always dangerous'],
+                        answer: 1
+                    }
+                ]
+            },
+            {
+                id: 'assorko-market',
+                title: 'A Morning at Assorko-Essaman Market',
+                author: 'Wesley Prep Literacy Series • Lower Primary',
+                level: 'GES Level: Basic 1 – Basic 3',
+                strand: 'Strand 1: Oral Language & Vocabulary',
+                duration: '~1.5 mins audio',
+                mp3Url: '',
+                paragraphs: [
+                    'Every Saturday morning, Ama wakes up early to help her grandmother carry fresh cassava, ripe plantains, and sweet oranges to the Assorko-Essaman community market. The cool morning breeze blows gently from the river as traders arrange their wooden stalls.',
+                    'Ama greets every elder politely with a cheerful smile. She helps count the oranges into neat heaps of five and arranges the golden plantains in rows. Customers love buying from Ama because she is honest, respectful, and quick with her mental arithmetic.',
+                    'Before returning home at noon, Ama uses a small coin she earned to buy a colourful exercise book and a pencil. She knows that hard work at home and dedication in school go hand in hand.'
+                ],
+                questions: [
+                    {
+                        q: '1. Which items did Ama and her grandmother carry to the market?',
+                        options: ['Yam, cocoa, and tomatoes', 'Cassava, ripe plantains, and sweet oranges', 'Fish, salt, and maize'],
+                        answer: 1
+                    },
+                    {
+                        q: '2. How many oranges did Ama place in each neat heap?',
+                        options: ['Five', 'Ten', 'Twelve'],
+                        answer: 0
+                    },
+                    {
+                        q: '3. What did Ama buy with the coin she earned?',
+                        options: ['A toy drum', 'A sweet drink', 'An exercise book and a pencil'],
+                        answer: 2
+                    }
+                ]
+            },
+            {
+                id: 'pra-river-guardians',
+                title: 'Guardians of the River Pra',
+                author: 'Wesley Prep Junior Reader • Upper Primary & JHS 1',
+                level: 'GES Level: Basic 6 – JHS 1',
+                strand: 'Strand 2: Comprehension & Environmental Literacy',
+                duration: '~2.5 mins audio',
+                mp3Url: '',
+                paragraphs: [
+                    'In the Western Region of Ghana, the River Pra winds gracefully toward the sea, providing water for farming, fishing, and daily life. When Kwame and Efua noticed plastic waste and muddy runoff threatening a stream connected to the river, they alerted their Science and Social Studies teachers.',
+                    'Together with the school environmental club, the learners organized a Saturday clean-up campaign and planted bamboo and native trees along the riverbank. Their teacher explained how tree roots hold the soil firmly and prevent erosion during heavy tropical rains.',
+                    'Within a few months, clear water returned to the stream, and small fish swam back among the reeds. The community elders praised the pupils for demonstrating true patriotism and responsible citizenship.'
+                ],
+                questions: [
+                    {
+                        q: '1. What environmental problem did Kwame and Efua notice?',
+                        options: ['Bushfires on the hills', 'Plastic waste and muddy runoff threatening the stream', 'Lack of fishing nets'],
+                        answer: 1
+                    },
+                    {
+                        q: '2. Why did the learners plant trees along the riverbank?',
+                        options: ['To block the river completely', 'To hold the soil firmly and prevent erosion', 'To create shade for football games'],
+                        answer: 1
+                    },
+                    {
+                        q: '3. What value did the community elders praise the pupils for?',
+                        options: ['Patriotism and responsible citizenship', 'Fast running', 'Singing songs'],
+                        answer: 0
+                    }
+                ]
+            }
+        ];
+
+        let currentStoryIndex = 0;
+        let readerFontSizePx = 16;
+        let isStorySpeaking = false;
+        let speechUtterance = null;
+        let currentCharOffset = 0;
+        let activeStoryFullText = '';
+
+        function initEnglishLibrary() {
+            const select = document.getElementById('library-story-select');
+            if (!select) return;
+            select.innerHTML = englishLibraryStories.map((s, idx) => `<option value="${idx}">${s.title} (${s.level.replace('GES Level: ', '')})</option>`).join('');
+            loadLibraryStory();
+        }
+
+        function loadLibraryStory() {
+            stopStoryAudio();
+            const select = document.getElementById('library-story-select');
+            currentStoryIndex = select ? parseInt(select.value) || 0 : 0;
+            const story = englishLibraryStories[currentStoryIndex];
+
+            document.getElementById('story-title').innerText = story.title;
+            document.getElementById('story-author').innerText = story.author;
+            document.getElementById('story-ges-level-badge').innerText = story.level;
+            document.getElementById('story-strand-badge').innerText = story.strand;
+            document.getElementById('story-duration-badge').innerText = story.duration;
+
+            const bodyEl = document.getElementById('story-content-body');
+            bodyEl.innerHTML = story.paragraphs.map(p => `<p>${escapeHtml(p)}</p>`).join('');
+            activeStoryFullText = story.paragraphs.join(' ');
+            currentCharOffset = 0;
+            updateScrubberUI(0);
+
+            const qContainer = document.getElementById('comprehension-questions-container');
+            document.getElementById('comprehension-score-badge').classList.add('hidden');
+            qContainer.innerHTML = story.questions.map((item, qIdx) => `
+                <div class="p-4 bg-white rounded-xl border border-slate-200 space-y-2" id="comp-q-box-${qIdx}">
+                    <p class="text-xs font-bold text-slate-900">${escapeHtml(item.q)}</p>
+                    <div class="space-y-1.5 pt-1">
+                        ${item.options.map((opt, oIdx) => `
+                            <label class="flex items-center gap-2 text-xs text-slate-700 cursor-pointer hover:text-blue-900">
+                                <input type="radio" name="comp-q-${qIdx}" value="${oIdx}" class="text-blue-900">
+                                <span>${escapeHtml(opt)}</span>
+                            </label>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function changeReaderFontSize(delta) {
+            readerFontSizePx = Math.max(13, Math.min(26, readerFontSizePx + delta));
+            const bodyEl = document.getElementById('story-content-body');
+            if (bodyEl) bodyEl.style.fontSize = `${readerFontSizePx}px`;
+        }
+
+        function resetReaderFontSize() {
+            readerFontSizePx = 16;
+            const bodyEl = document.getElementById('story-content-body');
+            if (bodyEl) bodyEl.style.fontSize = '16px';
+        }
+
+        function updateScrubberUI(pct) {
+            const clamped = Math.max(0, Math.min(100, Math.round(pct)));
+            const scrubber = document.getElementById('audio-progress-scrubber');
+            const label = document.getElementById('audio-current-pct');
+            if (scrubber) scrubber.value = clamped;
+            if (label) label.innerText = `${clamped}%`;
+        }
+
+        function startSpeechFromOffset(charIndex) {
+            if (!('speechSynthesis' in window)) {
+                alert('Speech Synthesis is not supported in this browser.');
+                return;
+            }
+            window.speechSynthesis.cancel();
+            const safeOffset = Math.max(0, Math.min(activeStoryFullText.length - 1, charIndex));
+            const sliceText = activeStoryFullText.slice(safeOffset);
+            const speed = parseFloat(document.getElementById('audio-speed-select')?.value || '1.0');
+
+            speechUtterance = new SpeechSynthesisUtterance(sliceText);
+            speechUtterance.rate = speed;
+            speechUtterance.lang = 'en-GB';
+
+            speechUtterance.onboundary = (event) => {
+                if (typeof event.charIndex === 'number') {
+                    currentCharOffset = safeOffset + event.charIndex;
+                    const pct = (currentCharOffset / Math.max(1, activeStoryFullText.length)) * 100;
+                    updateScrubberUI(pct);
+                }
+            };
+
+            speechUtterance.onend = () => {
+                isStorySpeaking = false;
+                currentCharOffset = 0;
+                updateScrubberUI(100);
+                const btn = document.getElementById('audio-play-pause-btn');
+                if (btn) btn.innerHTML = '▶ Play Narration';
+                const status = document.getElementById('audio-engine-status');
+                if (status) status.innerText = 'Narration completed.';
+            };
+
+            isStorySpeaking = true;
+            const btn = document.getElementById('audio-play-pause-btn');
+            if (btn) btn.innerHTML = '⏸ Pause Narration';
+            const status = document.getElementById('audio-engine-status');
+            if (status) status.innerText = `Playing via Web Speech (${speed}x)...`;
+            window.speechSynthesis.speak(speechUtterance);
+        }
+
+        function toggleStoryAudio() {
+            if (!('speechSynthesis' in window)) {
+                alert('Your browser does not support Web Speech Synthesis.');
+                return;
+            }
+            if (isStorySpeaking) {
+                window.speechSynthesis.cancel();
+                isStorySpeaking = false;
+                const btn = document.getElementById('audio-play-pause-btn');
+                if (btn) btn.innerHTML = '▶ Resume Narration';
+                const status = document.getElementById('audio-engine-status');
+                if (status) status.innerText = 'Narration paused.';
+            } else {
+                startSpeechFromOffset(currentCharOffset);
+            }
+        }
+
+        function stopStoryAudio() {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+            }
+            isStorySpeaking = false;
+            currentCharOffset = 0;
+            updateScrubberUI(0);
+            const btn = document.getElementById('audio-play-pause-btn');
+            if (btn) btn.innerHTML = '▶ Play Narration';
+            const status = document.getElementById('audio-engine-status');
+            if (status) status.innerText = 'Web Speech Synthesis Ready (Attach .mp3 anytime)';
+        }
+
+        function changeAudioSpeed() {
+            if (isStorySpeaking) {
+                startSpeechFromOffset(currentCharOffset);
+            }
+        }
+
+        function scrubStoryAudio(pctVal) {
+            const pct = parseFloat(pctVal) || 0;
+            currentCharOffset = Math.floor((pct / 100) * activeStoryFullText.length);
+            updateScrubberUI(pct);
+            if (isStorySpeaking) {
+                startSpeechFromOffset(currentCharOffset);
+            }
+        }
+
+        function gradeComprehensionQuiz() {
+            const story = englishLibraryStories[currentStoryIndex];
+            let score = 0;
+            story.questions.forEach((item, qIdx) => {
+                const selected = document.querySelector(`input[name="comp-q-${qIdx}"]:checked`);
+                const box = document.getElementById(`comp-q-box-${qIdx}`);
+                if (box) {
+                    box.classList.remove('border-emerald-500', 'bg-emerald-50/40', 'border-red-400', 'bg-red-50/40');
+                }
+                if (selected && parseInt(selected.value) === item.answer) {
+                    score++;
+                    if (box) box.classList.add('border-emerald-500', 'bg-emerald-50/40');
+                } else {
+                    if (box) box.classList.add('border-red-400', 'bg-red-50/40');
+                }
+            });
+            const badge = document.getElementById('comprehension-score-badge');
+            badge.innerText = `Score: ${score} / ${story.questions.length}`;
+            badge.classList.remove('hidden');
+        }
+
+        function resetComprehensionQuiz() {
+            const story = englishLibraryStories[currentStoryIndex];
+            story.questions.forEach((_, qIdx) => {
+                const radios = document.querySelectorAll(`input[name="comp-q-${qIdx}"]`);
+                radios.forEach(r => r.checked = false);
+                const box = document.getElementById(`comp-q-box-${qIdx}`);
+                if (box) box.classList.remove('border-emerald-500', 'bg-emerald-50/40', 'border-red-400', 'bg-red-50/40');
+            });
+            document.getElementById('comprehension-score-badge').classList.add('hidden');
+        }
+
+        /* =========================================================================
+           2. TEACHERS' RESOURCES HUB (GES STANDARD: NURSERY TO JHS 1)
+        ========================================================================= */
+        const gesCurriculumBank = {
+            'Nursery 1': {
+                'PHONICS': [
+                    {
+                        topic: 'Letter Sounds /s/ and /a/ Recognition',
+                        strand: 'Strand 1: Oral Language & Pre-Reading',
+                        substrand: 'Sub-Strand 1: Environmental & Letter Sounds',
+                        code: 'NUR1.1.1.1',
+                        objective: 'Learners will identify and articulate the initial sounds /s/ and /a/ using familiar objects and songs.',
+                        materials: ['Sandpaper letter cut-outs (s, a)', 'Bottle tops', 'Picture cards of snake, sun, ant, apple'],
+                        preparation: 'Cut large cardboard letters and glue fine sand on them for tactile tracing before class.',
+                        starter: 'Sing the Jolly Phonics /s/ snake rhyme with hand-weaving gestures for 5 minutes.',
+                        main: 'Pass around picture cards of a sun, snake, and apple. Guide toddlers in small circles to trace the sandpaper letters with their index fingers while saying the sound.',
+                        plenary: 'Hold up two objects (apple and ball) and let learners clap when they hear the /a/ object.'
+                    }
+                ],
+                'NUMERACY': [
+                    {
+                        topic: 'Counting Concrete Objects 1 to 5',
+                        strand: 'Strand 1: Number Sense',
+                        substrand: 'Sub-Strand 1: Counting & Sorting',
+                        code: 'NUR1.2.1.1',
+                        objective: 'Learners will count and match 1 to 5 everyday objects with one-to-one correspondence.',
+                        materials: ['Clean plastic bottle caps', 'Empty egg crates', '5 large pebbles or palm kernels'],
+                        preparation: 'Label five cups of an egg crate with dots 1 through 5.',
+                        starter: 'Chant "One, Two, Buckle My Shoe" with finger counting.',
+                        main: 'Give each pair of learners 5 bottle caps and guide them to place one cap into each marked egg-crate cup while counting aloud.',
+                        plenary: 'Teacher claps 3 or 4 times; learners hold up the matching number of bottle caps.'
+                    }
+                ],
+                'COLOR FUN': [
+                    {
+                        topic: 'Identifying Primary Colours (Red, Yellow, Blue)',
+                        strand: 'Strand 2: Visual Exploration',
+                        substrand: 'Sub-Strand 1: Colours in Our Environment',
+                        code: 'NUR1.3.1.1',
+                        objective: 'Learners will sort and name red, yellow, and blue objects found in the classroom.',
+                        materials: ['Red, yellow, and blue paper scraps', 'Three labeled sorting bowls', 'Crayons'],
+                        preparation: 'Place three colored bowls on the mat and scatter mixed color cards nearby.',
+                        starter: 'Show a ripe yellow banana and a red hibiscus flower; ask learners to name their colours.',
+                        main: 'Learners take turns picking a card and dropping it into the matching colored bowl while naming the colour aloud.',
+                        plenary: 'Touch something blue or red in the classroom before lining up.'
+                    }
+                ]
+            },
+            'Nursery 2': {
+                'LITERACY': [
+                    {
+                        topic: 'Picture Story Sequencing & Naming Objects',
+                        strand: 'Strand 2: Pre-Reading Skills',
+                        substrand: 'Sub-Strand 2: Picture Interpretation',
+                        code: 'NUR2.1.2.1',
+                        objective: 'Learners will describe actions in 3 sequential pictures and speak in short, clear sentences.',
+                        materials: ['3-step handwashing picture chart', 'Soap and Veronica bucket', 'Manila flashcards'],
+                        preparation: 'Draw three large scenes on manila card: wet hands, apply soap, rinse clean.',
+                        starter: 'Demonstrate washing hands and ask learners what happens first and last.',
+                        main: 'Mix up the 3 picture cards on the board. Invite learners to arrange them in the right order and tell the story.',
+                        plenary: 'Whole class recites the 3 handwashing steps together.'
+                    }
+                ],
+                'NUMERACY': [
+                    {
+                        topic: 'Number Recognition & Matching 1 to 10',
+                        strand: 'Strand 1: Number & Numeration',
+                        substrand: 'Sub-Strand 1: Number Symbols 1–10',
+                        code: 'NUR2.2.1.1',
+                        objective: 'Learners will match number cards 1–10 to corresponding groups of counters.',
+                        materials: ['Number flashcards (1–10)', 'Counting sticks / straws', 'Chalk'],
+                        preparation: 'Write numbers 1 to 10 on cut manila cards.',
+                        starter: 'Sing "Ten Green Bottles" using fingers.',
+                        main: 'Distribute number cards 1–10 to groups and have learners bundle the exact number of straws beside each card.',
+                        plenary: 'Quick flashcard drill: teacher flashes a number and class jumps that many times.'
+                    }
+                ]
+            },
+            'KG 1': {
+                'LANGUAGE AND LITERACY': [
+                    {
+                        topic: 'Blending Two-Letter & Three-Letter CVC Words',
+                        strand: 'Strand 2: Reading',
+                        substrand: 'Sub-Strand 3: Phonemic Awareness & Blending',
+                        code: 'KG1.2.3.1',
+                        objective: 'Learners will blend consonant-vowel-consonant sounds (e.g., c-a-t, p-e-n) to read simple words.',
+                        materials: ['Letter slider strip made from manila card', 'Word-family flashcards (-at, -en)', 'Board markers'],
+                        preparation: 'Create a sliding window strip with "-at" and initial letters c, m, s, b, r.',
+                        starter: 'Sound out /c/ - /a/ - /t/ slowly like a train engine speeding up.',
+                        main: 'Demonstrate pulling the letter slider to form cat, mat, sat, bat. Have learners read each new word in pairs.',
+                        plenary: 'Show picture of a mat or cat; learners pick the matching word card.'
+                    }
+                ],
+                'O.W.O.P': [
+                    {
+                        topic: 'Parts of the Human Body & Their Functions',
+                        strand: 'Strand 1: All About Us',
+                        substrand: 'Sub-Strand 1: Nature of God / Human Body',
+                        code: 'KG1.1.1.1',
+                        objective: 'Learners will identify external body parts (eyes, ears, nose, hands, legs) and state one function of each.',
+                        materials: ['Large outline drawing of a child on manila sheet', 'Body-part label cards', 'Masking tape'],
+                        preparation: 'Pin the body outline chart at learner eye level.',
+                        starter: 'Play "Head, Shoulders, Knees and Toes" at increasing speeds.',
+                        main: 'Call learners to paste word/picture cards onto the chart and explain how we use each part (e.g., eyes to see, hands to write).',
+                        plenary: 'Riddle game: "I help you smell delicious food. What am I?"'
+                    }
+                ]
+            },
+            'KG 2': {
+                'MATHEMATICS': [
+                    {
+                        topic: 'Addition of Single-Digit Numbers up to 10',
+                        strand: 'Strand 1: Number',
+                        substrand: 'Sub-Strand 2: Number Operations (Addition)',
+                        code: 'KG2.1.2.1',
+                        objective: 'Learners will combine two sets of concrete objects to find sums up to 10.',
+                        materials: ['Addition machine made from two paper towel rolls and a box', 'Seeds / bottle tops', 'Number cards'],
+                        preparation: 'Tape two cardboard tubes tilted into a collection tray to build a "Number Machine".',
+                        starter: 'Hold 2 pencils in left hand and 3 in right hand; ask how many altogether.',
+                        main: 'Drop 4 seeds into the left tube and 3 into the right tube. Learners count the total in the tray and write 4 + 3 = 7.',
+                        plenary: 'Learners solve 3 quick oral addition stories on mini slates.'
+                    }
+                ],
+                'O.W.O.P': [
+                    {
+                        topic: 'Living and Non-Living Things in the School Compound',
+                        strand: 'Strand 2: My Environment',
+                        substrand: 'Sub-Strand 1: Living & Non-Living Things',
+                        code: 'KG2.2.1.1',
+                        objective: 'Learners will classify items around the school into living and non-living things.',
+                        materials: ['Potted plant, ant/earthworm in clear jar, stone, plastic cup', 'Two sorting hoops'],
+                        preparation: 'Arrange real specimens on the nature table.',
+                        starter: 'Ask learners: "Does a stone eat food or grow bigger?"',
+                        main: 'Take a 10-minute nature walk outside the classroom to observe trees, birds, stones, and benches, then sort specimens into two hoops.',
+                        plenary: 'Thumbs up for living things, hands folded for non-living things as teacher names items.'
+                    }
+                ]
+            },
+            'Basic 1': {
+                'MATHEMATICS': [
+                    {
+                        topic: 'Place Value: Tens and Ones up to 50',
+                        strand: 'Strand 1: Number',
+                        substrand: 'Sub-Strand 1: Counting, Representation & Cardinality',
+                        code: 'B1.1.1.2',
+                        objective: 'Learners will group concrete objects into bundles of tens and loose ones to represent 2-digit numbers.',
+                        materials: ['Broomsticks / straws', 'Rubber bands', 'Place-value mat drawn on manila sheet'],
+                        preparation: 'Prepare 50 straws and rubber bands for groups of four.',
+                        starter: 'Count in 10s up to 50 using claps.',
+                        main: 'Guide learners to tie 10 straws into a bundle to represent 1 Ten, then build numbers like 24 (2 bundles of ten and 4 single straws).',
+                        plenary: 'Teacher holds up 3 bundles and 2 single straws; class writes 32.'
+                    }
+                ],
+                'SCIENCE': [
+                    {
+                        topic: 'Sources and Uses of Water',
+                        strand: 'Strand 2: Cycles',
+                        substrand: 'Sub-Strand 1: Earth Science (Water)',
+                        code: 'B1.2.1.1',
+                        objective: 'Learners will identify natural and man-made sources of water in their community and state three uses.',
+                        materials: ['Flashcards of river, rain, well, borehole, tap', 'Water bottle'],
+                        preparation: 'Display flashcards of water sources around the board.',
+                        starter: 'Ask learners where they fetched water before coming to school this morning.',
+                        main: 'Discuss each water source (River Pra, rain, borehole, pipe-borne water) and role-play domestic uses (drinking, bathing, watering crops).',
+                        plenary: 'Learners draw and label one source of water in their exercise books.'
+                    }
+                ]
+            },
+            'Basic 2': {
+                'ENGLISH LANGUAGE': [
+                    {
+                        topic: 'Action Words (Verbs) in Everyday Sentences',
+                        strand: 'Strand 3: Grammar Usage',
+                        substrand: 'Sub-Strand 4: Verbs',
+                        code: 'B2.3.4.1',
+                        objective: 'Learners will identify and use simple action verbs accurately in oral and written sentences.',
+                        materials: ['Action verb flashcards (sweep, read, jump, cook, write)', 'Sentence strip cards'],
+                        preparation: 'Write 10 action verbs on bold manila cards.',
+                        starter: 'Play "Simon Says" using action commands (jump, clap, write).',
+                        main: 'Learners pick a card from a bag, mime the action silently for the class to guess, and then construct a full sentence on the board.',
+                        plenary: 'Underline the action verb in 4 short sentences on the board.'
+                    }
+                ],
+                'HISTORY': [
+                    {
+                        topic: 'Major Ethnic Groups in Ghana',
+                        strand: 'Strand 2: My Country Ghana',
+                        substrand: 'Sub-Strand 1: The People of Ghana',
+                        code: 'B2.2.1.1',
+                        objective: 'Learners will name major ethnic groups in Ghana (Akan, Ewe, Ga-Adangbe, Mole-Dagbani, Guan) and their greetings.',
+                        materials: ['Map of Ghana on manila sheet', 'Traditional greeting flashcards'],
+                        preparation: 'Pin the map of Ghana showing regional distribution.',
+                        starter: 'Greet the class in Fante/Twi, Ga, Ewe, and Hausa; ask learners to respond.',
+                        main: 'Locate the major ethnic groups on the Ghana map and practice traditional morning greetings from each group in pairs.',
+                        plenary: 'Match the greeting ("Maakye", "Ŋdi", "Ojekoo") to its ethnic group.'
+                    }
+                ]
+            },
+            'Basic 3': {
+                'SCIENCE': [
+                    {
+                        topic: 'States of Matter: Solid, Liquid, and Gas',
+                        strand: 'Strand 1: Diversity of Matter',
+                        substrand: 'Sub-Strand 2: Materials',
+                        code: 'B3.1.2.1',
+                        objective: 'Learners will classify everyday materials as solids, liquids, or gases based on observable properties.',
+                        materials: ['Stone, wooden block, water in clear cup, cooking oil, inflated balloon'],
+                        preparation: 'Set up three stations labeled Solid, Liquid, and Gas.',
+                        starter: 'Pop or deflate a balloon gently so learners feel the rushing air.',
+                        main: 'Groups test pouring water into different containers to see it take the container’s shape, while comparing it to a rigid wooden block.',
+                        plenary: 'Complete a 3-column sorting table on the chalkboard.'
+                    }
+                ],
+                'R. M. E.': [
+                    {
+                        topic: 'Sacred Scriptures & Oral Traditions of the Three Religions',
+                        strand: 'Strand 2: Religious Practices',
+                        substrand: 'Sub-Strand 1: Religious Worship & Scriptures',
+                        code: 'B3.2.1.1',
+                        objective: 'Learners will identify the Holy Bible, Holy Qur’an, and African Traditional oral proverbs/myths.',
+                        materials: ['Flashcards of Holy Bible, Holy Qur’an, and Traditional Elder storytelling', 'Key-term cards'],
+                        preparation: 'Prepare clean comparison flashcards.',
+                        starter: 'Ask learners to share one wise proverb taught by an elder at home.',
+                        main: 'Discuss how Christians use the Holy Bible, Muslims use the Holy Qur’an, and Traditional believers preserve wisdom through oral traditions and proverbs.',
+                        plenary: 'Quiz drill matching each religion to its sacred scripture or tradition.'
+                    }
+                ]
+            },
+            'Basic 4': {
+                'MATHEMATICS': [
+                    {
+                        topic: 'Equivalent Fractions & Comparing Unlike Fractions',
+                        strand: 'Strand 1: Number',
+                        substrand: 'Sub-Strand 3: Fractions',
+                        code: 'B4.1.3.1',
+                        objective: 'Learners will generate equivalent fractions and compare two fractions using fraction strips.',
+                        materials: ['Equal-length manila paper strips folded into halves, quarters, eighths', 'Markers', 'Scissors'],
+                        preparation: 'Cut 4 identical strips of manila card per learner group.',
+                        starter: 'Ask: "Would you rather have 1/2 of a sugar bread loaf or 2/4 of the same loaf?"',
+                        main: 'Learners fold Strip A into 2 equal parts (1/2) and Strip B into 4 equal parts (2/4), placing them side by side to verify equal length, then extend to 4/8 and 3/6.',
+                        plenary: 'Exit ticket: Write two fractions equivalent to 1/3.'
+                    },
+                    {
+                        topic: 'Multiplication of 2-Digit by 1-Digit Numbers (Area Model)',
+                        strand: 'Strand 1: Number',
+                        substrand: 'Sub-Strand 2: Number Operations',
+                        code: 'B4.1.2.2',
+                        objective: 'Learners will multiply 2-digit numbers by 1-digit numbers using expanded form and area grids.',
+                        materials: ['Grid box cards', 'Chalkboard ruler', 'Place value counters'],
+                        preparation: 'Draw a 2-column area rectangle on the board.',
+                        starter: 'Mental warm-up: 20 × 4, 30 × 3, 40 × 2.',
+                        main: 'Break 24 × 3 into (20 × 3) + (4 × 3) = 60 + 12 = 72 using a visual box diagram. Learners solve 4 guided problems in groups.',
+                        plenary: 'Peer review of two worked examples on the board.'
+                    }
+                ],
+                'SCIENCE': [
+                    {
+                        topic: 'Parts of a Flowering Plant and Their Functions',
+                        strand: 'Strand 1: Diversity of Matter',
+                        substrand: 'Sub-Strand 1: Living and Non-Living Things',
+                        code: 'B4.1.1.2',
+                        objective: 'Learners will uproot a small weed safely, identify root, stem, leaf, and flower, and state their functions.',
+                        materials: ['Whole uprooted herbaceous weed (e.g., Tridax)', 'Hand lens', 'Manila chart & label tags'],
+                        preparation: 'Collect 5 whole weeds with intact roots and flowers before class.',
+                        starter: 'Ask learners how a plant drinks water from the soil without a mouth.',
+                        main: 'Groups examine the uprooted plant, trace water transport from roots through the stem to leaves, and attach function flashcards to each organ.',
+                        plenary: 'Learners sketch and label the plant in their science notebooks.'
+                    }
+                ],
+                'ENGLISH LANGUAGE': [
+                    {
+                        topic: 'Adjectives of Quality and Quantity in Descriptive Writing',
+                        strand: 'Strand 3: Grammar Usage',
+                        substrand: 'Sub-Strand 5: Adjectives',
+                        code: 'B4.3.5.1',
+                        objective: 'Learners will identify adjectives in passages and use them to enrich descriptive paragraphs.',
+                        materials: ['Mystery bag with textured items (rough stone, smooth shell, soft cotton)', 'Adjective flashcards'],
+                        preparation: 'Place 5 contrasting objects inside an opaque cloth bag.',
+                        starter: 'Invite a learner to feel an item inside the bag without looking and describe it to the class.',
+                        main: 'Record all describing words on the board, categorize them into size, colour, and texture, and rewrite plain sentences into vivid ones.',
+                        plenary: 'Each learner shares one descriptive sentence about our school compound.'
+                    }
+                ]
+            },
+            'Basic 5': {
+                'SCIENCE': [
+                    {
+                        topic: 'Ecosystems, Producers, Consumers & Food Chains',
+                        strand: 'Strand 4: Forces and Energy / Interactions',
+                        substrand: 'Sub-Strand 2: Ecosystem & Food Chains',
+                        code: 'B5.4.2.1',
+                        objective: 'Learners will construct a 4-organism local food chain and explain energy flow from the sun.',
+                        materials: ['Organism cards (Sun, Maize plant, Grasshopper, Lizard, Hawk)', 'Yarn / string', 'Manila sheet'],
+                        preparation: 'Punch holes in organism cards and thread yarn for role-play.',
+                        starter: 'Ask: "What did you eat for breakfast, and where did that food get its energy?"',
+                        main: 'Five learners wear organism cards and pass a ball of yarn from Sun → Maize → Grasshopper → Lizard → Hawk to demonstrate energy transfer.',
+                        plenary: 'Discuss what happens to lizards if all grasshoppers disappear.'
+                    }
+                ],
+                'MATHEMATICS': [
+                    {
+                        topic: 'Converting Fractions to Decimals and Percentages',
+                        strand: 'Strand 1: Number',
+                        substrand: 'Sub-Strand 4: Decimals & Percentages',
+                        code: 'B5.1.4.1',
+                        objective: 'Learners will convert halves, quarters, fifths, and tenths into decimals and percentages using a 100-square grid.',
+                        materials: ['10×10 hundred-square manila grids', 'Colored pencils', 'Conversion flashcards'],
+                        preparation: 'Draw a large 100-square grid on the board.',
+                        starter: 'Ask what 50% off in a shop means in terms of half price.',
+                        main: 'Learners shade 25 out of 100 squares to see visually that 25/100 = 1/4 = 0.25 = 25%. Repeat for 1/2, 1/5, and 3/4.',
+                        plenary: 'Rapid-fire conversion game using flashcards.'
+                    }
+                ]
+            },
+            'Basic 6': {
+                'MATHEMATICS': [
+                    {
+                        topic: 'Ratio and Direct Proportion in Real-Life Problems',
+                        strand: 'Strand 1: Number',
+                        substrand: 'Sub-Strand 5: Ratio and Proportion',
+                        code: 'B6.1.5.1',
+                        objective: 'Learners will express quantities as simplified ratios and solve direct proportion word problems.',
+                        materials: ['Red and blue bottle caps', 'Recipe ratio cards (gari & beans / fruit juice mix)'],
+                        preparation: 'Prepare bags with 12 red caps and 8 blue caps.',
+                        starter: 'Compare the number of boys to girls in the front row as a ratio.',
+                        main: 'Learners group 12 red and 8 blue caps into equal sets of 4 to simplify 12:8 down to 3:2, then apply ratios to scaling a juice recipe.',
+                        plenary: 'Solve 2 BECE-foundation word problems on ratio.'
+                    }
+                ],
+                'COMPUTING': [
+                    {
+                        topic: 'Introduction to Spreadsheets: Rows, Columns & Basic Formulas',
+                        strand: 'Strand 5: Programming and Databases / Productivity',
+                        substrand: 'Sub-Strand 2: Electronic Spreadsheets',
+                        code: 'B6.5.2.1',
+                        objective: 'Learners will identify cell addresses (e.g., B3) and write a =SUM() formula to total class scores.',
+                        materials: ['Printed spreadsheet grid on manila sheet', 'Laptop / projector (if available)', 'Cell flashcards'],
+                        preparation: 'Draw columns A–E and rows 1–6 on manila sheet.',
+                        starter: 'Play a battleship-style coordinate callout ("Find cell C4!").',
+                        main: 'Enter sample SBA scores on the grid and demonstrate how =SUM(B2:D2) automatically updates when a score changes.',
+                        plenary: 'Learners write the exact formula needed to sum cells A1 through A5.'
+                    }
+                ]
+            },
+            'JHS 1': {
+                'INTEGRATED SCIENCE': [
+                    {
+                        topic: 'Separation of Mixtures: Filtration, Evaporation & Magnetism',
+                        strand: 'Strand 1: Diversity of Matter',
+                        substrand: 'Sub-Strand 2: Mixtures and Separation Techniques',
+                        code: 'B7.1.2.1',
+                        objective: 'Learners will select and demonstrate appropriate physical methods to separate heterogeneous mixtures.',
+                        materials: ['Iron filings / nails mixed with sand', 'Bar magnet wrapped in polythene', 'Salt solution, funnel, filter paper/clean cloth'],
+                        preparation: 'Prepare two mixture beakers: (1) sand + iron filings, (2) muddy water.',
+                        starter: 'Challenge learners: "How can we recover clean iron filings from dry sand in 10 seconds without picking them by hand?"',
+                        main: 'Groups pass a wrapped bar magnet over the sand mixture to extract iron filings, then set up a funnel filter to separate suspended mud from water.',
+                        plenary: 'Match 5 industrial/domestic mixtures (e.g., gari & chaff, salt & water) to their separation methods.'
+                    }
+                ],
+                'MATHEMATICS': [
+                    {
+                        topic: 'Operations on Integers Using a Number Line & Zero Pairs',
+                        strand: 'Strand 1: Number',
+                        substrand: 'Sub-Strand 1: Number and Numeration Systems (Integers)',
+                        code: 'B7.1.1.3',
+                        objective: 'Learners will add and subtract positive and negative integers using two-colour counters and a number line.',
+                        materials: ['Two-colour bottle caps (Blue = +1, Red = -1)', 'Floor number line (-10 to +10)'],
+                        preparation: 'Tape a large integer number line along the front floor.',
+                        starter: 'Discuss real-life negative numbers: depths below sea level and bank overdrafts.',
+                        main: 'Demonstrate that 1 Blue (+1) and 1 Red (-1) cancel out as a "Zero Pair". Learners physically model (-5) + (+3) = -2 using counters and floor steps.',
+                        plenary: 'Solve 5 integer expressions individually and verify with a partner.'
+                    }
+                ],
+                'SOCIAL STUDIES': [
+                    {
+                        topic: 'Environmental Degradation & Sustainable Resource Management in Ghana',
+                        strand: 'Strand 1: Environment',
+                        substrand: 'Sub-Strand 1: Environmental Issues',
+                        code: 'B7.1.1.1',
+                        objective: 'Learners will analyze causes of land and water degradation in Ghana and propose practical community solutions.',
+                        materials: ['Before-and-after river/forest comparison cards', 'Manila poster sheets', 'Markers'],
+                        preparation: 'Prepare four case-study scenario cards (illegal mining, deforestation, improper plastic disposal, bush burning).',
+                        starter: 'Display contrasting images of a clean river and a polluted river; elicit immediate observations.',
+                        main: 'In four expert groups, learners analyze one environmental threat, list its socio-economic effects on local communities, and present an action plan.',
+                        plenary: 'Draft a 3-point class pledge for environmental stewardship at Assorko-Essaman.'
+                    }
+                ],
+                'CAREER TECHNOLOGY': [
+                    {
+                        topic: 'Personal Hygiene, Workshop Safety & Hand Tool Care',
+                        strand: 'Strand 1: Health and Safety',
+                        substrand: 'Sub-Strand 1: Personal Hygiene and Food / Workshop Safety',
+                        code: 'B7.1.1.2',
+                        objective: 'Learners will identify workshop hazards and demonstrate safe handling and storage of basic hand tools.',
+                        materials: ['Try square, tape measure, hacksaw/tenon saw, safety goggles', 'Safety sign flashcards'],
+                        preparation: 'Arrange sample hand tools safely on a demonstration bench.',
+                        starter: 'Spot-the-hazard warm-up using a workshop safety poster.',
+                        main: 'Demonstrate proper stance, blade direction, and tool maintenance (wiping metal surfaces lightly with oil to prevent rust), followed by group safety drills.',
+                        plenary: 'Identify 4 safety symbols and explain their meaning.'
+                    }
+                ]
+            }
+        };
+
+        let currentResourceView = 'tlm';
+        let currentFlashcardList = [];
+        let currentFlashcardIndex = 0;
+
+        function getGenericFallbackTopic(className, subjectName) {
+            return {
+                topic: `Core Concepts & Practical Applications in ${subjectName}`,
+                strand: `GES ${className} Standard Curriculum`,
+                substrand: `Foundational Skills & Competency Development`,
+                code: `GES-${className.replace(/\s+/g, '').toUpperCase()}`,
+                objective: `Learners in ${className} will demonstrate understanding of key concepts in ${subjectName} through guided group tasks and hands-on TLMs.`,
+                materials: [
+                    'Manila cards and bold markers',
+                    'Locally sourced counters / realia',
+                    `${className} GES Learner’s Textbook & Workbook`
+                ],
+                preparation: `Prepare bold keyword flashcards and arrange learners into mixed-ability groups of 4–5 before the lesson begins.`,
+                starter: `Review previous knowledge with a 5-minute interactive oral quiz and real-world example connected to Assorko-Essaman daily life.`,
+                main: `Introduce the ${subjectName} concept step-by-step using visual manila charts. Guide groups through hands-on practice while circulating to provide differentiated support.`,
+                plenary: `Summarize 3 key takeaways on the board and administer a quick 3-question formative check.`
+            };
+        }
+
+        function onGesClassChange() {
+            const classSel = document.getElementById('ges-class-filter');
+            const subSel = document.getElementById('ges-subject-filter');
+            if (!classSel || !subSel) return;
+
+            const selectedClass = classSel.value;
+            const assignedSubjects = getSubjectsForClass(selectedClass);
+
+            subSel.innerHTML = assignedSubjects.map(sub => `<option value="${sub}">${sub}</option>`).join('');
+            onGesSubjectChange();
+        }
+
+        function onGesSubjectChange() {
+            const classSel = document.getElementById('ges-class-filter');
+            const subSel = document.getElementById('ges-subject-filter');
+            const topicSel = document.getElementById('ges-topic-filter');
+            if (!classSel || !subSel || !topicSel) return;
+
+            const selectedClass = classSel.value;
+            const selectedSub = subSel.value;
+            const topicsForClassSub = (gesCurriculumBank[selectedClass] && gesCurriculumBank[selectedClass][selectedSub])
+                ? gesCurriculumBank[selectedClass][selectedSub]
+                : [getGenericFallbackTopic(selectedClass, selectedSub)];
+
+            topicSel.innerHTML = topicsForClassSub.map((t, idx) => `<option value="${idx}">${t.topic}</option>`).join('');
+            renderGesResourceContent();
+        }
+
+        function renderGesResourceContent() {
+            const selectedClass = document.getElementById('ges-class-filter')?.value || 'Basic 4';
+            const selectedSub = document.getElementById('ges-subject-filter')?.value || 'MATHEMATICS';
+            const topicIdx = parseInt(document.getElementById('ges-topic-filter')?.value || '0') || 0;
+
+            const topicsList = (gesCurriculumBank[selectedClass] && gesCurriculumBank[selectedClass][selectedSub])
+                ? gesCurriculumBank[selectedClass][selectedSub]
+                : [getGenericFallbackTopic(selectedClass, selectedSub)];
+            const lesson = topicsList[topicIdx] || topicsList[0];
+
+            document.getElementById('ges-meta-strand').innerText = lesson.strand;
+            document.getElementById('ges-meta-substrand').innerText = lesson.substrand;
+            document.getElementById('ges-meta-code').innerText = `${selectedClass} • ${lesson.code}`;
+
+            // Populate TLMs Guide View
+            document.getElementById('tlm-objective').innerText = lesson.objective;
+            document.getElementById('tlm-materials').innerHTML = lesson.materials.map(m => `<li>${escapeHtml(m)}</li>`).join('');
+            document.getElementById('tlm-preparation').innerText = lesson.preparation;
+            document.getElementById('tlm-step-starter').innerText = lesson.starter;
+            document.getElementById('tlm-step-main').innerText = lesson.main;
+            document.getElementById('tlm-step-plenary').innerText = lesson.plenary;
+
+            // Build 4 Interactive Flashcards from Lesson Metadata
+            currentFlashcardList = [
+                {
+                    front: `${selectedClass} • ${selectedSub}\nTopic: ${lesson.topic}`,
+                    back: `Performance Objective:\n${lesson.objective}`
+                },
+                {
+                    front: `Low-Cost Local TLMs Needed`,
+                    back: lesson.materials.join(' • ')
+                },
+                {
+                    front: `Starter & Teacher Preparation`,
+                    back: `${lesson.preparation}\n\nStarter: ${lesson.starter}`
+                },
+                {
+                    front: `Main Classroom Activity & Plenary`,
+                    back: `${lesson.main}\n\nPlenary: ${lesson.plenary}`
+                }
+            ];
+            currentFlashcardIndex = 0;
+            renderCurrentFlashcard();
+        }
+
+        function switchResourceHubView(viewName) {
+            currentResourceView = viewName;
+            const tlmView = document.getElementById('ges-tlm-view');
+            const fcView = document.getElementById('ges-flashcards-view');
+            const btnTlm = document.getElementById('btn-view-tlm');
+            const btnFc = document.getElementById('btn-view-flashcards');
+
+            if (viewName === 'tlm') {
+                tlmView.classList.remove('hidden');
+                fcView.classList.add('hidden');
+                btnTlm.className = 'px-4 py-2 rounded-lg text-xs font-bold bg-blue-900 text-white shadow';
+                btnFc.className = 'px-4 py-2 rounded-lg text-xs font-bold text-slate-700 hover:bg-white';
+            } else {
+                tlmView.classList.add('hidden');
+                fcView.classList.remove('hidden');
+                btnFc.className = 'px-4 py-2 rounded-lg text-xs font-bold bg-blue-900 text-white shadow';
+                btnTlm.className = 'px-4 py-2 rounded-lg text-xs font-bold text-slate-700 hover:bg-white';
+            }
+        }
+
+        function renderCurrentFlashcard() {
+            const inner = document.getElementById('flashcard-inner');
+            if (inner) inner.classList.remove('is-flipped');
+
+            const card = currentFlashcardList[currentFlashcardIndex] || { front: '--', back: '--' };
+            document.getElementById('flashcard-front-text').innerText = card.front;
+            document.getElementById('flashcard-back-text').innerText = card.back;
+            document.getElementById('flashcard-counter').innerText = `Card ${currentFlashcardIndex + 1} of ${currentFlashcardList.length}`;
+        }
+
+        function flipCurrentFlashcard() {
+            const inner = document.getElementById('flashcard-inner');
+            if (inner) inner.classList.toggle('is-flipped');
+        }
+
+        function prevFlashcard() {
+            currentFlashcardIndex = (currentFlashcardIndex - 1 + currentFlashcardList.length) % currentFlashcardList.length;
+            renderCurrentFlashcard();
+        }
+
+        function nextFlashcard() {
+            currentFlashcardIndex = (currentFlashcardIndex + 1) % currentFlashcardList.length;
+            renderCurrentFlashcard();
+        }
+
+        function printFlashcardsSheet() {
+            const selectedClass = document.getElementById('ges-class-filter')?.value || 'Basic 4';
+            const selectedSub = document.getElementById('ges-subject-filter')?.value || 'MATHEMATICS';
+            const printContainer = document.getElementById('flashcards-print-sheet');
+            if (!printContainer) return;
+
+            printContainer.innerHTML = currentFlashcardList.map((card, idx) => `
+                <div class="flashcard-print-box">
+                    <div style="border-bottom: 1px solid #cbd5e1; padding-bottom: 6px; margin-bottom: 8px;">
+                        <strong style="font-size: 11px; color: #1e3a8a;">WESLEY PREP • ${escapeHtml(selectedClass)} (${escapeHtml(selectedSub)}) — CARD ${idx + 1}</strong>
+                        <p style="font-size: 13px; font-weight: 800; margin-top: 4px;">${escapeHtml(card.front)}</p>
+                    </div>
+                    <div style="font-size: 12px; color: #1e293b;">
+                        <strong>Answer / Guide:</strong> ${escapeHtml(card.back)}
+                    </div>
+                </div>
+            `).join('');
+
+            document.body.classList.add('printing-flashcards');
+            window.print();
+            setTimeout(() => {
+                document.body.classList.remove('printing-flashcards');
+            }, 500);
         }
 
         function getAllowedClasses() {
@@ -1193,10 +2314,15 @@
 
         function switchTab(tabId) {
             const tabs = [
-                'dashboard', 'assessment', 'strengths', 'history', 'lms', 'ai-copilot', 'attendance',
-                'timetable', 'fees', 'classes', 'students', 'teachers', 'admins', 'announcements',
-                'gallery', 'admin-themes', 'teacher-gallery', 'teacher-announcements', 'profile'
+                'dashboard', 'assessment', 'strengths', 'history', 'lms', 'resource-hub', 'english-library',
+                'ai-copilot', 'attendance', 'timetable', 'fees', 'classes', 'students', 'teachers',
+                'admins', 'announcements', 'gallery', 'admin-themes', 'teacher-gallery',
+                'teacher-announcements', 'profile'
             ];
+
+            if (tabId !== 'english-library') {
+                stopStoryAudio();
+            }
 
             tabs.forEach(t => {
                 const el = document.getElementById(`tab-${t}`);
@@ -1208,6 +2334,14 @@
 
             if (tabId === 'dashboard') {
                 renderCharts();
+            }
+
+            if (tabId === 'resource-hub') {
+                onGesClassChange();
+            }
+
+            if (tabId === 'english-library') {
+                initEnglishLibrary();
             }
 
             if (tabId === 'announcements') {
@@ -1302,6 +2436,8 @@
             renderLMSDocuments();
             updateLockStatusUI();
             renderCharts();
+            onGesClassChange();
+            initEnglishLibrary();
 
             const announcementTextarea = document.getElementById('announcement-text');
             if (announcementTextarea) announcementTextarea.value = globalAnnouncementText;
@@ -1990,9 +3126,8 @@
             }
 
             const models = [
-                'gemini-3.5-flash-lite',
-                'gemini-3.6-flash',
-                'gemini-3.8-flash'
+                'gemini-2.5-flash',
+                'gemini-2.0-flash'
             ];
             let data = null;
 
@@ -3208,282 +4343,147 @@
                 return;
             }
 
-            tbody.innerHTML = filteredStudents.map((s) => {
+            tbody.innerHTML = filteredStudents.map(s => {
                 const globalIdx = studentsData.findIndex(item => item.id === s.id);
-
+                const made = s.attendanceMade ?? 65;
+                const total = s.attendanceTotal ?? 70;
                 return `
                     <tr>
                         <td class="p-3 font-medium">${s.name}</td>
                         <td class="p-3">${s.class}</td>
-                        <td class="p-3 text-center"><input type="number" value="${s.attendanceMade || 65}" onchange="updateAttendanceProp(${globalIdx}, 'attendanceMade', this.value)" class="w-20 p-1.5 border rounded text-center font-bold text-blue-900 bg-slate-50"></td>
-                        <td class="p-3 text-center"><input type="number" value="${s.attendanceTotal || 70}" onchange="updateAttendanceProp(${globalIdx}, 'attendanceTotal', this.value)" class="w-20 p-1.5 border rounded text-center font-bold text-slate-800 bg-slate-50"></td>
-                        <td class="p-3 text-center font-bold text-amber-900 bg-amber-50">${s.attendanceMade || 65} out of ${s.attendanceTotal || 70}</td>
+                        <td class="p-3 text-center">
+                            <input type="number" value="${made}" onchange="updateStudentProp(${globalIdx}, 'attendanceMade', parseInt(this.value) || 0); renderAttendanceRegister();" class="w-20 p-1.5 border rounded text-center font-bold">
+                        </td>
+                        <td class="p-3 text-center">
+                            <input type="number" value="${total}" onchange="updateStudentProp(${globalIdx}, 'attendanceTotal', parseInt(this.value) || 0); renderAttendanceRegister();" class="w-20 p-1.5 border rounded text-center font-bold">
+                        </td>
+                        <td class="p-3 text-center font-bold text-blue-900">${made} / ${total}</td>
                     </tr>
                 `;
             }).join('');
         }
 
-        function updateAttendanceProp(index, field, val) {
-            if (studentsData[index]) studentsData[index][field] = parseInt(val) || 0;
-            renderAttendanceRegister();
-        }
-
-        function submitAttendanceRecord() {
-            alert('Attendance records successfully saved and synced to student report cards!');
+        async function submitAttendanceRecord() {
+            await finalizeReports();
         }
 
         function exportAttendance(format) {
-            const className = document.getElementById('attendance-class-filter').value;
-            if (!isClassAllowed(className)) {
-                alert('You are not permitted to export attendance for this class.');
-                return;
-            }
-
-            let content = `${schoolProfile.name.toUpperCase()}\nATTENDANCE REGISTER SUMMARY\nClass: ${className}\n\nStudent Name\tDays Present\tTotal Days\tRatio\n`;
-
-            studentsData.filter(s => s.class === className && isClassAllowed(s.class)).forEach(s => {
-                content += `${s.name}\t${s.attendanceMade || 65}\t${s.attendanceTotal || 70}\t${s.attendanceMade || 65} out of ${s.attendanceTotal || 70}\n`;
+            const selectedClass = document.getElementById('attendance-class-filter')?.value || classesData[0];
+            let content = `${schoolProfile.name.toUpperCase()}\nATTENDANCE REGISTER - ${selectedClass}\n-------------------------------------------\nName\tDays Present\tTotal Days\n`;
+            studentsData.filter(s => s.class === selectedClass).forEach(s => {
+                content += `${s.name}\t${s.attendanceMade ?? 65}\t${s.attendanceTotal ?? 70}\n`;
             });
-
             const blob = new Blob([content], { type: format === 'pdf' ? 'application/pdf' : 'application/msword' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `${className}_Attendance_Summary.${format === 'pdf' ? 'pdf' : 'doc'}`;
+            a.download = `Attendance_${selectedClass}.${format === 'pdf' ? 'pdf' : 'doc'}`;
             a.click();
-
-            alert(`Attendance summary downloaded as ${format.toUpperCase()}!`);
         }
 
-        function renderCharts() {
-            const maleCount = studentsData.filter(s => s.gender === 'Male').length;
-            const femaleCount = studentsData.filter(s => s.gender === 'Female').length;
-            const totalStudents = studentsData.length || 1;
-
-            const femalePct = Math.round((femaleCount / totalStudents) * 100);
-            const cardGender = document.getElementById('card-gender');
-            if (cardGender) {
-                cardGender.style.setProperty('--fill-pct', `${Math.max(25, Math.min(85, femalePct))}%`);
+        function editTimetable() {
+            const updated = prompt('Enter updated school timetable schedule:', timetableText);
+            if (updated !== null && updated.trim()) {
+                timetableText = updated.trim();
+                const display = document.getElementById('timetable-display');
+                if (display) display.innerText = timetableText;
             }
+        }
 
-            const ctxGender = document.getElementById('genderChart');
-            if (ctxGender) {
-                if (window.myGenderChart) window.myGenderChart.destroy();
-                window.myGenderChart = new Chart(ctxGender.getContext('2d'), {
-                    type: 'doughnut',
-                    data: {
-                        labels: ['Male', 'Female'],
-                        datasets: [{ data: [maleCount || 4, femaleCount || 4], backgroundColor: ['#1e3a8a', '#d97706'] }]
-                    },
-                    options: { responsive: true, maintainAspectRatio: false }
-                });
+        async function addClass() {
+            const input = document.getElementById('new-class-input');
+            const val = input ? input.value.trim() : '';
+            if (!val) return;
+            if (!classesData.includes(val)) {
+                classesData.push(val);
+                await persistClassesData();
+                renderAll();
             }
+            if (input) input.value = '';
+        }
 
-            const classCounts = classesData.map(c => studentsData.filter(s => s.class === c).length);
-            const maxClassCount = Math.max(...classCounts, 1);
-            const activeClassesCount = studentsData.length > 0 ? Math.max(...classCounts) : 0;
-            
-            const enrollmentPct = Math.round((activeClassesCount / Math.max(maxClassCount, 25)) * 100);
-            const cardClass = document.getElementById('card-class');
-            if (cardClass) {
-                cardClass.style.setProperty('--fill-pct', `${Math.max(30, Math.min(90, enrollmentPct))}%`);
-            }
+        async function postAnnouncement() {
+            const textEl = document.getElementById('announcement-text');
+            const photoEl = document.getElementById('announcement-photo-input');
+            globalAnnouncementText = textEl ? textEl.value.trim() : globalAnnouncementText;
 
-            const ctxClass = document.getElementById('classChart');
-            if (ctxClass) {
-                if (window.myClassChart) window.myClassChart.destroy();
-                window.myClassChart = new Chart(ctxClass.getContext('2d'), {
-                    type: 'bar',
-                    data: {
-                        labels: classesData,
-                        datasets: [{ label: 'Students', data: classCounts, backgroundColor: '#1e3a8a' }]
-                    },
-                    options: { responsive: true, maintainAspectRatio: false }
-                });
+            if (photoEl && photoEl.files && photoEl.files[0]) {
+                const reader = new FileReader();
+                reader.onload = async function(evt) {
+                    globalAnnouncementImgUrl = evt.target.result;
+                    galleryPhotos.push({ url: globalAnnouncementImgUrl, name: photoEl.files[0].name });
+                    await saveCloudSettings();
+                    renderGalleryGrids();
+                    alert('Announcement and photo published to cloud!');
+                };
+                reader.readAsDataURL(photoEl.files[0]);
+            } else {
+                await saveCloudSettings();
+                alert('Announcement published to cloud!');
             }
         }
 
         async function uploadMultiplePhotos() {
-            const fileInput = document.getElementById('multi-photo-file');
-
-            if (!fileInput || !fileInput.files || fileInput.files.length === 0) {
-                alert('Please select at least one photo!');
+            const input = document.getElementById('multi-photo-file');
+            if (!input || !input.files || input.files.length === 0) {
+                alert('Please select one or more image files.');
                 return;
             }
-
-            let loadedCount = 0;
-            const totalFiles = fileInput.files.length;
-
-            Array.from(fileInput.files).forEach(file => {
-                const reader = new FileReader();
-                reader.onload = async function(e) {
-                    galleryPhotos.push({ url: e.target.result, name: file.name });
-                    loadedCount++;
-
-                    if (loadedCount === totalFiles) {
-                        await saveCloudSettings();
-                        renderGalleryGrids();
-                        alert(`${totalFiles} photo(s) successfully uploaded to Supabase cloud and synced across all devices!`);
-                    }
-                };
-                reader.readAsDataURL(file);
-            });
-
-            fileInput.value = '';
+            const files = Array.from(input.files);
+            for (const file of files) {
+                const dataUrl = await new Promise(resolve => {
+                    const reader = new FileReader();
+                    reader.onload = e => resolve(e.target.result);
+                    reader.readAsDataURL(file);
+                });
+                galleryPhotos.push({ url: dataUrl, name: file.name });
+            }
+            await saveCloudSettings();
+            renderGalleryGrids();
+            input.value = '';
+            alert(`${files.length} photo(s) uploaded to school gallery!`);
         }
 
         function renderGalleryGrids() {
-            const grid = document.getElementById('gallery-grid');
-            const tGrid = document.getElementById('teacher-gallery-grid');
+            const html = galleryPhotos.length === 0
+                ? `<p class="text-slate-400 italic text-sm col-span-full">No photos uploaded yet.</p>`
+                : galleryPhotos.map((p, idx) => `
+                    <div class="border rounded-xl overflow-hidden bg-slate-50 shadow-sm flex flex-col">
+                        <img src="${p.url}" alt="${escapeHtml(p.name || 'Photo')}" class="h-36 w-full object-cover">
+                        <div class="p-2 flex justify-between items-center text-[11px]">
+                            <span class="truncate font-medium text-slate-700">${escapeHtml(p.name || 'Photo ' + (idx + 1))}</span>
+                            <a href="${p.url}" download="${p.name || 'school-photo.jpg'}" class="text-blue-900 font-bold underline ml-2">JPG</a>
+                        </div>
+                    </div>
+                `).join('');
 
-            if (galleryPhotos.length === 0) {
-                const emptyMsg = `<p class="text-slate-400 italic text-sm">No photos uploaded yet.</p>`;
-                if (grid) grid.innerHTML = emptyMsg;
-                if (tGrid) tGrid.innerHTML = emptyMsg;
-                return;
-            }
-
-            const html = galleryPhotos.map((p) => `
-                <div class="bg-slate-50 rounded-xl p-3 text-center border space-y-2">
-                    <img src="${p.url}" alt="School Activity" class="h-32 w-full object-cover rounded-lg shadow">
-                    <a href="${p.url}" download="${p.name || 'school_photo.jpg'}" class="block text-xs bg-blue-900 text-white py-1.5 px-3 rounded-lg font-bold hover:bg-blue-800">Download JPG ⬇️</a>
-                </div>
-            `).join('');
-
-            if (grid) grid.innerHTML = html;
-            if (tGrid) tGrid.innerHTML = html;
+            const adminGrid = document.getElementById('gallery-grid');
+            const teacherGrid = document.getElementById('teacher-gallery-grid');
+            if (adminGrid) adminGrid.innerHTML = html;
+            if (teacherGrid) teacherGrid.innerHTML = html;
         }
 
-        async function postAnnouncement() {
-            const textInput = document.getElementById('announcement-text');
-            const text = textInput ? textInput.value.trim() : '';
-            const photoInput = document.getElementById('announcement-photo-input');
-
-            if (!text && (!photoInput || !photoInput.files || !photoInput.files.length === 0)) {
-                alert('Please provide announcement text or a photo.');
-                return;
-            }
-
-            if (text) globalAnnouncementText = text;
-
-            const processAndPublish = async () => {
-                await saveCloudSettings();
-
-                const modalText = document.getElementById('modal-announcement-text');
-                if (modalText) modalText.innerText = globalAnnouncementText;
-
-                const teacherDisplay = document.getElementById('teacher-announcement-display');
-                if (teacherDisplay) teacherDisplay.innerText = globalAnnouncementText;
-
-                if (globalAnnouncementImgUrl) {
-                    const modalImg = document.getElementById('modal-announcement-img');
-                    if (modalImg) modalImg.src = globalAnnouncementImgUrl;
-                    
-                    const modalImgContainer = document.getElementById('modal-announcement-image-container');
-                    if (modalImgContainer) modalImgContainer.classList.remove('hidden');
-
-                    const imgPrev = document.getElementById('teacher-announcement-img-preview');
-                    if (imgPrev) imgPrev.src = globalAnnouncementImgUrl;
-
-                    const imgDisp = document.getElementById('teacher-announcement-image-display');
-                    if (imgDisp) imgDisp.classList.remove('hidden');
-                }
-
-                try {
-                    if (typeof teachersList !== 'undefined' && teachersList.length > 0) {
-                        const messageBody = `WesleyPrep Notice: ${globalAnnouncementText}`;
-                        for (const teacher of teachersList) {
-                            if (teacher.phone_number) {
-                                await sendMNotifySMS(teacher.phone_number, messageBody);
-                            }
-                        }
-                    }
-                } catch (err) {
-                    console.error("SMS broadcast exception:", err);
-                }
-
-                alert('Announcement published and synced successfully!');
-            };
-
-            if (photoInput && photoInput.files && photoInput.files[0]) {
-                const reader = new FileReader();
-                reader.onload = async function(e) {
-                    globalAnnouncementImgUrl = e.target.result;
-                    if (typeof galleryPhotos !== 'undefined') {
-                        galleryPhotos.push({ 
-                            url: globalAnnouncementImgUrl, 
-                            name: photoInput.files[0].name || 'announcement_photo.jpg' 
-                        });
-                    }
-                    
-                    if (typeof renderGalleryGrids === 'function') {
-                        renderGalleryGrids();
-                    }
-
-                    await processAndPublish();
-                };
-                reader.readAsDataURL(photoInput.files[0]);
-            } else {
-                await processAndPublish();
-            }
-        }
-                                                      
-        async function sendMNotifySMS(recipientPhone, messageText) {
-            const apiKey = 'HYE0Up95h7mpXrEJRn31mdbAJ';
-            const senderId = 'wps-portal';
-
-            const url = `https://api.mnotify.com/api/sms/quick?key=${apiKey}`;
-
-            const payload = {
-                recipient: [recipientPhone],
-                sender: senderId,
-                message: messageText,
-                is_schedule: false
-            };
-
-            try {
-                const response = await fetch(url, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-
-                const data = await response.json();
-                if (!response.ok) {
-                    console.error(`mNotify returned HTTP ${response.status}:`, data);
-                    return false;
-                }
-
-                console.log('SMS sent successfully:', data);
-                return true;
-            } catch (err) {
-                console.error('Network failure sending SMS via mNotify:', err);
-                return false;
-            }
-        }
-        
         function saveSchoolProfile() {
-            const nameInput = document.getElementById('profile-school-name');
-            const locInput = document.getElementById('profile-school-location');
-            const mottoInput = document.getElementById('profile-school-motto');
+            const nameVal = document.getElementById('profile-school-name')?.value.trim();
+            const locVal = document.getElementById('profile-school-location')?.value.trim();
+            const mottoVal = document.getElementById('profile-school-motto')?.value.trim();
 
-            if (nameInput) schoolProfile.name = nameInput.value;
-            if (locInput) schoolProfile.location = locInput.value;
-            if (mottoInput) schoolProfile.motto = mottoInput.value;
+            if (nameVal) schoolProfile.name = nameVal;
+            if (locVal) schoolProfile.location = locVal;
+            if (mottoVal) schoolProfile.motto = mottoVal;
 
-            document.getElementById('login-school-title').innerText = schoolProfile.name;
-            document.getElementById('login-school-motto').innerText = schoolProfile.motto;
             document.getElementById('nav-school-name').innerText = schoolProfile.name;
             document.getElementById('nav-school-info').innerText = `${schoolProfile.location} • Default Tuition: GH₵ 250`;
             document.getElementById('dashboard-motto-display').innerText = `${schoolProfile.name}, ${schoolProfile.location} — ${schoolProfile.motto}.`;
-
-            alert('School profile and branding updated successfully!');
+            alert('School profile updated!');
         }
 
-        function logout() {
-            currentUser = null;
-            document.getElementById('app-shell').classList.add('hidden');
-            document.getElementById('auth-screen').classList.remove('hidden');
+        function generateCustomPrompt() {
+            const grade = document.getElementById('prompt-grade')?.value || 'Basic 4';
+            const subject = document.getElementById('prompt-subject')?.value || 'Mathematics';
+            const goal = document.getElementById('prompt-goal')?.value.trim() || 'Core Curriculum Topic';
+            setAiPrompt(`Create a comprehensive 60-minute GES standard lesson plan for ${grade} ${subject} on the topic "${goal}", including Performance Objectives, Low-Cost TLMs, Starter, Main Activity, and Plenary.`);
+            askAICopilot();
         }
 
         function closeAnnouncementModal() {
@@ -3494,52 +4494,57 @@
             document.getElementById('receipt-modal').classList.add('hidden');
         }
 
-        async function addClass() {
-            const input = document.getElementById('new-class-input');
-            const value = input ? input.value.trim() : '';
-            if (!value) {
-                alert('Please enter a class name.');
-                return;
-            }
-            if (!classesData.includes(value)) {
-                classesData.push(value);
-                await persistClassesData();
-            }
-            if (input) input.value = '';
-            renderAll();
-            alert(`Class "${value}" added successfully.`);
+        function logout() {
+            stopStoryAudio();
+            currentUser = null;
+            document.getElementById('app-shell').classList.add('hidden');
+            document.getElementById('auth-screen').classList.remove('hidden');
         }
 
-        function editTimetable() {
-            const newSchedule = prompt('Edit the timetable:', timetableText);
-            if (newSchedule !== null) {
-                timetableText = newSchedule;
-                const el = document.getElementById('timetable-display');
-                if (el) el.innerText = timetableText;
-            }
-        }
+        let genderChartInstance = null;
+        let classChartInstance = null;
 
-        function generateCustomPrompt() {
-            const grade = document.getElementById('prompt-grade').value;
-            const subject = document.getElementById('prompt-subject').value;
-            const goal = document.getElementById('prompt-goal').value.trim();
+        function renderCharts() {
+            const genderCanvas = document.getElementById('genderChart');
+            const classCanvas = document.getElementById('classChart');
+            if (!genderCanvas || !classCanvas || typeof Chart === 'undefined') return;
 
-            if (!grade || !subject || !goal) {
-                alert('Please fill in all fields to generate a custom lesson plan.');
-                return;
-            }
+            const males = studentsData.filter(s => (s.gender || '').toLowerCase() === 'male').length;
+            const females = studentsData.filter(s => (s.gender || '').toLowerCase() === 'female').length;
 
-            const structuredPrompt = `Act as an expert primary school teacher. Create a detailed, engaging lesson plan for a ${subject} class at the ${grade} level. The main goal of the lesson is to: "${goal}". Include a clear lesson objective, a step-by-step introduction, main learner activities, and a quick formative assessment.`;
+            if (genderChartInstance) genderChartInstance.destroy();
+            genderChartInstance = new Chart(genderCanvas.getContext('2d'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['Male', 'Female'],
+                    datasets: [{
+                        data: [males, females],
+                        backgroundColor: ['#1e3a8a', '#d97706'],
+                        borderWidth: 2
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
 
-            const mainInput = document.querySelector('textarea') || document.getElementById('question-input');
-            if (mainInput) {
-                mainInput.value = structuredPrompt;
-                if (typeof askAICopilot === 'function') {
-                    askAICopilot();
-                } else if (typeof askGemini === 'function') {
-                    askGemini();
+            const classCounts = classesData.map(c => studentsData.filter(s => s.class === c).length);
+            if (classChartInstance) classChartInstance.destroy();
+            classChartInstance = new Chart(classCanvas.getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: classesData,
+                    datasets: [{
+                        label: 'Students Enrolled',
+                        data: classCounts,
+                        backgroundColor: '#1e3a8a',
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
                 }
-            }
+            });
         }
     </script>
 </body>
