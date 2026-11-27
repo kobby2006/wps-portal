@@ -317,6 +317,14 @@
                                     <option value="CREATIVE ARTS">CREATIVE ARTS</option>
                                     <option value="GHANAIAN LANGUAGE">GHANAIAN LANGUAGE</option>
                                     <option value="R. M. E.">R. M. E.</option>
+                                    <option value="LANGUAGE AND LITERACY">LANGUAGE AND LITERACY</option>
+                                    <option value="LITERACY">LITERACY</option>
+                                    <option value="NUMERACY">NUMERACY</option>
+                                    <option value="PHONICS">PHONICS</option>
+                                    <option value="O.W.O.P">O.W.O.P</option>
+                                    <option value="PICTURE READING AND COLORING">PICTURE READING AND COLORING</option>
+                                    <option value="WRITING">WRITING</option>
+                                    <option value="COLOR FUN">COLOR FUN</option>
                                 </select>
                             </div>
                         </div>
@@ -1049,7 +1057,34 @@
         let lmsDocuments = [];
         let activeThemeColor = 'navy';
 
-        const standardSubjects = [
+        const nurserySubjects = [
+            'PICTURE READING AND COLORING',
+            'WRITING',
+            'LITERACY',
+            'NUMERACY',
+            'PHONICS',
+            'COLOR FUN'
+        ];
+
+        const kg1Subjects = [
+            'LANGUAGE AND LITERACY',
+            'MATHEMATICS',
+            'O.W.O.P',
+            'CREATIVE ARTS',
+            'PHONICS'
+        ];
+
+        const kg2Subjects = [
+            'LITERACY',
+            'NUMERACY',
+            'MATHEMATICS',
+            'PHONICS',
+            'PICTURE READING AND COLORING',
+            'O.W.O.P',
+            'CREATIVE ARTS'
+        ];
+
+        const primaryJhsSubjects = [
             'ENGLISH LANGUAGE',
             'MATHEMATICS',
             'SCIENCE',
@@ -1059,6 +1094,21 @@
             'COMPUTING',
             'GHANAIAN LANGUAGE'
         ];
+
+        const standardSubjects = Array.from(new Set([
+            ...primaryJhsSubjects,
+            ...nurserySubjects,
+            ...kg1Subjects,
+            ...kg2Subjects
+        ]));
+
+        function getSubjectsForClass(className) {
+            const c = (className || '').trim().toLowerCase();
+            if (c.includes('nursery')) return nurserySubjects;
+            if (c === 'kg 1' || c === 'kg1' || c.includes('kindergarten 1')) return kg1Subjects;
+            if (c === 'kg 2' || c === 'kg2' || c.includes('kindergarten 2')) return kg2Subjects;
+            return primaryJhsSubjects;
+        }
 
         function getAllowedClasses() {
             if (!currentUser || currentUser.role === 'admin') return classesData;
@@ -2402,11 +2452,29 @@
             const selectGrading = document.getElementById('grading-class-filter');
             const selectedClass = selectGrading ? selectGrading.value : 'Basic 4';
             const modeDesc = document.getElementById('assessment-mode-description');
+            const cLower = (selectedClass || '').toLowerCase();
 
-            if (['Basic 1', 'Basic 2', 'Basic 3'].includes(selectedClass)) {
+            if (cLower.includes('nursery') || cLower.includes('kindergarten') || cLower.startsWith('kg')) {
+                if (modeDesc) modeDesc.innerText = `Mode: ${selectedClass} — Early Childhood / KG Department Subjects.`;
+            } else if (['Basic 1', 'Basic 2', 'Basic 3'].includes(selectedClass)) {
                 if (modeDesc) modeDesc.innerText = `Mode: ${selectedClass} — One Class Teacher (Class Teacher handles all subjects for this class).`;
             } else {
                 if (modeDesc) modeDesc.innerText = `Mode: ${selectedClass} — Subject Teaching (Specialized Subject Teacher grading).`;
+            }
+
+            const gradingSubject = document.getElementById('grading-subject-filter');
+            if (gradingSubject) {
+                const classSubjects = getSubjectsForClass(selectedClass);
+                const allowedSubjects = getAllowedSubjects();
+                const visibleSubjects = (currentUser && currentUser.role === 'teacher' && allowedSubjects.length > 0)
+                    ? classSubjects.filter(sub => allowedSubjects.includes(sub))
+                    : classSubjects;
+                const listToRender = visibleSubjects.length > 0 ? visibleSubjects : classSubjects;
+                const prevVal = gradingSubject.value;
+                gradingSubject.innerHTML = listToRender.map(sub => `<option value="${sub}">${sub}</option>`).join('');
+                if (listToRender.includes(prevVal)) {
+                    gradingSubject.value = prevVal;
+                }
             }
 
             renderGradingTable();
@@ -2677,9 +2745,10 @@
                 return;
             }
 
+            const classSpecificSubjects = getSubjectsForClass(histClass);
             const subjectsToShow = (currentUser && currentUser.role === 'teacher' && currentUser.teacherSubjects && currentUser.teacherSubjects.length > 0)
-                ? currentUser.teacherSubjects
-                : standardSubjects;
+                ? classSpecificSubjects.filter(sub => currentUser.teacherSubjects.includes(sub))
+                : classSpecificSubjects;
 
             let masterAssessmentSheetsHtml = subjectsToShow.map(subject => {
                 let rowsHtml = filtered.map((s, idx) => {
@@ -2774,7 +2843,7 @@
                 const other = parseFloat(s.otherFee) || 20;
                 const totalFee = arrears + tuition + printing + pta + other;
 
-                let subjectsHtml = standardSubjects.map(subName => {
+                let subjectsHtml = getSubjectsForClass(s.class).map(subName => {
                     const sub = (s.subjectsData[histYear] && s.subjectsData[histYear][histTerm] && s.subjectsData[histYear][histTerm][subName])
                         ? s.subjectsData[histYear][histTerm][subName]
                         : { indTest1: 0, groupTest: 0, indTest2: 0, homework: 0, exam: 0 };
@@ -3195,7 +3264,6 @@
             const processAndPublish = async () => {
                 await saveCloudSettings();
 
-                // Update announcement text instantly on screen
                 const modalText = document.getElementById('modal-announcement-text');
                 if (modalText) modalText.innerText = globalAnnouncementText;
 
@@ -3358,7 +3426,7 @@
 
             const structuredPrompt = `Act as an expert primary school teacher. Create a detailed, engaging lesson plan for a ${subject} class at the ${grade} level. The main goal of the lesson is to: "${goal}". Include a clear lesson objective, a step-by-step introduction, main learner activities, and a quick formative assessment.`;
 
-            const mainInput = document.getElementById('ai-user-query') || document.querySelector('textarea');
+            const mainInput = document.querySelector('textarea') || document.getElementById('question-input');
             if (mainInput) {
                 mainInput.value = structuredPrompt;
                 if (typeof askAICopilot === 'function') {
