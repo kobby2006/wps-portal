@@ -196,15 +196,15 @@
             <!-- SIDEBAR NAVIGATION -->
             <aside class="w-full md:w-64 bg-white/90 backdrop-blur-md border-r border-slate-200 p-4 space-y-2 no-print">
                 <button onclick="switchTab('dashboard')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📊 <span>Dashboard & Charts</span></button>
-<button onclick="switchTab('assessment')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📝 <span>SBA & Exam Grading</span></button>
-<button onclick="switchTab('strengths')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">⚡ <span>Student Strengths & Performance</span></button>
-<button onclick="switchTab('history')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📁 <span>Student History & Reports</span></button>
-<button onclick="switchTab('lms')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📚 <span>LMS & Teacher Training Hub</span></button>
-<a href="resource-hub.html" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🗂️ <span>GES Teaching Resource Hub</span></a>
-<a href="english-library.html" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📖 <span>English Library Hub</span></a>
-<button onclick="switchTab('ai-copilot')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🤖 <span>Live Gemini AI Assistant</span></button>
-<button onclick="switchTab('attendance')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📅 <span>Attendance Register</span></button>
-<button onclick="switchTab('timetable')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">⏰ <span>Timetable & Time Mgmt</span></button>
+                <button onclick="switchTab('assessment')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📝 <span>SBA & Exam Grading</span></button>
+                <button onclick="switchTab('strengths')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">⚡ <span>Student Strengths & Performance</span></button>
+                <button onclick="switchTab('history')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📁 <span>Student History & Reports</span></button>
+                <button onclick="switchTab('lms')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📚 <span>LMS & Teacher Training Hub</span></button>
+                <a href="resource-hub.html" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🗂️ <span>GES Teaching Resource Hub</span></a>
+                <a href="english-library.html" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📖 <span>English Library Hub</span></a>
+                <button onclick="switchTab('ai-copilot')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🤖 <span>Live Gemini AI Assistant</span></button>
+                <button onclick="switchTab('attendance')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📅 <span>Attendance Register</span></button>
+                <button onclick="switchTab('timetable')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">⏰ <span>Timetable & Time Mgmt</span></button>
                 
                 <!-- Admin Only Nav Items -->
                 <div id="admin-nav-section" class="pt-4 border-t border-slate-200 space-y-2">
@@ -220,21 +220,21 @@
                     <button onclick="switchTab('profile')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">⚙️ <span>School Profile & Branding</span></button>
                 </div>
 
-<!-- Teacher Nav -->
-<div id="teacher-nav-section" class="hidden pt-4 border-t border-slate-200 space-y-2">
-    <p class="px-4 text-xs font-bold uppercase tracking-wider text-slate-400">Staff Portal</p>
-    <button onclick="switchTab('assessment')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📝 <span>SBA & Exam Grading</span></button>
-    <button onclick="switchTab('strengths')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">⚡ <span>Student Strengths & Performance</span></button>
-    <button onclick="switchTab('history')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📁 <span>Student History & Reports</span></button>
-    <button onclick="switchTab('attendance')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📅 <span>Attendance Register</span></button>
-    <button onclick="switchTab('lms')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📚 <span>Teaching Hub & Resources</span></button>
-    <a href="resource-hub.html" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🗂️ <span>GES Teaching Resource Hub</span></a>
-    <a href="english-library.html" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📖 <span>English Library Hub</span></a>
-    <button onclick="switchTab('ai-copilot')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🤖 <span>Live Gemini AI Assistant</span></button>
-    <button onclick="switchTab('timetable')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">⏰ <span>Manage Timetable</span></button>
-    <button onclick="switchTab('teacher-gallery')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🖼️ <span>School Photo Gallery</span></button>
-        <button onclick="switchTab('teacher-announcements')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📢 <span>View Announcements</span></button>
-</div>
+                <!-- Teacher Nav -->
+                <div id="teacher-nav-section" class="hidden pt-4 border-t border-slate-200 space-y-2">
+                    <p class="px-4 text-xs font-bold uppercase tracking-wider text-slate-400">Staff Portal</p>
+                    <button onclick="switchTab('assessment')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📝 <span>SBA & Exam Grading</span></button>
+                    <button onclick="switchTab('strengths')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">⚡ <span>Student Strengths & Performance</span></button>
+                    <button onclick="switchTab('history')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📁 <span>Student History & Reports</span></button>
+                    <button onclick="switchTab('attendance')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📅 <span>Attendance Register</span></button>
+                    <button onclick="switchTab('lms')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📚 <span>Teaching Hub & Resources</span></button>
+                    <a href="resource-hub.html" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🗂️ <span>GES Teaching Resource Hub</span></a>
+                    <a href="english-library.html" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📖 <span>English Library Hub</span></a>
+                    <button onclick="switchTab('ai-copilot')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🤖 <span>Live Gemini AI Assistant</span></button>
+                    <button onclick="switchTab('timetable')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">⏰ <span>Manage Timetable</span></button>
+                    <button onclick="switchTab('teacher-gallery')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🖼️ <span>School Photo Gallery</span></button>
+                    <button onclick="switchTab('teacher-announcements')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📢 <span>View Announcements</span></button>
+                </div>
             </aside>
 
             <!-- MAIN CONTENT AREA -->
@@ -559,6 +559,50 @@
                                 <button onclick="setAiPrompt('Create a 45-minute lesson plan for Basic 5 Science on Ecosystems and Food Chains.')" class="px-3 py-1.5 bg-slate-100 hover:bg-blue-50 hover:text-blue-900 border rounded-xl text-xs font-semibold transition">🧬 Basic 5 Science Lesson Plan</button>
                                 <button onclick="setAiPrompt('Give me 5 engaging classroom management tips for primary school teachers.')" class="px-3 py-1.5 bg-slate-100 hover:bg-blue-50 hover:text-blue-900 border rounded-xl text-xs font-semibold transition">🛡️ Classroom Management Tips</button>
                                 <button onclick="setAiPrompt('How do I explain long division clearly to Basic 4 students?')" class="px-3 py-1.5 bg-slate-100 hover:bg-blue-50 hover:text-blue-900 border rounded-xl text-xs font-semibold transition">➗ Long Division Teaching Guide</button>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-3">
+                            <h3 class="text-sm font-bold text-slate-800">Custom Lesson Plan Builder</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                                <div>
+                                    <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Grade Level</label>
+                                    <select id="prompt-grade" class="w-full p-2.5 border border-slate-300 rounded-xl bg-white text-xs font-medium">
+                                        <option value="">Select Class...</option>
+                                        <option value="Basic 1">Basic 1</option>
+                                        <option value="Basic 2">Basic 2</option>
+                                        <option value="Basic 3">Basic 3</option>
+                                        <option value="Basic 4">Basic 4</option>
+                                        <option value="Basic 5">Basic 5</option>
+                                        <option value="Basic 6">Basic 6</option>
+                                        <option value="JHS 1">JHS 1</option>
+                                        <option value="JHS 2">JHS 2</option>
+                                        <option value="JHS 3">JHS 3</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Subject</label>
+                                    <select id="prompt-subject" class="w-full p-2.5 border border-slate-300 rounded-xl bg-white text-xs font-medium">
+                                        <option value="">Select Subject...</option>
+                                        <option value="Mathematics">Mathematics</option>
+                                        <option value="Science">Science</option>
+                                        <option value="English Language">English Language</option>
+                                        <option value="Religious and Moral Education">Religious and Moral Education</option>
+                                        <option value="Computing">Computing</option>
+                                        <option value="Creative Arts">Creative Arts</option>
+                                        <option value="Ghanaian Language">Ghanaian Language</option>
+                                        <option value="History">History</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Lesson Goal or Topic</label>
+                                    <input type="text" id="prompt-goal" placeholder="e.g., Fraction concepts" class="w-full p-2.5 border border-slate-300 rounded-xl bg-white text-xs">
+                                </div>
+                            </div>
+                            <div class="flex justify-end">
+                                <button type="button" onclick="generateCustomPrompt()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl transition shadow">
+                                    Build & Generate Custom Lesson Plan
+                                </button>
                             </div>
                         </div>
 
@@ -964,7 +1008,15 @@
         let portalLocked = false;
         let globalAnnouncementText = "Welcome to Wesley Preparatory School. Please ensure all student records and SBA scores are updated promptly.";
         let globalAnnouncementImgUrl = "";
-        let classesData = ['Basic 1', 'Basic 2', 'Basic 3', 'Basic 4', 'Basic 5', 'Basic 6', 'JHS 1', 'JHS 2', 'JHS 3'];
+        const defaultClassesData = ['Basic 1', 'Basic 2', 'Basic 3', 'Basic 4', 'Basic 5', 'Basic 6', 'JHS 1', 'JHS 2', 'JHS 3'];
+        let classesData = (() => {
+            try {
+                const saved = JSON.parse(localStorage.getItem('wps_classes_data'));
+                return Array.isArray(saved) && saved.length > 0 ? saved : [...defaultClassesData];
+            } catch (e) {
+                return [...defaultClassesData];
+            }
+        })();
         
         let studentsData = [
             { id: 101, name: "Benaiah Mensah", class: "Basic 4", gender: "Male", subjectsData: {}, arrearsFee: 0, tuitionFee: 250, printingFee: 25, ptaFee: 5, otherFee: 20, attendanceMade: 65, attendanceTotal: 70 },
@@ -1148,6 +1200,7 @@
 
             if (tabId === 'lms') {
                 renderLMSDocuments();
+                renderClassesList();
             }
 
             if (tabId === 'teachers') {
@@ -1218,6 +1271,10 @@
                     galleryPhotos = data.gallery_photos || [];
                     lmsDocuments = data.lms_documents || [];
                     activeThemeColor = data.active_theme || 'navy';
+                    if (Array.isArray(data.classes_list) && data.classes_list.length > 0) {
+                        classesData = data.classes_list;
+                        localStorage.setItem('wps_classes_data', JSON.stringify(classesData));
+                    }
                     applyThemeColor(activeThemeColor);
                 }
             } catch (err) {
@@ -1669,7 +1726,42 @@
             renderAdminsList();
         }
 
+        function renderClassesList() {
+            const container = document.getElementById('classes-list-container');
+            if (!container) return;
+            container.innerHTML = classesData.map((c, idx) => `
+                <span class="inline-flex items-center gap-2 px-3 py-1.5 bg-blue-50 text-blue-950 border border-blue-200 rounded-xl text-xs font-bold">
+                    <span>${escapeHtml(c)}</span>
+                    <button type="button" onclick="removeClass(${idx})" title="Remove class" class="text-red-600 hover:text-red-800 font-black ml-1">&times;</button>
+                </span>
+            `).join('');
+        }
+
+        async function persistClassesData() {
+            try {
+                localStorage.setItem('wps_classes_data', JSON.stringify(classesData));
+            } catch (e) {}
+            try {
+                await supabaseClient
+                    .from('school_settings')
+                    .update({ classes_list: classesData })
+                    .eq('id', 1);
+            } catch (e) {
+                console.log('Optional classes_list sync note:', e);
+            }
+        }
+
+        async function removeClass(index) {
+            const className = classesData[index];
+            if (!className) return;
+            if (!confirm(`Remove "${className}" from the active classes list?`)) return;
+            classesData.splice(index, 1);
+            await persistClassesData();
+            renderAll();
+        }
+
         function renderAll() {
+            renderClassesList();
             renderTeacherCheckboxes();
             renderClassesDropdown();
             renderFeeClassDropdown();
@@ -1802,7 +1894,7 @@
                 return;
             }
 
-                                    const models = [
+            const models = [
                 'gemini-3.5-flash-lite',
                 'gemini-3.6-flash',
                 'gemini-3.8-flash'
@@ -2269,6 +2361,25 @@
                 alert('Exception saving admin: ' + err.message);
             }
         });
+
+        function renderAdminsList() {
+            const container = document.getElementById('admins-list-container');
+            if (!container) return;
+
+            if (adminsList.length === 0) {
+                container.innerHTML = `<p class="text-slate-400 italic text-xs">No administrators registered yet.</p>`;
+                return;
+            }
+
+            container.innerHTML = adminsList.map(a => `
+                <div class="p-3 bg-slate-50 border rounded-xl flex justify-between items-center text-xs">
+                    <div>
+                        <strong class="text-blue-950 text-sm">${escapeHtml(a.name)}</strong>
+                        <p class="text-slate-600 font-medium mt-0.5">Email: <span class="text-blue-900">${escapeHtml(a.email || 'N/A')}</span></p>
+                    </div>
+                </div>
+            `).join('');
+        }
 
         function getTeacherNameForDocument(className, subjectName) {
             const subRaw = (subjectName || '').toLowerCase();
@@ -3210,7 +3321,7 @@
             document.getElementById('receipt-modal').classList.add('hidden');
         }
 
-        function addClass() {
+        async function addClass() {
             const input = document.getElementById('new-class-input');
             const value = input ? input.value.trim() : '';
             if (!value) {
@@ -3219,6 +3330,7 @@
             }
             if (!classesData.includes(value)) {
                 classesData.push(value);
+                await persistClassesData();
             }
             if (input) input.value = '';
             renderAll();
@@ -3233,7 +3345,8 @@
                 if (el) el.innerText = timetableText;
             }
         }
-                    function generateCustomPrompt() {
+
+        function generateCustomPrompt() {
             const grade = document.getElementById('prompt-grade').value;
             const subject = document.getElementById('prompt-subject').value;
             const goal = document.getElementById('prompt-goal').value.trim();
@@ -3245,7 +3358,7 @@
 
             const structuredPrompt = `Act as an expert primary school teacher. Create a detailed, engaging lesson plan for a ${subject} class at the ${grade} level. The main goal of the lesson is to: "${goal}". Include a clear lesson objective, a step-by-step introduction, main learner activities, and a quick formative assessment.`;
 
-            const mainInput = document.querySelector('textarea') || document.getElementById('question-input');
+            const mainInput = document.getElementById('ai-user-query') || document.querySelector('textarea');
             if (mainInput) {
                 mainInput.value = structuredPrompt;
                 if (typeof askAICopilot === 'function') {
@@ -3256,48 +3369,5 @@
             }
         }
     </script>
-
-    <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200 space-y-4 max-w-lg mx-auto">
-  <h3 class="text-lg font-bold text-slate-800">AI Prompt Builder</h3>
-  
-  <div>
-    <label class="block text-sm font-medium text-slate-700 mb-1">Grade Level</label>
-    <select id="prompt-grade" class="w-full p-3 border border-slate-300 rounded-xl bg-white focus:ring-2 focus:ring-amber-500 outline-none">
-      <option value="">Select Class...</option>
-      <option value="Class 1">Class 1</option>
-      <option value="Class 2">Class 2</option>
-      <option value="Class 3">Class 3</option>
-      <option value="Class 4">Class 4</option>
-      <option value="Class 5">Class 5</option>
-      <option value="Class 6">Class 6</option>
-      <option value="JHS 1">JHS 1</option>
-    </select>
-  </div>
-
-  <div>
-    <label class="block text-sm font-medium text-slate-700 mb-1">Subject</label>
-    <select id="prompt-subject" class="w-full p-3 border border-slate-300 rounded-xl bg-white focus:ring-2 focus:ring-amber-500 outline-none">
-      <option value="">Select Subject...</option>
-      <option value="Mathematics">Mathematics</option>
-      <option value="Science">Science</option>
-      <option value="English">English</option>
-      <option value="Religious and Moral Education">Religious and Moral Education</option>
-      <option value="Computing">Computing</option>
-      <option value="Creative Arts">Creative Arts</option>
-      <option value="Ghanaian Language">Ghanaian Language</option>
-      <option value="History">History</option>
-    </select>
-  </div>
-
-  <div>
-    <label class="block text-sm font-medium text-slate-700 mb-1">Lesson Goal or Topic</label>
-    <input type="text" id="prompt-goal" placeholder="e.g., Fraction concepts" class="w-full p-3 border border-slate-300 rounded-xl bg-white focus:ring-2 focus:ring-amber-500 outline-none">
-  </div>
-
-  <button onclick="generateCustomPrompt()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold p-3 rounded-xl transition shadow-md cursor-pointer">
-    Generate Custom Lesson Plan
-  </button>
-    </div>
-    
 </body>
 </html>
