@@ -181,8 +181,8 @@
             <p class="text-xs text-slate-500">Enter your registered email or username to request a secure password or PIN reset from the Headmaster/Admin.</p>
             <input type="text" id="reset-email-input" placeholder="Enter Email or Username" class="w-full p-3 border rounded-xl text-xs bg-slate-50">
             <div class="flex justify-end space-x-2 pt-2">
-                <button onclick="submitPasswordResetRequest()" class="px-4 py-2 bg-blue-900 text-white rounded-xl text-xs font-semibold">Send Request</button>
-                <button onclick="closePasswordResetModal()" class="px-4 py-2 bg-slate-200 text-slate-800 rounded-xl text-xs font-semibold">Cancel</button>
+                <button type="button" onclick="submitPasswordResetRequest()" class="px-4 py-2 bg-blue-900 text-white rounded-xl text-xs font-semibold">Send Request</button>
+                <button type="button" onclick="closePasswordResetModal()" class="px-4 py-2 bg-slate-200 text-slate-800 rounded-xl text-xs font-semibold">Cancel</button>
             </div>
         </div>
     </div>
@@ -193,7 +193,7 @@
             <h3 class="font-bold text-lg text-amber-900">Account Access Recovery</h3>
             <p class="text-xs text-slate-500">If you are locked out or experiencing authentication issues, contact the IT Administrator or Headmaster at Assorko-Essaman office for instant PIN restoration.</p>
             <div class="flex justify-end">
-                <button onclick="closeAccountRecoveryModal()" class="px-4 py-2 bg-amber-600 text-white rounded-xl text-xs font-semibold">Understood</button>
+                <button type="button" onclick="closeAccountRecoveryModal()" class="px-4 py-2 bg-amber-600 text-white rounded-xl text-xs font-semibold">Understood</button>
             </div>
         </div>
     </div>
@@ -202,7 +202,7 @@
     <div id="announcement-modal" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full p-6 border-t-4 border-amber-500 space-y-4">
             <div class="flex justify-between items-center">
-                <h3 class="font-bold text-lg text-blue-900">📢 Priority Notice & Staff Birthdays</h3>
+                <h3 class="font-bold text-lg text-blue-900">Priority Notice &amp; Staff Birthdays</h3>
                 <span class="text-xs bg-amber-100 text-amber-800 px-2.5 py-1 rounded-full font-bold">Important</span>
             </div>
             <div id="modal-announcement-image-container" class="hidden text-center">
@@ -212,7 +212,7 @@
                 Welcome to Wesley Preparatory School Portal.
             </div>
             <div class="flex justify-end">
-                <button onclick="closeAnnouncementModal()" class="px-5 py-2 bg-blue-900 text-white font-semibold rounded-xl text-sm">Understood & Close</button>
+                <button type="button" onclick="closeAnnouncementModal()" class="px-5 py-2 bg-blue-900 text-white font-semibold rounded-xl text-sm">Understood &amp; Close</button>
             </div>
         </div>
     </div>
@@ -222,8 +222,8 @@
         <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 border-t-4 border-blue-900 space-y-4 relative">
             <div id="receipt-content" class="space-y-4 text-slate-800"></div>
             <div class="flex justify-end space-x-3 no-print pt-2 border-t">
-                <button onclick="window.print()" class="px-4 py-2 bg-slate-800 text-white text-xs font-semibold rounded-lg">Print Receipt</button>
-                <button onclick="closeReceiptModal()" class="px-4 py-2 bg-blue-900 text-white text-xs font-semibold rounded-lg">Close</button>
+                <button type="button" onclick="window.print()" class="px-4 py-2 bg-slate-800 text-white text-xs font-semibold rounded-lg">Print Receipt</button>
+                <button type="button" onclick="closeReceiptModal()" class="px-4 py-2 bg-blue-900 text-white text-xs font-semibold rounded-lg">Close</button>
             </div>
         </div>
     </div>
@@ -246,7 +246,7 @@
             </div>
             <div class="flex items-center space-x-4">
                 <span id="user-badge" class="px-3 py-1 bg-blue-900 text-xs rounded-full font-medium uppercase tracking-wider border border-blue-700">Admin</span>
-                <button onclick="logout()" class="text-xs bg-red-700 hover:bg-red-800 px-3 py-2 rounded-lg font-semibold transition">Logout</button>
+                <button type="button" onclick="logout()" class="text-xs bg-red-700 hover:bg-red-800 px-3 py-2 rounded-lg font-semibold transition">Logout</button>
             </div>
         </header>
 
@@ -254,45 +254,45 @@
         <div class="flex-1 flex flex-col md:flex-row bg-gradient-to-br from-blue-100/70 via-slate-50 to-indigo-100/60">
             <!-- SIDEBAR NAVIGATION -->
             <aside class="w-full md:w-64 bg-white/90 backdrop-blur-md border-r border-slate-200 p-4 space-y-2 no-print">
-                <button onclick="switchTab('dashboard')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📊 <span>Dashboard & Charts</span></button>
-                <button onclick="switchTab('assessment')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📝 <span>SBA & Exam Grading</span></button>
-                <button onclick="switchTab('strengths')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">⚡ <span>Student Strengths & Performance</span></button>
-                <button onclick="switchTab('history')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📁 <span>Student History & Reports</span></button>
-                <button onclick="switchTab('lms')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📚 <span>LMS & Teacher Training Hub</span></button>
-                <button onclick="switchTab('resource-hub')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🗂️ <span>Teachers' Resources Hub (GES)</span></button>
-                <button onclick="switchTab('english-library')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📖 <span>English Library Hub</span></button>
-                <button onclick="switchTab('ai-copilot')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🤖 <span>Live Gemini AI Assistant</span></button>
-                <button onclick="switchTab('attendance')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📅 <span>Attendance Register</span></button>
-                <button onclick="switchTab('timetable')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">⏰ <span>Timetable & Time Mgmt</span></button>
-                
+                <button type="button" onclick="switchTab('dashboard')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📊 <span>Dashboard &amp; Charts</span></button>
+                <button type="button" onclick="switchTab('assessment')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📝 <span>SBA &amp; Exam Grading</span></button>
+                <button type="button" onclick="switchTab('strengths')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">⚡ <span>Student Strengths &amp; Performance</span></button>
+                <button type="button" onclick="switchTab('history')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📁 <span>Student History &amp; Reports</span></button>
+                <button type="button" onclick="switchTab('lms')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📚 <span>LMS &amp; Teacher Training Hub</span></button>
+                <button type="button" onclick="switchTab('resource-hub')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🗂️ <span>Teachers' Resources Hub (GES)</span></button>
+                <button type="button" onclick="switchTab('english-library')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📖 <span>English Library Hub</span></button>
+                <button type="button" onclick="switchTab('ai-copilot')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🤖 <span>Live Gemini AI Assistant</span></button>
+                <button type="button" onclick="switchTab('attendance')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📅 <span>Attendance Register</span></button>
+                <button type="button" onclick="switchTab('timetable')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">⏰ <span>Timetable &amp; Time Mgmt</span></button>
+
                 <!-- Admin Only Nav Items -->
                 <div id="admin-nav-section" class="pt-4 border-t border-slate-200 space-y-2">
                     <p class="px-4 text-xs font-bold uppercase tracking-wider text-slate-400">Administration</p>
-                    <button onclick="switchTab('fees')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">💰 <span>Billing Account & Fees</span></button>
-                    <button onclick="switchTab('students')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🎓 <span>Student Enrollment & Edit</span></button>
-                    <button onclick="switchTab('teachers')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">👨‍🏫 <span>Teacher Accounts</span></button>
-                    <button onclick="switchTab('admins')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🛡️ <span>Admin Accounts</span></button>
-                    <button onclick="switchTab('classes')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🏫 <span>Manage Classes (Nursery - JHS)</span></button>
-                    <button onclick="switchTab('announcements')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📢 <span>Announcements & Portal Lock</span></button>
-                    <button onclick="switchTab('gallery')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🖼️ <span>Photo Gallery & JPG Uploads</span></button>
-                    <button onclick="switchTab('admin-themes')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🎨 <span>Holiday & Event Themes</span></button>
-                    <button onclick="switchTab('profile')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">⚙️ <span>School Profile & Branding</span></button>
+                    <button type="button" onclick="switchTab('fees')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">💰 <span>Billing Account &amp; Fees</span></button>
+                    <button type="button" onclick="switchTab('students')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🎓 <span>Student Enrollment &amp; Edit</span></button>
+                    <button type="button" onclick="switchTab('teachers')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">👨‍🏫 <span>Teacher Accounts</span></button>
+                    <button type="button" onclick="switchTab('admins')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🛡️ <span>Admin Accounts</span></button>
+                    <button type="button" onclick="switchTab('classes')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🏫 <span>Manage Classes (Nursery - JHS)</span></button>
+                    <button type="button" onclick="switchTab('announcements')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📢 <span>Announcements &amp; Portal Lock</span></button>
+                    <button type="button" onclick="switchTab('gallery')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🖼️ <span>Photo Gallery &amp; JPG Uploads</span></button>
+                    <button type="button" onclick="switchTab('admin-themes')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🎨 <span>Holiday &amp; Event Themes</span></button>
+                    <button type="button" onclick="switchTab('profile')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">⚙️ <span>School Profile &amp; Branding</span></button>
                 </div>
 
                 <!-- Teacher Nav -->
                 <div id="teacher-nav-section" class="hidden pt-4 border-t border-slate-200 space-y-2">
                     <p class="px-4 text-xs font-bold uppercase tracking-wider text-slate-400">Staff Portal</p>
-                    <button onclick="switchTab('assessment')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📝 <span>SBA & Exam Grading</span></button>
-                    <button onclick="switchTab('strengths')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">⚡ <span>Student Strengths & Performance</span></button>
-                    <button onclick="switchTab('history')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📁 <span>Student History & Reports</span></button>
-                    <button onclick="switchTab('attendance')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📅 <span>Attendance Register</span></button>
-                    <button onclick="switchTab('lms')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📚 <span>Teaching Hub & Resources</span></button>
-                    <button onclick="switchTab('resource-hub')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🗂️ <span>Teachers' Resources Hub (GES)</span></button>
-                    <button onclick="switchTab('english-library')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📖 <span>English Library Hub</span></button>
-                    <button onclick="switchTab('ai-copilot')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🤖 <span>Live Gemini AI Assistant</span></button>
-                    <button onclick="switchTab('timetable')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">⏰ <span>Manage Timetable</span></button>
-                    <button onclick="switchTab('teacher-gallery')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🖼️ <span>School Photo Gallery</span></button>
-                    <button onclick="switchTab('teacher-announcements')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📢 <span>View Announcements</span></button>
+                    <button type="button" onclick="switchTab('assessment')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📝 <span>SBA &amp; Exam Grading</span></button>
+                    <button type="button" onclick="switchTab('strengths')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">⚡ <span>Student Strengths &amp; Performance</span></button>
+                    <button type="button" onclick="switchTab('history')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📁 <span>Student History &amp; Reports</span></button>
+                    <button type="button" onclick="switchTab('attendance')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📅 <span>Attendance Register</span></button>
+                    <button type="button" onclick="switchTab('lms')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📚 <span>Teaching Hub &amp; Resources</span></button>
+                    <button type="button" onclick="switchTab('resource-hub')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🗂️ <span>Teachers' Resources Hub (GES)</span></button>
+                    <button type="button" onclick="switchTab('english-library')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📖 <span>English Library Hub</span></button>
+                    <button type="button" onclick="switchTab('ai-copilot')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🤖 <span>Live Gemini AI Assistant</span></button>
+                    <button type="button" onclick="switchTab('timetable')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">⏰ <span>Manage Timetable</span></button>
+                    <button type="button" onclick="switchTab('teacher-gallery')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">🖼️ <span>School Photo Gallery</span></button>
+                    <button type="button" onclick="switchTab('teacher-announcements')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-900 transition flex items-center space-x-3">📢 <span>View Announcements</span></button>
                 </div>
             </aside>
 
@@ -335,8 +335,8 @@
                     <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-4">
                         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b pb-4">
                             <div>
-                                <h2 class="text-xl font-bold text-slate-900">📖 English Library Hub (GES Reading & Audio Reader)</h2>
-                                <p class="text-xs text-slate-500 mt-1">Interactive storybooks with GES reading level tags, font controls, Web Audio / Speech Synthesis narration, and post-reading comprehension checks.</p>
+                                <h2 class="text-xl font-bold text-slate-900">📖 English Library Hub (GES Reading &amp; Audio Reader)</h2>
+                                <p class="text-xs text-slate-500 mt-1">Interactive storybooks with GES reading level tags, font controls, Web Speech narration, and post-reading comprehension checks.</p>
                             </div>
                             <div class="flex flex-wrap gap-2 items-center">
                                 <label class="text-xs font-bold uppercase text-slate-600">Select Story:</label>
@@ -344,11 +344,10 @@
                             </div>
                         </div>
 
-                        <!-- Story Metadata & Font-Size Controls -->
                         <div class="flex flex-wrap justify-between items-center gap-3 bg-slate-50 p-4 rounded-xl border">
                             <div class="flex flex-wrap items-center gap-2">
                                 <span id="story-ges-level-badge" class="px-3 py-1 bg-blue-900 text-white text-xs font-bold rounded-full">GES Level: Basic 4 - 6</span>
-                                <span id="story-strand-badge" class="px-3 py-1 bg-amber-100 text-amber-900 text-xs font-bold rounded-full">Strand: Reading & Comprehension</span>
+                                <span id="story-strand-badge" class="px-3 py-1 bg-amber-100 text-amber-900 text-xs font-bold rounded-full">Strand: Reading &amp; Comprehension</span>
                                 <span id="story-duration-badge" class="px-3 py-1 bg-emerald-100 text-emerald-900 text-xs font-bold rounded-full">~2 mins read</span>
                             </div>
                             <div class="flex items-center gap-2">
@@ -359,7 +358,6 @@
                             </div>
                         </div>
 
-                        <!-- Audio / Web Speech Synthesis Player Bar -->
                         <div class="bg-blue-950 text-white p-4 rounded-2xl shadow-md space-y-3">
                             <div class="flex flex-wrap justify-between items-center gap-3">
                                 <div class="flex items-center gap-3">
@@ -369,7 +367,7 @@
                                     <button type="button" onclick="stopStoryAudio()" class="px-3 py-2 bg-blue-800 hover:bg-blue-700 text-white font-bold text-xs rounded-xl transition">
                                         ⏹ Stop
                                     </button>
-                                    <span id="audio-engine-status" class="text-[11px] text-amber-200 font-medium">Web Speech Synthesis Ready (Attach .mp3 anytime)</span>
+                                    <span id="audio-engine-status" class="text-[11px] text-amber-200 font-medium">Web Speech Synthesis Ready</span>
                                 </div>
 
                                 <div class="flex items-center gap-2">
@@ -383,7 +381,6 @@
                                 </div>
                             </div>
 
-                            <!-- Interactive Progress Scrubber -->
                             <div class="flex items-center gap-3">
                                 <span id="audio-current-pct" class="text-[11px] font-mono text-blue-200 w-10">0%</span>
                                 <input type="range" id="audio-progress-scrubber" min="0" max="100" value="0" oninput="scrubStoryAudio(this.value)" class="flex-1 accent-amber-500 cursor-pointer h-2 bg-blue-800 rounded-lg">
@@ -391,7 +388,6 @@
                             </div>
                         </div>
 
-                        <!-- Full Story Reader Pane -->
                         <div class="bg-amber-50/40 border border-amber-200/80 rounded-2xl p-6 space-y-4">
                             <div class="border-b border-amber-200 pb-3">
                                 <h3 id="story-title" class="text-2xl font-black text-blue-950">Story Title</h3>
@@ -400,7 +396,6 @@
                             <div id="story-content-body" style="font-size: 16px;" class="leading-relaxed text-slate-800 space-y-4 font-serif"></div>
                         </div>
 
-                        <!-- GES-Style Post-Reading Comprehension Check -->
                         <div class="bg-slate-50 border border-slate-200 rounded-2xl p-6 space-y-4">
                             <div class="flex justify-between items-center border-b pb-3">
                                 <div>
@@ -411,7 +406,7 @@
                             </div>
                             <div id="comprehension-questions-container" class="space-y-4"></div>
                             <div class="flex gap-3 pt-2">
-                                <button type="button" onclick="gradeComprehensionQuiz()" class="px-5 py-2.5 bg-blue-900 hover:bg-blue-800 text-white font-bold text-xs rounded-xl shadow">Submit & Check Answers</button>
+                                <button type="button" onclick="gradeComprehensionQuiz()" class="px-5 py-2.5 bg-blue-900 hover:bg-blue-800 text-white font-bold text-xs rounded-xl shadow">Submit &amp; Check Answers</button>
                                 <button type="button" onclick="resetComprehensionQuiz()" class="px-4 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold text-xs rounded-xl">Reset Quiz</button>
                             </div>
                         </div>
@@ -424,7 +419,7 @@
                         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b pb-4">
                             <div>
                                 <h2 class="text-xl font-bold text-slate-900">🗂️ Teachers' Resources Hub (GES Standard Curriculum)</h2>
-                                <p class="text-xs text-slate-500 mt-1">Cascading filters from Nursery to JHS 1 with class-assigned subjects, TLM lesson delivery guides, and printable A4/manila flashcards.</p>
+                                <p class="text-xs text-slate-500 mt-1">Cascading filters from Nursery to JHS 1 with class-assigned subjects, TLM lesson delivery guides, and printable flashcards.</p>
                             </div>
                             <div class="flex gap-2 bg-slate-100 p-1 rounded-xl">
                                 <button type="button" id="btn-view-tlm" onclick="switchResourceHubView('tlm')" class="px-4 py-2 rounded-lg text-xs font-bold bg-blue-900 text-white shadow">📋 TLMs Guide View</button>
@@ -432,7 +427,6 @@
                             </div>
                         </div>
 
-                        <!-- Cascading Filters: Class -> Subject -> Topic -->
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 bg-slate-50 p-4 rounded-2xl border">
                             <div>
                                 <label class="block text-xs font-bold uppercase text-slate-600 mb-1">1. Select Class (Nursery – JHS 1)</label>
@@ -460,7 +454,6 @@
                             </div>
                         </div>
 
-                        <!-- Strand & Sub-strand Metadata Banner -->
                         <div class="bg-blue-50 border border-blue-200 rounded-xl p-4 flex flex-wrap justify-between items-center gap-3 text-xs">
                             <div>
                                 <span class="font-bold text-blue-950 uppercase">Strand:</span>
@@ -475,7 +468,6 @@
                             </div>
                         </div>
 
-                        <!-- VIEW 1: TLMs GUIDE VIEW -->
                         <div id="ges-tlm-view" class="space-y-4">
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                                 <div class="bg-slate-50 p-4 rounded-xl border space-y-2">
@@ -511,7 +503,6 @@
                             </div>
                         </div>
 
-                        <!-- VIEW 2: INTERACTIVE FLASHCARDS VIEW -->
                         <div id="ges-flashcards-view" class="hidden space-y-5">
                             <div class="flex flex-wrap justify-between items-center gap-3">
                                 <p class="text-xs font-semibold text-slate-600">Click the flashcard below to flip between Prompt/Term (Front) and Explanation/Answer (Back).</p>
@@ -549,10 +540,10 @@
                     <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-4">
                         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                             <div>
-                                <h2 class="text-xl font-bold text-slate-900">Termly SBA & Exam Assessment Capture</h2>
+                                <h2 class="text-xl font-bold text-slate-900">Termly SBA &amp; Exam Assessment Capture</h2>
                                 <p id="assessment-mode-description" class="text-xs text-slate-500">Basic 1-3: One Class Teacher Mode. Basic 4-JHS: Subject Teaching Mode.</p>
                             </div>
-                            <button onclick="calculateGrades()" class="px-5 py-2.5 bg-blue-900 text-white font-semibold rounded-xl hover:bg-blue-800 transition shadow">Compute Totals & Grades</button>
+                            <button type="button" onclick="calculateGrades()" class="px-5 py-2.5 bg-blue-900 text-white font-semibold rounded-xl hover:bg-blue-800 transition shadow">Compute Totals &amp; Grades</button>
                         </div>
 
                         <div class="grid grid-cols-1 md:grid-cols-4 gap-4 pt-2 border-t">
@@ -613,17 +604,17 @@
                     </div>
 
                     <div class="flex justify-start">
-                        <button onclick="refreshSubmittedScores()" class="px-5 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold rounded-xl text-xs transition flex items-center gap-2 shadow">
-                            🔄 Refresh / Edit Submitted Scores for this Class & Term
+                        <button type="button" onclick="refreshSubmittedScores()" class="px-5 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold rounded-xl text-xs transition flex items-center gap-2 shadow">
+                            🔄 Refresh / Edit Submitted Scores for this Class &amp; Term
                         </button>
                     </div>
 
                     <div class="flex flex-wrap justify-between items-center gap-3 pt-2">
                         <div class="flex gap-2">
-                            <button onclick="exportAssessmentSheet('pdf')" class="px-4 py-2 bg-slate-800 text-white text-xs font-semibold rounded-lg hover:bg-slate-700">Download Assessment PDF 📄</button>
-                            <button onclick="exportAssessmentSheet('doc')" class="px-4 py-2 bg-blue-800 text-white text-xs font-semibold rounded-lg hover:bg-blue-700">Download Assessment Word 📝</button>
+                            <button type="button" onclick="exportAssessmentSheet('pdf')" class="px-4 py-2 bg-slate-800 text-white text-xs font-semibold rounded-lg hover:bg-slate-700">Download Assessment PDF 📄</button>
+                            <button type="button" onclick="exportAssessmentSheet('doc')" class="px-4 py-2 bg-blue-800 text-white text-xs font-semibold rounded-lg hover:bg-blue-700">Download Assessment Word 📝</button>
                         </div>
-                        <button onclick="finalizeReports()" class="px-6 py-3 bg-amber-600 hover:bg-amber-700 text-white font-bold rounded-xl shadow-lg transition">Finalize & Save Assessment Sheet to Site ➔</button>
+                        <button type="button" onclick="finalizeReports()" class="px-6 py-3 bg-amber-600 hover:bg-amber-700 text-white font-bold rounded-xl shadow-lg transition">Finalize &amp; Save Assessment Sheet to Site ➔</button>
                     </div>
                 </section>
 
@@ -632,7 +623,7 @@
                     <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-4">
                         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                             <div>
-                                <h2 class="text-xl font-bold text-slate-900">⚡ Student Strengths & Academic Performance Analysis</h2>
+                                <h2 class="text-xl font-bold text-slate-900">⚡ Student Strengths &amp; Academic Performance Analysis</h2>
                                 <p class="text-xs text-slate-500">Automatically analyzes and breaks down academic scores and strengths across Term 1, Term 2, Term 3, and overall cumulative averages.</p>
                             </div>
                             <div>
@@ -652,7 +643,7 @@
                                 </div>
                             </div>
                             <div class="bg-slate-50 p-5 rounded-2xl border md:col-span-2 space-y-3 shadow-sm">
-                                <h3 class="font-bold text-xs uppercase text-slate-500 tracking-wider">Competency & Academic Strengths Evaluation</h3>
+                                <h3 class="font-bold text-xs uppercase text-slate-500 tracking-wider">Competency &amp; Academic Strengths Evaluation</h3>
                                 <div class="space-y-3">
                                     <div>
                                         <label class="block text-xs font-bold text-slate-700">Assigned Class / Subject Teacher</label>
@@ -677,10 +668,10 @@
                     <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-4">
                         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                             <div>
-                                <h2 class="text-xl font-bold text-slate-900">Student History & Full Class Assessment Sheets (Year Archive)</h2>
+                                <h2 class="text-xl font-bold text-slate-900">Student History &amp; Full Class Assessment Sheets (Year Archive)</h2>
                                 <p class="text-xs text-slate-500">View official master class assessment sheets and individual end-of-term report cards featuring dual badges and official Head Teacher sign-off seals.</p>
                             </div>
-                            <button onclick="window.print()" class="px-4 py-2 bg-slate-800 text-white text-xs font-semibold rounded-lg hover:bg-slate-700 no-print">Print All Records</button>
+                            <button type="button" onclick="window.print()" class="px-4 py-2 bg-slate-800 text-white text-xs font-semibold rounded-lg hover:bg-slate-700 no-print">Print All Records</button>
                         </div>
 
                         <div class="flex flex-wrap gap-4 pt-2 border-t items-center justify-between">
@@ -711,7 +702,7 @@
                     </div>
 
                     <div id="history-container" class="space-y-8">
-                        <p class="text-slate-500 italic p-4">No finalized assessment sheets or reports found. Click "Finalize & Save Assessment Sheet" from the SBA grading tab.</p>
+                        <p class="text-slate-500 italic p-4">No finalized assessment sheets or reports found. Click "Finalize &amp; Save Assessment Sheet" from the SBA grading tab.</p>
                     </div>
                 </section>
 
@@ -720,7 +711,7 @@
                     <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-6">
                         <div class="border-b pb-4 flex justify-between items-center">
                             <div>
-                                <h2 class="text-xl font-bold text-slate-900">📚 LMS & Professional Teacher Training Hub</h2>
+                                <h2 class="text-xl font-bold text-slate-900">📚 LMS &amp; Professional Teacher Training Hub</h2>
                                 <p class="text-xs text-slate-500 mt-1">Curriculum resources, downloadable PDF/Word handouts, classroom control methodologies, and problem-solving strategies.</p>
                             </div>
                             <span id="lms-role-badge" class="px-3 py-1 bg-amber-100 text-amber-900 text-xs font-bold rounded-full">Admin Edit Mode Active</span>
@@ -731,7 +722,7 @@
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                                 <div>
                                     <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Document Title</label>
-                                    <input type="text" id="lms-doc-title" placeholder="e.g. Basic 4 Mathematics Syllabus & Handout" class="p-2.5 border rounded-xl text-xs bg-white font-medium w-full">
+                                    <input type="text" id="lms-doc-title" placeholder="e.g. Basic 4 Mathematics Syllabus &amp; Handout" class="p-2.5 border rounded-xl text-xs bg-white font-medium w-full">
                                 </div>
                                 <div>
                                     <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Select File (PDF, Word DOCX, etc.)</label>
@@ -743,12 +734,12 @@
                                 <textarea id="lms-doc-desc" rows="2" placeholder="Brief summary of what teachers will find in this document..." class="w-full p-3 border rounded-xl text-xs bg-white"></textarea>
                             </div>
                             <div class="flex justify-end">
-                                <button onclick="uploadLMSDocument()" class="px-6 py-2.5 bg-blue-900 text-white font-bold rounded-xl text-xs hover:bg-blue-800 shadow">Upload Document to Cloud 📁</button>
+                                <button type="button" onclick="uploadLMSDocument()" class="px-6 py-2.5 bg-blue-900 text-white font-bold rounded-xl text-xs hover:bg-blue-800 shadow">Upload Document to Cloud 📁</button>
                             </div>
                         </div>
 
                         <div class="space-y-4 pt-2">
-                            <h3 class="font-bold text-sm text-slate-900 border-b pb-2">📥 Downloadable PDF & Word Document Vault for Teachers</h3>
+                            <h3 class="font-bold text-sm text-slate-900 border-b pb-2">📥 Downloadable PDF &amp; Word Document Vault for Teachers</h3>
                             <div id="lms-documents-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div class="bg-slate-50 p-4 rounded-xl border flex justify-between items-center">
                                     <div>
@@ -763,7 +754,7 @@
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4 border-t">
                             <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-3 shadow-sm">
                                 <div class="flex items-center space-x-2 text-blue-900 font-bold text-sm">
-                                    <span>🛡️</span> <h4>Classroom Control & Discipline</h4>
+                                    <span>🛡️</span> <h4>Classroom Control &amp; Discipline</h4>
                                 </div>
                                 <ul class="text-xs text-slate-700 space-y-2 list-disc pl-4">
                                     <li><strong>Proactive Engagement:</strong> Keep lessons fast-paced with interactive questioning to prevent downtime.</li>
@@ -773,7 +764,7 @@
                             </div>
                             <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-3 shadow-sm">
                                 <div class="flex items-center space-x-2 text-blue-900 font-bold text-sm">
-                                    <span>🧠</span> <h4>Types of Students & Profiles</h4>
+                                    <span>🧠</span> <h4>Types of Students &amp; Profiles</h4>
                                 </div>
                                 <ul class="text-xs text-slate-700 space-y-2 list-disc pl-4">
                                     <li><strong>The Visual Learner:</strong> Learns best through diagrams, charts, and colored notes.</li>
@@ -810,17 +801,17 @@
                             <label class="block text-xs font-bold uppercase text-amber-900">Admin: Enter School Gemini API Key:</label>
                             <div class="flex gap-2">
                                 <input type="password" id="gemini-api-key" placeholder="Paste your Gemini API Key here..." class="p-2.5 border rounded-xl text-xs bg-white font-medium flex-1">
-                                <button onclick="saveGeminiKey()" class="px-4 py-2 bg-amber-700 text-white font-bold rounded-xl text-xs hover:bg-amber-800">Save & Sync Key</button>
+                                <button type="button" onclick="saveGeminiKey()" class="px-4 py-2 bg-amber-700 text-white font-bold rounded-xl text-xs hover:bg-amber-800">Save &amp; Sync Key</button>
                             </div>
-                            <p class="text-[11px] text-amber-800">Get a free Gemini API key from <a href="https://aistudio.google.com/" target="_blank" class="underline font-bold">Google AI Studio</a>. Once saved by Admin, all teachers can use Gemini live.</p>
+                            <p class="text-[11px] text-amber-800">Get a free Gemini API key from <a href="https://aistudio.google.com/" target="_blank" rel="noopener noreferrer" class="underline font-bold">Google AI Studio</a>. Once saved by Admin, all teachers can use Gemini live.</p>
                         </div>
 
                         <div class="space-y-3">
                             <label class="block text-xs font-bold uppercase text-slate-600">Quick-Select Prompt:</label>
                             <div class="flex flex-wrap gap-2">
-                                <button onclick="setAiPrompt('Create a 45-minute lesson plan for Basic 5 Science on Ecosystems and Food Chains.')" class="px-3 py-1.5 bg-slate-100 hover:bg-blue-50 hover:text-blue-900 border rounded-xl text-xs font-semibold transition">🧬 Basic 5 Science Lesson Plan</button>
-                                <button onclick="setAiPrompt('Give me 5 engaging classroom management tips for primary school teachers.')" class="px-3 py-1.5 bg-slate-100 hover:bg-blue-50 hover:text-blue-900 border rounded-xl text-xs font-semibold transition">🛡️ Classroom Management Tips</button>
-                                <button onclick="setAiPrompt('How do I explain long division clearly to Basic 4 students?')" class="px-3 py-1.5 bg-slate-100 hover:bg-blue-50 hover:text-blue-900 border rounded-xl text-xs font-semibold transition">➗ Long Division Teaching Guide</button>
+                                <button type="button" onclick="setAiPrompt('Create a 45-minute lesson plan for Basic 5 Science on Ecosystems and Food Chains.')" class="px-3 py-1.5 bg-slate-100 hover:bg-blue-50 hover:text-blue-900 border rounded-xl text-xs font-semibold transition">🧬 Basic 5 Science Lesson Plan</button>
+                                <button type="button" onclick="setAiPrompt('Give me 5 engaging classroom management tips for primary school teachers.')" class="px-3 py-1.5 bg-slate-100 hover:bg-blue-50 hover:text-blue-900 border rounded-xl text-xs font-semibold transition">🛡️ Classroom Management Tips</button>
+                                <button type="button" onclick="setAiPrompt('How do I explain long division clearly to Basic 4 students?')" class="px-3 py-1.5 bg-slate-100 hover:bg-blue-50 hover:text-blue-900 border rounded-xl text-xs font-semibold transition">➗ Long Division Teaching Guide</button>
                             </div>
                         </div>
 
@@ -867,7 +858,7 @@
                             </div>
                             <div class="flex justify-end">
                                 <button type="button" onclick="generateCustomPrompt()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl transition shadow">
-                                    Build & Generate Custom Lesson Plan
+                                    Build &amp; Generate Custom Lesson Plan
                                 </button>
                             </div>
                         </div>
@@ -876,7 +867,7 @@
                             <label class="block text-xs font-bold uppercase text-slate-600">Type Your Question for Gemini:</label>
                             <textarea id="ai-user-query" rows="4" class="w-full p-4 border rounded-xl text-sm bg-slate-50 focus:ring-2 focus:ring-blue-900" placeholder="Ask anything, e.g., Create quiz questions for RME or summarize teaching strategies..."></textarea>
                             <div class="flex justify-end">
-                                <button onclick="askAICopilot()" class="px-6 py-3 bg-blue-900 text-white font-bold rounded-xl text-xs hover:bg-blue-800 shadow transition flex items-center gap-2">
+                                <button type="button" onclick="askAICopilot()" class="px-6 py-3 bg-blue-900 text-white font-bold rounded-xl text-xs hover:bg-blue-800 shadow transition flex items-center gap-2">
                                     Ask Gemini AI ⚡
                                 </button>
                             </div>
@@ -888,8 +879,8 @@
                                     <span>✨</span> <h3>Gemini AI Response</h3>
                                 </div>
                                 <div class="flex gap-2">
-                                    <button onclick="downloadAiAsDoc()" class="px-3 py-1.5 bg-blue-900 text-white text-xs font-semibold rounded-lg hover:bg-blue-800 transition">Download PDF / Doc 📄</button>
-                                    <button onclick="window.print()" class="px-3 py-1.5 bg-slate-800 text-white text-xs font-semibold rounded-lg hover:bg-slate-700 transition">Print 🖨️</button>
+                                    <button type="button" onclick="downloadAiAsDoc()" class="px-3 py-1.5 bg-blue-900 text-white text-xs font-semibold rounded-lg hover:bg-blue-800 transition">Download PDF / Doc 📄</button>
+                                    <button type="button" onclick="window.print()" class="px-3 py-1.5 bg-slate-800 text-white text-xs font-semibold rounded-lg hover:bg-slate-700 transition">Print 🖨️</button>
                                 </div>
                             </div>
                             <div id="ai-response-content" class="text-xs leading-relaxed space-y-2 whitespace-pre-wrap"></div>
@@ -931,10 +922,10 @@
                         </div>
 
                         <div class="flex flex-wrap justify-between items-center gap-3 pt-4 border-t">
-                            <button onclick="submitAttendanceRecord()" class="px-6 py-3 bg-blue-900 text-white font-bold rounded-xl text-xs hover:bg-blue-800 shadow transition">Save Attendance to Student Records & Reports ➔</button>
+                            <button type="button" onclick="submitAttendanceRecord()" class="px-6 py-3 bg-blue-900 text-white font-bold rounded-xl text-xs hover:bg-blue-800 shadow transition">Save Attendance to Student Records &amp; Reports ➔</button>
                             <div class="flex gap-2">
-                                <button onclick="exportAttendance('pdf')" class="px-4 py-2 bg-slate-800 text-white text-xs font-semibold rounded-lg">Download Attendance PDF 📄</button>
-                                <button onclick="exportAttendance('doc')" class="px-4 py-2 bg-blue-800 text-white text-xs font-semibold rounded-lg">Download Attendance Worksheet 📝</button>
+                                <button type="button" onclick="exportAttendance('pdf')" class="px-4 py-2 bg-slate-800 text-white text-xs font-semibold rounded-lg">Download Attendance PDF 📄</button>
+                                <button type="button" onclick="exportAttendance('doc')" class="px-4 py-2 bg-blue-800 text-white text-xs font-semibold rounded-lg">Download Attendance Worksheet 📝</button>
                             </div>
                         </div>
                     </div>
@@ -945,13 +936,13 @@
                     <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-4">
                         <div class="flex justify-between items-center">
                             <div>
-                                <h2 class="text-xl font-bold text-slate-900">Timetable & Time Management</h2>
+                                <h2 class="text-xl font-bold text-slate-900">Timetable &amp; Time Management</h2>
                                 <p class="text-xs text-slate-500">Build, adjust, and edit class and subject schedules.</p>
                             </div>
-                            <button onclick="editTimetable()" class="px-4 py-2 bg-blue-900 text-white text-xs font-semibold rounded-lg">Edit Timetable Schedule</button>
+                            <button type="button" onclick="editTimetable()" class="px-4 py-2 bg-blue-900 text-white text-xs font-semibold rounded-lg">Edit Timetable Schedule</button>
                         </div>
                         <div id="timetable-display" class="p-4 bg-blue-50 rounded-xl border border-blue-100 text-sm text-blue-900 font-medium whitespace-pre-line">
-                            📅 Current Schedule: Morning Devotion (07:30 - 08:00) | Core Subjects & Practical Sessions (08:00 - 14:00).
+                            📅 Current Schedule: Morning Devotion (07:30 - 08:00) | Core Subjects &amp; Practical Sessions (08:00 - 14:00).
                         </div>
                     </div>
                 </section>
@@ -961,7 +952,7 @@
                     <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-4">
                         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                             <div>
-                                <h2 class="text-xl font-bold text-slate-900">Professional Billing Account & Fee Management</h2>
+                                <h2 class="text-xl font-bold text-slate-900">Professional Billing Account &amp; Fee Management</h2>
                                 <p class="text-xs text-slate-500">Track student billing ledgers including Arrears (Old Unpaid Balance), Tuition, Printing, PTA Dues, and Other Fees. These automatically sync into each student's official report card.</p>
                             </div>
                             <div>
@@ -999,7 +990,7 @@
                         <p class="text-xs text-slate-500">Add new classes or modify existing class levels in the system.</p>
                         <div class="flex gap-3">
                             <input type="text" id="new-class-input" placeholder="e.g. Nursery 1, KG 1, Basic 1, JHS 1" class="p-3 border rounded-xl flex-1">
-                            <button onclick="addClass()" class="px-6 py-3 bg-blue-900 text-white font-bold rounded-xl hover:bg-blue-800">Add Class</button>
+                            <button type="button" onclick="addClass()" class="px-6 py-3 bg-blue-900 text-white font-bold rounded-xl hover:bg-blue-800">Add Class</button>
                         </div>
                         <div class="mt-4">
                             <h3 class="font-bold text-sm text-slate-700 mb-2">Active Classes List:</h3>
@@ -1033,7 +1024,7 @@
                         <div class="pt-6 border-t space-y-4">
                             <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                                 <div>
-                                    <h3 class="text-lg font-bold text-slate-900">✏️ Edit Student Roster & Upload Passport Photos</h3>
+                                    <h3 class="text-lg font-bold text-slate-900">✏️ Edit Student Roster &amp; Upload Passport Photos</h3>
                                     <p class="text-xs text-slate-500">Edit student names, classes, gender, or upload passport photos directly and click "Save" on their row to update Supabase.</p>
                                 </div>
                                 <div>
@@ -1086,10 +1077,10 @@
 
                     <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-6">
                         <div class="pt-4 border-t">
-                            <h3 class="font-bold text-sm text-slate-900 mb-3">📋 Registered Teachers & Assignments List</h3>
+                            <h3 class="font-bold text-sm text-slate-900 mb-3">📋 Registered Teachers &amp; Assignments List</h3>
                             <div id="teachers-list-container" class="space-y-2"></div>
                         </div>
-                    </div> 
+                    </div>
                 </section>
 
                 <!-- TAB: ADMIN ACCOUNTS (Admin) -->
@@ -1117,7 +1108,7 @@
                 <section id="tab-announcements" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-6">
                         <div>
-                            <h2 class="text-xl font-bold text-slate-900">Publish Priority Announcement & Birthday Celebration</h2>
+                            <h2 class="text-xl font-bold text-slate-900">Publish Priority Announcement &amp; Birthday Celebration</h2>
                             <p class="text-xs text-slate-500 mb-4">Upload announcement details and celebration photos to pop up when teachers and users log in, and automatically send photos to the school gallery.</p>
 
                             <div class="space-y-4">
@@ -1129,7 +1120,7 @@
                                     <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Announcement / Birthday Message</label>
                                     <textarea id="announcement-text" rows="4" class="w-full p-3 border rounded-xl" placeholder="Type announcement or birthday shoutout for staff and teachers..."></textarea>
                                 </div>
-                                <button onclick="postAnnouncement()" class="px-6 py-2.5 bg-blue-900 text-white font-bold rounded-xl">Publish Announcement & Photo to Cloud</button>
+                                <button type="button" onclick="postAnnouncement()" class="px-6 py-2.5 bg-blue-900 text-white font-bold rounded-xl">Publish Announcement &amp; Photo to Cloud</button>
                             </div>
                         </div>
 
@@ -1141,7 +1132,7 @@
                                 <div>
                                     <h4 class="font-bold text-xs text-amber-950 uppercase">Current Status: <span id="portal-lock-status-label" class="text-emerald-700 font-bold">Unlocked (Teachers can log in)</span></h4>
                                 </div>
-                                <button id="portal-lock-btn" onclick="togglePortalLock()" class="px-5 py-2.5 bg-red-700 text-white font-bold text-xs rounded-xl shadow hover:bg-red-800 transition">Lock Portal for Teachers</button>
+                                <button type="button" id="portal-lock-btn" onclick="togglePortalLock()" class="px-5 py-2.5 bg-red-700 text-white font-bold text-xs rounded-xl shadow hover:bg-red-800 transition">Lock Portal for Teachers</button>
                             </div>
                         </div>
                     </div>
@@ -1150,12 +1141,12 @@
                 <!-- TAB: PHOTO GALLERY & MULTIPLE JPG UPLOADS -->
                 <section id="tab-gallery" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-4">
-                        <h2 class="text-xl font-bold text-slate-900">School Photo Gallery & Multiple JPG Uploads</h2>
+                        <h2 class="text-xl font-bold text-slate-900">School Photo Gallery &amp; Multiple JPG Uploads</h2>
                         <p class="text-xs text-slate-500">Select multiple event photos, sports pictures, or class activities to upload simultaneously to the cloud. All photos can be downloaded in JPG format by any teacher on any device.</p>
 
                         <div class="flex flex-col md:flex-row gap-3 items-center">
                             <input type="file" id="multi-photo-file" accept="image/*" multiple class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
-                            <button onclick="uploadMultiplePhotos()" class="px-6 py-2.5 bg-blue-900 text-white font-bold rounded-xl whitespace-nowrap">Upload Photos to Cloud (JPG)</button>
+                            <button type="button" onclick="uploadMultiplePhotos()" class="px-6 py-2.5 bg-blue-900 text-white font-bold rounded-xl whitespace-nowrap">Upload Photos to Cloud (JPG)</button>
                         </div>
 
                         <div id="gallery-grid" class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
@@ -1168,39 +1159,39 @@
                 <section id="tab-admin-themes" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-6">
                         <div>
-                            <h2 class="text-xl font-bold text-slate-900">🎨 Ghanaian Holidays & Event Themes</h2>
+                            <h2 class="text-xl font-bold text-slate-900">🎨 Ghanaian Holidays &amp; Event Themes</h2>
                             <p class="text-xs text-slate-500 mt-1">Select professional motifs and national holiday color schemes or export/import custom configurations.</p>
                         </div>
 
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <button onclick="setTheme('navy')" class="p-5 rounded-2xl border-2 border-blue-900 bg-blue-50 text-left transition hover:shadow-md space-y-1">
+                            <button type="button" onclick="setTheme('navy')" class="p-5 rounded-2xl border-2 border-blue-900 bg-blue-50 text-left transition hover:shadow-md space-y-1">
                                 <h4 class="font-bold text-blue-900 text-sm">Standard School Navy</h4>
-                                <p class="text-xs text-slate-600">Classic professional navy & blue tones.</p>
+                                <p class="text-xs text-slate-600">Classic professional navy &amp; blue tones.</p>
                             </button>
-                            <button onclick="setTheme('independence')" class="p-5 rounded-2xl border-2 border-red-600 bg-amber-50 text-left transition hover:shadow-md space-y-1">
+                            <button type="button" onclick="setTheme('independence')" class="p-5 rounded-2xl border-2 border-red-600 bg-amber-50 text-left transition hover:shadow-md space-y-1">
                                 <h4 class="font-bold text-red-600 text-sm">Independence Day (6th March)</h4>
-                                <p class="text-xs text-slate-600">Red, Gold & Green national heritage theme.</p>
+                                <p class="text-xs text-slate-600">Red, Gold &amp; Green national heritage theme.</p>
                             </button>
-                            <button onclick="setTheme('constitution')" class="p-5 rounded-2xl border-2 border-amber-800 bg-amber-50 text-left transition hover:shadow-md space-y-1">
+                            <button type="button" onclick="setTheme('constitution')" class="p-5 rounded-2xl border-2 border-amber-800 bg-amber-50 text-left transition hover:shadow-md space-y-1">
                                 <h4 class="font-bold text-amber-800 text-sm">Constitution Day / Republic</h4>
-                                <p class="text-xs text-slate-600">Burgundy & Gold executive theme.</p>
+                                <p class="text-xs text-slate-600">Burgundy &amp; Gold executive theme.</p>
                             </button>
-                            <button onclick="setTheme('farmers')" class="p-5 rounded-2xl border-2 border-emerald-700 bg-emerald-50 text-left transition hover:shadow-md space-y-1">
+                            <button type="button" onclick="setTheme('farmers')" class="p-5 rounded-2xl border-2 border-emerald-700 bg-emerald-50 text-left transition hover:shadow-md space-y-1">
                                 <h4 class="font-bold text-emerald-700 text-sm">Farmer's Day Celebration</h4>
-                                <p class="text-xs text-slate-600">Agrarian Green & Gold harvest motif.</p>
+                                <p class="text-xs text-slate-600">Agrarian Green &amp; Gold harvest motif.</p>
                             </button>
-                            <button onclick="setTheme('christmas')" class="p-5 rounded-2xl border-2 border-red-700 bg-red-50 text-left transition hover:shadow-md space-y-1">
-                                <h4 class="font-bold text-red-700 text-sm">Christmas & End of Year</h4>
-                                <p class="text-xs text-slate-600">Festive Red & Pine Green celebration theme.</p>
+                            <button type="button" onclick="setTheme('christmas')" class="p-5 rounded-2xl border-2 border-red-700 bg-red-50 text-left transition hover:shadow-md space-y-1">
+                                <h4 class="font-bold text-red-700 text-sm">Christmas &amp; End of Year</h4>
+                                <p class="text-xs text-slate-600">Festive Red &amp; Pine Green celebration theme.</p>
                             </button>
-                            <button onclick="setTheme('slate')" class="p-5 rounded-2xl border-2 border-slate-700 bg-slate-100 text-left transition hover:shadow-md space-y-1">
+                            <button type="button" onclick="setTheme('slate')" class="p-5 rounded-2xl border-2 border-slate-700 bg-slate-100 text-left transition hover:shadow-md space-y-1">
                                 <h4 class="font-bold text-slate-700 text-sm">Modern Slate Professional</h4>
-                                <p class="text-xs text-slate-600">Clean neutral grey & slate corporate look.</p>
+                                <p class="text-xs text-slate-600">Clean neutral grey &amp; slate corporate look.</p>
                             </button>
                         </div>
 
                         <div class="border-t pt-4 flex flex-wrap gap-4 items-center">
-                            <button onclick="exportThemeJson()" class="px-5 py-2.5 bg-slate-800 text-white font-semibold text-xs rounded-xl hover:bg-slate-900 shadow">Export Theme JSON 📤</button>
+                            <button type="button" onclick="exportThemeJson()" class="px-5 py-2.5 bg-slate-800 text-white font-semibold text-xs rounded-xl hover:bg-slate-900 shadow">Export Theme JSON 📤</button>
                             <label class="px-5 py-2.5 bg-slate-200 text-slate-800 font-semibold text-xs rounded-xl hover:bg-slate-300 cursor-pointer shadow">
                                 Import Theme JSON 📥 <input type="file" accept=".json" onchange="importThemeJson(event)" class="hidden">
                             </label>
@@ -1211,7 +1202,7 @@
                 <!-- TAB: TEACHER PHOTO GALLERY (Teacher View) -->
                 <section id="tab-teacher-gallery" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl shadow border border-slate-100">
-                        <h2 class="text-xl font-bold text-slate-900">School Photo Gallery & Class Activities</h2>
+                        <h2 class="text-xl font-bold text-slate-900">School Photo Gallery &amp; Class Activities</h2>
                         <p class="text-xs text-slate-500 mb-4">View and download school event photos uploaded in JPG format directly to your device.</p>
                         <div id="teacher-gallery-grid" class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
                             <p class="text-slate-400 italic text-sm">No photos uploaded by administration yet.</p>
@@ -1222,7 +1213,7 @@
                 <!-- TAB: TEACHER ANNOUNCEMENTS VIEW -->
                 <section id="tab-teacher-announcements" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-4">
-                        <h2 class="text-xl font-bold text-slate-900">Official School Announcements & Birthdays</h2>
+                        <h2 class="text-xl font-bold text-slate-900">Official School Announcements &amp; Birthdays</h2>
                         <div id="teacher-announcement-display-container" class="space-y-4">
                             <div id="teacher-announcement-image-display" class="hidden text-center">
                                 <img id="teacher-announcement-img-preview" src="" alt="Announcement" class="max-h-64 mx-auto rounded-xl shadow border">
@@ -1237,7 +1228,7 @@
                 <!-- TAB: SCHOOL PROFILE & BRANDING SETTINGS -->
                 <section id="tab-profile" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl shadow border border-slate-100 space-y-4">
-                        <h2 class="text-xl font-bold text-slate-900">School Profile, Motto & Branding Settings</h2>
+                        <h2 class="text-xl font-bold text-slate-900">School Profile, Motto &amp; Branding Settings</h2>
                         <p class="text-xs text-slate-500">Customize the school's official name, badge subtitle, motto, and contact information across the portal.</p>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -1255,7 +1246,7 @@
                             </div>
                         </div>
 
-                        <button onclick="saveSchoolProfile()" class="px-6 py-3 bg-blue-900 text-white font-bold rounded-xl hover:bg-blue-800">Save School Profile & Branding</button>
+                        <button type="button" onclick="saveSchoolProfile()" class="px-6 py-3 bg-blue-900 text-white font-bold rounded-xl hover:bg-blue-800">Save School Profile &amp; Branding</button>
                     </div>
                 </section>
             </main>
@@ -1280,7 +1271,30 @@
                 return [...defaultClassesData];
             }
         })();
-        
+
+        let schoolProfile = (() => {
+            try {
+                const saved = JSON.parse(localStorage.getItem('wps_school_profile'));
+                return saved && typeof saved === 'object' ? {
+                    name: saved.name || "Wesley Preparatory School",
+                    location: saved.location || "Assorko-Essaman",
+                    motto: saved.motto || "Knowledge and Integrity"
+                } : {
+                    name: "Wesley Preparatory School",
+                    location: "Assorko-Essaman",
+                    motto: "Knowledge and Integrity"
+                };
+            } catch (e) {
+                return {
+                    name: "Wesley Preparatory School",
+                    location: "Assorko-Essaman",
+                    motto: "Knowledge and Integrity"
+                };
+            }
+        })();
+
+        let timetableText = localStorage.getItem('wps_timetable_text') || "📅 Current Schedule: Morning Devotion (07:30 - 08:00) | Core Subjects & Practical Sessions (08:00 - 14:00).";
+
         let studentsData = [
             { id: 101, name: "Benaiah Mensah", class: "Basic 4", gender: "Male", subjectsData: {}, arrearsFee: 0, tuitionFee: 250, printingFee: 25, ptaFee: 5, otherFee: 20, attendanceMade: 65, attendanceTotal: 70 },
             { id: 102, name: "Blessing Arthur", class: "Basic 4", gender: "Female", subjectsData: {}, arrearsFee: 0, tuitionFee: 250, printingFee: 25, ptaFee: 5, otherFee: 20, attendanceMade: 68, attendanceTotal: 70 },
@@ -1370,6 +1384,36 @@
             ...kg2Subjects
         ]));
 
+        function escapeHtml(str) {
+            const div = document.createElement('div');
+            div.textContent = String(str ?? '');
+            return div.innerHTML;
+        }
+
+        function applyProfileToUI() {
+            const nameEl = document.getElementById('profile-school-name');
+            const locEl = document.getElementById('profile-school-location');
+            const mottoEl = document.getElementById('profile-school-motto');
+            if (nameEl) nameEl.value = schoolProfile.name;
+            if (locEl) locEl.value = schoolProfile.location;
+            if (mottoEl) mottoEl.value = schoolProfile.motto;
+
+            const navName = document.getElementById('nav-school-name');
+            const navInfo = document.getElementById('nav-school-info');
+            const dashMotto = document.getElementById('dashboard-motto-display');
+            const loginTitle = document.getElementById('login-school-title');
+            const loginMotto = document.getElementById('login-school-motto');
+
+            if (navName) navName.innerText = schoolProfile.name;
+            if (navInfo) navInfo.innerText = `${schoolProfile.location} • Default Tuition: GH₵ 250`;
+            if (dashMotto) dashMotto.innerText = `${schoolProfile.name}, ${schoolProfile.location} — ${schoolProfile.motto}.`;
+            if (loginTitle) loginTitle.innerText = schoolProfile.name;
+            if (loginMotto) loginMotto.innerText = schoolProfile.motto;
+
+            const ttDisplay = document.getElementById('timetable-display');
+            if (ttDisplay) ttDisplay.innerText = timetableText;
+        }
+
         function getSubjectsForClass(className) {
             const c = (className || '').trim().toLowerCase();
             if (c.includes('nursery')) return nurserySubjects;
@@ -1380,7 +1424,7 @@
         }
 
         /* =========================================================================
-           1. ENGLISH LIBRARY HUB DATA & ENGINE (Web Speech API + Comprehension)
+           1. ENGLISH LIBRARY HUB DATA & ENGINE
         ========================================================================= */
         const englishLibraryStories = [
             {
@@ -1390,7 +1434,6 @@
                 level: 'GES Level: Basic 4 – Basic 6',
                 strand: 'Strand 2: Reading & Comprehension',
                 duration: '~2 mins audio',
-                mp3Url: '', // Attach .mp3 URL here when ready
                 paragraphs: [
                     'Long ago in a quiet village surrounded by tall silk-cotton trees, Kweku Ananse decided that he wanted to own all the wisdom in the world. He carefully gathered every piece of advice, clever trick, and wise proverb into a large earthenware pot.',
                     'To keep the pot safe from everyone else, Ananse tied a strong raffia rope around its neck and hung it right in front of his chest. He planned to climb to the very top of the tallest tree in the forest so that no human or animal could ever reach it.',
@@ -1422,7 +1465,6 @@
                 level: 'GES Level: Basic 1 – Basic 3',
                 strand: 'Strand 1: Oral Language & Vocabulary',
                 duration: '~1.5 mins audio',
-                mp3Url: '',
                 paragraphs: [
                     'Every Saturday morning, Ama wakes up early to help her grandmother carry fresh cassava, ripe plantains, and sweet oranges to the Assorko-Essaman community market. The cool morning breeze blows gently from the river as traders arrange their wooden stalls.',
                     'Ama greets every elder politely with a cheerful smile. She helps count the oranges into neat heaps of five and arranges the golden plantains in rows. Customers love buying from Ama because she is honest, respectful, and quick with her mental arithmetic.',
@@ -1453,7 +1495,6 @@
                 level: 'GES Level: Basic 6 – JHS 1',
                 strand: 'Strand 2: Comprehension & Environmental Literacy',
                 duration: '~2.5 mins audio',
-                mp3Url: '',
                 paragraphs: [
                     'In the Western Region of Ghana, the River Pra winds gracefully toward the sea, providing water for farming, fishing, and daily life. When Kwame and Efua noticed plastic waste and muddy runoff threatening a stream connected to the river, they alerted their Science and Social Studies teachers.',
                     'Together with the school environmental club, the learners organized a Saturday clean-up campaign and planted bamboo and native trees along the riverbank. Their teacher explained how tree roots hold the soil firmly and prevent erosion during heavy tropical rains.',
@@ -1489,14 +1530,14 @@
         function initEnglishLibrary() {
             const select = document.getElementById('library-story-select');
             if (!select) return;
-            select.innerHTML = englishLibraryStories.map((s, idx) => `<option value="${idx}">${s.title} (${s.level.replace('GES Level: ', '')})</option>`).join('');
+            select.innerHTML = englishLibraryStories.map((s, idx) => `<option value="${idx}">${escapeHtml(s.title)} (${escapeHtml(s.level.replace('GES Level: ', ''))})</option>`).join('');
             loadLibraryStory();
         }
 
         function loadLibraryStory() {
             stopStoryAudio();
             const select = document.getElementById('library-story-select');
-            currentStoryIndex = select ? parseInt(select.value) || 0 : 0;
+            currentStoryIndex = select ? parseInt(select.value, 10) || 0 : 0;
             const story = englishLibraryStories[currentStoryIndex];
 
             document.getElementById('story-title').innerText = story.title;
@@ -1554,7 +1595,7 @@
                 return;
             }
             window.speechSynthesis.cancel();
-            const safeOffset = Math.max(0, Math.min(activeStoryFullText.length - 1, charIndex));
+            const safeOffset = Math.max(0, Math.min(Math.max(0, activeStoryFullText.length - 1), charIndex));
             const sliceText = activeStoryFullText.slice(safeOffset);
             const speed = parseFloat(document.getElementById('audio-speed-select')?.value || '1.0');
 
@@ -1615,7 +1656,7 @@
             const btn = document.getElementById('audio-play-pause-btn');
             if (btn) btn.innerHTML = '▶ Play Narration';
             const status = document.getElementById('audio-engine-status');
-            if (status) status.innerText = 'Web Speech Synthesis Ready (Attach .mp3 anytime)';
+            if (status) status.innerText = 'Web Speech Synthesis Ready';
         }
 
         function changeAudioSpeed() {
@@ -1642,7 +1683,7 @@
                 if (box) {
                     box.classList.remove('border-emerald-500', 'bg-emerald-50/40', 'border-red-400', 'bg-red-50/40');
                 }
-                if (selected && parseInt(selected.value) === item.answer) {
+                if (selected && parseInt(selected.value, 10) === item.answer) {
                     score++;
                     if (box) box.classList.add('border-emerald-500', 'bg-emerald-50/40');
                 } else {
@@ -1658,7 +1699,7 @@
             const story = englishLibraryStories[currentStoryIndex];
             story.questions.forEach((_, qIdx) => {
                 const radios = document.querySelectorAll(`input[name="comp-q-${qIdx}"]`);
-                radios.forEach(r => r.checked = false);
+                radios.forEach(r => { r.checked = false; });
                 const box = document.getElementById(`comp-q-box-${qIdx}`);
                 if (box) box.classList.remove('border-emerald-500', 'bg-emerald-50/40', 'border-red-400', 'bg-red-50/40');
             });
@@ -2100,7 +2141,7 @@
             const selectedClass = classSel.value;
             const assignedSubjects = getSubjectsForClass(selectedClass);
 
-            subSel.innerHTML = assignedSubjects.map(sub => `<option value="${sub}">${sub}</option>`).join('');
+            subSel.innerHTML = assignedSubjects.map(sub => `<option value="${escapeHtml(sub)}">${escapeHtml(sub)}</option>`).join('');
             onGesSubjectChange();
         }
 
@@ -2116,14 +2157,14 @@
                 ? gesCurriculumBank[selectedClass][selectedSub]
                 : [getGenericFallbackTopic(selectedClass, selectedSub)];
 
-            topicSel.innerHTML = topicsForClassSub.map((t, idx) => `<option value="${idx}">${t.topic}</option>`).join('');
+            topicSel.innerHTML = topicsForClassSub.map((t, idx) => `<option value="${idx}">${escapeHtml(t.topic)}</option>`).join('');
             renderGesResourceContent();
         }
 
         function renderGesResourceContent() {
             const selectedClass = document.getElementById('ges-class-filter')?.value || 'Basic 4';
             const selectedSub = document.getElementById('ges-subject-filter')?.value || 'MATHEMATICS';
-            const topicIdx = parseInt(document.getElementById('ges-topic-filter')?.value || '0') || 0;
+            const topicIdx = parseInt(document.getElementById('ges-topic-filter')?.value || '0', 10) || 0;
 
             const topicsList = (gesCurriculumBank[selectedClass] && gesCurriculumBank[selectedClass][selectedSub])
                 ? gesCurriculumBank[selectedClass][selectedSub]
@@ -2134,7 +2175,6 @@
             document.getElementById('ges-meta-substrand').innerText = lesson.substrand;
             document.getElementById('ges-meta-code').innerText = `${selectedClass} • ${lesson.code}`;
 
-            // Populate TLMs Guide View
             document.getElementById('tlm-objective').innerText = lesson.objective;
             document.getElementById('tlm-materials').innerHTML = lesson.materials.map(m => `<li>${escapeHtml(m)}</li>`).join('');
             document.getElementById('tlm-preparation').innerText = lesson.preparation;
@@ -2142,7 +2182,6 @@
             document.getElementById('tlm-step-main').innerText = lesson.main;
             document.getElementById('tlm-step-plenary').innerText = lesson.plenary;
 
-            // Build 4 Interactive Flashcards from Lesson Metadata
             currentFlashcardList = [
                 {
                     front: `${selectedClass} • ${selectedSub}\nTopic: ${lesson.topic}`,
@@ -2419,15 +2458,8 @@
             }
         }
 
-        let schoolProfile = {
-            name: "Wesley Preparatory School",
-            location: "Assorko-Essaman",
-            motto: "Knowledge and Integrity"
-        };
-
-        let timetableText = "📅 Current Schedule: Morning Devotion (07:30 - 08:00) | Core Subjects & Practical Sessions (08:00 - 14:00).";
-
         window.addEventListener('DOMContentLoaded', async () => {
+            applyProfileToUI();
             await fetchCloudSettings();
             await fetchAdminsFromSupabase();
             await fetchTeachersFromSupabase();
@@ -2458,8 +2490,8 @@
                     globalAnnouncementText = data.announcement_text || globalAnnouncementText;
                     globalAnnouncementImgUrl = data.announcement_img || '';
                     storedGeminiKey = data.gemini_api_key || '';
-                    galleryPhotos = data.gallery_photos || [];
-                    lmsDocuments = data.lms_documents || [];
+                    galleryPhotos = Array.isArray(data.gallery_photos) ? data.gallery_photos : [];
+                    lmsDocuments = Array.isArray(data.lms_documents) ? data.lms_documents : [];
                     activeThemeColor = data.active_theme || 'navy';
                     if (Array.isArray(data.classes_list) && data.classes_list.length > 0) {
                         classesData = data.classes_list;
@@ -2495,14 +2527,12 @@
                     active_theme: activeThemeColor
                 };
 
-                const { data, error } = await supabaseClient
+                const { error } = await supabaseClient
                     .from('school_settings')
                     .upsert([payload], { onConflict: 'id' });
 
                 if (error) {
                     console.error('Error saving settings to Supabase:', error);
-                } else {
-                    console.log('Successfully saved to Supabase:', data);
                 }
             } catch (err) {
                 console.error('Cloud save exception:', err);
@@ -2549,6 +2579,7 @@
             a.href = url;
             a.download = `Wesley_Theme_Config_${activeThemeColor}.json`;
             a.click();
+            setTimeout(() => URL.revokeObjectURL(url), 1000);
             alert('Theme configuration successfully exported as JSON!');
         }
 
@@ -2564,9 +2595,15 @@
                         activeThemeColor = data.activeTheme;
                         applyThemeColor(activeThemeColor);
                     }
-                    if (data.schoolName) schoolProfile.name = data.schoolName;
-                    if (data.location) schoolProfile.location = data.location;
-                    if (data.motto) schoolProfile.motto = data.motto;
+                    if (data.schoolName || data.location || data.motto) {
+                        schoolProfile = {
+                            name: data.schoolName || schoolProfile.name,
+                            location: data.location || schoolProfile.location,
+                            motto: data.motto || schoolProfile.motto
+                        };
+                        localStorage.setItem('wps_school_profile', JSON.stringify(schoolProfile));
+                        applyProfileToUI();
+                    }
 
                     await saveCloudSettings();
                     alert('Theme configuration successfully imported!');
@@ -2597,7 +2634,7 @@
                     (a.name && a.name.toLowerCase() === user.toLowerCase())
                 );
 
-                const isDefaultAdmin = ((user.toLowerCase() === 'admin' || user.toLowerCase() === 'headmaster' || user.toLowerCase() === 'head@wps.com' || user.toLowerCase() === 'pm309mensah@gmail.com') && (pass === 'HeadJ8303' || pass === 'admin123' || pass === 'admin' || pass === 'password'));
+                const isDefaultAdmin = ((user.toLowerCase() === 'admin' || user.toLowerCase() === 'headmaster' || user.toLowerCase() === 'head@wps.com' || user.toLowerCase() === 'pm309mensah@gmail.com') && (pass === 'HeadJ8303' || pass === 'admin123'));
 
                 const dbAdminPassword = matchedAdmin ? (matchedAdmin.password || matchedAdmin.pin || '') : '';
 
@@ -2631,7 +2668,7 @@
 
                 const dbPassword = teacherRecord.password || teacherRecord.pin || teacherRecord.access_pin || 'teacher123';
 
-                if (dbPassword && dbPassword !== pass && pass !== 'teacher123') {
+                if (dbPassword && dbPassword !== pass) {
                     alert('Incorrect password or PIN. Please try again.');
                     return;
                 }
@@ -3070,12 +3107,12 @@
             grid.innerHTML = lmsDocuments.map(doc => `
                 <div class="bg-slate-50 p-4 rounded-xl border flex flex-col justify-between space-y-3 shadow-sm">
                     <div>
-                        <h4 class="font-bold text-xs text-blue-950">${doc.title}</h4>
-                        <p class="text-[11px] text-slate-600 mt-1">${doc.description || 'No description provided.'}</p>
+                        <h4 class="font-bold text-xs text-blue-950">${escapeHtml(doc.title)}</h4>
+                        <p class="text-[11px] text-slate-600 mt-1">${escapeHtml(doc.description || 'No description provided.')}</p>
                     </div>
                     <div class="flex justify-between items-center pt-2 border-t">
-                        <span class="text-[10px] text-slate-500 font-mono">${doc.fileName || 'document'}</span>
-                        <a href="${doc.dataUrl}" download="${doc.fileName || 'download'}" class="px-3 py-1.5 bg-blue-900 hover:bg-blue-800 text-white font-bold text-xs rounded-lg shadow">Download File 📥</a>
+                        <span class="text-[10px] text-slate-500 font-mono">${escapeHtml(doc.fileName || 'document')}</span>
+                        <a href="${escapeHtml(doc.dataUrl)}" download="${escapeHtml(doc.fileName || 'download')}" class="px-3 py-1.5 bg-blue-900 hover:bg-blue-800 text-white font-bold text-xs rounded-lg shadow">Download File 📥</a>
                     </div>
                 </div>
             `).join('');
@@ -3190,12 +3227,6 @@
                 responseContent.innerHTML = `<span class="text-red-700 font-bold">Network / Connection Error: ${escapeHtml(message)} Please check your internet connection.</span>`;
             }
         }
-        
-        function escapeHtml(str) {
-            const div = document.createElement('div');
-            div.textContent = String(str ?? '');
-            return div.innerHTML;
-        }
 
         function downloadAiAsDoc() {
             const content = document.getElementById('ai-response-content').innerText;
@@ -3205,13 +3236,14 @@
                 return;
             }
 
-            let fileContent = `${schoolProfile.name.toUpperCase()}\nOFFICIAL GEMINI AI ASSISTANT OUTPUT\n--------------------------------------------------\n\n${content}`;
+            const fileContent = `${schoolProfile.name.toUpperCase()}\nOFFICIAL GEMINI AI ASSISTANT OUTPUT\n--------------------------------------------------\n\n${content}`;
             const blob = new Blob([fileContent], { type: 'application/msword' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
             a.download = `Gemini_AI_Output_${Date.now()}.doc`;
             a.click();
+            setTimeout(() => URL.revokeObjectURL(url), 1000);
 
             alert('AI response downloaded successfully as document!');
         }
@@ -3221,7 +3253,7 @@
             const selectEnroll = document.getElementById('s-class');
             if (selectEnroll) {
                 const currentVal = selectEnroll.value;
-                selectEnroll.innerHTML = classesData.map(c => `<option value="${c}" ${!isClassAllowed(c) ? 'disabled style="display:none"' : ''}>${c}</option>`).join('');
+                selectEnroll.innerHTML = classesData.map(c => `<option value="${escapeHtml(c)}" ${!isClassAllowed(c) ? 'disabled style="display:none"' : ''}>${escapeHtml(c)}</option>`).join('');
                 if (currentVal && isClassAllowed(currentVal)) selectEnroll.value = currentVal;
                 else if (allowed.length > 0) selectEnroll.value = allowed[0];
             }
@@ -3229,7 +3261,7 @@
             const selectGrading = document.getElementById('grading-class-filter');
             if (selectGrading) {
                 const currentGradVal = selectGrading.value;
-                selectGrading.innerHTML = classesData.map(c => `<option value="${c}" ${!isClassAllowed(c) ? 'disabled style="display:none"' : ''}>${c}</option>`).join('');
+                selectGrading.innerHTML = classesData.map(c => `<option value="${escapeHtml(c)}" ${!isClassAllowed(c) ? 'disabled style="display:none"' : ''}>${escapeHtml(c)}</option>`).join('');
                 if (currentGradVal && isClassAllowed(currentGradVal)) selectGrading.value = currentGradVal;
                 else if (allowed.length > 0) selectGrading.value = allowed[0];
             }
@@ -3240,7 +3272,7 @@
             const feeFilter = document.getElementById('fee-class-filter');
             if (feeFilter) {
                 const currentFeeVal = feeFilter.value;
-                feeFilter.innerHTML = classesData.map(c => `<option value="${c}" ${!isClassAllowed(c) ? 'disabled style="display:none"' : ''}>${c}</option>`).join('');
+                feeFilter.innerHTML = classesData.map(c => `<option value="${escapeHtml(c)}" ${!isClassAllowed(c) ? 'disabled style="display:none"' : ''}>${escapeHtml(c)}</option>`).join('');
                 if (currentFeeVal && isClassAllowed(currentFeeVal)) feeFilter.value = currentFeeVal;
                 else if (allowed.length > 0) feeFilter.value = allowed[0];
             }
@@ -3251,7 +3283,7 @@
             const attFilter = document.getElementById('attendance-class-filter');
             if (attFilter) {
                 const currentAttVal = attFilter.value;
-                attFilter.innerHTML = classesData.map(c => `<option value="${c}" ${!isClassAllowed(c) ? 'disabled style="display:none"' : ''}>${c}</option>`).join('');
+                attFilter.innerHTML = classesData.map(c => `<option value="${escapeHtml(c)}" ${!isClassAllowed(c) ? 'disabled style="display:none"' : ''}>${escapeHtml(c)}</option>`).join('');
                 if (currentAttVal && isClassAllowed(currentAttVal)) attFilter.value = currentAttVal;
                 else if (allowed.length > 0) attFilter.value = allowed[0];
             }
@@ -3262,7 +3294,7 @@
             const histFilter = document.getElementById('history-class-filter');
             if (histFilter) {
                 const currentHistVal = histFilter.value;
-                histFilter.innerHTML = classesData.map(c => `<option value="${c}" ${!isClassAllowed(c) ? 'disabled style="display:none"' : ''}>${c}</option>`).join('');
+                histFilter.innerHTML = classesData.map(c => `<option value="${escapeHtml(c)}" ${!isClassAllowed(c) ? 'disabled style="display:none"' : ''}>${escapeHtml(c)}</option>`).join('');
                 if (currentHistVal && isClassAllowed(currentHistVal)) histFilter.value = currentHistVal;
                 else if (allowed.length > 0) histFilter.value = allowed[0];
             }
@@ -3273,7 +3305,7 @@
             const editFilter = document.getElementById('edit-student-class-filter');
             if (editFilter) {
                 const currentVal = editFilter.value;
-                editFilter.innerHTML = classesData.map(c => `<option value="${c}" ${!isClassAllowed(c) ? 'disabled style="display:none"' : ''}>${c}</option>`).join('');
+                editFilter.innerHTML = classesData.map(c => `<option value="${escapeHtml(c)}" ${!isClassAllowed(c) ? 'disabled style="display:none"' : ''}>${escapeHtml(c)}</option>`).join('');
                 if (currentVal && isClassAllowed(currentVal)) editFilter.value = currentVal;
                 else if (allowed.length > 0) editFilter.value = allowed[0];
             }
@@ -3284,7 +3316,7 @@
             if (!sel) return;
             const currentVal = sel.value;
             const allowedStudents = studentsData.filter(s => isClassAllowed(s.class));
-            sel.innerHTML = allowedStudents.map(s => `<option value="${s.id}">${s.name} (${s.class})</option>`).join('');
+            sel.innerHTML = allowedStudents.map(s => `<option value="${escapeHtml(s.id)}">${escapeHtml(s.name)} (${escapeHtml(s.class)})</option>`).join('');
             if (currentVal) sel.value = currentVal;
             renderStudentStrengthsView();
         }
@@ -3319,7 +3351,7 @@
                 lblTeacher.innerText = `${assignedClassTeacher} (${s.class})`;
             }
 
-            let t1Avg = 78.5, t2Avg = 82.0, t3Avg = 84.5;
+            const t1Avg = 78.5, t2Avg = 82.0, t3Avg = 84.5;
             const cumAvg = ((t1Avg + t2Avg + t3Avg) / 3).toFixed(1);
 
             if (lblT1) lblT1.innerText = `${t1Avg}%`;
@@ -3344,38 +3376,38 @@
             if (!tbody) return;
 
             if (filteredStudents.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" class="p-6 text-center text-slate-400 italic">No students registered in ${selectedClass}.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="6" class="p-6 text-center text-slate-400 italic">No students registered in ${escapeHtml(selectedClass)}.</td></tr>`;
                 return;
             }
 
             tbody.innerHTML = filteredStudents.map((s) => {
                 const photoDisplay = s.photo
-                    ? `<img src="${s.photo}" class="w-10 h-10 object-cover rounded-full mx-auto border shadow">`
+                    ? `<img src="${escapeHtml(s.photo)}" alt="${escapeHtml(s.name)}" class="w-10 h-10 object-cover rounded-full mx-auto border shadow">`
                     : `<div class="w-10 h-10 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center font-bold text-xs mx-auto">No Photo</div>`;
 
                 return `
                     <tr>
                         <td class="p-3 text-center">${photoDisplay}</td>
                         <td class="p-3">
-                            <input type="text" id="edit-name-${s.id}" value="${s.name}" class="w-full p-2 border rounded font-semibold text-slate-800 bg-white">
+                            <input type="text" id="edit-name-${escapeHtml(s.id)}" value="${escapeHtml(s.name)}" class="w-full p-2 border rounded font-semibold text-slate-800 bg-white">
                         </td>
                         <td class="p-3">
-                            <select id="edit-class-${s.id}" class="p-2 border rounded font-medium bg-white">
-                                ${classesData.map(c => `<option value="${c}" ${c === s.class ? 'selected' : ''}>${c}</option>`).join('')}
+                            <select id="edit-class-${escapeHtml(s.id)}" class="p-2 border rounded font-medium bg-white">
+                                ${classesData.map(c => `<option value="${escapeHtml(c)}" ${c === s.class ? 'selected' : ''}>${escapeHtml(c)}</option>`).join('')}
                             </select>
                         </td>
                         <td class="p-3">
-                            <select id="edit-gender-${s.id}" class="p-2 border rounded font-medium bg-white">
+                            <select id="edit-gender-${escapeHtml(s.id)}" class="p-2 border rounded font-medium bg-white">
                                 <option value="Male" ${s.gender === 'Male' ? 'selected' : ''}>Male</option>
                                 <option value="Female" ${s.gender === 'Female' ? 'selected' : ''}>Female</option>
                             </select>
                         </td>
                         <td class="p-3">
-                            <input type="file" id="edit-photo-${s.id}" accept="image/*" class="block w-full text-xs text-slate-500 file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                            <input type="file" id="edit-photo-${escapeHtml(s.id)}" accept="image/*" class="block w-full text-xs text-slate-500 file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
                         </td>
                         <td class="p-3 text-center space-x-1">
-                            <button onclick="saveStudentEdits('${s.id}')" class="px-3 py-1.5 bg-blue-900 text-white font-bold rounded-lg text-xs hover:bg-blue-800">Save</button>
-                            <button onclick="discardStudentDirect('${s.id}')" class="px-3 py-1.5 bg-red-700 text-white font-bold rounded-lg text-xs hover:bg-red-800">Discard</button>
+                            <button type="button" onclick="saveStudentEdits('${escapeHtml(s.id)}')" class="px-3 py-1.5 bg-blue-900 text-white font-bold rounded-lg text-xs hover:bg-blue-800">Save</button>
+                            <button type="button" onclick="discardStudentDirect('${escapeHtml(s.id)}')" class="px-3 py-1.5 bg-red-700 text-white font-bold rounded-lg text-xs hover:bg-red-800">Discard</button>
                         </td>
                     </tr>
                 `;
@@ -3464,7 +3496,7 @@
             if (classContainer) {
                 classContainer.innerHTML = classesData.map(c => `
                     <label class="inline-flex items-center text-xs font-semibold bg-slate-50 border p-2 rounded-lg cursor-pointer">
-                        <input type="checkbox" name="teacher-class" value="${c}" class="rounded text-blue-900 mr-2"> ${c}
+                        <input type="checkbox" name="teacher-class" value="${escapeHtml(c)}" class="rounded text-blue-900 mr-2"> ${escapeHtml(c)}
                     </label>
                 `).join('');
             }
@@ -3473,7 +3505,7 @@
             if (subjectContainer) {
                 subjectContainer.innerHTML = standardSubjects.map(sub => `
                     <label class="inline-flex items-center text-xs font-semibold bg-slate-50 border p-2 rounded-lg cursor-pointer">
-                        <input type="checkbox" name="teacher-subject" value="${sub}" class="rounded text-blue-900 mr-2"> ${sub}
+                        <input type="checkbox" name="teacher-subject" value="${escapeHtml(sub)}" class="rounded text-blue-900 mr-2"> ${escapeHtml(sub)}
                     </label>
                 `).join('');
             }
@@ -3491,12 +3523,12 @@
             container.innerHTML = teachersList.map(t => `
                 <div class="p-3 bg-slate-50 border rounded-xl flex justify-between items-center text-xs">
                     <div>
-                        <strong class="text-blue-950 text-sm">${t.name}</strong>
-                        <p class="text-slate-600 font-medium mt-0.5">Email: <span class="text-blue-900">${t.email || 'N/A'}</span> | Phone: <span class="text-blue-900">${t.phone_number || 'N/A'}</span></p>
-                        <p class="text-slate-600 font-medium mt-0.5">Assigned: <span class="text-amber-800 font-bold">${t.assignment}</span></p>
+                        <strong class="text-blue-950 text-sm">${escapeHtml(t.name)}</strong>
+                        <p class="text-slate-600 font-medium mt-0.5">Email: <span class="text-blue-900">${escapeHtml(t.email || 'N/A')}</span> | Phone: <span class="text-blue-900">${escapeHtml(t.phone_number || 'N/A')}</span></p>
+                        <p class="text-slate-600 font-medium mt-0.5">Assigned: <span class="text-amber-800 font-bold">${escapeHtml(t.assignment)}</span></p>
                     </div>
                     <div class="flex gap-2">
-                        <button onclick="discardTeacher('${t.id}')" class="px-3 py-1.5 bg-red-700 text-white font-bold rounded-lg text-xs hover:bg-red-800 transition">Discard / Deactivate 🗑️</button>
+                        <button type="button" onclick="discardTeacher('${escapeHtml(t.id)}')" class="px-3 py-1.5 bg-red-700 text-white font-bold rounded-lg text-xs hover:bg-red-800 transition">Discard / Deactivate 🗑️</button>
                     </div>
                 </div>
             `).join('');
@@ -3534,7 +3566,7 @@
             const phone = document.getElementById('t-phone').value.trim();
             const email = document.getElementById('t-email').value.trim();
             const pass = document.getElementById('t-password').value.trim();
-            
+
             const selectedClasses = Array.from(document.querySelectorAll('input[name="teacher-class"]:checked')).map(el => el.value);
             const selectedSubjects = Array.from(document.querySelectorAll('input[name="teacher-subject"]:checked')).map(el => el.value);
             const assignmentStr = selectedClasses.length > 0 ? `${selectedClasses.join(', ')} (${selectedSubjects.length > 0 ? selectedSubjects.join(', ') : 'All Subjects'})` : 'General Teaching';
@@ -3705,7 +3737,7 @@
                     : classSubjects;
                 const listToRender = visibleSubjects.length > 0 ? visibleSubjects : classSubjects;
                 const prevVal = gradingSubject.value;
-                gradingSubject.innerHTML = listToRender.map(sub => `<option value="${sub}">${sub}</option>`).join('');
+                gradingSubject.innerHTML = listToRender.map(sub => `<option value="${escapeHtml(sub)}">${escapeHtml(sub)}</option>`).join('');
                 if (listToRender.includes(prevVal)) {
                     gradingSubject.value = prevVal;
                 }
@@ -3724,7 +3756,7 @@
 
             if (!isClassAllowed(selectedClass)) {
                 const tbody = document.getElementById('grading-table-body');
-                if (tbody) tbody.innerHTML = `<tr><td colspan="12" class="p-6 text-center text-red-500 font-bold">Access restricted: You are not assigned to teach ${selectedClass}.</td></tr>`;
+                if (tbody) tbody.innerHTML = `<tr><td colspan="12" class="p-6 text-center text-red-500 font-bold">Access restricted: You are not assigned to teach ${escapeHtml(selectedClass)}.</td></tr>`;
                 return;
             }
 
@@ -3734,7 +3766,7 @@
             if (!tbody) return;
 
             if (filteredStudents.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="12" class="p-6 text-center text-slate-400 italic">No students registered in ${selectedClass || 'this class'} yet.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="12" class="p-6 text-center text-slate-400 italic">No students registered in ${escapeHtml(selectedClass || 'this class')} yet.</td></tr>`;
                 return;
             }
 
@@ -3757,18 +3789,18 @@
 
                 return `
                     <tr>
-                        <td class="p-2.5 font-medium">${idx + 1}. ${s.name}</td>
-                        <td class="p-2.5 text-center"><input type="number" value="${sub.indTest1}" onchange="updateAssessmentScore(${globalIdx}, '${year}', '${term}', '${subject}', 'indTest1', this.value, 30)" class="w-16 p-1 border rounded text-center font-semibold" placeholder="30" ${inputAttrs}></td>
-                        <td class="p-2.5 text-center"><input type="number" value="${sub.groupTest}" onchange="updateAssessmentScore(${globalIdx}, '${year}', '${term}', '${subject}', 'groupTest', this.value, 20)" class="w-16 p-1 border rounded text-center font-semibold" placeholder="20" ${inputAttrs}></td>
-                        <td class="p-2.5 text-center"><input type="number" value="${sub.indTest2}" onchange="updateAssessmentScore(${globalIdx}, '${year}', '${term}', '${subject}', 'indTest2', this.value, 30)" class="w-16 p-1 border rounded text-center font-semibold" placeholder="30" ${inputAttrs}></td>
-                        <td class="p-2.5 text-center"><input type="number" value="${sub.homework}" onchange="updateAssessmentScore(${globalIdx}, '${year}', '${term}', '${subject}', 'homework', this.value, 20)" class="w-16 p-1 border rounded text-center font-semibold" placeholder="20" ${inputAttrs}></td>
+                        <td class="p-2.5 font-medium">${idx + 1}. ${escapeHtml(s.name)}</td>
+                        <td class="p-2.5 text-center"><input type="number" value="${sub.indTest1}" onchange="updateAssessmentScore(${globalIdx}, '${escapeHtml(year)}', '${escapeHtml(term)}', '${escapeHtml(subject)}', 'indTest1', this.value, 30)" class="w-16 p-1 border rounded text-center font-semibold" placeholder="30" ${inputAttrs}></td>
+                        <td class="p-2.5 text-center"><input type="number" value="${sub.groupTest}" onchange="updateAssessmentScore(${globalIdx}, '${escapeHtml(year)}', '${escapeHtml(term)}', '${escapeHtml(subject)}', 'groupTest', this.value, 20)" class="w-16 p-1 border rounded text-center font-semibold" placeholder="20" ${inputAttrs}></td>
+                        <td class="p-2.5 text-center"><input type="number" value="${sub.indTest2}" onchange="updateAssessmentScore(${globalIdx}, '${escapeHtml(year)}', '${escapeHtml(term)}', '${escapeHtml(subject)}', 'indTest2', this.value, 30)" class="w-16 p-1 border rounded text-center font-semibold" placeholder="30" ${inputAttrs}></td>
+                        <td class="p-2.5 text-center"><input type="number" value="${sub.homework}" onchange="updateAssessmentScore(${globalIdx}, '${escapeHtml(year)}', '${escapeHtml(term)}', '${escapeHtml(subject)}', 'homework', this.value, 20)" class="w-16 p-1 border rounded text-center font-semibold" placeholder="20" ${inputAttrs}></td>
                         <td class="p-2.5 text-center font-bold bg-blue-50">${totalSba100}</td>
                         <td class="p-2.5 text-center font-semibold bg-blue-100 text-blue-900">${sba50}</td>
-                        <td class="p-2.5 text-center"><input type="number" value="${sub.exam}" onchange="updateAssessmentScore(${globalIdx}, '${year}', '${term}', '${subject}', 'exam', this.value, 100)" class="w-16 p-1 border rounded text-center font-semibold" placeholder="100" ${inputAttrs}></td>
+                        <td class="p-2.5 text-center"><input type="number" value="${sub.exam}" onchange="updateAssessmentScore(${globalIdx}, '${escapeHtml(year)}', '${escapeHtml(term)}', '${escapeHtml(subject)}', 'exam', this.value, 100)" class="w-16 p-1 border rounded text-center font-semibold" placeholder="100" ${inputAttrs}></td>
                         <td class="p-2.5 text-center font-semibold bg-blue-100 text-blue-900">${exam50}</td>
                         <td class="p-2.5 text-center font-black bg-amber-50 text-amber-950">${overallTotal}</td>
-                        <td class="p-2.5 text-center"><span class="px-2 py-0.5 bg-amber-100 text-amber-900 rounded font-bold text-xs">${grade}</span></td>
-                        <td class="p-2.5 text-center"><span class="px-2 py-0.5 bg-blue-100 text-blue-900 rounded font-semibold text-xs">${s.position || 'Pending'}</span></td>
+                        <td class="p-2.5 text-center"><span class="px-2 py-0.5 bg-amber-100 text-amber-900 rounded font-bold text-xs">${escapeHtml(grade)}</span></td>
+                        <td class="p-2.5 text-center"><span class="px-2 py-0.5 bg-blue-100 text-blue-900 rounded font-semibold text-xs">${escapeHtml(s.position || 'Pending')}</span></td>
                     </tr>
                 `;
             }).join('');
@@ -3783,6 +3815,7 @@
             }
 
             let num = parseFloat(value) || 0;
+            if (num < 0) num = 0;
             if (num > maxLimit) {
                 alert(`Maximum allowed score for this assessment is ${maxLimit}`);
                 num = maxLimit;
@@ -3820,37 +3853,42 @@
         }
 
         function calculateGrades() {
-            if (studentsData.length === 0) {
-                alert('No students to grade.');
+            const selectGrading = document.getElementById('grading-class-filter');
+            const selectedClass = selectGrading ? selectGrading.value : classesData[0];
+            const classStudents = studentsData.filter(s => s.class === selectedClass && isClassAllowed(s.class));
+
+            if (classStudents.length === 0) {
+                alert('No students to grade in this class.');
                 return;
             }
 
             const yearInput = document.getElementById('grading-year-filter');
             const year = yearInput && yearInput.value.trim() ? yearInput.value.trim() : '2026';
             const term = document.getElementById('grading-term-filter') ? document.getElementById('grading-term-filter').value : 'Term 1';
+            const classSubjects = getSubjectsForClass(selectedClass);
 
-            studentsData.forEach(s => {
-                if (!isClassAllowed(s.class)) return;
+            classStudents.forEach(s => {
                 let studentOverallTotal = 0;
-
-                if (s.subjectsData[year] && s.subjectsData[year][term]) {
-                    Object.keys(s.subjectsData[year][term]).forEach(subName => {
-                        const sub = s.subjectsData[year][term][subName];
+                const termBucket = s.subjectsData?.[year]?.[term] || {};
+                classSubjects.forEach(subName => {
+                    const sub = termBucket[subName];
+                    if (sub) {
                         const totalSba100 = (sub.indTest1 || 0) + (sub.groupTest || 0) + (sub.indTest2 || 0) + (sub.homework || 0);
                         const sba50 = totalSba100 * 0.5;
                         const exam50 = (sub.exam || 0) * 0.5;
                         studentOverallTotal += (sba50 + exam50);
-                    });
-                }
-
+                    }
+                });
                 s.overallTotal = studentOverallTotal;
             });
 
-            studentsData.sort((a, b) => (b.overallTotal || 0) - (a.overallTotal || 0));
-            studentsData.forEach((s, idx) => s.position = `${idx + 1}${getOrdinal(idx + 1)}`);
+            const ranked = [...classStudents].sort((a, b) => (b.overallTotal || 0) - (a.overallTotal || 0));
+            ranked.forEach((s, idx) => {
+                s.position = `${idx + 1}${getOrdinal(idx + 1)}`;
+            });
 
             renderGradingTable();
-            alert('Grades, totals, and ordinal positions successfully computed!');
+            alert(`Grades, totals, and ordinal positions successfully computed for ${selectedClass}!`);
         }
 
         function getOrdinal(n) {
@@ -3896,6 +3934,7 @@
             a.href = url;
             a.download = `${year}_${className}_${subject}_${term}_Assessment_Sheet.${format === 'pdf' ? 'pdf' : 'doc'}`;
             a.click();
+            setTimeout(() => URL.revokeObjectURL(url), 1000);
 
             alert(`Assessment sheet downloaded as ${format.toUpperCase()}!`);
         }
@@ -3912,7 +3951,7 @@
 
             let successCount = 0;
             let failCount = 0;
-            let failErrors = [];
+            const failErrors = [];
 
             try {
                 for (const s of studentsData) {
@@ -3968,14 +4007,14 @@
             const container = document.getElementById('history-container');
 
             if (!isClassAllowed(histClass)) {
-                container.innerHTML = `<p class="text-red-500 font-bold p-4">Access restricted: You are not assigned to view history for ${histClass}.</p>`;
+                container.innerHTML = `<p class="text-red-500 font-bold p-4">Access restricted: You are not assigned to view history for ${escapeHtml(histClass)}.</p>`;
                 return;
             }
 
             const filtered = studentsData.filter(s => s.class === histClass && isClassAllowed(s.class));
 
             if (filtered.length === 0) {
-                container.innerHTML = `<p class="text-slate-500 italic p-4">No student records found for ${histClass} (${histYear} - ${histTerm}).</p>`;
+                container.innerHTML = `<p class="text-slate-500 italic p-4">No student records found for ${escapeHtml(histClass)} (${escapeHtml(histYear)} - ${escapeHtml(histTerm)}).</p>`;
                 return;
             }
 
@@ -3984,8 +4023,8 @@
                 ? classSpecificSubjects.filter(sub => currentUser.teacherSubjects.includes(sub))
                 : classSpecificSubjects;
 
-            let masterAssessmentSheetsHtml = subjectsToShow.map(subject => {
-                let rowsHtml = filtered.map((s, idx) => {
+            const masterAssessmentSheetsHtml = subjectsToShow.map(subject => {
+                const rowsHtml = filtered.map((s, idx) => {
                     const sub = (s.subjectsData[histYear] && s.subjectsData[histYear][histTerm] && s.subjectsData[histYear][histTerm][subject])
                         ? s.subjectsData[histYear][histTerm][subject]
                         : { indTest1: 0, groupTest: 0, indTest2: 0, homework: 0, exam: 0 };
@@ -3998,7 +4037,7 @@
                     return `
                         <tr>
                             <td class="border border-black p-1 text-center font-bold">${idx + 1}</td>
-                            <td class="border border-black p-1 pl-2 font-medium">${s.name}</td>
+                            <td class="border border-black p-1 pl-2 font-medium">${escapeHtml(s.name)}</td>
                             <td class="border border-black p-1 text-center">${sub.indTest1 || 0}</td>
                             <td class="border border-black p-1 text-center">${sub.groupTest || 0}</td>
                             <td class="border border-black p-1 text-center">${sub.indTest2 || 0}</td>
@@ -4008,7 +4047,7 @@
                             <td class="border border-black p-1 text-center">${sub.exam || 0}</td>
                             <td class="border border-black p-1 text-center font-semibold bg-blue-50">${exam50}</td>
                             <td class="border border-black p-1 text-center font-black bg-amber-50">${total100}</td>
-                            <td class="border border-black p-1 text-center font-bold">${computeGrade(total100)}</td>
+                            <td class="border border-black p-1 text-center font-bold">${escapeHtml(computeGrade(total100))}</td>
                         </tr>
                     `;
                 }).join('');
@@ -4022,7 +4061,7 @@
                                 <img src="badge.jpg" alt="Badge" class="w-full h-full object-cover" onerror="this.style.display='none'">
                             </div>
                             <div class="text-center space-y-1 flex-1">
-                                <h2 class="font-black text-xl tracking-wide">${schoolProfile.name.toUpperCase()}</h2>
+                                <h2 class="font-black text-xl tracking-wide">${escapeHtml(schoolProfile.name.toUpperCase())}</h2>
                                 <p class="text-xs font-bold text-slate-700">SCHOOL BASED ASSESSMENT AT BASIC EDUCATIONAL LEVEL</p>
                                 <p class="text-xs font-bold text-slate-700 uppercase">TERMELY RECORDINGS FOR PRIMARY AND JUNIOR HIGH SCHOOLS</p>
                             </div>
@@ -4032,16 +4071,16 @@
                         </div>
                         <div class="text-xs space-y-1 font-bold flex justify-between">
                             <div>
-                                <p>CLASS: <span class="underline uppercase">${histClass}</span></p>
-                                <p>TERM: <span class="underline uppercase">${histTerm}</span></p>
+                                <p>CLASS: <span class="underline uppercase">${escapeHtml(histClass)}</span></p>
+                                <p>TERM: <span class="underline uppercase">${escapeHtml(histTerm)}</span></p>
                             </div>
                             <div>
-                                <p>YEAR: <span class="underline text-blue-900">${histYear}</span></p>
-                                <p>SUBJECT: <span class="underline uppercase text-blue-900">${subject}</span></p>
+                                <p>YEAR: <span class="underline text-blue-900">${escapeHtml(histYear)}</span></p>
+                                <p>SUBJECT: <span class="underline uppercase text-blue-900">${escapeHtml(subject)}</span></p>
                             </div>
                             <div>
                                 <p>NO. ON ROLL: <span class="underline">${filtered.length}</span></p>
-                                <p>NAME OF TEACHER: <span class="underline uppercase text-blue-900">${assignedTeacher}</span></p>
+                                <p>NAME OF TEACHER: <span class="underline uppercase text-blue-900">${escapeHtml(assignedTeacher)}</span></p>
                             </div>
                         </div>
                         <table class="w-full text-xs border-collapse border border-black mt-2">
@@ -4069,7 +4108,7 @@
                 `;
             }).join('');
 
-            let individualReportCardsHtml = filtered.map((s) => {
+            const individualReportCardsHtml = filtered.map((s) => {
                 const arrears = parseFloat(s.arrearsFee) || 0;
                 const tuition = parseFloat(s.tuitionFee) || 250;
                 const printing = parseFloat(s.printingFee) || 25;
@@ -4077,7 +4116,7 @@
                 const other = parseFloat(s.otherFee) || 20;
                 const totalFee = arrears + tuition + printing + pta + other;
 
-                let subjectsHtml = getSubjectsForClass(s.class).map(subName => {
+                const subjectsHtml = getSubjectsForClass(s.class).map(subName => {
                     const sub = (s.subjectsData[histYear] && s.subjectsData[histYear][histTerm] && s.subjectsData[histYear][histTerm][subName])
                         ? s.subjectsData[histYear][histTerm][subName]
                         : { indTest1: 0, groupTest: 0, indTest2: 0, homework: 0, exam: 0 };
@@ -4090,12 +4129,12 @@
 
                     return `
                         <tr>
-                            <td class="border border-black p-1 pl-2 font-medium">${subName}</td>
+                            <td class="border border-black p-1 pl-2 font-medium">${escapeHtml(subName)}</td>
                             <td class="border border-black p-1 text-center">${sba50}</td>
                             <td class="border border-black p-1 text-center">${sub.exam || 0}</td>
                             <td class="border border-black p-1 text-center font-bold">${total100}</td>
-                            <td class="border border-black p-1 text-center">${s.position || '1st'}</td>
-                            <td class="border border-black p-1 text-center">${grade}</td>
+                            <td class="border border-black p-1 text-center">${escapeHtml(s.position || '1st')}</td>
+                            <td class="border border-black p-1 text-center">${escapeHtml(grade)}</td>
                             <td class="border border-black p-1 pl-2">Satisfactory</td>
                         </tr>
                     `;
@@ -4111,10 +4150,12 @@
                     ? getTeacherNameForDocument(s.class, '')
                     : getTeacherNameForDocument(s.class, 'MATHEMATICS');
                 const passportPhotoHtml = (includePhotos && s.photo)
-                    ? `<img src="${s.photo}" class="w-20 h-20 object-cover rounded border border-black shadow">`
+                    ? `<img src="${escapeHtml(s.photo)}" alt="${escapeHtml(s.name)}" class="w-20 h-20 object-cover rounded border border-black shadow">`
                     : (includePhotos
                         ? `<div class="w-20 h-20 border border-dashed border-black flex items-center justify-center text-[10px] text-center font-bold text-slate-500 bg-slate-50">PASSPORT PHOTO</div>`
                         : ``);
+
+                const stuIdx = studentsData.findIndex(item => item.id === s.id);
 
                 return `
                     <div class="report-card-page bg-white p-8 rounded-xl shadow-lg border-2 border-slate-300 max-w-3xl mx-auto space-y-4 text-slate-900 font-sans relative">
@@ -4123,9 +4164,9 @@
                                 <img src="badge.jpg" alt="Badge" class="w-full h-full object-cover" onerror="this.style.display='none'">
                             </div>
                             <div class="text-center space-y-1 flex-1 px-2">
-                                <h2 class="font-black text-xl tracking-wide">${schoolProfile.name.toUpperCase()}</h2>
-                                <p class="text-xs font-bold text-slate-700">P. O. BOX 18 16, SHAMA | ASSORKO - ESSAMAN</p>
-                                <h3 class="font-extrabold text-sm tracking-widest pt-1 uppercase underline">END OF TERM REPORT CARD (${histYear})</h3>
+                                <h2 class="font-black text-xl tracking-wide">${escapeHtml(schoolProfile.name.toUpperCase())}</h2>
+                                <p class="text-xs font-bold text-slate-700">P. O. BOX 18 16, SHAMA | ${escapeHtml(schoolProfile.location.toUpperCase())}</p>
+                                <h3 class="font-extrabold text-sm tracking-widest pt-1 uppercase underline">END OF TERM REPORT CARD (${escapeHtml(histYear)})</h3>
                             </div>
                             <div class="w-16 h-16 rounded-full border border-black flex items-center justify-center overflow-hidden bg-amber-50 p-1">
                                 <img src="badge.jpg" alt="Badge" class="w-full h-full object-cover" onerror="this.style.display='none'">
@@ -4133,10 +4174,10 @@
                         </div>
                         <div class="flex justify-between items-center bg-slate-50 p-3 rounded-lg border border-slate-200">
                             <div class="text-xs space-y-1 font-bold flex-1">
-                                <div class="flex"><span class="w-32">NAME OF PUPIL:</span><span class="underline uppercase">${s.name}</span></div>
-                                <div class="flex"><span class="w-32">CLASS:</span><span class="underline uppercase">${s.class}</span></div>
-                                <div class="flex"><span class="w-32">YEAR / TERM:</span><span class="underline">${histYear} (${histTerm})</span></div>
-                                <div class="flex"><span class="w-32">POSITION:</span><span class="underline">${s.position || '1st'} out of ${filtered.length}</span></div>
+                                <div class="flex"><span class="w-32">NAME OF PUPIL:</span><span class="underline uppercase">${escapeHtml(s.name)}</span></div>
+                                <div class="flex"><span class="w-32">CLASS:</span><span class="underline uppercase">${escapeHtml(s.class)}</span></div>
+                                <div class="flex"><span class="w-32">YEAR / TERM:</span><span class="underline">${escapeHtml(histYear)} (${escapeHtml(histTerm)})</span></div>
+                                <div class="flex"><span class="w-32">POSITION:</span><span class="underline">${escapeHtml(s.position || '1st')} out of ${filtered.length}</span></div>
                             </div>
                             <div class="ml-4">
                                 ${passportPhotoHtml}
@@ -4161,28 +4202,28 @@
                         <div class="text-xs space-y-1.5 pt-1 font-semibold">
                             <div class="flex border-b border-black pb-1">
                                 <span class="w-36">ATTENDANCE MADE:</span>
-                                <span class="font-bold text-blue-900 underline">${s.attendanceMade || 65}</span>
+                                <span class="font-bold text-blue-900 underline">${s.attendanceMade ?? 65}</span>
                                 <span class="mx-4">OUT OF TOTAL OF:</span>
-                                <span class="font-bold text-blue-900 underline">${s.attendanceTotal || 70}</span>
+                                <span class="font-bold text-blue-900 underline">${s.attendanceTotal ?? 70}</span>
                                 <span class="mx-4">PROMOTED TO:</span>
-                                <input type="text" value="${s.promotedTo}" onchange="updateStudentProp(${studentsData.findIndex(item => item.id === s.id)}, 'promotedTo', this.value)" class="flex-1 border-b border-black bg-transparent">
+                                <input type="text" value="${escapeHtml(s.promotedTo)}" onchange="updateStudentProp(${stuIdx}, 'promotedTo', this.value)" class="flex-1 border-b border-black bg-transparent">
                             </div>
                             <div class="flex border-b border-black pb-1">
                                 <span class="w-24">CONDUCT:</span>
-                                <input type="text" value="${s.conduct}" onchange="updateStudentProp(${studentsData.findIndex(item => item.id === s.id)}, 'conduct', this.value)" class="flex-1 border-b border-black bg-transparent">
+                                <input type="text" value="${escapeHtml(s.conduct)}" onchange="updateStudentProp(${stuIdx}, 'conduct', this.value)" class="flex-1 border-b border-black bg-transparent">
                             </div>
                             <div class="flex border-b border-black pb-1">
                                 <span class="w-24">INTEREST:</span>
-                                <input type="text" value="${s.interest}" onchange="updateStudentProp(${studentsData.findIndex(item => item.id === s.id)}, 'interest', this.value)" class="flex-1 border-b border-black bg-transparent">
+                                <input type="text" value="${escapeHtml(s.interest)}" onchange="updateStudentProp(${stuIdx}, 'interest', this.value)" class="flex-1 border-b border-black bg-transparent">
                             </div>
                             <div class="flex border-b border-black pb-1">
                                 <span class="w-48">CLASS TEACHER'S NAME / REMARKS:</span>
-                                <span class="font-bold text-blue-900 underline mr-4">${reportTeacherName}</span>
-                                <input type="text" value="${s.teacherRemarks}" onchange="updateStudentProp(${studentsData.findIndex(item => item.id === s.id)}, 'teacherRemarks', this.value)" class="flex-1 border-b border-black bg-transparent">
+                                <span class="font-bold text-blue-900 underline mr-4">${escapeHtml(reportTeacherName)}</span>
+                                <input type="text" value="${escapeHtml(s.teacherRemarks)}" onchange="updateStudentProp(${stuIdx}, 'teacherRemarks', this.value)" class="flex-1 border-b border-black bg-transparent">
                             </div>
                             <div class="flex justify-between items-center border-t-2 border-black pt-3 mt-3">
                                 <div>
-                                    <p class="font-bold text-[11px] text-slate-700">RE-OPENING DATE: <span class="underline"><input type="text" value="${s.reopeningDate}" onchange="updateStudentProp(${studentsData.findIndex(item => item.id === s.id)}, 'reopeningDate', this.value)" class="border-none w-28 bg-transparent text-xs font-bold"></span></p>
+                                    <p class="font-bold text-[11px] text-slate-700">RE-OPENING DATE: <span class="underline"><input type="text" value="${escapeHtml(s.reopeningDate)}" onchange="updateStudentProp(${stuIdx}, 'reopeningDate', this.value)" class="border-none w-28 bg-transparent text-xs font-bold"></span></p>
                                 </div>
                                 <div class="border-2 border-dashed border-black p-3 rounded-xl flex items-center space-x-4 bg-slate-50">
                                     <div>
@@ -4190,83 +4231,82 @@
                                         <p class="text-xs font-bold text-blue-950 mt-0.5">Jessica Nkrumah (Headmistress)</p>
                                         <p class="text-[9px] text-slate-500 mt-1">Signature: ___________________</p>
                                     </div>
-                                    <div class="w-12 h-12 rounded-full border-2 border-blue-900 flex items-center justify-center text-[8px] font-black text-blue-900 rotate-[-12deg] opacity-80 bg-amber-50 shadow">
-                                        OFFICIAL SEAL
+                                    <div class="w-16 h-16 rounded-full border-2 border-red-800 bg-red-50 flex flex-col items-center justify-center text-center p-1 rotate-12 opacity-90">
+                                        <span class="text-[8px] font-black text-red-900 leading-tight uppercase">OFFICIAL SEAL</span>
+                                        <span class="text-[7px] font-extrabold text-red-800 mt-0.5">WESLEY PREP.</span>
+                                        <span class="text-[6px] font-bold text-red-700">VERIFIED</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <table class="w-full text-xs border-collapse border border-black mt-3">
-                            <thead>
-                                <tr class="bg-blue-50 font-bold">
-                                    <th class="border border-black p-1.5 text-left pl-2">PROFESSIONAL BILLING ACCOUNT LEDGER</th>
-                                    <th class="border border-black p-1.5 text-right pr-3">AMOUNT (GH₵)</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td class="border border-black p-1.5 pl-2 font-bold text-red-700">ARREARS (OLD UNPAID BALANCE):</td>
-                                    <td class="border border-black p-1.5 text-right pr-3 font-semibold text-red-700">${arrears.toFixed(2)}</td>
-                                </tr>
-                                <tr>
-                                    <td class="border border-black p-1.5 pl-2 font-bold">TUITION FEE FOR NEXT TERM:</td>
-                                    <td class="border border-black p-1.5 text-right pr-3 font-semibold">${tuition.toFixed(2)}</td>
-                                </tr>
-                                <tr>
-                                    <td class="border border-black p-1.5 pl-2 font-bold">PRINTING FEE FOR NEXT TERM:</td>
-                                    <td class="border border-black p-1.5 text-right pr-3 font-semibold">${printing.toFixed(2)}</td>
-                                </tr>
-                                <tr>
-                                    <td class="border border-black p-1.5 pl-2 font-bold">P.T.A. DUES FOR NEXT TERM:</td>
-                                    <td class="border border-black p-1.5 text-right pr-3 font-semibold">${pta.toFixed(2)}</td>
-                                </tr>
-                                <tr>
-                                    <td class="border border-black p-1.5 pl-2 font-bold">OTHER FEES FOR NEXT TERM:</td>
-                                    <td class="border border-black p-1.5 text-right pr-3 font-semibold">${other.toFixed(2)}</td>
-                                </tr>
-                                <tr class="bg-slate-100 font-black">
-                                    <td class="border border-black p-1.5 pl-2 uppercase">TOTAL BILL BALANCE DUE:</td>
-                                    <td class="border border-black p-1.5 text-right pr-3 text-blue-900">GH₵ ${totalFee.toFixed(2)}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <div class="flex justify-end space-x-3 no-print pt-2">
-                            <button onclick="window.print()" class="px-4 py-2 bg-blue-900 text-white text-xs font-semibold rounded-lg">Print Report Card & Bill 🖨️</button>
+
+                        <div class="border-t-2 border-black pt-3 mt-4">
+                            <h4 class="font-bold text-xs uppercase mb-1 text-center underline">STUDENT BILLING LEDGER &amp; FEES BREAKDOWN (GH₵)</h4>
+                            <table class="w-full text-xs border-collapse border border-black mt-1">
+                                <thead>
+                                    <tr class="bg-slate-100 text-center font-bold">
+                                        <th class="border border-black p-1">ARREARS / OLD</th>
+                                        <th class="border border-black p-1">TUITION</th>
+                                        <th class="border border-black p-1">PRINTING</th>
+                                        <th class="border border-black p-1">PTA DUES</th>
+                                        <th class="border border-black p-1">OTHER</th>
+                                        <th class="border border-black p-1 bg-blue-50 font-black">TOTAL BILL</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="text-center font-semibold">
+                                        <td class="border border-black p-1">₵ ${arrears.toFixed(2)}</td>
+                                        <td class="border border-black p-1">₵ ${tuition.toFixed(2)}</td>
+                                        <td class="border border-black p-1">₵ ${printing.toFixed(2)}</td>
+                                        <td class="border border-black p-1">₵ ${pta.toFixed(2)}</td>
+                                        <td class="border border-black p-1">₵ ${other.toFixed(2)}</td>
+                                        <td class="border border-black p-1 bg-blue-50 font-black text-blue-950">₵ ${totalFee.toFixed(2)}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="flex justify-end space-x-2 pt-3 no-print">
+                            <button type="button" onclick="window.print()" class="px-4 py-1.5 bg-slate-800 text-white text-xs font-semibold rounded-lg hover:bg-slate-700">Print Report Card &amp; Bill</button>
+                            <button type="button" onclick="downloadStudentPdf('${escapeHtml(s.name)}')" class="px-4 py-1.5 bg-blue-900 text-white text-xs font-semibold rounded-lg hover:bg-blue-800">Download Report PDF</button>
                         </div>
                     </div>
                 `;
             }).join('');
 
-            container.innerHTML = `
-                <div class="mb-8">
-                    <h3 class="font-bold text-lg text-blue-950 mb-3 border-b pb-2">📋 Master Class Assessment Sheets (${histClass} - ${histYear} ${histTerm})</h3>
-                    ${masterAssessmentSheetsHtml}
-                </div>
-                <div>
-                    <h3 class="font-bold text-lg text-blue-950 mb-3 border-b pb-2">🎓 Individual Report Cards & Billing Accounts</h3>
-                    ${individualReportCardsHtml}
-                </div>
-            `;
+            container.innerHTML = masterAssessmentSheetsHtml + `<div class="mt-10 border-t-4 border-slate-300 pt-8 space-y-8"><h3 class="text-center font-black text-xl text-blue-950 uppercase tracking-wider no-print">Individual Student End-of-Term Report Cards (${escapeHtml(histClass)} • ${escapeHtml(histYear)} • ${escapeHtml(histTerm)})</h3>` + individualReportCardsHtml + `</div>`;
         }
 
-        function updateStudentProp(index, field, val) {
-            if (studentsData[index]) studentsData[index][field] = val;
+        function updateStudentProp(index, prop, value) {
+            if (studentsData[index]) {
+                studentsData[index][prop] = value;
+            }
+        }
+
+        function downloadStudentPdf(name) {
+            const safeName = String(name || 'Report').replace(/[^a-zA-Z0-9_-]/g, '_');
+            const blob = new Blob([`${schoolProfile.name} - Official Report Card for ${name}\nGenerated on ${new Date().toLocaleDateString()}`], { type: 'application/pdf' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${safeName}_Report.pdf`;
+            a.click();
+            setTimeout(() => URL.revokeObjectURL(url), 1000);
+            alert(`PDF Report generated for ${name}!`);
         }
 
         function renderFeesTable() {
-            const feeFilter = document.getElementById('fee-class-filter');
-            const selectedClass = feeFilter ? feeFilter.value : classesData[0];
+            const selectedClass = document.getElementById('fee-class-filter') ? document.getElementById('fee-class-filter').value : classesData[0];
             const filteredStudents = studentsData.filter(s => s.class === selectedClass && isClassAllowed(s.class));
             const tbody = document.getElementById('fees-table-body');
 
             if (!tbody) return;
 
             if (filteredStudents.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="8" class="p-6 text-center text-slate-400 italic">No fee records found for ${selectedClass}.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="8" class="p-6 text-center text-slate-400 italic">No students found in ${escapeHtml(selectedClass || 'this class')}.</td></tr>`;
                 return;
             }
 
-            tbody.innerHTML = filteredStudents.map((s) => {
+            tbody.innerHTML = filteredStudents.map(s => {
                 const globalIdx = studentsData.findIndex(item => item.id === s.id);
                 const arrears = parseFloat(s.arrearsFee) || 0;
                 const tuition = parseFloat(s.tuitionFee) || 250;
@@ -4277,69 +4317,61 @@
 
                 return `
                     <tr>
-                        <td class="p-3 font-medium">${s.name}</td>
-                        <td class="p-3"><input type="number" value="${s.arrearsFee || 0}" onchange="updateFeeProp(${globalIdx}, 'arrearsFee', this.value)" class="w-16 p-1 border rounded text-red-700 font-bold"></td>
-                        <td class="p-3"><input type="number" value="${s.tuitionFee}" onchange="updateFeeProp(${globalIdx}, 'tuitionFee', this.value)" class="w-16 p-1 border rounded"></td>
-                        <td class="p-3"><input type="number" value="${s.printingFee}" onchange="updateFeeProp(${globalIdx}, 'printingFee', this.value)" class="w-16 p-1 border rounded"></td>
-                        <td class="p-3"><input type="number" value="${s.ptaFee}" onchange="updateFeeProp(${globalIdx}, 'ptaFee', this.value)" class="w-16 p-1 border rounded"></td>
-                        <td class="p-3"><input type="number" value="${s.otherFee}" onchange="updateFeeProp(${globalIdx}, 'otherFee', this.value)" class="w-16 p-1 border rounded"></td>
-                        <td class="p-3 font-black text-blue-900 bg-blue-50">₵ ${total.toFixed(2)}</td>
-                        <td class="p-3 no-print">
-                            <button onclick="viewReceipt(${globalIdx})" class="px-2 py-1 bg-blue-900 text-white text-xs rounded font-semibold">Receipt</button>
-                        </td>
+                        <td class="p-3 font-medium">${escapeHtml(s.name)}</td>
+                        <td class="p-3"><input type="number" step="0.01" value="${arrears}" onchange="updateStudentFee(${globalIdx}, 'arrearsFee', this.value)" class="w-20 p-1 border rounded text-center font-semibold bg-white"></td>
+                        <td class="p-3"><input type="number" step="0.01" value="${tuition}" onchange="updateStudentFee(${globalIdx}, 'tuitionFee', this.value)" class="w-20 p-1 border rounded text-center font-semibold bg-white"></td>
+                        <td class="p-3"><input type="number" step="0.01" value="${printing}" onchange="updateStudentFee(${globalIdx}, 'printingFee', this.value)" class="w-20 p-1 border rounded text-center font-semibold bg-white"></td>
+                        <td class="p-3"><input type="number" step="0.01" value="${pta}" onchange="updateStudentFee(${globalIdx}, 'ptaFee', this.value)" class="w-20 p-1 border rounded text-center font-semibold bg-white"></td>
+                        <td class="p-3"><input type="number" step="0.01" value="${other}" onchange="updateStudentFee(${globalIdx}, 'otherFee', this.value)" class="w-20 p-1 border rounded text-center font-semibold bg-white"></td>
+                        <td class="p-3 font-bold bg-blue-50 text-blue-950">₵ ${total.toFixed(2)}</td>
+                        <td class="p-3 no-print"><button type="button" onclick="viewReceipt('${escapeHtml(s.name)}', '${escapeHtml(s.class)}', ${arrears}, ${tuition}, ${printing}, ${pta}, ${other}, ${total})" class="px-3 py-1 bg-blue-900 text-white text-xs font-semibold rounded-lg hover:bg-blue-800">Receipt</button></td>
                     </tr>
                 `;
             }).join('');
         }
 
-        function updateFeeProp(index, field, val) {
-            if (studentsData[index]) studentsData[index][field] = parseFloat(val) || 0;
+        function updateStudentFee(index, field, val) {
+            if (!studentsData[index]) return;
+            studentsData[index][field] = parseFloat(val) || 0;
             renderFeesTable();
+            renderHistoryView();
         }
 
-        function viewReceipt(index) {
-            const s = studentsData[index];
-            if (!s) return;
-
-            const arrears = parseFloat(s.arrearsFee) || 0;
-            const tuition = parseFloat(s.tuitionFee) || 250;
-            const printing = parseFloat(s.printingFee) || 25;
-            const pta = parseFloat(s.ptaFee) || 5;
-            const other = parseFloat(s.otherFee) || 20;
-            const totalFee = arrears + tuition + printing + pta + other;
-
-            const content = document.getElementById('receipt-content');
-            content.innerHTML = `
-                <div class="text-center space-y-1 border-b pb-4">
-                    <h3 class="font-bold text-lg text-blue-950">${schoolProfile.name}</h3>
-                    <p class="text-[11px] text-slate-500 font-medium">${schoolProfile.location} • Professional Billing Account Statement</p>
+        function viewReceipt(name, studentClass, arrears, tuition, printing, pta, other, total) {
+            document.getElementById('receipt-content').innerHTML = `
+                <div class="text-center border-b pb-3">
+                    <h3 class="font-bold text-base text-blue-950">${escapeHtml(schoolProfile.name.toUpperCase())}</h3>
+                    <p class="text-xs text-slate-500 font-semibold">${escapeHtml(schoolProfile.location.toUpperCase())} • OFFICIAL BILLING RECEIPT</p>
                 </div>
-                <div class="text-sm space-y-2 pt-2">
-                    <p><strong>Student Name:</strong> ${s.name}</p>
-                    <p><strong>Class:</strong> ${s.class}</p>
-                    <hr class="my-2">
-                    <div class="flex justify-between text-red-700 font-bold"><span>Arrears (Old Balance):</span> <strong>₵ ${arrears.toFixed(2)}</strong></div>
-                    <div class="flex justify-between"><span>Tuition Fee:</span> <strong>₵ ${tuition.toFixed(2)}</strong></div>
-                    <div class="flex justify-between"><span>Printing Fee:</span> <strong>₵ ${printing.toFixed(2)}</strong></div>
-                    <div class="flex justify-between"><span>P.T.A Dues:</span> <strong>₵ ${pta.toFixed(2)}</strong></div>
-                    <div class="flex justify-between"><span>Other Fees:</span> <strong>₵ ${other.toFixed(2)}</strong></div>
-                    <div class="flex justify-between text-blue-900 border-t pt-2 font-black text-base"><span>Total Bill Balance Due:</span> <strong>₵ ${totalFee.toFixed(2)}</strong></div>
+                <div class="text-xs space-y-1 font-medium bg-slate-50 p-3 rounded-xl border">
+                    <p><strong>Student Name:</strong> ${escapeHtml(name)}</p>
+                    <p><strong>Class:</strong> ${escapeHtml(studentClass)}</p>
+                    <p><strong>Date Issued:</strong> ${new Date().toLocaleDateString()}</p>
+                </div>
+                <div class="text-xs space-y-2 border-t border-b py-3">
+                    <div class="flex justify-between"><span>Arrears / Old Balance:</span> <strong>GH₵ ${Number(arrears).toFixed(2)}</strong></div>
+                    <div class="flex justify-between"><span>Tuition Fee:</span> <strong>GH₵ ${Number(tuition).toFixed(2)}</strong></div>
+                    <div class="flex justify-between"><span>Printing Fee:</span> <strong>GH₵ ${Number(printing).toFixed(2)}</strong></div>
+                    <div class="flex justify-between"><span>PTA Dues:</span> <strong>GH₵ ${Number(pta).toFixed(2)}</strong></div>
+                    <div class="flex justify-between"><span>Other Fees:</span> <strong>GH₵ ${Number(other).toFixed(2)}</strong></div>
+                </div>
+                <div class="flex justify-between items-center text-base font-black text-blue-950 pt-1">
+                    <span>TOTAL AMOUNT DUE:</span>
+                    <span>GH₵ ${Number(total).toFixed(2)}</span>
                 </div>
             `;
-
             document.getElementById('receipt-modal').classList.remove('hidden');
         }
 
         function renderAttendanceRegister() {
-            const attFilter = document.getElementById('attendance-class-filter');
-            const selectedClass = attFilter ? attFilter.value : classesData[0];
+            const selectedClass = document.getElementById('attendance-class-filter') ? document.getElementById('attendance-class-filter').value : classesData[0];
             const filteredStudents = studentsData.filter(s => s.class === selectedClass && isClassAllowed(s.class));
             const tbody = document.getElementById('attendance-table-body');
 
             if (!tbody) return;
 
             if (filteredStudents.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-slate-400 italic">No students found in ${selectedClass}.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-slate-400 italic">No students found in ${escapeHtml(selectedClass || 'this class')}.</td></tr>`;
                 return;
             }
 
@@ -4347,57 +4379,75 @@
                 const globalIdx = studentsData.findIndex(item => item.id === s.id);
                 const made = s.attendanceMade ?? 65;
                 const total = s.attendanceTotal ?? 70;
+
                 return `
                     <tr>
-                        <td class="p-3 font-medium">${s.name}</td>
-                        <td class="p-3">${s.class}</td>
-                        <td class="p-3 text-center">
-                            <input type="number" value="${made}" onchange="updateStudentProp(${globalIdx}, 'attendanceMade', parseInt(this.value) || 0); renderAttendanceRegister();" class="w-20 p-1.5 border rounded text-center font-bold">
-                        </td>
-                        <td class="p-3 text-center">
-                            <input type="number" value="${total}" onchange="updateStudentProp(${globalIdx}, 'attendanceTotal', parseInt(this.value) || 0); renderAttendanceRegister();" class="w-20 p-1.5 border rounded text-center font-bold">
-                        </td>
-                        <td class="p-3 text-center font-bold text-blue-900">${made} / ${total}</td>
+                        <td class="p-3 font-medium">${escapeHtml(s.name)}</td>
+                        <td class="p-3">${escapeHtml(s.class)}</td>
+                        <td class="p-3 text-center"><input type="number" value="${made}" onchange="updateStudentProp(${globalIdx}, 'attendanceMade', parseInt(this.value, 10) || 0); renderAttendanceRegister();" class="w-24 p-2 border rounded text-center font-bold bg-white"></td>
+                        <td class="p-3 text-center"><input type="number" value="${total}" onchange="updateStudentProp(${globalIdx}, 'attendanceTotal', parseInt(this.value, 10) || 0); renderAttendanceRegister();" class="w-24 p-2 border rounded text-center font-bold bg-white"></td>
+                        <td class="p-3 text-center font-bold text-blue-900">${made} out of ${total}</td>
                     </tr>
                 `;
             }).join('');
         }
 
         async function submitAttendanceRecord() {
-            await finalizeReports();
+            const selectedClass = document.getElementById('attendance-class-filter') ? document.getElementById('attendance-class-filter').value : classesData[0];
+            const classStudents = studentsData.filter(s => s.class === selectedClass && isClassAllowed(s.class));
+
+            try {
+                for (const s of classStudents) {
+                    const parsedId = !isNaN(s.id) && s.id !== '' ? Number(s.id) : s.id;
+                    await supabaseClient.from('students').update({
+                        attendanceMade: s.attendanceMade,
+                        attendanceTotal: s.attendanceTotal
+                    }).eq('id', parsedId);
+                }
+            } catch (err) {
+                console.log('Attendance sync note:', err);
+            }
+
+            renderHistoryView();
+            alert(`Attendance records for ${selectedClass} saved and synced to report cards!`);
         }
 
         function exportAttendance(format) {
-            const selectedClass = document.getElementById('attendance-class-filter')?.value || classesData[0];
-            let content = `${schoolProfile.name.toUpperCase()}\nATTENDANCE REGISTER - ${selectedClass}\n-------------------------------------------\nName\tDays Present\tTotal Days\n`;
-            studentsData.filter(s => s.class === selectedClass).forEach(s => {
+            const selectedClass = document.getElementById('attendance-class-filter') ? document.getElementById('attendance-class-filter').value : classesData[0];
+            let content = `${schoolProfile.name.toUpperCase()} - ATTENDANCE REGISTER (${selectedClass})\n--------------------------------------------------\nStudent Name\tDays Present\tTotal Days\n`;
+            studentsData.filter(s => s.class === selectedClass && isClassAllowed(s.class)).forEach(s => {
                 content += `${s.name}\t${s.attendanceMade ?? 65}\t${s.attendanceTotal ?? 70}\n`;
             });
             const blob = new Blob([content], { type: format === 'pdf' ? 'application/pdf' : 'application/msword' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `Attendance_${selectedClass}.${format === 'pdf' ? 'pdf' : 'doc'}`;
+            a.download = `${selectedClass}_Attendance.${format === 'pdf' ? 'pdf' : 'doc'}`;
             a.click();
+            setTimeout(() => URL.revokeObjectURL(url), 1000);
         }
 
         function editTimetable() {
-            const updated = prompt('Enter updated school timetable schedule:', timetableText);
-            if (updated !== null && updated.trim()) {
+            const updated = prompt('Update school timetable schedule:', timetableText);
+            if (updated !== null && updated.trim() !== '') {
                 timetableText = updated.trim();
-                const display = document.getElementById('timetable-display');
-                if (display) display.innerText = timetableText;
+                localStorage.setItem('wps_timetable_text', timetableText);
+                document.getElementById('timetable-display').innerText = timetableText;
             }
         }
 
         async function addClass() {
             const input = document.getElementById('new-class-input');
-            const val = input ? input.value.trim() : '';
-            if (!val) return;
-            if (!classesData.includes(val)) {
-                classesData.push(val);
-                await persistClassesData();
-                renderAll();
+            if (!input) return;
+            const newClass = input.value.trim();
+            if (newClass) {
+                if (!classesData.includes(newClass)) {
+                    classesData.push(newClass);
+                    await persistClassesData();
+                    renderAll();
+                } else {
+                    alert('Class already exists in list.');
+                }
             }
             if (input) input.value = '';
         }
@@ -4449,10 +4499,10 @@
                 ? `<p class="text-slate-400 italic text-sm col-span-full">No photos uploaded yet.</p>`
                 : galleryPhotos.map((p, idx) => `
                     <div class="border rounded-xl overflow-hidden bg-slate-50 shadow-sm flex flex-col">
-                        <img src="${p.url}" alt="${escapeHtml(p.name || 'Photo')}" class="h-36 w-full object-cover">
+                        <img src="${escapeHtml(p.url)}" alt="${escapeHtml(p.name || 'Photo')}" class="h-36 w-full object-cover">
                         <div class="p-2 flex justify-between items-center text-[11px]">
                             <span class="truncate font-medium text-slate-700">${escapeHtml(p.name || 'Photo ' + (idx + 1))}</span>
-                            <a href="${p.url}" download="${p.name || 'school-photo.jpg'}" class="text-blue-900 font-bold underline ml-2">JPG</a>
+                            <a href="${escapeHtml(p.url)}" download="${escapeHtml(p.name || 'school-photo.jpg')}" class="text-blue-900 font-bold underline ml-2">JPG</a>
                         </div>
                     </div>
                 `).join('');
@@ -4463,7 +4513,7 @@
             if (teacherGrid) teacherGrid.innerHTML = html;
         }
 
-        function saveSchoolProfile() {
+        async function saveSchoolProfile() {
             const nameVal = document.getElementById('profile-school-name')?.value.trim();
             const locVal = document.getElementById('profile-school-location')?.value.trim();
             const mottoVal = document.getElementById('profile-school-motto')?.value.trim();
@@ -4472,9 +4522,9 @@
             if (locVal) schoolProfile.location = locVal;
             if (mottoVal) schoolProfile.motto = mottoVal;
 
-            document.getElementById('nav-school-name').innerText = schoolProfile.name;
-            document.getElementById('nav-school-info').innerText = `${schoolProfile.location} • Default Tuition: GH₵ 250`;
-            document.getElementById('dashboard-motto-display').innerText = `${schoolProfile.name}, ${schoolProfile.location} — ${schoolProfile.motto}.`;
+            localStorage.setItem('wps_school_profile', JSON.stringify(schoolProfile));
+            applyProfileToUI();
+            await saveCloudSettings();
             alert('School profile updated!');
         }
 
